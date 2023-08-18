@@ -14,6 +14,7 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:itckfa/screen/Customs/Contants.dart';
 import 'package:location_geocoder/location_geocoder.dart';
 import 'package:itckfa/models/search_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
@@ -22,13 +23,7 @@ import 'package:search_map_location/widget/search_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-import 'ToFromDate.dart';
-import 'contants.dart';
-import 'distance.dart';
-import 'landsize.dart';
 import 'numDisplay.dart';
-import 'road.dart';
 
 typedef OnChangeCallback = void Function(dynamic value);
 
@@ -74,10 +69,6 @@ class _HomePageState extends State<map_cross_verbal> {
   // static const apiKey = "AIzaSyCeogkN2j3bqrqyIuv4GD4bT1n_4lpNlnY";
   late LocatitonGeocoder geocoder = LocatitonGeocoder(googleApikey);
   late SearchRequestModel requestModel;
-
-  String? _currentAddress;
-  Position? _currentPosition;
-
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;

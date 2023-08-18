@@ -52,7 +52,6 @@ class LandBuilding extends StatefulWidget {
 }
 
 class _LandBuildingState extends State<LandBuilding> {
-  final _formKey = GlobalKey<FormState>();
   List list = [];
   var formatter = NumberFormat("##,###,###,##0.00", "en_US");
   int? min;
@@ -661,6 +660,7 @@ class _LandBuildingState extends State<LandBuilding> {
       //     (((widget.asking_price * (100 - max)) / 100) * (widget.opt / 100)));
       // minSqm = ((widget.asking_price * (100 - min) / 100) +
       //     (((widget.asking_price * (100 - min)) / 100) * (widget.opt / 100)));
+      // ignore: unnecessary_null_comparison
       if (widget.opt_type_id != null) {
         totalMin =
             ((minSqm! * area) * (double.parse(widget.opt_type_id) / 100)) +

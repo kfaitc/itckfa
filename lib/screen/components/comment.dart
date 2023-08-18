@@ -34,14 +34,11 @@ class CommentAndOption extends StatefulWidget {
 class _CommentAndOptionState extends State<CommentAndOption> {
   late String Value = '';
   late List<dynamic> _list;
-  late List<dynamic> _list2;
   var genderValue;
   @override
   void initState() {
     super.initState();
     _list = [];
-    _list2 = [];
-    // ignore: unnecessary_new
     Load();
   }
 
@@ -152,11 +149,7 @@ class _CommentAndOptionState extends State<CommentAndOption> {
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/options?opt_id=${id}'));
     if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
-
       setState(() {
-        _list2 = jsonData;
-
         // print(_list);
       });
     }
