@@ -1,0 +1,126 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:flutter/material.dart';
+import 'package:flutter_application/components/property.dart';
+import 'package:flutter_application/customs/form.dart';
+
+import 'contants.dart';
+
+class Test2 extends StatefulWidget {
+  @override
+  _Test2State createState() => _Test2State();
+}
+
+class _Test2State extends State<Test2> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: IconButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(15.0),
+                    ),
+                  ),
+                  content: Stack(
+                    clipBehavior: Clip.none,
+                    children: <Widget>[
+                      Positioned(
+                        right: -40.0,
+                        top: -40.0,
+                        child: InkResponse(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: CircleAvatar(
+                            child: Icon(Icons.close),
+                            backgroundColor: Colors.red,
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              // Container(
+                              //   width: 300,
+                              //   child: PropertyDropdown(),
+                              // ),
+                              Container(
+                                width: 300,
+                                child: FormS(
+                                  label: "Desciption",
+                                  iconname: Icon(
+                                    Icons.book,
+                                    color: kImageColor,
+                                  ),
+                                  onSaved: (newValue) {},
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                width: 300,
+                                child: FormS(
+                                  label: "Depreciation",
+                                  iconname: Icon(
+                                    Icons.monetization_on,
+                                    color: kImageColor,
+                                  ),
+                                  onSaved: (newValue) {},
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                width: 300,
+                                child: FormS(
+                                  label: "Area",
+                                  iconname: Icon(
+                                    Icons.layers,
+                                    color: kImageColor,
+                                  ),
+                                  onSaved: (newValue) {},
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: ElevatedButton(
+                                  child: Text("Save"),
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _formKey.currentState!.save();
+                                    }
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+        },
+        icon: Icon(
+          Icons.add,
+          color: kImageColor,
+        ),
+      ),
+    );
+  }
+}
