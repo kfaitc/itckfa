@@ -14,15 +14,16 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:itckfa/screen/Customs/Contants.dart';
-import 'package:location_geocoder/location_geocoder.dart';
 import 'package:itckfa/models/search_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
+import 'package:itckfa/screen/components/property.dart';
+import 'package:location_geocoder/location_geocoder.dart';
 import 'package:search_map_location/utils/google_search/place.dart';
 import 'package:search_map_location/widget/search_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'contants.dart';
 import 'numDisplay.dart';
 
 typedef OnChangeCallback = void Function(dynamic value);
@@ -62,6 +63,8 @@ class _HomePageState extends State<map_cross_verbal> {
   double adding_price = 0;
   String sendAddrress = '';
   List data = [];
+  // ignore: prefer_typing_uninitialized_variables
+  var pty;
   var formatter = NumberFormat("##,###,###,###", "en_US");
   var date = DateFormat('yyyy-MM-dd').format(DateTime(2020, 01, 01));
   var date1 = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -69,6 +72,10 @@ class _HomePageState extends State<map_cross_verbal> {
   // static const apiKey = "AIzaSyCeogkN2j3bqrqyIuv4GD4bT1n_4lpNlnY";
   late LocatitonGeocoder geocoder = LocatitonGeocoder(googleApikey);
   late SearchRequestModel requestModel;
+
+  String? _currentAddress;
+  Position? _currentPosition;
+
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -134,6 +141,7 @@ class _HomePageState extends State<map_cross_verbal> {
     Future.delayed(const Duration(seconds: 3), () async {
       await _getCurrentLocation();
     });
+
     // getAddress(latLng);
     // ignore: unnecessary_new
     requestModel = new SearchRequestModel(
@@ -305,6 +313,15 @@ class _HomePageState extends State<map_cross_verbal> {
                     requestModel.num = newValue!;
                   })),
           SizedBox(height: 10.0),
+          PropertyDropdown(
+            name: (value) {
+              // propertyType = value;
+            },
+            id: (value) {
+              pty = value;
+            },
+            // pro: list[0]['property_type_name'],
+          ),
           // Distance(
           //     onSaved: (input) => setState(() {
           //           requestModel.distance = input!;
@@ -406,23 +423,37 @@ class _HomePageState extends State<map_cross_verbal> {
   }
 
   List data_adding_correct = [];
+  double? min, max;
   Future<void> Show(SearchRequestModel requestModel) async {
     // var rs = await http
     //     .get(Uri.parse('https://kfahrm.cc/laravel/public/api/comparable/list?page=100'));
     setState(() {
       isApiCallProcess = true;
     });
+    final Jsondata;
+    if (pty != null) {
+      Jsondata = {
+        "property_type_id": pty,
+        "num": requestModel.num,
+        "lat": requestModel.lat,
+        "lng": requestModel.lng,
+      };
+    } else {
+      Jsondata = {
+        "num": requestModel.num,
+        "lat": requestModel.lat,
+        "lng": requestModel.lng,
+      };
+    }
     final rs = await http.post(
         Uri.parse(
             'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/map_action'),
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: requestModel.toJson());
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(Jsondata));
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
+        print(jsonData.toString());
         list = jsonData['autoverbal'];
       });
       await Find_by_piont(
@@ -432,12 +463,7 @@ class _HomePageState extends State<map_cross_verbal> {
     print(list.length);
 
     Map map = list.asMap();
-    // List list = [
-    //   {"title": "one", "id": "1", "lat": 11.489, "lon": 105.9214},
-    //   {"title": "two", "id": "2", "lat": 11.5, "lon": 104.9314},
-    //   {"title": "three", "id": "3", "lat": 11.6, "lon": 104.9414},
-    // ];
-    print(map);
+    print(list);
     if (requestModel.lat.isEmpty || requestModel.lng.isEmpty) {
       setState(() {
         isApiCallProcess = false;
@@ -455,19 +481,21 @@ class _HomePageState extends State<map_cross_verbal> {
     } else {
       setState(() {
         isApiCallProcess = false;
+        max = 0;
+        min = 0;
       });
       if (map.isEmpty) {
         markers.clear();
         AwesomeDialog(
           context: context,
-          dialogType: DialogType.error,
+          dialogType: DialogType.info,
           animType: AnimType.rightSlide,
           headerAnimationLoop: false,
           title: 'No data found!',
-          desc: "You can try to change the information. ",
+          desc: "You can try to change Property.",
           btnOkOnPress: () {},
           btnOkIcon: Icons.cancel,
-          btnOkColor: Colors.red,
+          btnOkColor: Colors.blue,
         ).show();
       } else {
         int index = 0;
@@ -479,7 +507,6 @@ class _HomePageState extends State<map_cross_verbal> {
                   double.parse(map[i]['comparable_adding_price']) / map.length;
               print(map[i]['comparable_adding_price']);
             } else if (map[i]['comparable_adding_price'].contains(',')) {
-              print(map[i]['comparable_adding_price'].replaceAll(",", ""));
               adding_price += double.parse(
                       map[i]['comparable_adding_price'].replaceAll(",", "")) /
                   map.length;
@@ -490,89 +517,8 @@ class _HomePageState extends State<map_cross_verbal> {
                   (double.parse(map[i]['comparable_adding_price'])) /
                       map.length;
             }
-            MarkerId markerId = MarkerId(i.toString());
-            Marker marker = Marker(
-              markerId: markerId,
-              position: LatLng(
-                double.parse(map[i]['latlong_log'].toString()),
-                double.parse(map[i]['latlong_la'].toString()),
-              ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueCyan),
-              onTap: () {
-                setState(() {
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      title: Text(
-                        "Property{${i + 1}} ${map[i]['property_type_name']}",
-                        style: TextStyle(
-                            color: kPrimaryColor, fontWeight: FontWeight.bold),
-                      ),
-                      content: SizedBox(
-                        height: 150,
-                        child: Row(
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Price',
-                                  style: TextStyle(
-                                      color: kImageColor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text('Land-Width'),
-                                Text('Land-Length'),
-                                Text('Land-Total'),
-                                // Text('Date'),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '  :   ' +
-                                      map[i]['comparable_adding_price'] +
-                                      '\$',
-                                  style: TextStyle(
-                                      color: kImageColor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                    '  :   ' + map[i]['comparable_land_width']),
-                                Text('  :   ' +
-                                    map[i]['comparable_land_length']),
-                                Text('  :   ' +
-                                    formatter.format(double.parse(map[i]
-                                            ['comparable_land_total']
-                                        .toString()))),
-                                // Text('  :   ' + map[i]['comparable_survey_date']),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, 'OK'),
-                          child: const Text('OK'),
-                        ),
-                      ],
-                    ),
-                  );
-                });
-              },
-            );
             setState(() {
-              isApiCallProcess = false;
-              listMarkerIds.add(marker);
-
+              data_adding_correct.add(map[i]);
               // widget.asking_price(adding_price);
             });
           } else if (i > 0) {
@@ -615,8 +561,8 @@ class _HomePageState extends State<map_cross_verbal> {
                 double.parse(data_adding_correct[i]['latlong_log'].toString()),
                 double.parse(data_adding_correct[i]['latlong_la'].toString()),
               ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueCyan),
+              icon: await BitmapDescriptor.fromAssetImage(
+                  ImageConfiguration(size: Size(50, 50)), 'assets/icons/l.png'),
               onTap: () {
                 setState(() {
                   showDialog<String>(
@@ -727,8 +673,8 @@ class _HomePageState extends State<map_cross_verbal> {
                 double.parse(data_adding_correct[i]['latlong_log'].toString()),
                 double.parse(data_adding_correct[i]['latlong_la'].toString()),
               ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueGreen),
+              icon: await BitmapDescriptor.fromAssetImage(
+                  ImageConfiguration(size: Size(50, 50)), 'assets/icons/f.png'),
               onTap: () {
                 setState(() {
                   showDialog<String>(
@@ -839,8 +785,8 @@ class _HomePageState extends State<map_cross_verbal> {
                 double.parse(data_adding_correct[i]['latlong_log'].toString()),
                 double.parse(data_adding_correct[i]['latlong_la'].toString()),
               ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueMagenta),
+              icon: await BitmapDescriptor.fromAssetImage(
+                  ImageConfiguration(size: Size(50, 50)), 'assets/icons/v.png'),
               onTap: () {
                 setState(() {
                   showDialog<String>(
@@ -951,8 +897,8 @@ class _HomePageState extends State<map_cross_verbal> {
                 double.parse(data_adding_correct[i]['latlong_log'].toString()),
                 double.parse(data_adding_correct[i]['latlong_la'].toString()),
               ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueRose),
+              icon: await BitmapDescriptor.fromAssetImage(
+                  ImageConfiguration(size: Size(50, 50)), 'assets/icons/h.png'),
               onTap: () {
                 setState(() {
                   showDialog<String>(
@@ -1063,8 +1009,8 @@ class _HomePageState extends State<map_cross_verbal> {
                 double.parse(data_adding_correct[i]['latlong_log'].toString()),
                 double.parse(data_adding_correct[i]['latlong_la'].toString()),
               ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueViolet),
+              icon: await BitmapDescriptor.fromAssetImage(
+                  ImageConfiguration(size: Size(50, 50)), 'assets/icons/b.png'),
               onTap: () {
                 setState(() {
                   showDialog<String>(
@@ -1175,8 +1121,8 @@ class _HomePageState extends State<map_cross_verbal> {
                 double.parse(data_adding_correct[i]['latlong_log'].toString()),
                 double.parse(data_adding_correct[i]['latlong_la'].toString()),
               ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueBlue),
+              icon: await BitmapDescriptor.fromAssetImage(
+                  ImageConfiguration(size: Size(50, 50)), 'assets/icons/v.png'),
               onTap: () {
                 setState(() {
                   showDialog<String>(
@@ -1287,8 +1233,8 @@ class _HomePageState extends State<map_cross_verbal> {
                 double.parse(data_adding_correct[i]['latlong_log'].toString()),
                 double.parse(data_adding_correct[i]['latlong_la'].toString()),
               ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueAzure),
+              icon: await BitmapDescriptor.fromAssetImage(
+                  ImageConfiguration(size: Size(50, 50)), 'assets/icons/a.png'),
               onTap: () {
                 setState(() {
                   showDialog<String>(
@@ -1400,6 +1346,8 @@ class _HomePageState extends State<map_cross_verbal> {
   }
 
   Future Dialog(BuildContext context) {
+    min = adding_price - (0.1 * adding_price);
+    max = adding_price - (0.05 * adding_price);
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1458,13 +1406,32 @@ class _HomePageState extends State<map_cross_verbal> {
                       ),
                     ),
                   ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text("minimum : ${formatter.format(min)}\$",
+                        style: TextStyle(
+                          fontSize: 11,
+                          decorationStyle: TextDecorationStyle.dashed,
+                          decoration: TextDecoration.underline,
+                        )),
+                    Text("maximum : ${formatter.format(max)}\$",
+                        style: TextStyle(
+                          fontSize: 11,
+                          decorationStyle: TextDecorationStyle.dashed,
+                          decoration: TextDecoration.underline,
+                        )),
+                  ],
+                ),
                 Text(
                     "Avg price of property : " +
                         formatter.format(adding_price).toString() +
                         "\$",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      height: 5,
                       fontSize: 12,
                       decorationStyle: TextDecorationStyle.dashed,
                       decoration: TextDecoration.underline,

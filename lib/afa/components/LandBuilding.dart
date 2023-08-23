@@ -685,14 +685,14 @@ class _LandBuildingState extends State<LandBuilding> {
 
   void calLs2(double area) {
     setState(() {
-      maxSqm = (widget.asking_price! - (0 * widget.asking_price!)) +
+      maxSqm = (widget.asking_price! - (0.05 * widget.asking_price!)) +
           (widget.asking_price! -
               (widget.asking_price! -
                   (widget.asking_price! *
                       double.parse(widget.opt_type_id) /
                       100)));
 
-      minSqm = (widget.asking_price! - (0 * widget.asking_price!)) +
+      minSqm = (widget.asking_price! - (0.1 * widget.asking_price!)) +
           (widget.asking_price! -
               (widget.asking_price! -
                   (widget.asking_price! *

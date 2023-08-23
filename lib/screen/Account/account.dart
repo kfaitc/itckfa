@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, import_of_legacy_library_into_null_safe, prefer_const_literals_to_create_immutables, deprecated_member_use, must_be_immutable, use_build_context_synchronously, non_constant_identifier_names, unused_field, unused_local_variable, prefer_typing_uninitialized_variables, unnecessary_string_interpolations, unused_import
+// ignore_for_file: prefer_const_constructors, import_of_legacy_library_into_null_safe, prefer_const_literals_to_create_immutables, deprecated_member_use, must_be_immutable, use_build_context_synchronously, non_constant_identifier_names, unused_field, unused_local_variable, prefer_typing_uninitialized_variables, unnecessary_string_interpolations, unused_import, unnecessary_null_comparison
 
 import 'dart:convert';
 import 'dart:io';
@@ -176,7 +176,8 @@ class _AccountState extends State<Account> {
       textColor: Colors.blue,
       fontSize: 20,
     );
-    Get.off(() => Login());
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (context) => Login()), (route) => false);
   }
 
   static List<PeopleModel> list = [];
@@ -194,10 +195,11 @@ class _AccountState extends State<Account> {
           });
     } else {
       setState(() {
-        Password = TextEditingController(text: list[0].password);
+        int i = list.length - 1;
+        Password = TextEditingController(text: list[i].password);
         requestModel = RegisterRequestModel_update(
-          email: list[0].name,
-          password: list[0].password,
+          email: list[i].name,
+          password: list[i].password,
           first_name: widget.first_name,
           gender: widget.gender,
           known_from: widget.from,

@@ -17,7 +17,7 @@ class TitleBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Image.asset(
-              'assets/images/KFA-Logo.png',
+              'assets/images/KFA_CRM.png',
               height: 55,
               width: 55,
             ),

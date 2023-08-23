@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,6 +19,7 @@ import 'package:itckfa/afa/customs/formVLD.dart';
 import 'package:itckfa/api/api_service.dart';
 import 'package:itckfa/models/register_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
+import 'package:itckfa/verify.dart';
 
 import '../../../screen/Customs/responsive.dart';
 import '../../customs/formTwin.dart';
@@ -143,6 +145,9 @@ class _RegisterState extends State<Register> {
     });
   }
 
+  FirebaseAuth auth = FirebaseAuth.instance;
+  PhoneAuthCredential? credential;
+  String? smsCode;
   String? set_id_user;
   int? user_last_id;
   Random random = new Random();
@@ -221,11 +226,20 @@ class _RegisterState extends State<Register> {
         elevation: 0,
         centerTitle: true,
         title: Image.asset(
-          'assets/images/KFA-Logo.png',
-          height: 120,
-          width: 150,
+          'assets/images/KFA_CRM.png',
+          height: 160,
+          width: 160,
         ),
         toolbarHeight: 100,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.chevron_left_outlined,
+              color: Colors.white,
+              size: 40,
+            )),
       ),
       backgroundColor: kwhite_new,
       body: Container(
@@ -514,6 +528,7 @@ class _RegisterState extends State<Register> {
                   });
                 },
                 label: 'Email',
+                type: TextInputType.emailAddress,
                 iconname: Icon(
                   Icons.email,
                   color: kImageColor,
@@ -529,6 +544,7 @@ class _RegisterState extends State<Register> {
                   });
                 },
                 label: 'Phone Number',
+                type: TextInputType.phone,
                 iconname: Icon(
                   Icons.phone,
                   color: kImageColor,
@@ -543,6 +559,7 @@ class _RegisterState extends State<Register> {
                       requestModel.password = input;
                     });
                   },
+                  keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
                     fillColor: kwhite,
                     filled: true,
@@ -606,6 +623,7 @@ class _RegisterState extends State<Register> {
                       requestModel.password_confirmation = input;
                     });
                   },
+                  keyboardType: TextInputType.visiblePassword,
                   decoration: InputDecoration(
                     fillColor: kwhite,
                     filled: true,
@@ -748,52 +766,109 @@ class _RegisterState extends State<Register> {
                       if (get_bytes != null || _byesData != null) {
                         await uploadImage();
                       }
-
                       APIservice apIservice = APIservice();
-
-                      apIservice.register(requestModel).then((value) {
-                        setState(() {
-                          isApiCallProcess = false;
-                        });
-                        if (value.message == "User successfully registered") {
-                          var people = PeopleModel(
-                            id: 0,
-                            name: requestModel.email,
-                            password: requestModel.password,
-                          );
-                          PeopleController().insertPeople(people);
+                      await FirebaseAuth.instance.verifyPhoneNumber(
+                        phoneNumber: '+855${requestModel.tel_num}',
+                        timeout: const Duration(seconds: 90),
+                        verificationCompleted:
+                            (PhoneAuthCredential credential) async {
+                          await auth.signInWithCredential(credential);
+                          print("\ngood to\n");
+                          // ignore: use_build_context_synchronously
                           AwesomeDialog(
                             context: context,
-                            animType: AnimType.leftSlide,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.success,
-                            showCloseIcon: false,
-                            title: value.message,
-                            autoHide: Duration(seconds: 3),
-                            onDismissCallback: (type) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Login(),
-                                ),
-                              );
-                            },
-                          ).show();
-                        } else {
-                          AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.error,
+                            dialogType: DialogType.info,
                             animType: AnimType.rightSlide,
                             headerAnimationLoop: false,
-                            title: 'Error',
-                            desc: value.message,
+                            title: 'Error code sms',
+                            desc: "good",
                             btnOkOnPress: () {},
                             btnOkIcon: Icons.cancel,
-                            btnOkColor: Colors.red,
+                            btnOkColor: Colors.greenAccent,
                           ).show();
-                          print(value.message);
-                        }
-                      });
+                        },
+                        verificationFailed: (FirebaseAuthException e) {
+                          if (e.code == 'invalid-phone-number') {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Error code sms',
+                              desc: e.code,
+                              btnOkOnPress: () {},
+                              btnOkIcon: Icons.cancel,
+                              btnOkColor: Colors.red,
+                            ).show();
+                          }
+                        },
+                        codeSent:
+                            (String verificationId, int? resendToken) async {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyVerify(
+                                        code: (value) {
+                                          setState(() {
+                                            smsCode = value;
+                                          });
+                                        },
+                                      )));
+                          // Create a PhoneAuthCredential with the code
+                          credential = PhoneAuthProvider.credential(
+                              verificationId: verificationId,
+                              smsCode: smsCode!);
+                          final user =
+                              await auth.signInWithCredential(credential!);
+
+                          apIservice.register(requestModel).then((value) {
+                            setState(() {
+                              isApiCallProcess = false;
+                            });
+                            if (value.message ==
+                                "User successfully registered") {
+                              var people = PeopleModel(
+                                id: 0,
+                                name: requestModel.email,
+                                password: requestModel.password,
+                              );
+                              PeopleController().insertPeople(people);
+                              AwesomeDialog(
+                                context: context,
+                                animType: AnimType.leftSlide,
+                                headerAnimationLoop: false,
+                                dialogType: DialogType.success,
+                                showCloseIcon: false,
+                                title: value.message,
+                                autoHide: Duration(seconds: 3),
+                                onDismissCallback: (type) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Login(),
+                                    ),
+                                  );
+                                },
+                              ).show();
+                            } else {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.rightSlide,
+                                headerAnimationLoop: false,
+                                title: 'Error',
+                                desc: value.message,
+                                btnOkOnPress: () {},
+                                btnOkIcon: Icons.cancel,
+                                btnOkColor: Colors.red,
+                              ).show();
+                              print(value.message);
+                            }
+                            Navigator.pop(context);
+                          });
+                        },
+                        codeAutoRetrievalTimeout: (String verificationId) {},
+                      );
                     }
                   },
                 ),

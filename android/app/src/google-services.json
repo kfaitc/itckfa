@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "266399223712",
+    "project_id": "kfa-crm-map",
+    "storage_bucket": "kfa-crm-map.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:266399223712:android:76f580427ba9630a5edec5",
+        "android_client_info": {
+          "package_name": "com.example.itckfa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "266399223712-0ajigftl40nh8bu6s2dgi68dmcllajhs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7Wk0YVMlr5A8PVWSRF05cIjTVAJTD7nE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "266399223712-0ajigftl40nh8bu6s2dgi68dmcllajhs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

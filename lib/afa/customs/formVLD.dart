@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 class FormValidate extends StatelessWidget {
   final String label;
   final Widget iconname;
+  final TextInputType? type;
   final FormFieldSetter<String> onSaved;
   const FormValidate(
       {Key? key,
       required this.label,
       required this.iconname,
-      required this.onSaved})
+      required this.onSaved,
+      this.type})
       : super(key: key);
 
   @override
@@ -19,6 +21,7 @@ class FormValidate extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
       child: TextFormField(
         onChanged: onSaved,
+        keyboardType: (type != null) ? type : TextInputType.text,
         decoration: InputDecoration(
           fillColor: Color.fromARGB(255, 255, 255, 255),
           filled: true,

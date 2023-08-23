@@ -60,14 +60,17 @@ class Menu_Add_verbal extends StatelessWidget {
               height: MediaQuery.of(context).size.height,
               width: double.infinity,
               alignment: Alignment.center,
+              padding: EdgeInsets.only(bottom: 100),
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
-                  BoxShadow(blurRadius: 15, color: Colors.yellowAccent)
+                  BoxShadow(
+                      blurRadius: 15,
+                      color: ui.Color.fromARGB(255, 191, 197, 186))
                 ],
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(220),
-                  bottomRight: Radius.circular(220),
+                  topLeft: Radius.circular(250),
+                  bottomRight: Radius.circular(250),
                 ),
               ),
               child: Column(
@@ -276,16 +279,10 @@ class Menu_Add_verbal extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 40,
-              right: 50,
+              bottom: -10,
+              right: 1,
               child: SizedBox(
-                height: 180,
-                width: 230,
-                child: Image.asset(
-                  'assets/images/New_KFA_Logo.png',
-                  fit: BoxFit.fill,
-                ),
-              ),
+                  height: 90, child: Image.asset("assets/images/KFA_CRM.png")),
             ),
             Positioned(
                 top: 1,

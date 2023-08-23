@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:getwidget/components/carousel/gf_carousel.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:itckfa/Memory_local/Local_data.dart';
 import 'package:itckfa/afa/screens/Auth/register.dart';
 import 'package:itckfa/api/api_service.dart';
@@ -36,7 +38,7 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isObscure = true;
   late LoginRequestModel requestModel;
@@ -70,238 +72,388 @@ class _LoginState extends State<Login> {
     }
   }
 
+  late AnimationController controller;
+  late Animation<double> animation;
+  late PageController _pageController;
+  late List<Widget> slideList;
+  late int initialPage;
   @override
   void initState() {
+    _pageController = PageController(initialPage: 0);
+    initialPage = _pageController.initialPage;
     selectPeople();
     status;
     list;
     super.initState();
     requestModel = LoginRequestModel(email: "", password: "");
+    controller =
+        AnimationController(duration: const Duration(seconds: 5), vsync: this);
+    animation = new CurvedAnimation(parent: controller, curve: Curves.linear);
+    controller.repeat();
   }
 
+  bool welcome = false;
+  bool check_elcome = false;
   @override
   Widget build(BuildContext context) {
-    return ProgressHUD(
-      color: kPrimaryColor,
-      inAsyncCall: isApiCallProcess,
-      opacity: 0.3,
-      child: _uiSteup(context),
-    );
-  }
-
-  Widget _uiSteup(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kwhite_new,
-        elevation: 0,
-        centerTitle: true,
-        title: Image.asset(
-          // 'assets/images/KFA-Logo.png',
-          'assets/images/KFA-Logo.png',
-          height: 120,
-          width: 150,
-        ),
-        toolbarHeight: 100,
-      ),
-      backgroundColor: kwhite_new,
-      body: Container(
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: kwhite,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(30.0),
-            topLeft: Radius.circular(30.0),
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Responsive(
-            mobile: login(context),
-            tablet: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 500,
-                        child: login(context),
-                      ),
-                    ],
+    Future.delayed(const Duration(seconds: 20), () async {
+      setState(() {
+        welcome = true;
+      });
+    });
+    Future.delayed(const Duration(seconds: 1), () async {
+      setState(() {
+        check_elcome = true;
+      });
+    });
+    if (check_elcome) {
+      return ProgressHUD(
+        color: kPrimaryColor,
+        inAsyncCall: isApiCallProcess,
+        opacity: 0.5,
+        child: (status || welcome)
+            ? Scaffold(
+                appBar: AppBar(
+                  backgroundColor: kwhite_new,
+                  elevation: 0,
+                  centerTitle: true,
+                  title: Image.asset(
+                    'assets/images/KFA_CRM.png',
+                    height: 160,
+                    width: 160,
                   ),
-                )
-              ],
-            ),
-            desktop: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 500,
-                        child: login(context),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            phone: login(context),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Padding login(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            const Text(
-              'Welcome to KFA system',
-              style: TextStyle(
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,
-                color: kwhite_new,
-              ),
-            ),
-            const SizedBox(
-              height: 10.0,
-            ),
-            const Text.rich(
-              TextSpan(
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  TextSpan(
-                    text: "ONE CLICK ",
-                    style: TextStyle(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
-                      color: kImageColor,
+                  toolbarHeight: 130,
+                ),
+                backgroundColor: kwhite_new,
+                body: Container(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: kwhite,
+                    borderRadius: BorderRadius.only(
+                      // topRight: Radius.circular(30.0),
+                      topLeft: Radius.circular(100.0),
+                      // bottomLeft: Radius.circular(30.0),
+                      bottomRight: Radius.circular(100.0),
                     ),
                   ),
-                  TextSpan(
-                    text: "1\$",
-                    style: TextStyle(
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.bold,
-                      color: kerror,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(
-              height: 30.0,
-            ),
-            ((status == false) ? input(context) : Output(context)),
-
-            SizedBox(
-              height: 10.0,
-            ),
-            // ignore: deprecated_member_use
-            SizedBox(
-              width: 150,
-              child: AnimatedButton(
-                text: 'Login',
-                color: kwhite_new,
-                pressEvent: () {
-                  if (validateAndSave()) {
-                    setState(() {
-                      // final player = AudioPlayer();
-                      // player.play(AssetSource('nor.mp3'));
-                      isApiCallProcess = true;
-                    });
-                    APIservice apIservice = APIservice();
-                    apIservice.login(requestModel).then((value) {
-                      Load(value.token);
-                      setState(() {
-                        isApiCallProcess = false;
-                      });
-                      if (value.message == "Login Successfully!") {
-                        var people = PeopleModel(
-                          id: 0,
-                          name: requestModel.email,
-                          password: requestModel.password,
-                        );
-                        PeopleController().insertPeople(people);
-                        AwesomeDialog(
-                          btnOkOnPress: () {},
-                          context: context,
-                          animType: AnimType.leftSlide,
-                          headerAnimationLoop: false,
-                          dialogType: DialogType.success,
-                          showCloseIcon: false,
-                          title: value.message,
-                          autoHide: Duration(seconds: 3),
-                          onDismissCallback: (type) {
-                            // debugPrint('Dialog Dissmiss from callback $type');
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomePage1(
-                                    log: 0,
-                                    lat: 0,
-                                    user: username,
-                                    email: email,
-                                    first_name: first_name,
-                                    last_name: last_name,
-                                    gender: gender,
-                                    from: from,
-                                    tel: tel,
-                                    id: id.toString(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Responsive(
+                        mobile: login(context),
+                        tablet: Row(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 500,
+                                    child: login(context),
                                   ),
-                                ));
-                          },
-                        ).show();
-                      } else {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.error,
-                          animType: AnimType.rightSlide,
-                          headerAnimationLoop: false,
-                          title: 'Error',
-                          desc: value.message,
-                          btnOkOnPress: () {},
-                          btnOkIcon: Icons.cancel,
-                          btnOkColor: Colors.red,
-                        ).show();
-                        print(value.message);
-                      }
-                    });
-                    print(requestModel.toJson());
-                  }
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 20.0,
-            ),
-            Text.rich(TextSpan(children: [
-              TextSpan(
-                text: "Don't have any account? ",
-                style: TextStyle(fontSize: 16.0, color: kTextLightColor),
-              ),
-              TextSpan(
-                text: 'Register',
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => Register()));
-                  },
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: kImageColor,
-                  fontWeight: FontWeight.bold,
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        desktop: Row(
+                          children: [
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 500,
+                                    child: login(context),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        phone: login(context),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : Scaffold(
+                backgroundColor: Color.fromARGB(255, 142, 41, 155),
+                body: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20)),
+                        image: DecorationImage(
+                            image: AssetImage('assets/images/first.gif'),
+                            fit: BoxFit.fill),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          welcome = true;
+                        });
+                      },
+                      child: Container(
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 41, 72, 163),
+                          boxShadow: const [
+                            BoxShadow(
+                                blurRadius: 10,
+                                offset: Offset(0.0, -0.9),
+                                color: Colors.white)
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GFAnimation(
+                                turnsAnimation: animation,
+                                controller: controller,
+                                type: GFAnimationType.rotateTransition,
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.shape_line_outlined,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                            blurRadius: 10,
+                                            offset: Offset(0.0, -0.9),
+                                            color: Colors.white)
+                                      ],
+                                    )
+                                  ],
+                                )),
+                            SizedBox(width: 10),
+                            GFAnimation(
+                                turnsAnimation: animation,
+                                controller: controller,
+                                type: GFAnimationType.rotateTransition,
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.shape_line_outlined,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                            blurRadius: 10,
+                                            offset: Offset(0.0, -0.9),
+                                            color: Colors.white)
+                                      ],
+                                    )
+                                  ],
+                                )),
+                            SizedBox(width: 10),
+                            Text(
+                              "Continue...",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(width: 10),
+                            GFAnimation(
+                                turnsAnimation: animation,
+                                controller: controller,
+                                type: GFAnimationType.rotateTransition,
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.shape_line_outlined,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                            blurRadius: 10,
+                                            offset: Offset(0.0, -0.9),
+                                            color: Colors.white)
+                                      ],
+                                    )
+                                  ],
+                                )),
+                            SizedBox(width: 10),
+                            GFAnimation(
+                                turnsAnimation: animation,
+                                controller: controller,
+                                type: GFAnimationType.rotateTransition,
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.shape_line_outlined,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                            blurRadius: 10,
+                                            offset: Offset(0.0, -0.9),
+                                            color: Colors.white)
+                                      ],
+                                    )
+                                  ],
+                                )),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ])),
-          ],
-        ),
+      );
+    } else {
+      return SafeArea(
+          child: Container(
+        height: MediaQuery.of(context).size.height,
+        color: Colors.white,
+      ));
+    }
+  }
+
+  Widget login(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 25.0,
+          ),
+          // const Text.rich(
+          //   TextSpan(
+          //     // ignore: prefer_const_literals_to_create_immutables
+          //     children: [
+          //       TextSpan(
+          //         text: "ONE CLICK ",
+          //         style: TextStyle(
+          //           fontSize: 22.0,
+          //           fontWeight: FontWeight.bold,
+          //           color: kImageColor,
+          //         ),
+          //       ),
+          //       TextSpan(
+          //         text: "1\$",
+          //         style: TextStyle(
+          //           fontSize: 40.0,
+          //           fontWeight: FontWeight.bold,
+          //           color: kerror,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+
+          ((status == false) ? input(context) : Output(context)),
+
+          SizedBox(
+            height: 10.0,
+          ),
+          // ignore: deprecated_member_use
+          SizedBox(
+            width: 150,
+            child: AnimatedButton(
+              text: 'Login',
+              color: kwhite_new,
+              pressEvent: () {
+                if (validateAndSave()) {
+                  setState(() {
+                    // final player = AudioPlayer();
+                    // player.play(AssetSource('nor.mp3'));
+                    isApiCallProcess = true;
+                  });
+                  APIservice apIservice = APIservice();
+                  apIservice.login(requestModel).then((value) {
+                    Load(value.token);
+                    setState(() {
+                      isApiCallProcess = false;
+                    });
+                    if (value.message == "Login Successfully!") {
+                      var people = PeopleModel(
+                        id: 0,
+                        name: requestModel.email,
+                        password: requestModel.password,
+                      );
+                      PeopleController().insertPeople(people);
+                      AwesomeDialog(
+                        btnOkOnPress: () {},
+                        context: context,
+                        animType: AnimType.leftSlide,
+                        headerAnimationLoop: false,
+                        dialogType: DialogType.success,
+                        showCloseIcon: false,
+                        title: value.message,
+                        autoHide: Duration(seconds: 3),
+                        onDismissCallback: (type) {
+                          // debugPrint('Dialog Dissmiss from callback $type');
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage1(
+                                  log: 0,
+                                  lat: 0,
+                                  user: username,
+                                  email: email,
+                                  first_name: first_name,
+                                  last_name: last_name,
+                                  gender: gender,
+                                  from: from,
+                                  tel: tel,
+                                  id: id.toString(),
+                                ),
+                              ));
+                        },
+                      ).show();
+                    } else {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.error,
+                        animType: AnimType.rightSlide,
+                        headerAnimationLoop: false,
+                        title: 'Error',
+                        desc: value.message,
+                        btnOkOnPress: () {},
+                        btnOkIcon: Icons.cancel,
+                        btnOkColor: Colors.red,
+                      ).show();
+                      print(value.message);
+                    }
+                  });
+                  print(requestModel.toJson());
+                }
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+
+          Text.rich(TextSpan(children: [
+            TextSpan(
+              text: "Don't have any account? ",
+              style: TextStyle(fontSize: 16.0, color: kTextLightColor),
+            ),
+            TextSpan(
+              text: 'Register',
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Register()));
+                },
+              style: TextStyle(
+                fontSize: 16.0,
+                color: kImageColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ])),
+        ],
       ),
     );
   }
@@ -350,6 +502,9 @@ class _LoginState extends State<Login> {
           child: TextFormField(
             // controller: Email,
             onSaved: (input) => requestModel.email = input!,
+            keyboardAppearance: Brightness.light,
+            keyboardType: TextInputType.emailAddress,
+            scrollPadding: const EdgeInsets.only(top: 5000),
             decoration: InputDecoration(
               fillColor: Color.fromARGB(255, 255, 255, 255),
               filled: true,
@@ -360,16 +515,19 @@ class _LoginState extends State<Login> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(
-                    color: Color.fromRGBO(0, 126, 250, 1), width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
+                    color: Color.fromRGBO(0, 126, 250, 1), width: 1.0),
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(40),
+                    bottomLeft: Radius.circular(40)),
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: Color.fromRGBO(0, 126, 250, 1),
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: Color.fromRGBO(0, 126, 250, 1),
+                  ),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40))),
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 1,
@@ -424,8 +582,10 @@ class _LoginState extends State<Login> {
                 },
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
+                borderSide: const BorderSide(color: kPrimaryColor, width: 1.0),
+                borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(40),
+                    topLeft: Radius.circular(40)),
               ),
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -446,7 +606,9 @@ class _LoginState extends State<Login> {
                   width: 1,
                   color: kPrimaryColor,
                 ),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40),
+                    topRight: Radius.circular(40)),
               ),
             ),
             validator: (input) {
@@ -479,15 +641,19 @@ class _LoginState extends State<Login> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(
-                    color: Color.fromRGBO(0, 126, 250, 1), width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
+                    color: Color.fromRGBO(0, 126, 250, 1), width: 1.0),
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(40),
+                    bottomLeft: Radius.circular(40)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 1,
                   color: Color.fromRGBO(0, 126, 250, 1),
                 ),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    bottomRight: Radius.circular(40)),
               ),
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -543,8 +709,10 @@ class _LoginState extends State<Login> {
                 },
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
+                borderSide: const BorderSide(color: kPrimaryColor, width: 1.0),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    bottomRight: Radius.circular(40)),
               ),
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -565,7 +733,9 @@ class _LoginState extends State<Login> {
                   width: 1,
                   color: kPrimaryColor,
                 ),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(40),
+                    topRight: Radius.circular(40)),
               ),
             ),
             validator: (input) {
