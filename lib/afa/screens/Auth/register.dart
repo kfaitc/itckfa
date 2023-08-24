@@ -87,7 +87,7 @@ class _RegisterState extends State<Register> {
         // _file = imagefile;
         // XFile? imagefile;
 
-        //output /data/user/0/com.example.testapp/cache/image_picker7973898508152261600.jpg
+        //output /data/user/0/com.oneclickonedollar.testapp/cache/image_picker7973898508152261600.jpg
         File? imagefile = File(imagepath); //convert Path to File
         // saveAutoVerbal(imagefile);
         get_bytes = await imagefile.readAsBytes(); //convert to bytes
@@ -131,7 +131,7 @@ class _RegisterState extends State<Register> {
     // _file = imagefile;
     // XFile? imagefile;
 
-    //output /data/user/0/com.example.testapp/cache/image_picker7973898508152261600.jpg
+    //output /data/user/0/com.oneclickonedollar.testapp/cache/image_picker7973898508152261600.jpg
     File? imagefile = File(imagepath); //convert Path to File
     // saveAutoVerbal(imagefile);
     get_bytes = await imagefile.readAsBytes(); //convert to bytes

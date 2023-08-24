@@ -1330,7 +1330,7 @@
 //       if (pickedFile != null) {
 //         imagepath = pickedFile.path;
 //         print(imagepath);
-//         //output /data/user/0/com.example.testapp/cache/image_picker7973898508152261600.jpg
+//         //output /data/user/0/com.oneclickonedollar.testapp/cache/image_picker7973898508152261600.jpg
 //         File imagefile = File(imagepath); //convert Path to File
 //         // saveAutoVerbal(imagefile);
 //         Uint8List imagebytes = await imagefile.readAsBytes(); //convert to bytes

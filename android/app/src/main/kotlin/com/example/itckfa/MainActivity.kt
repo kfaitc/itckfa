@@ -1,4 +1,4 @@
-package com.example.itckfa
+package com.oneclickonedollar.itckfa
 
 import io.flutter.embedding.android.FlutterActivity
 
