@@ -16,7 +16,7 @@ import 'package:itckfa/screen/Home/Customs/New_season.dart/page_add.dart';
 import 'package:itckfa/screen/Home/Customs/Model-responsive.dart';
 import 'package:itckfa/screen/Profile/components/Image.dart';
 import 'package:itckfa/screen/Profile/profile.dart';
-import 'package:itckfa/screen/propertype/Ppopertys/Home_Screen_property.dart';
+import 'package:itckfa/screen/Property/Home_Screen_property.dart';
 
 import 'MenuCard_dektop.dart';
 
