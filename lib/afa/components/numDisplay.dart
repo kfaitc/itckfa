@@ -30,6 +30,7 @@ class NumDisplay extends StatelessWidget {
         initialValue: "5",
         decoration: InputDecoration(
           fillColor: kwhite,
+          contentPadding: EdgeInsets.symmetric(vertical: 8),
           filled: true,
           labelText: "Num Display",
           prefixIcon: Icon(

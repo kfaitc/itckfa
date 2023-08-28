@@ -441,16 +441,13 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
             ),
             TextSpan(
               text: 'Register',
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).textScaleFactor * 16),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => Register()));
                 },
-              style: TextStyle(
-                fontSize: 16.0,
-                color: kImageColor,
-                fontWeight: FontWeight.bold,
-              ),
             ),
           ])),
         ],
@@ -514,17 +511,17 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                 color: kImageColor,
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                    color: Color.fromRGBO(0, 126, 250, 1), width: 1.0),
+                // borderSide: const BorderSide(
+                //     color: Color.fromRGBO(0, 126, 250, 1), width: 1.0),
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(40),
                     bottomLeft: Radius.circular(40)),
               ),
               enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 1,
-                    color: Color.fromRGBO(0, 126, 250, 1),
-                  ),
+                  // borderSide: BorderSide(
+                  //   width: 1,
+                  //   color: Color.fromARGB(255, 255, 255, 255),
+                  // ),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
                       bottomRight: Radius.circular(40))),
@@ -582,7 +579,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                 },
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: kPrimaryColor, width: 1.0),
+                // borderSide: const BorderSide(color: kPrimaryColor, width: 1.0),
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(40),
                     topLeft: Radius.circular(40)),

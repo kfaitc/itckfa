@@ -9,9 +9,14 @@ typedef OnChangeCallback = void Function(dynamic value);
 class PropertyDropdown extends StatefulWidget {
   final OnChangeCallback name;
   final OnChangeCallback id;
+  final OnChangeCallback? check_onclick;
   final String? pro;
   const PropertyDropdown(
-      {Key? key, required this.name, required this.id, this.pro})
+      {Key? key,
+      required this.name,
+      required this.id,
+      this.pro,
+      this.check_onclick})
       : super(key: key);
 
   @override
@@ -46,6 +51,11 @@ class _PropertyDropdownState extends State<PropertyDropdown> {
         child: DropdownButtonFormField<String>(
           isExpanded: true,
           //value: genderValue,
+          onTap: () {
+            setState(() {
+              widget.check_onclick!(true);
+            });
+          },
           onChanged: (newValue) {
             setState(() {
               propertyValue = newValue as String;
@@ -65,7 +75,6 @@ class _PropertyDropdownState extends State<PropertyDropdown> {
                       value["property_type_name"],
                   child: Text(
                     value["property_type_name"],
-                    style: TextStyle(height: 0.1),
                   ),
                 ),
               )
@@ -78,7 +87,7 @@ class _PropertyDropdownState extends State<PropertyDropdown> {
 
           decoration: InputDecoration(
             filled: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 8),
+            contentPadding: EdgeInsets.symmetric(vertical: 15),
             fillColor: Colors.white,
             labelText: ((widget.pro == null) ? 'Property' : widget.pro),
             hintText: 'Select one',
