@@ -127,9 +127,13 @@ class _TopUpState extends State<TopUp> {
                       children: [
                         Container(
                           margin: const EdgeInsets.only(left: 15),
+                          padding: const EdgeInsets.all(5),
                           height: 30,
                           width: 30,
-                          child: Image.asset("assets/images/v.png"),
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage("assets/images/v.png"),
+                                  fit: BoxFit.cover)),
                         ),
                         const SizedBox(width: 10),
                         Text(
@@ -201,6 +205,7 @@ class _TopUpState extends State<TopUp> {
                       margin: const EdgeInsets.all(5),
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
+                        color: kImageColor,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: Colors.white,
@@ -209,9 +214,9 @@ class _TopUpState extends State<TopUp> {
                       ),
                       child: Column(
                         children: [
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Text(
                                 "Tariff Plans for ",
                                 style: TextStyle(
@@ -222,7 +227,6 @@ class _TopUpState extends State<TopUp> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blue,
-                                    fontSize: 17,
                                     decorationStyle: TextDecorationStyle.dashed,
                                     decoration: TextDecoration.underline),
                               )
@@ -253,9 +257,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -316,9 +319,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -379,9 +381,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -448,9 +449,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -511,9 +511,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -574,9 +573,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -622,13 +620,13 @@ class _TopUpState extends State<TopUp> {
                       ),
                     ),
                   ),
-                  Positioned(
-                      right: 15,
-                      bottom: -1,
-                      child: Image.asset(
-                        "assets/images/pay.png",
-                        width: 125,
-                      ))
+                  // Positioned(
+                  //     right: 15,
+                  //     bottom: -1,
+                  //     child: Image.asset(
+                  //       "assets/images/pay.png",
+                  //       width: 125,
+                  //     ))
                 ],
               ),
             ),
@@ -658,37 +656,30 @@ class _TopUpState extends State<TopUp> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              const SizedBox(width: 10),
-                              const Text(
+                              SizedBox(width: 10),
+                              Text(
                                 "Tariff Plans for",
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.white),
                               ),
                               SizedBox(
-                                height: 25,
-                                width: 90,
-                                child: DefaultTextStyle(
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                      fontSize: 17,
-                                      decorationStyle:
-                                          TextDecorationStyle.dashed,
-                                      decoration: TextDecoration.underline),
-                                  child: AnimatedTextKit(
-                                    animatedTexts: [
-                                      RotateAnimatedText('WEEK '),
-                                      RotateAnimatedText('MOUNT'),
+                                  height: 25,
+                                  child: Row(
+                                    children: [
+                                      Text("Week&Month",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blue,
+                                              decorationStyle:
+                                                  TextDecorationStyle.dashed,
+                                              decoration:
+                                                  TextDecoration.underline)),
                                     ],
-                                    pause: const Duration(milliseconds: 500),
-                                    repeatForever: true,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
+                                  )),
+                              SizedBox(width: 0),
                             ],
                           ),
                           InkWell(
@@ -696,14 +687,14 @@ class _TopUpState extends State<TopUp> {
                               BottomSheet(context, '10.00', widget.set_email!,
                                   '5  V / Week');
                             },
-                            child: Card(
+                            child: const Card(
                               color: Colors.white,
                               elevation: 5,
                               child: ListTile(
                                 minVerticalPadding: 5,
                                 title: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     Text(
                                       "Use ",
                                       style: TextStyle(
@@ -736,7 +727,7 @@ class _TopUpState extends State<TopUp> {
                                     ),
                                   ],
                                 ),
-                                subtitle: const Text("10 \$"),
+                                subtitle: Text("10 \$"),
                               ),
                             ),
                           ),
@@ -745,14 +736,14 @@ class _TopUpState extends State<TopUp> {
                               BottomSheet(context, '30.00', widget.set_email!,
                                   '30  V / Week');
                             },
-                            child: Card(
+                            child: const Card(
                               color: Colors.white,
                               elevation: 5,
                               child: ListTile(
                                 minVerticalPadding: 5,
                                 title: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     Text(
                                       "Use ",
                                       style: TextStyle(
@@ -785,7 +776,7 @@ class _TopUpState extends State<TopUp> {
                                     ),
                                   ],
                                 ),
-                                subtitle: const Text("30 \$"),
+                                subtitle: Text("30 \$"),
                               ),
                             ),
                           ),
@@ -793,12 +784,12 @@ class _TopUpState extends State<TopUp> {
                       ),
                     ),
                   ),
-                  Positioned(
-                      right: 15,
-                      child: Image.asset(
-                        "assets/images/pay.png",
-                        width: 125,
-                      ))
+                  // Positioned(
+                  //     right: 15,
+                  //     child: Image.asset(
+                  //       "assets/images/pay.png",
+                  //       width: 125,
+                  //     ))
                 ],
               ),
             ),

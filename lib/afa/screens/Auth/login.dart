@@ -108,207 +108,208 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     });
     if (check_elcome) {
       return ProgressHUD(
-        color: kPrimaryColor,
-        inAsyncCall: isApiCallProcess,
-        opacity: 0.5,
-        child: (status || welcome)
-            ? Scaffold(
-                appBar: AppBar(
-                  backgroundColor: kwhite_new,
-                  elevation: 0,
-                  centerTitle: true,
-                  title: Image.asset(
-                    'assets/images/KFA_CRM.png',
-                    height: 160,
-                    width: 160,
-                  ),
-                  toolbarHeight: 130,
-                ),
-                backgroundColor: kwhite_new,
-                body: Container(
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: kwhite,
-                    borderRadius: BorderRadius.only(
-                      // topRight: Radius.circular(30.0),
-                      topLeft: Radius.circular(100.0),
-                      // bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(100.0),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Responsive(
-                        mobile: login(context),
-                        tablet: Row(
-                          children: [
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 500,
-                                    child: login(context),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        desktop: Row(
-                          children: [
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 500,
-                                    child: login(context),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        phone: login(context),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            : Scaffold(
-                backgroundColor: Color.fromARGB(255, 142, 41, 155),
-                body: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20)),
-                        image: DecorationImage(
-                            image: AssetImage('assets/images/first.gif'),
-                            fit: BoxFit.fill),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          welcome = true;
-                        });
-                      },
-                      child: Container(
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 41, 72, 163),
-                          boxShadow: const [
-                            BoxShadow(
-                                blurRadius: 10,
-                                offset: Offset(0.0, -0.9),
-                                color: Colors.white)
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GFAnimation(
-                                turnsAnimation: animation,
-                                controller: controller,
-                                type: GFAnimationType.rotateTransition,
-                                alignment: Alignment.center,
-                                child: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.shape_line_outlined,
-                                      color: Colors.white,
-                                      shadows: [
-                                        Shadow(
-                                            blurRadius: 10,
-                                            offset: Offset(0.0, -0.9),
-                                            color: Colors.white)
-                                      ],
-                                    )
-                                  ],
-                                )),
-                            SizedBox(width: 10),
-                            GFAnimation(
-                                turnsAnimation: animation,
-                                controller: controller,
-                                type: GFAnimationType.rotateTransition,
-                                alignment: Alignment.center,
-                                child: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.shape_line_outlined,
-                                      color: Colors.white,
-                                      shadows: [
-                                        Shadow(
-                                            blurRadius: 10,
-                                            offset: Offset(0.0, -0.9),
-                                            color: Colors.white)
-                                      ],
-                                    )
-                                  ],
-                                )),
-                            SizedBox(width: 10),
-                            Text(
-                              "Continue...",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(width: 10),
-                            GFAnimation(
-                                turnsAnimation: animation,
-                                controller: controller,
-                                type: GFAnimationType.rotateTransition,
-                                alignment: Alignment.center,
-                                child: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.shape_line_outlined,
-                                      color: Colors.white,
-                                      shadows: [
-                                        Shadow(
-                                            blurRadius: 10,
-                                            offset: Offset(0.0, -0.9),
-                                            color: Colors.white)
-                                      ],
-                                    )
-                                  ],
-                                )),
-                            SizedBox(width: 10),
-                            GFAnimation(
-                                turnsAnimation: animation,
-                                controller: controller,
-                                type: GFAnimationType.rotateTransition,
-                                alignment: Alignment.center,
-                                child: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.shape_line_outlined,
-                                      color: Colors.white,
-                                      shadows: [
-                                        Shadow(
-                                            blurRadius: 10,
-                                            offset: Offset(0.0, -0.9),
-                                            color: Colors.white)
-                                      ],
-                                    )
-                                  ],
-                                )),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+          color: kPrimaryColor,
+          inAsyncCall: isApiCallProcess,
+          opacity: 0.5,
+          // child: (status || welcome)
+          //     ?
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: kwhite_new,
+              elevation: 0,
+              centerTitle: true,
+              title: Image.asset(
+                'assets/images/KFA_CRM.png',
+                height: 160,
+                width: 160,
+              ),
+              toolbarHeight: 130,
+            ),
+            backgroundColor: kwhite_new,
+            body: Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: kwhite,
+                borderRadius: BorderRadius.only(
+                  // topRight: Radius.circular(30.0),
+                  topLeft: Radius.circular(100.0),
+                  // bottomLeft: Radius.circular(30.0),
+                  bottomRight: Radius.circular(100.0),
                 ),
               ),
-      );
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Responsive(
+                    mobile: login(context),
+                    tablet: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 500,
+                                child: login(context),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    desktop: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 500,
+                                child: login(context),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    phone: login(context),
+                  ),
+                ],
+              ),
+            ),
+          )
+          // : Scaffold(
+          //     backgroundColor: Color.fromARGB(255, 142, 41, 155),
+          //     body: Column(
+          //       mainAxisAlignment: MainAxisAlignment.start,
+          //       children: [
+          //         Container(
+          //           width: MediaQuery.of(context).size.width,
+          //           height: MediaQuery.of(context).size.height * 0.8,
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.only(
+          //                 topLeft: Radius.circular(20),
+          //                 topRight: Radius.circular(20)),
+          //             image: DecorationImage(
+          //                 image: AssetImage('assets/images/first.gif'),
+          //                 fit: BoxFit.fill),
+          //           ),
+          //         ),
+          //         InkWell(
+          //           onTap: () {
+          //             setState(() {
+          //               welcome = true;
+          //             });
+          //           },
+          //           child: Container(
+          //             height: 45,
+          //             decoration: BoxDecoration(
+          //               color: Color.fromARGB(255, 41, 72, 163),
+          //               boxShadow: const [
+          //                 BoxShadow(
+          //                     blurRadius: 10,
+          //                     offset: Offset(0.0, -0.9),
+          //                     color: Colors.white)
+          //               ],
+          //             ),
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.center,
+          //               children: [
+          //                 GFAnimation(
+          //                     turnsAnimation: animation,
+          //                     controller: controller,
+          //                     type: GFAnimationType.rotateTransition,
+          //                     alignment: Alignment.center,
+          //                     child: Row(
+          //                       children: const [
+          //                         Icon(
+          //                           Icons.shape_line_outlined,
+          //                           color: Colors.white,
+          //                           shadows: [
+          //                             Shadow(
+          //                                 blurRadius: 10,
+          //                                 offset: Offset(0.0, -0.9),
+          //                                 color: Colors.white)
+          //                           ],
+          //                         )
+          //                       ],
+          //                     )),
+          //                 SizedBox(width: 10),
+          //                 GFAnimation(
+          //                     turnsAnimation: animation,
+          //                     controller: controller,
+          //                     type: GFAnimationType.rotateTransition,
+          //                     alignment: Alignment.center,
+          //                     child: Row(
+          //                       children: const [
+          //                         Icon(
+          //                           Icons.shape_line_outlined,
+          //                           color: Colors.white,
+          //                           shadows: [
+          //                             Shadow(
+          //                                 blurRadius: 10,
+          //                                 offset: Offset(0.0, -0.9),
+          //                                 color: Colors.white)
+          //                           ],
+          //                         )
+          //                       ],
+          //                     )),
+          //                 SizedBox(width: 10),
+          //                 Text(
+          //                   "Continue...",
+          //                   style: TextStyle(
+          //                       color: Colors.white,
+          //                       fontWeight: FontWeight.w600),
+          //                 ),
+          //                 SizedBox(width: 10),
+          //                 GFAnimation(
+          //                     turnsAnimation: animation,
+          //                     controller: controller,
+          //                     type: GFAnimationType.rotateTransition,
+          //                     alignment: Alignment.center,
+          //                     child: Row(
+          //                       children: const [
+          //                         Icon(
+          //                           Icons.shape_line_outlined,
+          //                           color: Colors.white,
+          //                           shadows: [
+          //                             Shadow(
+          //                                 blurRadius: 10,
+          //                                 offset: Offset(0.0, -0.9),
+          //                                 color: Colors.white)
+          //                           ],
+          //                         )
+          //                       ],
+          //                     )),
+          //                 SizedBox(width: 10),
+          //                 GFAnimation(
+          //                     turnsAnimation: animation,
+          //                     controller: controller,
+          //                     type: GFAnimationType.rotateTransition,
+          //                     alignment: Alignment.center,
+          //                     child: Row(
+          //                       children: const [
+          //                         Icon(
+          //                           Icons.shape_line_outlined,
+          //                           color: Colors.white,
+          //                           shadows: [
+          //                             Shadow(
+          //                                 blurRadius: 10,
+          //                                 offset: Offset(0.0, -0.9),
+          //                                 color: Colors.white)
+          //                           ],
+          //                         )
+          //                       ],
+          //                     )),
+          //               ],
+          //             ),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          // ),
+          );
     } else {
       return SafeArea(
           child: Container(
@@ -442,7 +443,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
             TextSpan(
               text: 'Register',
               style: TextStyle(
-                  fontSize: MediaQuery.of(context).textScaleFactor * 16),
+                  fontSize: MediaQuery.of(context).textScaleFactor * 16,
+                  color: kPrimaryColor),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   Navigator.push(context,
@@ -508,37 +510,36 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
               labelText: 'Email',
               prefixIcon: Icon(
                 Icons.email,
-                color: kImageColor,
+                color: kPrimaryColor,
               ),
-              focusedBorder: OutlineInputBorder(
-                // borderSide: const BorderSide(
-                //     color: Color.fromRGBO(0, 126, 250, 1), width: 1.0),
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(40),
-                    bottomLeft: Radius.circular(40)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                  // borderSide: BorderSide(
-                  //   width: 1,
-                  //   color: Color.fromARGB(255, 255, 255, 255),
-                  // ),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40))),
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: Color.fromARGB(255, 249, 0, 0),
-                ),
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: Color.fromARGB(255, 249, 0, 0),
-                ),
-                //  borderRadius: BorderRadius.circular(10.0),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
+              // enabledBorder: OutlineInputBorder(
+              //     // borderSide: BorderSide(
+              //     //   width: 1,
+              //     //   color: Color.fromARGB(255, 255, 255, 255),
+              //     // ),
+              //     borderRadius: BorderRadius.only(
+              //         topLeft: Radius.circular(40),
+              //         bottomRight: Radius.circular(40))),
+              // errorBorder: OutlineInputBorder(
+              //   borderSide: BorderSide(
+              //     width: 1,
+              //     color: Color.fromARGB(255, 249, 0, 0),
+              //   ),
+              //   borderRadius: BorderRadius.circular(10.0),
+              // ),
+              // focusedErrorBorder: OutlineInputBorder(
+              //   borderSide: BorderSide(
+              //     width: 1,
+              //     color: Color.fromARGB(255, 249, 0, 0),
+              //   ),
+              //   //  borderRadius: BorderRadius.circular(10.0),
+              // ),
             ),
             validator: (input) {
               if (input == null || input.isEmpty) {
@@ -565,11 +566,11 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
               labelText: 'Enter password',
               prefixIcon: Icon(
                 Icons.key,
-                color: kImageColor,
+                color: kPrimaryColor,
               ),
               suffixIcon: IconButton(
                 icon: Icon(
-                  color: kImageColor,
+                  color: kPrimaryColor,
                   _isObscure ? Icons.visibility : Icons.visibility_off,
                 ),
                 onPressed: () {
@@ -578,35 +579,36 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                   });
                 },
               ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               focusedBorder: OutlineInputBorder(
                 // borderSide: const BorderSide(color: kPrimaryColor, width: 1.0),
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(40),
-                    topLeft: Radius.circular(40)),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: kerror,
-                ),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 2,
-                  color: kerror,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: kPrimaryColor,
-                ),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(40),
-                    topRight: Radius.circular(40)),
-              ),
+              // errorBorder: OutlineInputBorder(
+              //   borderSide: BorderSide(
+              //     width: 1,
+              //     color: kerror,
+              //   ),
+              //   borderRadius: BorderRadius.circular(10.0),
+              // ),
+              // focusedErrorBorder: OutlineInputBorder(
+              //   borderSide: BorderSide(
+              //     width: 2,
+              //     color: kerror,
+              //   ),
+              //   borderRadius: BorderRadius.circular(10.0),
+              // ),
+              // enabledBorder: OutlineInputBorder(
+              //   borderSide: BorderSide(
+              //     width: 1,
+              //     color: kPrimaryColor,
+              //   ),
+              //   borderRadius: BorderRadius.only(
+              //       bottomLeft: Radius.circular(40),
+              //       topRight: Radius.circular(40)),
+              // ),
             ),
             validator: (input) {
               if (input == null || input.isEmpty) {
@@ -632,39 +634,12 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
               fillColor: Color.fromARGB(255, 255, 255, 255),
               filled: true,
               labelText: 'Email',
-              prefixIcon: Icon(
-                Icons.email,
-                color: kImageColor,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                    color: Color.fromRGBO(0, 126, 250, 1), width: 1.0),
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(40),
-                    bottomLeft: Radius.circular(40)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: Color.fromRGBO(0, 126, 250, 1),
-                ),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    bottomRight: Radius.circular(40)),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: Color.fromARGB(255, 249, 0, 0),
-                ),
+              border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: Color.fromARGB(255, 249, 0, 0),
-                ),
-                //  borderRadius: BorderRadius.circular(10.0),
+              prefixIcon: Icon(
+                Icons.email,
+                color: kPrimaryColor,
               ),
             ),
             validator: (input) {
@@ -690,13 +665,16 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
               fillColor: kwhite,
               filled: true,
               labelText: 'Enter password',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               prefixIcon: Icon(
                 Icons.key,
-                color: kImageColor,
+                color: kPrimaryColor,
               ),
               suffixIcon: IconButton(
                 icon: Icon(
-                  color: kImageColor,
+                  color: kPrimaryColor,
                   _isObscure ? Icons.visibility : Icons.visibility_off,
                 ),
                 onPressed: () {
@@ -704,35 +682,6 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                     _isObscure = !_isObscure;
                   });
                 },
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: kPrimaryColor, width: 1.0),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    bottomRight: Radius.circular(40)),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: kerror,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 2,
-                  color: kerror,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: kPrimaryColor,
-                ),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(40),
-                    topRight: Radius.circular(40)),
               ),
             ),
             validator: (input) {
