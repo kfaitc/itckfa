@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1018954426754-ff2hk53e3v4vmfcs2ip0ae8egsbuo1kg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1018954426754-ff2hk53e3v4vmfcs2ip0ae8egsbuo1kg</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBC8X4ctPS_FIETgLj3sNlxP3nvmp-dg4c</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1018954426754</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.oneclickonedollar.app</string>
+	<key>PROJECT_ID</key>
+	<string>click1dollar</string>
+	<key>STORAGE_BUCKET</key>
+	<string>click1dollar.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1018954426754:ios:a46b95b7c64502282f079b</string>
+</dict>
+</plist>
