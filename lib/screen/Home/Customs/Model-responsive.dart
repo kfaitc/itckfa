@@ -131,6 +131,13 @@ class Scard extends StatefulWidget {
 }
 
 class _ScardState extends State<Scard> {
+  var id;
+  @override
+  void initState() {
+    print(widget.id.toString() + "kokkokokokoko\n");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -159,7 +166,6 @@ class _ScardState extends State<Scard> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => TopUp(
-                            set_email: widget.email,
                             set_phone: widget.tel,
                             id_user: widget.id,
                           ),

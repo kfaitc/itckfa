@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
@@ -12,112 +14,103 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
+import 'package:itckfa/screen/components/payment/top_up.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:uuid/uuid.dart';
+import 'package:dio/dio.dart';
+import 'package:dotted_border/dotted_border.dart';
 
 class Qr_UPay extends StatefulWidget {
   const Qr_UPay(
       {super.key,
-      required this.price,
-      required this.accont,
-      required this.phone,
-      required this.option,
-      required this.id,
-      required this.control_user});
-  final String price;
-  final String accont;
-  final String phone;
-  final String option;
-  final String id;
-  final String control_user;
+      this.price,
+      this.accont,
+      this.phone,
+      this.option,
+      this.id,
+      this.control_user});
+  final String? price;
+  final String? accont;
+  final String? phone;
+  final String? option;
+  final String? id;
+  final String? control_user;
   @override
   State<Qr_UPay> createState() => Qr_UPayState();
 }
 
 class Qr_UPayState extends State<Qr_UPay> {
-  generateMd5() {
-    var content = new Utf8Encoder().convert(
-        'currency=USD&goodsDetail=test0001&mcId=1427830347298627585&mcOrderId=test00200007&money=sefs&notifyUrl=http://127.0.0.1:30005/upayApi/test/notify6c509474001d099e8ee25540cb5ad0a8');
-    var md5 = crypto.md5;
-    var digest = md5.convert(content);
-    return hex.encode(digest.bytes);
-  }
-
-  String? _Url_call_back;
-
-  Random random = Random();
-  String crc = '';
-  var order_reference_no;
+  final TextEditingController idText = TextEditingController();
+  final TextEditingController keyText = TextEditingController();
+  final TextEditingController nameText = TextEditingController();
+  final TextEditingController amountText = TextEditingController();
+  final TextEditingController orderIdText = TextEditingController();
+  final TextEditingController usdText = TextEditingController();
+  final TextEditingController versionText = TextEditingController();
+  final TextEditingController notifyText = TextEditingController();
+  final TextEditingController returnText = TextEditingController();
+  final TextEditingController signText = TextEditingController();
+  final TextEditingController langText = TextEditingController();
+  var loading = false;
+  static String baseUrl2 = 'https://dev-upayapi.u-pay.com/upayApi/mc/mcOrder';
+  var appUrl = '$baseUrl2/appCreate';
+  var qrUrl = '$baseUrl2/create/qrcode';
   var url_qr;
-  void createInvoice() async {
-    final url = Uri.parse('https://dev-upayapi.u-pay.com');
-
-    // JSON data
-    final jsonData = {
-      "order_reference_no": order_reference_no,
-      "type": "TAX",
-      "currency": "USD",
-      "issue_date": "2023-07-07T08:56:56.626Z",
-      "sub_total": widget.price,
-      "total": widget.price,
-      "billing_from": "#711, PP, Cambodia",
-      "billing_to": "#712, PP, Cambodia",
+  var orderId;
+  void createOrderQR() async {
+    setState(() {});
+    var merchantId = idText.text;
+    var merchantKey = keyText.text;
+    var goods = nameText.text;
+    var amount = amountText.text;
+    var ccy = usdText.text;
+    var v = versionText.text;
+    var notifyUrl = notifyText.text;
+    var returnUrl = returnText.text;
+    var language = langText.text;
+    orderId = SignUtil().RandomString(10);
+    orderIdText.text = orderId;
+    Map<String, String> map = {
+      'currency': ccy,
+      'goodsDetail': goods,
+      'lang': language,
+      'mcAbridge': 'test',
+      'mcId': merchantId,
+      'mcOrderId': orderId,
+      'money': amount,
+      'notifyUrl': notifyUrl,
+      'version': v,
     };
+    var sign = SignUtil.getSign(map, merchantKey);
+    map['sign'] = sign;
+    // print(jsonEncode(map));
+    signText.text = sign;
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer f104c7a9-1cf5-4fe8-a161-8d2c32c04345'
-      },
-      body: json.encode(jsonData),
-    );
-
-    if (response.statusCode == 200) {
-      print('Invoice created successfully. ${response}');
-      final responseBody = json.decode(response.body);
-      setState(() {
-        url_qr = responseBody['body']['qr_code_url'];
-        print('\n' +
-            'trace_id ' +
-            responseBody['trace_id '].toString() +
-            '\n' +
-            widget.id);
-      });
-    } else {
-      // Failed to create invoice
-      print('Failed to create invoice. Status code: ${response.statusCode}');
-    }
+    try {
+      var response = await Dio().post(qrUrl, data: map);
+      if (response.statusCode == 200) {
+        var data = response.data;
+        var d1 = jsonEncode(data['data']);
+        var d2 = json.decode(d1);
+        setState(() {
+          url_qr = d2['qrcode'].toString();
+        });
+      } else {}
+    } catch (e) {}
+    loading = false;
+    setState(() {});
   }
 
   bool success_payment = false;
-  Future<void> Load(BuildContext context) async {
+  Future<void> Load() async {
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_done?order_reference_no=${order_reference_no}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_done_upay?mcOrderId=${orderId}'));
     var jsonData = jsonDecode(rs.body);
     setState(() {
-      if (jsonData.toString() == order_reference_no.toString()) {
+      if (jsonData.toString() == orderId.toString()) {
         success_payment = true;
       }
     });
-
-    if (success_payment) {
-      var count_number = widget.option.split(' ');
-      final Data = {
-        "id_user_control": widget.control_user.toString(),
-        "count_autoverbal": int.parse(count_number[0].toString()),
-      };
-      final response = await http.post(
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode(Data),
-      );
-      Future.delayed(const Duration(seconds: 10), () async {
-        Navigator.pop(context);
-      });
-    }
   }
 
   bool isChecked = false;
@@ -128,24 +121,34 @@ class Qr_UPayState extends State<Qr_UPay> {
 
   TextEditingController roll_id = TextEditingController();
   int count = 0;
+  var thier_plan;
   @override
   void initState() {
-    // order_reference_no =
-    //     'KFA-${random.nextInt(9999999).toString()}k${random.nextInt(9999999).toString()}f${random.nextInt(9999999).toString()}';
-    // String state =
-    //     r"$2a$05$m3RX2lLwe9IoFqvwTh53e.p.UcdyLYstudb.9Hqa4uz0iqRH8h6xi" +
-    //         "${order_reference_no}|USD|${widget.price}";
-    // setState(() {
-    //   crc = generateCRC(state);
-    String md5 = generateMd5();
-    roll_id = TextEditingController(text: md5);
-    //   _Url_call_back =
-    //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back/${widget.control_user}/6560';
-    //   print("\n" + crc + "\n" + order_reference_no + "\n" + widget.price);
-    // });
-    // Future.delayed(const Duration(seconds: 2), () {
-    //   createInvoice();
-    // });
+    super.initState();
+    setState(() {
+      var count_number = widget.option!.split(' ');
+
+      if (count_number[4] == "Day") {
+        thier_plan = 1;
+      } else if (count_number[4] == "Week") {
+        thier_plan = 7;
+      } else if (count_number[4] == "Mount") {
+        thier_plan = 30;
+      }
+    });
+    if (thier_plan != null) {
+      idText.text = '1674724041055870978';
+      keyText.text = '3142e7560039d1661121992cfaafe17e';
+      nameText.text = widget.option ?? "";
+      amountText.text = widget.price ?? "";
+      usdText.text = 'USD';
+      versionText.text = 'V1';
+      notifyText.text =
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_upay/${widget.id}/8899/${widget.control_user}/${widget.price}/${thier_plan}';
+      returnText.text = 'kfa://callback';
+      langText.text = 'EN';
+      createOrderQR();
+    }
   }
 
   ScreenshotController screenshotController = ScreenshotController();
@@ -157,12 +160,7 @@ class Qr_UPayState extends State<Qr_UPay> {
 
     String actualDate = formatterDate.format(now);
     String actualDate1 = dateTime.format(now);
-    // Future.delayed(const Duration(seconds: 10), () async {
-    //   await Load(context);
-    //   setState(() {
-    //     count++;
-    //   });
-    // });
+    Load();
     return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
@@ -179,7 +177,7 @@ class Qr_UPayState extends State<Qr_UPay> {
           title: Text(
             "Scan for payments",
             style: TextStyle(
-                color: Color.fromRGBO(49, 27, 146, 1),
+                color: const Color.fromRGBO(49, 27, 146, 1),
                 fontSize: MediaQuery.textScaleFactorOf(context) * 18,
                 fontWeight: FontWeight.w900),
           ),
@@ -227,25 +225,63 @@ class Qr_UPayState extends State<Qr_UPay> {
                   fit: BoxFit.fitWidth,
                 ),
               ),
-              TextField(
-                controller: roll_id,
-                style: TextStyle(color: Colors.black),
-              ),
               if (url_qr != null)
                 Screenshot(
                   controller: screenshotController,
                   child: Container(
-                    height: 400,
-                    color: Colors.white,
-                    margin: const EdgeInsets.only(top: 15, right: 10, left: 10),
-                    child: FadeInImage.assetNetwork(
-                      placeholderCacheHeight: 50,
-                      placeholderCacheWidth: 50,
-                      fit: BoxFit.cover,
-                      placeholderFit: BoxFit.cover,
-                      filterQuality: FilterQuality.high,
-                      placeholder: 'assets/earth.gif',
-                      image: url_qr.toString(),
+                    height: 465,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    padding: const EdgeInsets.only(top: 65),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        image: const DecorationImage(
+                            image: AssetImage("assets/images/logoqr.png"),
+                            fit: BoxFit.fill)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "\t\t\t\t\t\t\t\tKFA",
+                          style: TextStyle(
+                              color: const Color.fromRGBO(121, 121, 121, 1),
+                              fontWeight: FontWeight.w700,
+                              fontSize:
+                                  MediaQuery.textScaleFactorOf(context) * 20),
+                        ),
+                        Text(
+                          "\t\t\t\t\t\t\t\t${widget.price ?? ""} \$",
+                          style: TextStyle(
+                              color: const Color.fromRGBO(63, 63, 63, 1),
+                              fontWeight: FontWeight.w700,
+                              fontSize:
+                                  MediaQuery.textScaleFactorOf(context) * 20),
+                        ),
+                        //  Text(
+                        //   '------------------------------------------------',
+                        //   style: TextStyle(
+                        //     overflow: TextOverflow.ellipsis,
+                        //   ),
+                        // ),
+
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 45),
+                          child: Center(
+                            child: BarcodeWidget(
+                                width: 226,
+                                height: 226,
+                                barcode: Barcode.qrCode(),
+                                data: url_qr,
+                                color: Colors.black,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                ),
+                                backgroundColor: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 )
@@ -262,7 +298,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                   'Scan with Bakong App Or Mobile Banking app that support KHQR',
                   style: TextStyle(
                       overflow: TextOverflow.visible,
-                      color: Color.fromRGBO(158, 158, 158, 1),
+                      color: const Color.fromRGBO(158, 158, 158, 1),
                       fontWeight: FontWeight.w500,
                       fontSize: MediaQuery.textScaleFactorOf(context) * 10),
                 ),
@@ -270,11 +306,14 @@ class Qr_UPayState extends State<Qr_UPay> {
               if (success_payment)
                 GFCheckboxListTile(
                   titleText: 'Payment Success',
-                  size: 25,
+                  size: 20,
                   activeBgColor: Colors.green,
-                  listItemTextColor: Color.fromRGBO(158, 158, 158, 1),
+                  color: Colors.white,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 25, horizontal: 16),
+                  listItemTextColor: const Color.fromARGB(255, 0, 0, 0),
                   type: GFCheckboxType.square,
-                  activeIcon: Icon(
+                  activeIcon: const Icon(
                     Icons.check,
                     size: 15,
                     color: Colors.white,
@@ -296,7 +335,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                       'Subtotal',
                       style: TextStyle(
                           overflow: TextOverflow.visible,
-                          color: Color.fromRGBO(158, 158, 158, 1),
+                          color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
                           fontSize: MediaQuery.textScaleFactorOf(context) * 11),
                     ),
@@ -305,7 +344,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                       " ${widget.price} USD",
                       style: TextStyle(
                           overflow: TextOverflow.visible,
-                          color: Color.fromRGBO(158, 158, 158, 1),
+                          color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
                           fontSize: MediaQuery.textScaleFactorOf(context) * 11),
                     ),
@@ -327,7 +366,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                       'V-Point',
                       style: TextStyle(
                           overflow: TextOverflow.visible,
-                          color: Color.fromRGBO(158, 158, 158, 1),
+                          color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
                           fontSize: MediaQuery.textScaleFactorOf(context) * 11),
                     ),
@@ -335,7 +374,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                       " ${widget.option}",
                       style: TextStyle(
                           overflow: TextOverflow.visible,
-                          color: Color.fromRGBO(158, 158, 158, 1),
+                          color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
                           fontSize: MediaQuery.textScaleFactorOf(context) * 11),
                     ),
@@ -360,7 +399,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                       'Total:',
                       style: TextStyle(
                           overflow: TextOverflow.visible,
-                          color: Color.fromRGBO(158, 158, 158, 1),
+                          color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
                           fontSize: MediaQuery.textScaleFactorOf(context) * 12),
                     ),
@@ -368,13 +407,14 @@ class Qr_UPayState extends State<Qr_UPay> {
                       " ${widget.price} USD",
                       style: TextStyle(
                           overflow: TextOverflow.visible,
-                          color: Color.fromRGBO(158, 158, 158, 1),
+                          color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
                           fontSize: MediaQuery.textScaleFactorOf(context) * 12),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(height: 50),
             ],
           ),
         ));
@@ -418,5 +458,16 @@ class SignUtil {
     sbf.write(secretKey);
     print(sbf.toString());
     return generateMD5(sbf.toString()).toUpperCase();
+  }
+
+  var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+  String RandomString(int strlen) {
+    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+    String result = "";
+    for (var i = 0; i < strlen; i++) {
+      result += chars[rnd.nextInt(chars.length)];
+    }
+    return result;
   }
 }

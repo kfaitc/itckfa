@@ -20,6 +20,7 @@ import 'package:itckfa/api/api_service.dart';
 import 'package:itckfa/models/register_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
 import 'package:itckfa/verify.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../screen/Customs/responsive.dart';
 import '../../customs/formTwin.dart';
@@ -56,61 +57,28 @@ class _RegisterState extends State<Register> {
     'Male',
     'Other',
   ];
-  XFile? _file;
+
   Uint8List? imagebytes;
   final ImagePicker imgpicker = ImagePicker();
   String imagepath = "";
-  dynamic openImage(ImageSource source) async {
-    try {
-      XFile? pickedFile = await ImagePicker().pickImage(source: source);
-      //you can use ImageCourse.camera for Camera capture
-      if (pickedFile != null) {
-        imagepath = pickedFile.path;
-        CroppedFile? cropFile = await ImageCropper()
-            .cropImage(sourcePath: pickedFile.path, aspectRatioPresets: [
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio16x9,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio5x3,
-          CropAspectRatioPreset.ratio5x4,
-          CropAspectRatioPreset.ratio7x5,
-          CropAspectRatioPreset.square,
-        ], uiSettings: [
-          AndroidUiSettings(
-              lockAspectRatio: false,
-              backgroundColor: Colors.black,
-              initAspectRatio: CropAspectRatioPreset.original)
-        ]);
-        _file = XFile(cropFile!.path);
-        imagepath = pickedFile.path;
-        // _file = imagefile;
-        // XFile? imagefile;
-
-        //output /data/user/0/com.oneclickonedollar.testapp/cache/image_picker7973898508152261600.jpg
-        File? imagefile = File(imagepath); //convert Path to File
-        // saveAutoVerbal(imagefile);
-        get_bytes = await imagefile.readAsBytes(); //convert to bytes
-        String base64string =
-            base64.encode(get_bytes!); //convert bytes to base64 string
-        // ignore: unused_local_variable
-        Uint8List decodedbytes = base64.decode(base64string);
-        //decode base64 stirng to bytes
-        setState(() async {
-          _file = imagefile as XFile;
-        });
-      } else {
-        print("No image is selected.");
-      }
-    } catch (e) {
-      print("error while picking file.");
+  File? imagefile;
+  Future<void> openImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? media = await picker.pickMedia();
+    //you can use ImageCourse.camera for Camera capture
+    if (media != null) {
+      imagepath = media.path;
+      imagefile = File(imagepath); //convert Path to File
+      get_bytes = await imagefile!.readAsBytes(); //convert to bytes
+    } else {
+      print("No image is selected.");
     }
   }
 
-  Future cut_again(XFile pickedFile) async {
-    imagepath = pickedFile.path;
+  Future cut_again() async {
+    imagepath = imagefile!.path;
     CroppedFile? cropFile = await ImageCropper()
-        .cropImage(sourcePath: pickedFile.path, aspectRatioPresets: [
+        .cropImage(sourcePath: imagefile!.path, aspectRatioPresets: [
       CropAspectRatioPreset.original,
       CropAspectRatioPreset.ratio16x9,
       CropAspectRatioPreset.ratio3x2,
@@ -126,22 +94,11 @@ class _RegisterState extends State<Register> {
           initAspectRatio: CropAspectRatioPreset.original)
     ]);
 
-    _file = XFile(cropFile!.path);
-    imagepath = pickedFile.path;
-    // _file = imagefile;
-    // XFile? imagefile;
-
-    //output /data/user/0/com.oneclickonedollar.testapp/cache/image_picker7973898508152261600.jpg
-    File? imagefile = File(imagepath); //convert Path to File
-    // saveAutoVerbal(imagefile);
-    get_bytes = await imagefile.readAsBytes(); //convert to bytes
-    String base64string =
-        base64.encode(get_bytes!); //convert bytes to base64 string
-    // ignore: unused_local_variable
-    Uint8List decodedbytes = base64.decode(base64string);
-    //decode base64 stirng to bytes
+    get_bytes = await imagefile!.readAsBytes(); //convert to bytes
     setState(() {
-      _file = imagefile as XFile;
+      get_bytes;
+      imagepath = imagefile!.path;
+      imagefile = File(imagepath); //convert Path to File
     });
   }
 
@@ -169,24 +126,32 @@ class _RegisterState extends State<Register> {
     }
   }
 
+  Future _getStoragePermission() async {
+    if (await Permission.storage.request().isGranted) {
+      // setState(() {
+      //   permissionGranted = true;
+      // });
+    } else if (await Permission.storage.request().isPermanentlyDenied) {
+      await openAppSettings();
+    } else if (await Permission.storage.request().isDenied) {
+      // setState(() {
+      //   permissionGranted = false;
+      // });
+    }
+  }
+
   Future<void> uploadImage() async {
-    var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_profile_user'));
-    request.fields['id_user'] = set_id_user ?? '';
     if (get_bytes != null) {
+      var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_profile_user'));
+      request.fields['id_user'] = set_id_user ?? '';
       request.files.add(await http.MultipartFile.fromBytes('image', get_bytes!,
           filename:
               'User ID :${set_id_user} photo ${random.nextInt(999)}.jpg'));
-    } else {
-      request.files.add(await http.MultipartFile.fromBytes('image', _byesData!,
-          filename:
-              'User ID :${set_id_user} Photo ${random.nextInt(999)}.jpg'));
+      var res = await request.send();
     }
-
-    // ignore: unused_local_variable
-    var res = await request.send();
   }
 
   bool _isObscure = true;
@@ -334,20 +299,23 @@ class _RegisterState extends State<Register> {
               ),
               InkWell(
                 onTap: () async {
-                  if (_file == null) {
+                  if (get_bytes == null) {
+                    await _getStoragePermission();
                     await openImage(ImageSource.gallery);
                   } else {
-                    await cut_again(_file!);
+                    await cut_again();
                     setState(() {
-                      _file;
+                      imagefile;
+                      get_bytes;
                     });
                   }
                   setState(() {
-                    _file;
+                    get_bytes;
+                    imagefile;
                   });
                 },
                 child: Center(
-                    child: (_file == null)
+                    child: (get_bytes == null)
                         ? Stack(
                             alignment: AlignmentDirectional.bottomCenter,
                             // ignore: prefer_const_literals_to_create_immutables
@@ -376,8 +344,7 @@ class _RegisterState extends State<Register> {
                             children: [
                               GFAvatar(
                                   size: 100,
-                                  backgroundImage:
-                                      FileImage(File(_file!.path))),
+                                  backgroundImage: MemoryImage(get_bytes!)),
                               Container(
                                 height: 20,
                                 width: 30,
@@ -767,108 +734,151 @@ class _RegisterState extends State<Register> {
                         await uploadImage();
                       }
                       APIservice apIservice = APIservice();
-                      await FirebaseAuth.instance.verifyPhoneNumber(
-                        phoneNumber: '+855${requestModel.tel_num}',
-                        timeout: const Duration(seconds: 90),
-                        verificationCompleted:
-                            (PhoneAuthCredential credential) async {
-                          await auth.signInWithCredential(credential);
-                          print("\ngood to\n");
-                          // ignore: use_build_context_synchronously
+                      apIservice.register(requestModel).then((value) {
+                        setState(() {
+                          isApiCallProcess = false;
+                        });
+                        if (value.message == "User successfully registered") {
+                          var people = PeopleModel(
+                            id: 0,
+                            name: requestModel.email,
+                            password: requestModel.password,
+                          );
+                          PeopleController().insertPeople(people);
                           AwesomeDialog(
                             context: context,
-                            dialogType: DialogType.info,
+                            animType: AnimType.leftSlide,
+                            headerAnimationLoop: false,
+                            dialogType: DialogType.success,
+                            showCloseIcon: false,
+                            title: value.message,
+                            autoHide: Duration(seconds: 3),
+                            onDismissCallback: (type) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Login(),
+                                ),
+                              );
+                            },
+                          ).show();
+                        } else {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.error,
                             animType: AnimType.rightSlide,
                             headerAnimationLoop: false,
-                            title: 'Error code sms',
-                            desc: "good",
+                            title: 'Error',
+                            desc: value.message,
                             btnOkOnPress: () {},
                             btnOkIcon: Icons.cancel,
-                            btnOkColor: Colors.greenAccent,
+                            btnOkColor: Colors.red,
                           ).show();
-                        },
-                        verificationFailed: (FirebaseAuthException e) {
-                          if (e.code == 'invalid-phone-number') {
-                            AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.error,
-                              animType: AnimType.rightSlide,
-                              headerAnimationLoop: false,
-                              title: 'Error code sms',
-                              desc: e.code,
-                              btnOkOnPress: () {},
-                              btnOkIcon: Icons.cancel,
-                              btnOkColor: Colors.red,
-                            ).show();
-                          }
-                        },
-                        codeSent:
-                            (String verificationId, int? resendToken) async {
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MyVerify(
-                                        code: (value) {
-                                          setState(() {
-                                            smsCode = value;
-                                          });
-                                        },
-                                      )));
-                          // Create a PhoneAuthCredential with the code
-                          credential = PhoneAuthProvider.credential(
-                              verificationId: verificationId,
-                              smsCode: smsCode!);
-                          final user =
-                              await auth.signInWithCredential(credential!);
+                          print(value.message);
+                        }
+                      });
+                      // await FirebaseAuth.instance.verifyPhoneNumber(
+                      //   phoneNumber: '+855${requestModel.tel_num}',
+                      //   timeout: const Duration(seconds: 90),
+                      //   verificationCompleted:
+                      //       (PhoneAuthCredential credential) async {
+                      //     await auth.signInWithCredential(credential);
+                      //     print("\ngood to\n");
+                      //     // ignore: use_build_context_synchronously
+                      //     AwesomeDialog(
+                      //       context: context,
+                      //       dialogType: DialogType.info,
+                      //       animType: AnimType.rightSlide,
+                      //       headerAnimationLoop: false,
+                      //       title: 'Error code sms',
+                      //       desc: "good",
+                      //       btnOkOnPress: () {},
+                      //       btnOkIcon: Icons.cancel,
+                      //       btnOkColor: Colors.greenAccent,
+                      //     ).show();
+                      //   },
+                      //   verificationFailed: (FirebaseAuthException e) {
+                      //     if (e.code == 'invalid-phone-number') {
+                      //       AwesomeDialog(
+                      //         context: context,
+                      //         dialogType: DialogType.error,
+                      //         animType: AnimType.rightSlide,
+                      //         headerAnimationLoop: false,
+                      //         title: 'Error code sms',
+                      //         desc: e.code,
+                      //         btnOkOnPress: () {},
+                      //         btnOkIcon: Icons.cancel,
+                      //         btnOkColor: Colors.red,
+                      //       ).show();
+                      //     }
+                      //   },
+                      //   codeSent:
+                      //       (String verificationId, int? resendToken) async {
+                      //     await Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => MyVerify(
+                      //                   code: (value) {
+                      //                     setState(() {
+                      //                       smsCode = value;
+                      //                     });
+                      //                   },
+                      //                 )));
+                      //     // Create a PhoneAuthCredential with the code
+                      //     credential = PhoneAuthProvider.credential(
+                      //         verificationId: verificationId,
+                      //         smsCode: smsCode!);
+                      //     final user =
+                      //         await auth.signInWithCredential(credential!);
 
-                          apIservice.register(requestModel).then((value) {
-                            setState(() {
-                              isApiCallProcess = false;
-                            });
-                            if (value.message ==
-                                "User successfully registered") {
-                              var people = PeopleModel(
-                                id: 0,
-                                name: requestModel.email,
-                                password: requestModel.password,
-                              );
-                              PeopleController().insertPeople(people);
-                              AwesomeDialog(
-                                context: context,
-                                animType: AnimType.leftSlide,
-                                headerAnimationLoop: false,
-                                dialogType: DialogType.success,
-                                showCloseIcon: false,
-                                title: value.message,
-                                autoHide: Duration(seconds: 3),
-                                onDismissCallback: (type) {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Login(),
-                                    ),
-                                  );
-                                },
-                              ).show();
-                            } else {
-                              AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.error,
-                                animType: AnimType.rightSlide,
-                                headerAnimationLoop: false,
-                                title: 'Error',
-                                desc: value.message,
-                                btnOkOnPress: () {},
-                                btnOkIcon: Icons.cancel,
-                                btnOkColor: Colors.red,
-                              ).show();
-                              print(value.message);
-                            }
-                            Navigator.pop(context);
-                          });
-                        },
-                        codeAutoRetrievalTimeout: (String verificationId) {},
-                      );
+                      //     apIservice.register(requestModel).then((value) {
+                      //       setState(() {
+                      //         isApiCallProcess = false;
+                      //       });
+                      //       if (value.message ==
+                      //           "User successfully registered") {
+                      //         var people = PeopleModel(
+                      //           id: 0,
+                      //           name: requestModel.email,
+                      //           password: requestModel.password,
+                      //         );
+                      //         PeopleController().insertPeople(people);
+                      //         AwesomeDialog(
+                      //           context: context,
+                      //           animType: AnimType.leftSlide,
+                      //           headerAnimationLoop: false,
+                      //           dialogType: DialogType.success,
+                      //           showCloseIcon: false,
+                      //           title: value.message,
+                      //           autoHide: Duration(seconds: 3),
+                      //           onDismissCallback: (type) {
+                      //             Navigator.pushReplacement(
+                      //               context,
+                      //               MaterialPageRoute(
+                      //                 builder: (context) => Login(),
+                      //               ),
+                      //             );
+                      //           },
+                      //         ).show();
+                      //       } else {
+                      //         AwesomeDialog(
+                      //           context: context,
+                      //           dialogType: DialogType.error,
+                      //           animType: AnimType.rightSlide,
+                      //           headerAnimationLoop: false,
+                      //           title: 'Error',
+                      //           desc: value.message,
+                      //           btnOkOnPress: () {},
+                      //           btnOkIcon: Icons.cancel,
+                      //           btnOkColor: Colors.red,
+                      //         ).show();
+                      //         print(value.message);
+                      //       }
+                      //       Navigator.pop(context);
+                      //     });
+                      //   },
+                      //   codeAutoRetrievalTimeout: (String verificationId) {},
+                      // );
                     }
                   },
                 ),

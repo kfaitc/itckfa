@@ -21,7 +21,9 @@ import 'package:itckfa/afa/components/slideUp.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Detail.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
 import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
+import 'package:itckfa/screen/components/payment/top_up.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../../contants.dart';
 import '../../../api/api_service.dart';
 import '../../../models/autoVerbal.dart';
@@ -35,9 +37,36 @@ import '../../../screen/components/map_all/map_in_list_search.dart';
 import '../../../screen/components/property.dart';
 import '../../components/LandBuilding.dart';
 
-class Menu_Add_verbal extends StatelessWidget {
+class Menu_Add_verbal extends StatefulWidget {
   const Menu_Add_verbal({super.key, required this.id});
   final String id;
+
+  @override
+  State<Menu_Add_verbal> createState() => _Menu_Add_verbalState();
+}
+
+class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
+  Future _getStoragePermission() async {
+    if (await Permission.storage.request().isGranted) {
+      // setState(() {
+      //   permissionGranted = true;
+      // });
+    } else if (await Permission.storage.request().isPermanentlyDenied) {
+      await openAppSettings();
+    } else if (await Permission.storage.request().isDenied) {
+      // setState(() {
+      //   permissionGranted = false;
+      // });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getStoragePermission();
+  }
+
   @override
   Widget build(BuildContext context) {
     const colorizeColors = [
@@ -49,6 +78,7 @@ class Menu_Add_verbal extends StatelessWidget {
     const colorizeTextStyle = TextStyle(
       fontSize: 25.0,
       fontFamily: 'Horizon',
+      color: Colors.white,
       shadows: [Shadow(blurRadius: 2, color: Colors.deepPurpleAccent)],
     );
     return Scaffold(
@@ -82,88 +112,57 @@ class Menu_Add_verbal extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => Add(
-                            id: id,
+                            id: widget.id,
                           ),
                         ),
                       );
                     },
                     child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(left: 50, bottom: 50),
-                      decoration: BoxDecoration(
-                        color: Colors.indigo[900],
-                        borderRadius:
-                            BorderRadius.only(topLeft: Radius.circular(90)),
-                        boxShadow: [
-                          BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
-                        ],
-                      ),
-                      child: AnimatedTextKit(
-                        animatedTexts: [
-                          ColorizeAnimatedText('Add Auto Verbal',
-                              textStyle: colorizeTextStyle,
-                              colors: colorizeColors,
-                              speed: const Duration(milliseconds: 70)),
-                        ],
-                        isRepeatingAnimation: true,
-                        repeatForever: true,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => Add(id: id)),
-                          );
-                        },
-                      ),
-                    ),
+                        height: 50,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(left: 50, bottom: 50),
+                        decoration: BoxDecoration(
+                          color: Colors.indigo[900],
+                          borderRadius:
+                              BorderRadius.only(topLeft: Radius.circular(90)),
+                          boxShadow: [
+                            BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
+                          ],
+                        ),
+                        child: Text(
+                          "Add Auto Verbal",
+                          style: colorizeTextStyle,
+                        )),
                   ),
                   InkWell(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => Add_with_property(
-                            id: id,
+                            id: widget.id,
                           ),
                         ),
                       );
                     },
                     child: Container(
-                      height: 50,
-                      margin: EdgeInsets.only(left: 50),
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.indigo[900],
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            topLeft: Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
-                        ],
-                      ),
-                      child: AnimatedTextKit(
-                        animatedTexts: [
-                          ColorizeAnimatedText(
-                            'Cross check price ',
-                            textStyle: colorizeTextStyle,
-                            colors: colorizeColors,
-                            speed: const Duration(milliseconds: 70),
-                          ),
-                        ],
-                        isRepeatingAnimation: true,
-                        repeatForever: true,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => Add_with_property(
-                                id: id,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                        height: 50,
+                        margin: EdgeInsets.only(left: 50),
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.indigo[900],
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              topLeft: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
+                          ],
+                        ),
+                        child: Text(
+                          "Cross check price",
+                          style: colorizeTextStyle,
+                        )),
                   ),
                   SizedBox(
                     height: 50,
@@ -173,47 +172,29 @@ class Menu_Add_verbal extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => List_Auto(
-                            verbal_id: id,
+                            verbal_id: widget.id,
                           ),
                         ),
                       );
                     },
                     child: Container(
-                      height: 50,
-                      margin: EdgeInsets.only(left: 50),
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.indigo[900],
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            topLeft: Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
-                        ],
-                      ),
-                      child: AnimatedTextKit(
-                        animatedTexts: [
-                          ColorizeAnimatedText(
-                            'List Auto Verbal',
-                            textStyle: colorizeTextStyle,
-                            colors: colorizeColors,
-                            speed: const Duration(milliseconds: 70),
-                          ),
-                        ],
-                        isRepeatingAnimation: true,
-                        repeatForever: true,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => List_Auto(
-                                verbal_id: id,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                        height: 50,
+                        margin: EdgeInsets.only(left: 50),
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.indigo[900],
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              topLeft: Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
+                          ],
+                        ),
+                        child: Text(
+                          "List Auto Verbal",
+                          style: colorizeTextStyle,
+                        )),
                   ),
                   SizedBox(
                     height: 50,
@@ -361,9 +342,55 @@ class _AddState extends State<Add> with SingleTickerProviderStateMixin {
   late Animation<Offset> offsetAnimation;
   var id_verbal;
   var formatter = NumberFormat("##,###,###,###", "en_US");
+  int number = 0;
+  var control_user;
+  Future get_control_user(String id) async {
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
+    if (rs.statusCode == 200) {
+      var jsonData = jsonDecode(rs.body);
+
+      setState(() {
+        print(jsonData[0]['control_user'].toString() + "\n");
+        control_user = jsonData[0]['control_user'].toString();
+        get_count();
+      });
+    }
+  }
+
+  void get_count() async {
+    setState(() {});
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}'));
+    if (rs.statusCode == 200) {
+      var jsonData = jsonDecode(rs.body);
+      setState(() {
+        number = jsonData;
+      });
+    }
+  }
+
+  Future<void> payment_done() async {
+    final Data = {
+      "id_user_control": control_user.toString(),
+      "count_autoverbal": "-1",
+    };
+    final response = await http.post(
+      Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(Data),
+    );
+    setState(() {});
+  }
+
   @override
   void initState() {
     _getCurrentPosition();
+    get_control_user(widget.id.toString());
+
     addVerbal(context);
     lat1;
     log2;
@@ -424,73 +451,86 @@ class _AddState extends State<Add> with SingleTickerProviderStateMixin {
         actions: <Widget>[
           InkWell(
             onTap: () {
-              if (_file != null) {
-                uploadt_image(_file!);
-              }
-              uploadt_image_map();
-              List<Map<String, dynamic>> jsonList =
-                  lb.map((item) => item.toJson()).toList();
-              requestModelAuto.user = widget.id;
-              requestModelAuto.verbal_id = code.toString();
-              requestModelAuto.verbal_khan = '${commune}.${district}';
-              requestModelAuto.verbal = jsonList;
-              APIservice apIservice = APIservice();
-              apIservice.saveAutoVerbal(requestModelAuto).then(
-                (value) async {
-                  if (requestModelAuto.verbal.isEmpty) {
-                    AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.error,
-                      animType: AnimType.rightSlide,
-                      headerAnimationLoop: false,
-                      title: 'Error',
-                      desc: "Please add Land/Building at least 1!",
-                      btnOkOnPress: () {},
-                      btnOkIcon: Icons.cancel,
-                      btnOkColor: Colors.red,
-                    ).show();
-                  } else {
-                    if (value.message == "Save Successfully") {
-                      AwesomeDialog(
-                          context: context,
-                          animType: AnimType.leftSlide,
-                          headerAnimationLoop: false,
-                          dialogType: DialogType.success,
-                          showCloseIcon: false,
-                          title: value.message,
-                          autoHide: Duration(seconds: 10),
-                          body: Center(
-                            child: Text("Do you want to save photo"),
-                          ),
-                          btnOkOnPress: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    save_image_after_add_verbal(
-                                      set_data_verbal: code.toString(),
-                                    )));
-                          },
-                          btnCancelOnPress: () {
-                            Navigator.pop(context);
-                          },
-                          onDismissCallback: (type) {
-                            Navigator.pop(context);
-                          }).show();
-                    } else {
+              if (number >= 1) {
+                if (_file != null) {
+                  uploadt_image(_file!);
+                }
+                uploadt_image_map();
+                List<Map<String, dynamic>> jsonList =
+                    lb.map((item) => item.toJson()).toList();
+                requestModelAuto.user = widget.id;
+                requestModelAuto.verbal_id = code.toString();
+                requestModelAuto.verbal_khan = '${commune}.${district}';
+                requestModelAuto.verbal = jsonList;
+                APIservice apIservice = APIservice();
+                apIservice.saveAutoVerbal(requestModelAuto).then(
+                  (value) async {
+                    if (requestModelAuto.verbal.isEmpty) {
                       AwesomeDialog(
                         context: context,
                         dialogType: DialogType.error,
                         animType: AnimType.rightSlide,
                         headerAnimationLoop: false,
                         title: 'Error',
-                        desc: value.message,
+                        desc: "Please add Land/Building at least 1!",
                         btnOkOnPress: () {},
                         btnOkIcon: Icons.cancel,
                         btnOkColor: Colors.red,
                       ).show();
+                    } else {
+                      if (value.message == "Save Successfully") {
+                        payment_done();
+                        AwesomeDialog(
+                            context: context,
+                            animType: AnimType.leftSlide,
+                            headerAnimationLoop: false,
+                            dialogType: DialogType.success,
+                            showCloseIcon: false,
+                            title: value.message,
+                            autoHide: Duration(seconds: 10),
+                            body: Center(
+                              child: Text("Do you want to save photo"),
+                            ),
+                            btnOkOnPress: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      save_image_after_add_verbal(
+                                        set_data_verbal: code.toString(),
+                                      )));
+                            },
+                            btnCancelOnPress: () {
+                              Navigator.pop(context);
+                            },
+                            onDismissCallback: (type) {
+                              Navigator.pop(context);
+                            }).show();
+                      } else {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.error,
+                          animType: AnimType.rightSlide,
+                          headerAnimationLoop: false,
+                          title: 'Error',
+                          desc: value.message,
+                          btnOkOnPress: () {},
+                          btnOkIcon: Icons.cancel,
+                          btnOkColor: Colors.red,
+                        ).show();
+                      }
                     }
-                  }
-                },
-              );
+                  },
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TopUp(
+                      set_phone: "",
+                      id_user: widget.id,
+                    ),
+                  ),
+                );
+              }
             },
             child: Container(
               margin: EdgeInsets.only(left: 5, top: 15, bottom: 15, right: 4),

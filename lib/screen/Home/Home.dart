@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, import_of_legacy_library_into_null_safe, use_build_context_synchronously, non_constant_identifier_names, unused_import, deprecated_member_use
 
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:itckfa/afa/components/contants.dart';
@@ -18,6 +17,7 @@ import 'package:itckfa/screen/Home/Body.dart';
 import 'package:itckfa/screen/Home/Customs/Drawer_menu.dart';
 import 'package:itckfa/screen/Home/Customs/MyDrawerList.dart';
 import 'package:itckfa/screen/Promotion/PartnerList.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -73,7 +73,6 @@ class _HomePageState extends State<HomePage1> {
 
   @override
   void initState() {
-    print(widget.id);
     super.initState();
   }
 
@@ -82,19 +81,11 @@ class _HomePageState extends State<HomePage1> {
   @override
   Widget build(BuildContext context) {
     final tabs = [
-      Center(
-          child: Body(
+      Body(
         lat: widget.lat,
         log: widget.log,
-        user: widget.user ?? '',
-        email: widget.email ?? '',
-        first_name: widget.first_name ?? '',
-        last_name: widget.last_name ?? '',
-        gender: widget.gender ?? '',
-        from: widget.from ?? '',
-        tel: widget.tel ?? '',
         id: widget.id ?? '',
-      )),
+      ),
       Center(child: Faps()),
       Center(child: Contacts()),
       Center(child: Abouts()),

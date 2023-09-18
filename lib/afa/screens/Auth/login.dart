@@ -96,227 +96,227 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   bool check_elcome = false;
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 20), () async {
-      setState(() {
-        welcome = true;
-      });
-    });
-    Future.delayed(const Duration(seconds: 1), () async {
-      setState(() {
-        check_elcome = true;
-      });
-    });
-    if (check_elcome) {
-      return ProgressHUD(
-          color: kPrimaryColor,
-          inAsyncCall: isApiCallProcess,
-          opacity: 0.5,
-          // child: (status || welcome)
-          //     ?
-          child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: kwhite_new,
-              elevation: 0,
-              centerTitle: true,
-              title: Image.asset(
-                'assets/images/KFA_CRM.png',
-                height: 160,
-                width: 160,
-              ),
-              toolbarHeight: 130,
-            ),
+    // Future.delayed(const Duration(seconds: 20), () async {
+    //   setState(() {
+    //     welcome = true;
+    //   });
+    // });
+    // Future.delayed(const Duration(seconds: 1), () async {
+    //   setState(() {
+    //     check_elcome = true;
+    //   });
+    // });
+    // if (check_elcome) {
+    return ProgressHUD(
+        color: kPrimaryColor,
+        inAsyncCall: isApiCallProcess,
+        opacity: 0.5,
+        // child: (status || welcome)
+        //     ?
+        child: Scaffold(
+          appBar: AppBar(
             backgroundColor: kwhite_new,
-            body: Container(
-              height: MediaQuery.of(context).size.height * 0.6,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: kwhite,
-                borderRadius: BorderRadius.only(
-                  // topRight: Radius.circular(30.0),
-                  topLeft: Radius.circular(100.0),
-                  // bottomLeft: Radius.circular(30.0),
-                  bottomRight: Radius.circular(100.0),
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Responsive(
-                    mobile: login(context),
-                    tablet: Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 500,
-                                child: login(context),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    desktop: Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 500,
-                                child: login(context),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    phone: login(context),
-                  ),
-                ],
+            elevation: 0,
+            centerTitle: true,
+            title: Image.asset(
+              'assets/images/KFA_CRM.png',
+              height: 160,
+              width: 160,
+            ),
+            toolbarHeight: 130,
+          ),
+          backgroundColor: kwhite_new,
+          body: Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: kwhite,
+              borderRadius: BorderRadius.only(
+                // topRight: Radius.circular(30.0),
+                topLeft: Radius.circular(100.0),
+                // bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(100.0),
               ),
             ),
-          )
-          // : Scaffold(
-          //     backgroundColor: Color.fromARGB(255, 142, 41, 155),
-          //     body: Column(
-          //       mainAxisAlignment: MainAxisAlignment.start,
-          //       children: [
-          //         Container(
-          //           width: MediaQuery.of(context).size.width,
-          //           height: MediaQuery.of(context).size.height * 0.8,
-          //           decoration: BoxDecoration(
-          //             borderRadius: BorderRadius.only(
-          //                 topLeft: Radius.circular(20),
-          //                 topRight: Radius.circular(20)),
-          //             image: DecorationImage(
-          //                 image: AssetImage('assets/images/first.gif'),
-          //                 fit: BoxFit.fill),
-          //           ),
-          //         ),
-          //         InkWell(
-          //           onTap: () {
-          //             setState(() {
-          //               welcome = true;
-          //             });
-          //           },
-          //           child: Container(
-          //             height: 45,
-          //             decoration: BoxDecoration(
-          //               color: Color.fromARGB(255, 41, 72, 163),
-          //               boxShadow: const [
-          //                 BoxShadow(
-          //                     blurRadius: 10,
-          //                     offset: Offset(0.0, -0.9),
-          //                     color: Colors.white)
-          //               ],
-          //             ),
-          //             child: Row(
-          //               mainAxisAlignment: MainAxisAlignment.center,
-          //               children: [
-          //                 GFAnimation(
-          //                     turnsAnimation: animation,
-          //                     controller: controller,
-          //                     type: GFAnimationType.rotateTransition,
-          //                     alignment: Alignment.center,
-          //                     child: Row(
-          //                       children: const [
-          //                         Icon(
-          //                           Icons.shape_line_outlined,
-          //                           color: Colors.white,
-          //                           shadows: [
-          //                             Shadow(
-          //                                 blurRadius: 10,
-          //                                 offset: Offset(0.0, -0.9),
-          //                                 color: Colors.white)
-          //                           ],
-          //                         )
-          //                       ],
-          //                     )),
-          //                 SizedBox(width: 10),
-          //                 GFAnimation(
-          //                     turnsAnimation: animation,
-          //                     controller: controller,
-          //                     type: GFAnimationType.rotateTransition,
-          //                     alignment: Alignment.center,
-          //                     child: Row(
-          //                       children: const [
-          //                         Icon(
-          //                           Icons.shape_line_outlined,
-          //                           color: Colors.white,
-          //                           shadows: [
-          //                             Shadow(
-          //                                 blurRadius: 10,
-          //                                 offset: Offset(0.0, -0.9),
-          //                                 color: Colors.white)
-          //                           ],
-          //                         )
-          //                       ],
-          //                     )),
-          //                 SizedBox(width: 10),
-          //                 Text(
-          //                   "Continue...",
-          //                   style: TextStyle(
-          //                       color: Colors.white,
-          //                       fontWeight: FontWeight.w600),
-          //                 ),
-          //                 SizedBox(width: 10),
-          //                 GFAnimation(
-          //                     turnsAnimation: animation,
-          //                     controller: controller,
-          //                     type: GFAnimationType.rotateTransition,
-          //                     alignment: Alignment.center,
-          //                     child: Row(
-          //                       children: const [
-          //                         Icon(
-          //                           Icons.shape_line_outlined,
-          //                           color: Colors.white,
-          //                           shadows: [
-          //                             Shadow(
-          //                                 blurRadius: 10,
-          //                                 offset: Offset(0.0, -0.9),
-          //                                 color: Colors.white)
-          //                           ],
-          //                         )
-          //                       ],
-          //                     )),
-          //                 SizedBox(width: 10),
-          //                 GFAnimation(
-          //                     turnsAnimation: animation,
-          //                     controller: controller,
-          //                     type: GFAnimationType.rotateTransition,
-          //                     alignment: Alignment.center,
-          //                     child: Row(
-          //                       children: const [
-          //                         Icon(
-          //                           Icons.shape_line_outlined,
-          //                           color: Colors.white,
-          //                           shadows: [
-          //                             Shadow(
-          //                                 blurRadius: 10,
-          //                                 offset: Offset(0.0, -0.9),
-          //                                 color: Colors.white)
-          //                           ],
-          //                         )
-          //                       ],
-          //                     )),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          // ),
-          );
-    } else {
-      return SafeArea(
-          child: Container(
-        height: MediaQuery.of(context).size.height,
-        color: Colors.white,
-      ));
-    }
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Responsive(
+                  mobile: login(context),
+                  tablet: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 500,
+                              child: login(context),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  desktop: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 500,
+                              child: login(context),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  phone: login(context),
+                ),
+              ],
+            ),
+          ),
+        )
+        // : Scaffold(
+        //     backgroundColor: Color.fromARGB(255, 142, 41, 155),
+        //     body: Column(
+        //       mainAxisAlignment: MainAxisAlignment.start,
+        //       children: [
+        //         Container(
+        //           width: MediaQuery.of(context).size.width,
+        //           height: MediaQuery.of(context).size.height * 0.8,
+        //           decoration: BoxDecoration(
+        //             borderRadius: BorderRadius.only(
+        //                 topLeft: Radius.circular(20),
+        //                 topRight: Radius.circular(20)),
+        //             image: DecorationImage(
+        //                 image: AssetImage('assets/images/first.gif'),
+        //                 fit: BoxFit.fill),
+        //           ),
+        //         ),
+        //         InkWell(
+        //           onTap: () {
+        //             setState(() {
+        //               welcome = true;
+        //             });
+        //           },
+        //           child: Container(
+        //             height: 45,
+        //             decoration: BoxDecoration(
+        //               color: Color.fromARGB(255, 41, 72, 163),
+        //               boxShadow: const [
+        //                 BoxShadow(
+        //                     blurRadius: 10,
+        //                     offset: Offset(0.0, -0.9),
+        //                     color: Colors.white)
+        //               ],
+        //             ),
+        //             child: Row(
+        //               mainAxisAlignment: MainAxisAlignment.center,
+        //               children: [
+        //                 GFAnimation(
+        //                     turnsAnimation: animation,
+        //                     controller: controller,
+        //                     type: GFAnimationType.rotateTransition,
+        //                     alignment: Alignment.center,
+        //                     child: Row(
+        //                       children: const [
+        //                         Icon(
+        //                           Icons.shape_line_outlined,
+        //                           color: Colors.white,
+        //                           shadows: [
+        //                             Shadow(
+        //                                 blurRadius: 10,
+        //                                 offset: Offset(0.0, -0.9),
+        //                                 color: Colors.white)
+        //                           ],
+        //                         )
+        //                       ],
+        //                     )),
+        //                 SizedBox(width: 10),
+        //                 GFAnimation(
+        //                     turnsAnimation: animation,
+        //                     controller: controller,
+        //                     type: GFAnimationType.rotateTransition,
+        //                     alignment: Alignment.center,
+        //                     child: Row(
+        //                       children: const [
+        //                         Icon(
+        //                           Icons.shape_line_outlined,
+        //                           color: Colors.white,
+        //                           shadows: [
+        //                             Shadow(
+        //                                 blurRadius: 10,
+        //                                 offset: Offset(0.0, -0.9),
+        //                                 color: Colors.white)
+        //                           ],
+        //                         )
+        //                       ],
+        //                     )),
+        //                 SizedBox(width: 10),
+        //                 Text(
+        //                   "Continue...",
+        //                   style: TextStyle(
+        //                       color: Colors.white,
+        //                       fontWeight: FontWeight.w600),
+        //                 ),
+        //                 SizedBox(width: 10),
+        //                 GFAnimation(
+        //                     turnsAnimation: animation,
+        //                     controller: controller,
+        //                     type: GFAnimationType.rotateTransition,
+        //                     alignment: Alignment.center,
+        //                     child: Row(
+        //                       children: const [
+        //                         Icon(
+        //                           Icons.shape_line_outlined,
+        //                           color: Colors.white,
+        //                           shadows: [
+        //                             Shadow(
+        //                                 blurRadius: 10,
+        //                                 offset: Offset(0.0, -0.9),
+        //                                 color: Colors.white)
+        //                           ],
+        //                         )
+        //                       ],
+        //                     )),
+        //                 SizedBox(width: 10),
+        //                 GFAnimation(
+        //                     turnsAnimation: animation,
+        //                     controller: controller,
+        //                     type: GFAnimationType.rotateTransition,
+        //                     alignment: Alignment.center,
+        //                     child: Row(
+        //                       children: const [
+        //                         Icon(
+        //                           Icons.shape_line_outlined,
+        //                           color: Colors.white,
+        //                           shadows: [
+        //                             Shadow(
+        //                                 blurRadius: 10,
+        //                                 offset: Offset(0.0, -0.9),
+        //                                 color: Colors.white)
+        //                           ],
+        //                         )
+        //                       ],
+        //                     )),
+        //               ],
+        //             ),
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        // ),
+        );
+    // } else {
+    //   return SafeArea(
+    //       child: Container(
+    //     height: MediaQuery.of(context).size.height,
+    //     color: Colors.white,
+    //   ));
+    // }
   }
 
   Widget login(BuildContext context) {

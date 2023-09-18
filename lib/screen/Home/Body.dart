@@ -16,6 +16,7 @@ import 'package:intl/intl.dart';
 
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
+import 'package:itckfa/afa/screens/AutoVerbal/List.dart';
 import 'package:itckfa/screen/Account/account.dart';
 import 'package:itckfa/screen/Home/Customs/Model-responsive.dart';
 import 'package:itckfa/screen/Promotion/membership_real.dart';
@@ -26,7 +27,10 @@ import 'package:http/http.dart' as http;
 import 'package:itckfa/screen/Promotion/Title_promo.dart';
 import 'package:itckfa/screen/Promotion/promotion.dart';
 import 'package:itckfa/screen/Home/Customs/titleBar.dart';
+import 'package:itckfa/screen/Property/Home_Screen_property.dart';
 import 'package:itckfa/screen/components/map_all/map_in_add_body.dart';
+import 'package:itckfa/screen/components/payment/top_up.dart';
+import 'package:url_launcher/url_launcher.dart';
 // import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
 
 // import '../../afa/components/slideUp.dart';
@@ -35,42 +39,14 @@ import '../../models/autoVerbal.dart';
 // import 'Customs/googlemapkfa/detailmap.dart';
 
 class Body extends StatefulWidget {
-  final String user;
-  final String first_name;
-  final String last_name;
-  final String email;
-  final String gender;
-  final String from;
-  final String tel;
-  final String id;
   final double? lat;
   final double? log;
-  // final String? c_id;
-  // final String? district;
-  // final String? commune;
-  // final String? province;
-  // final String? log;
-  // final String? lat;
-
+  final String? id;
   const Body({
     Key? key,
-    // required this.c_id,
-    // required this.commune,
-    // required this.district,
-    // required this.province,
-    // required this.log,
-    // required this.lat,
-
-    required this.lat,
-    required this.log,
-    required this.user,
-    required this.first_name,
-    required this.last_name,
-    required this.email,
-    required this.gender,
-    required this.from,
-    required this.tel,
-    required this.id,
+    this.lat,
+    this.log,
+    this.id,
   }) : super(key: key);
 
   @override
@@ -110,7 +86,7 @@ class _BodyState extends State<Body> {
               'Location permissions are permanently denied, we cannot request permissions.')));
       return false;
     }
-    _getCurrentPosition();
+    // _getCurrentPosition();
     return true;
   }
 
@@ -127,7 +103,7 @@ class _BodyState extends State<Body> {
 
   var maxSqm1, minSqm1;
   var maxSqm2, minSqm2;
-  var formatter = NumberFormat("##,###,###,##0.00", "en_US");
+  var formatter = NumberFormat("##,###,###,###.00", "en_US");
   Future<void> Find_by_piont(double la, double lo) async {
     final response = await http.get(Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=${la},${lo}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
@@ -202,9 +178,82 @@ class _BodyState extends State<Body> {
     });
   }
 
+  String? user;
+  String first_name = "";
+  String last_name = "";
+  String email = "";
+  String gender = "";
+  String from = "";
+  String tel = "";
+  String id = "";
+  String control_user = "";
+  String? number_of_vpoint;
+  String? their_plans;
+  String? expiry;
+  var jsonData = null;
+  Future get_control_user(String id) async {
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
+    if (rs.statusCode == 200) {
+      jsonData = jsonDecode(rs.body);
+      setState(() {
+        user = jsonData[0]['username'].toString();
+        first_name = jsonData[0]['first_name'].toString();
+        last_name = jsonData[0]['last_name'].toString();
+        email = jsonData[0]['email'].toString();
+        gender = jsonData[0]['gender'].toString();
+        from = jsonData[0]['known_from'].toString();
+        tel = jsonData[0]['tel_num'].toString();
+        id = jsonData[0]['id'].toString();
+        control_user = jsonData[0]['control_user'].toString();
+        print(id);
+      });
+    }
+  }
+
+  Future<void> check_v_point() async {
+    final response = await http.get(
+      Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      setState(() {
+        number_of_vpoint = jsonData['vpoint'].toString();
+        // their_plans = jsonData['their_plans'].toString();
+        if (jsonData['their_plans'].toString() == "1 day") {
+          their_plans = "1 Day";
+        } else if (jsonData['their_plans'].toString() == "7 day") {
+          their_plans = "1 Week";
+        } else if (jsonData['their_plans'].toString() == "30 day") {
+          their_plans = "1 Mount";
+        } else {
+          their_plans = jsonData['their_plans'].toString();
+        }
+        if (jsonData['expiry'].toString() != "0") {
+          expiry = jsonData['expiry'].toString();
+        } else {
+          DateTime timeNow = DateTime.now();
+          expiry = timeNow.toString();
+        }
+
+        print(number_of_vpoint);
+      });
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  String? formattedDate;
   @override
   void initState() {
     _handleLocationPermission();
+    // _getCurrentPosition();
+    get_control_user(widget.id ?? "");
     super.initState();
 
     requestModelAuto = AutoVerbalRequestModel(
@@ -255,689 +304,878 @@ class _BodyState extends State<Body> {
       wth = w * 0.5;
       wth2 = w * 0.3;
     }
-    DateTime timeNow = DateTime.now();
 
-    String formattedDate = DateFormat('dd MM yyyy').format(timeNow);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kwhite_new,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          icon: Icon(Icons.menu),
-        ),
-        title: TitleBar(),
-        actions: [
-          GFIconBadge(
-            position: GFBadgePosition.topEnd(top: 15),
-            counterChild: GFBadge(
-              shape: GFBadgeShape.circle,
-              child: Text("0"),
-            ),
-            child: GFIconButton(
-              padding: const EdgeInsets.all(1),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return Account(
-                    username: widget.user,
-                    email: widget.email,
-                    first_name: widget.first_name,
-                    last_name: widget.last_name,
-                    gender: widget.gender,
-                    from: widget.from,
-                    tel: widget.tel,
-                    id: widget.id,
-                  );
-                }));
-              },
-              icon: Icon(
-                Icons.account_circle,
-                color: Colors.white,
-                size: 30,
+    if (expiry != null) {
+      DateTime timeNow = DateTime.parse(expiry!);
+
+      formattedDate = DateFormat('d MMMM yyyy').format(timeNow);
+    }
+
+    if (jsonData != null) {
+      setState(() {
+        user = jsonData[0]['username'].toString();
+        first_name = jsonData[0]['first_name'].toString();
+        last_name = jsonData[0]['last_name'].toString();
+        email = jsonData[0]['email'].toString();
+        gender = jsonData[0]['gender'].toString();
+        from = jsonData[0]['known_from'].toString();
+        tel = jsonData[0]['tel_num'].toString();
+        id = jsonData[0]['id'].toString();
+        print(id);
+      });
+    }
+    if (control_user != "") {
+      check_v_point();
+    }
+    return (user != null)
+        ? Scaffold(
+            appBar: AppBar(
+              backgroundColor: kwhite_new,
+              // elevation: 0,
+              centerTitle: true,
+              leading: IconButton(
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                icon: Icon(Icons.menu),
               ),
-              color: Colors.white,
-              type: GFButtonType.outline2x,
-              size: 40,
-              disabledColor: Colors.white,
-              shape: GFIconButtonShape.circle,
-            ),
-          ),
-        ],
-      ),
-      backgroundColor: kwhite_new,
-      body: Container(
-        color: kwhite_new,
-        padding: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          child: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              Container(
-                padding: EdgeInsets.only(top: 40),
-                margin: EdgeInsets.only(top: 170),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
+              title: TitleBar(),
+              actions: [
+                GFIconBadge(
+                  position: GFBadgePosition.topEnd(top: 15),
+                  counterChild: GFBadge(
+                    shape: GFBadgeShape.circle,
+                    child: Text('0'),
+                  ),
+                  child: GFIconButton(
+                    padding: const EdgeInsets.all(1),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return Account(
+                          username: user!,
+                          email: email,
+                          first_name: first_name,
+                          last_name: last_name,
+                          gender: gender,
+                          from: from,
+                          tel: tel,
+                          id: id,
+                        );
+                      }));
+                    },
+                    icon: Icon(
+                      Icons.account_circle,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    color: Colors.white,
+                    type: GFButtonType.outline2x,
+                    size: 40,
+                    disabledColor: Colors.white,
+                    shape: GFIconButtonShape.circle,
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              ],
+            ),
+            backgroundColor: kwhite_new,
+            body: ListView(
+              children: [
+                Stack(
+                  alignment: Alignment.topCenter,
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 20),
-                      child: Scard(
-                        username: widget.user,
-                        email: widget.email,
-                        first_name: widget.first_name,
-                        last_name: widget.last_name,
-                        gender: widget.gender,
-                        from: widget.from,
-                        tel: widget.tel,
-                        id: widget.id,
+                      padding: EdgeInsets.only(top: 40),
+                      margin: EdgeInsets.only(top: 170),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        ),
                       ),
-                    ),
-                    // Menu(
-                    //   user: widget.user,
-                    //   email: widget.email,
-                    //   first_name: widget.first_name,
-                    //   last_name: widget.last_name,
-                    //   gender: widget.gender,
-                    //   from: widget.from,
-                    //   tel: widget.tel,
-                    //   id: widget.id,
-                    // ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    if (commune != null)
-                      Text(
-                        '   $commune /  $district',
-                        style: const TextStyle(
-                            fontStyle: FontStyle.italic, fontSize: 10),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    Stack(
-                      children: [
-                        if (lat != null)
-                          InkWell(
-                            onTap: () {
-                              setState(
-                                () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => Map_verbal_body(
-                                        get_commune: (value) {
-                                          setState(() {
-                                            commune = value.toString();
-                                          });
-                                        },
-                                        get_district: (value) {
-                                          setState(() {
-                                            district = value.toString();
-                                          });
-                                        },
-                                        get_lat: (value) {
-                                          setState(() {
-                                            lat = value;
-                                          });
-                                        },
-                                        get_log: (value) {
-                                          setState(() {
-                                            log = value;
-                                          });
-                                        },
-                                        get_province: (value) {},
-                                        get_max1: (value) {
-                                          setState(() {
-                                            maxSqm1 = value;
-                                          });
-                                        },
-                                        get_max2: (value) {
-                                          setState(() {
-                                            maxSqm2 = value;
-                                          });
-                                        },
-                                        get_min1: (value) {
-                                          setState(() {
-                                            minSqm1 = value;
-                                          });
-                                        },
-                                        get_min2: (value) {
-                                          setState(() {
-                                            minSqm2 = value;
-                                          });
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Container(
+                          //   margin: EdgeInsets.only(top: 20),
+                          //   child: Scard(
+                          //     username: user,
+                          //     email: email,
+                          //     first_name: first_name,
+                          //     last_name: last_name,
+                          //     gender: gender,
+                          //     from: from,
+                          //     tel: tel,
+                          //     id: id,
+                          //   ),
+                          // ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            alignment: Alignment.center,
+                            child: Wrap(
+                              spacing: 10.0,
+                              runSpacing: 10.0,
+                              children: <Widget>[
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      height: 90,
+                                      width: 92,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                        boxShadow: const [kDefaultShadow],
+                                      ),
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => TopUp(
+                                                  set_phone: tel,
+                                                  id_user: id.toString(),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                height: 50,
+                                                width: 50,
+                                                child: Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Image.asset(
+                                                      'assets/images/topup.png',
+                                                      fit: BoxFit.fill,
+                                                    )),
+                                              ),
+                                              Text(
+                                                "Top Up",
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SCard(
+                                  svgPic: 'assets/icons/wallet.svg',
+                                  title: 'Wallet',
+                                  press: () {},
+                                ),
+                                SCard(
+                                  svgPic: 'assets/icons/addverbal.svg',
+                                  title: 'Cross Check',
+                                  press: () {
+                                    setState(() {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return Menu_Add_verbal(
+                                              id: id,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    });
+                                  },
+                                ),
+                                SCard(
+                                  svgPic: 'assets/icons/verballist.svg',
+                                  title: 'Verbal List',
+                                  press: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return Menu_of_Autoverval(
+                                            id: id,
+                                          );
                                         },
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              height: 180,
-                              width: MediaQuery.of(context).size.width * 1,
-                              margin:
-                                  EdgeInsets.only(left: 5, right: 5, top: 3),
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://maps.googleapis.com/maps/api/staticmap?center=${lat},${log}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
-                                  fit: BoxFit.cover,
+                                    );
+                                  },
                                 ),
-                                border: Border.all(
-                                  width: 0.2,
+                                SCard(
+                                  svgPic: 'assets/icons/property.svg',
+                                  title: 'Property',
+                                  press: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return Home_Screen_property();
+                                      },
+                                    ));
+                                  },
                                 ),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20)),
-                              ),
-                            ),
-                          ),
-                        Positioned(
-                          child: Container(
-                            width: wth,
-                            height: 25,
-                            padding: EdgeInsets.only(left: 10),
-                            margin:
-                                EdgeInsets.only(right: 70, top: 10, left: 10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(30)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SizedBox(
-                                  width: wth2,
-                                  child: TextFormField(
-                                    onFieldSubmitted: (value) {},
-                                    onChanged: (value) {
-                                      setState(() {});
-                                    },
-                                    readOnly: true,
-                                    textInputAction: TextInputAction.search,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                    decoration: InputDecoration(
-                                      fillColor: Colors.white,
-                                      hintText: "Search",
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.only(top: 2),
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey[850],
-                                        fontSize: MediaQuery.of(context)
-                                                .textScaleFactor *
-                                            0.04,
-                                      ),
-                                    ),
-                                  ),
+                                SCard(
+                                  svgPic: 'assets/icons/list-property.svg',
+                                  title: 'News',
+                                  press: () async {
+                                    const url = 'https://kfa.com.kh/';
+                                    await launch(
+                                      url,
+                                      forceSafariVC: false,
+                                      forceWebView: false,
+                                    );
+                                  },
                                 ),
-                                IconButton(
-                                    // splashRadius: 30,
-                                    hoverColor: Colors.black,
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.search,
-                                      size: 10,
-                                    )),
-                                IconButton(
-                                    onPressed: () {
-                                      setState(() {});
-                                    },
-                                    icon: Icon(
-                                      Icons.person_pin_circle_outlined,
-                                      size: 10,
-                                    ))
                               ],
                             ),
                           ),
-                        ),
-                        Positioned(
-                            right: 10,
-                            top: 15,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 15,
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.mp_sharp,
-                                  color: Color.fromRGBO(0, 184, 212, 1),
-                                  size: 10,
-                                ),
-                                onPressed: () {},
-                              ),
-                            )),
-                      ],
+                          // Menu(
+                          //   user: widget.user,
+                          //   email: widget.email,
+                          //   first_name: widget.first_name,
+                          //   last_name: widget.last_name,
+                          //   gender: widget.gender,
+                          //   from: widget.from,
+                          //   tel: widget.tel,
+                          //   id: widget.id,
+                          // ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          // if (commune != null)
+                          //   Text(
+                          //     '   $commune /  $district',
+                          //     style: const TextStyle(
+                          //         fontStyle: FontStyle.italic, fontSize: 10),
+                          //     overflow: TextOverflow.ellipsis,
+                          //   ),
+                          // Stack(
+                          //   children: [
+                          //     if (lat != null)
+                          //       InkWell(
+                          //         onTap: () {
+                          //           setState(
+                          //             () {
+                          //               Navigator.of(context).push(
+                          //                 MaterialPageRoute(
+                          //                   builder: (context) =>
+                          //                       Map_verbal_body(
+                          //                     get_commune: (value) {
+                          //                       setState(() {
+                          //                         commune = value.toString();
+                          //                       });
+                          //                     },
+                          //                     get_district: (value) {
+                          //                       setState(() {
+                          //                         district = value.toString();
+                          //                       });
+                          //                     },
+                          //                     get_lat: (value) {
+                          //                       setState(() {
+                          //                         lat = value;
+                          //                       });
+                          //                     },
+                          //                     get_log: (value) {
+                          //                       setState(() {
+                          //                         log = value;
+                          //                       });
+                          //                     },
+                          //                     get_province: (value) {},
+                          //                     get_max1: (value) {
+                          //                       setState(() {
+                          //                         maxSqm1 = value;
+                          //                       });
+                          //                     },
+                          //                     get_max2: (value) {
+                          //                       setState(() {
+                          //                         maxSqm2 = value;
+                          //                       });
+                          //                     },
+                          //                     get_min1: (value) {
+                          //                       setState(() {
+                          //                         minSqm1 = value;
+                          //                       });
+                          //                     },
+                          //                     get_min2: (value) {
+                          //                       setState(() {
+                          //                         minSqm2 = value;
+                          //                       });
+                          //                     },
+                          //                   ),
+                          //                 ),
+                          //               );
+                          //             },
+                          //           );
+                          //         },
+                          //         child: Container(
+                          //           height: 180,
+                          //           width:
+                          //               MediaQuery.of(context).size.width * 1,
+                          //           margin: EdgeInsets.only(
+                          //               left: 5, right: 5, top: 3),
+                          //           decoration: BoxDecoration(
+                          //             image: DecorationImage(
+                          //               image: NetworkImage(
+                          //                   'https://maps.googleapis.com/maps/api/staticmap?center=${lat},${log}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                          //               fit: BoxFit.cover,
+                          //             ),
+                          //             border: Border.all(
+                          //               width: 0.2,
+                          //             ),
+                          //             borderRadius: BorderRadius.only(
+                          //                 topLeft: Radius.circular(20),
+                          //                 topRight: Radius.circular(20)),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     Positioned(
+                          //       child: Container(
+                          //         width: wth,
+                          //         height: 25,
+                          //         padding: EdgeInsets.only(left: 10),
+                          //         margin: EdgeInsets.only(
+                          //             right: 70, top: 10, left: 10),
+                          //         decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             borderRadius: BorderRadius.circular(30)),
+                          //         child: Row(
+                          //           mainAxisAlignment:
+                          //               MainAxisAlignment.spaceAround,
+                          //           children: [
+                          //             SizedBox(
+                          //               width: wth2,
+                          //               child: TextFormField(
+                          //                 onFieldSubmitted: (value) {},
+                          //                 onChanged: (value) {
+                          //                   setState(() {});
+                          //                 },
+                          //                 readOnly: true,
+                          //                 textInputAction:
+                          //                     TextInputAction.search,
+                          //                 style: TextStyle(
+                          //                     fontWeight: FontWeight.bold),
+                          //                 decoration: InputDecoration(
+                          //                   fillColor: Colors.white,
+                          //                   hintText: "Search",
+                          //                   border: InputBorder.none,
+                          //                   contentPadding:
+                          //                       EdgeInsets.only(top: 2),
+                          //                   hintStyle: TextStyle(
+                          //                     color: Colors.grey[850],
+                          //                     fontSize: MediaQuery.of(context)
+                          //                             .textScaleFactor *
+                          //                         0.04,
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //             ),
+                          //             IconButton(
+                          //                 // splashRadius: 30,
+                          //                 hoverColor: Colors.black,
+                          //                 onPressed: () {},
+                          //                 icon: const Icon(
+                          //                   Icons.search,
+                          //                   size: 10,
+                          //                 )),
+                          //             IconButton(
+                          //                 onPressed: () {
+                          //                   setState(() {});
+                          //                 },
+                          //                 icon: Icon(
+                          //                   Icons.person_pin_circle_outlined,
+                          //                   size: 10,
+                          //                 ))
+                          //           ],
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     Positioned(
+                          //         right: 10,
+                          //         top: 15,
+                          //         child: CircleAvatar(
+                          //           backgroundColor: Colors.white,
+                          //           radius: 15,
+                          //           child: IconButton(
+                          //             icon: const Icon(
+                          //               Icons.mp_sharp,
+                          //               color: Color.fromRGBO(0, 184, 212, 1),
+                          //               size: 10,
+                          //             ),
+                          //             onPressed: () {},
+                          //           ),
+                          //         )),
+                          //   ],
+                          // ),
+                          // if (maxSqm1 != null && R_avg != null)
+                          //   Container(
+                          //     height: 180,
+                          //     width: MediaQuery.of(context).size.width * 1,
+                          //     margin: EdgeInsets.all(5),
+                          //     decoration: BoxDecoration(
+                          //       color: Color.fromARGB(255, 7, 9, 145),
+                          //       border: Border.all(
+                          //         width: 0.01,
+                          //       ),
+                          //       image: DecorationImage(
+                          //         opacity: 0.2,
+                          //         image:
+                          //             AssetImage('assets/images/KFA-Logo.png'),
+                          //       ),
+                          //       borderRadius: BorderRadius.only(
+                          //           bottomLeft: Radius.circular(10),
+                          //           bottomRight: Radius.circular(10)),
+                          //     ),
+                          //     child: Column(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       children: [
+                          //         Text(
+                          //           "Residential",
+                          //           style: TextStyle(
+                          //               fontWeight: FontWeight.bold,
+                          //               fontSize: 14,
+                          //               decoration: TextDecoration.underline,
+                          //               decorationStyle:
+                          //                   TextDecorationStyle.dashed,
+                          //               color: Colors.white),
+                          //         ),
+                          //         Container(
+                          //           padding: EdgeInsets.all(7),
+                          //           margin:
+                          //               EdgeInsets.only(left: 10, right: 10),
+                          //           decoration: BoxDecoration(
+                          //             color: Color.fromARGB(234, 255, 255, 255),
+                          //             border: Border.all(
+                          //                 width: 0.2, color: Colors.green),
+
+                          //             borderRadius: BorderRadius.circular(5),
+
+                          //             // gradient: LinearGradient(
+                          //             //   begin: Alignment.topLeft,
+                          //             //   end: Alignment.bottomRight,
+                          //             //   colors: [
+                          //             //     Color.fromARGB(255, 244, 249, 255),
+                          //             //     Color.fromARGB(255, 246, 254, 255)
+                          //             //   ],
+                          //             // ),
+                          //           ),
+                          //           child: Column(
+                          //             children: [
+                          //               Row(
+                          //                 mainAxisAlignment:
+                          //                     MainAxisAlignment.center,
+                          //                 children: [
+                          //                   const Text("Avg = ",
+                          //                       style: TextStyle(
+                          //                           fontWeight: FontWeight.bold,
+                          //                           fontSize: 10)),
+                          //                   Text(
+                          //                       "${formatter.format(R_avg!)}\$",
+                          //                       style: const TextStyle(
+                          //                           fontSize: 11,
+                          //                           color: Color.fromARGB(
+                          //                               255, 242, 11, 134)))
+                          //                 ],
+                          //               ),
+                          //               Row(
+                          //                 mainAxisAlignment:
+                          //                     MainAxisAlignment.spaceAround,
+                          //                 children: [
+                          //                   Row(
+                          //                     children: [
+                          //                       const Text("Min = ",
+                          //                           style: TextStyle(
+                          //                               fontWeight:
+                          //                                   FontWeight.bold,
+                          //                               fontSize: 10)),
+                          //                       Text(
+                          //                           "${formatter.format(double.parse(maxSqm1))}\$",
+                          //                           style: const TextStyle(
+                          //                               fontSize: 11,
+                          //                               color: Color.fromARGB(
+                          //                                   255, 242, 11, 134)))
+                          //                     ],
+                          //                   ),
+                          //                   Row(
+                          //                     children: [
+                          //                       const Text("Max = ",
+                          //                           style: TextStyle(
+                          //                               fontWeight:
+                          //                                   FontWeight.bold,
+                          //                               fontSize: 10)),
+                          //                       Text(
+                          //                           "${formatter.format(double.parse(minSqm1))}\$",
+                          //                           style: const TextStyle(
+                          //                               fontSize: 11,
+                          //                               color: Color.fromARGB(
+                          //                                   255, 242, 11, 134)))
+                          //                     ],
+                          //                   ),
+                          //                 ],
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //         Divider(
+                          //             color: Colors.white,
+                          //             height: 10,
+                          //             thickness: 3),
+                          //         Text(
+                          //           "Commercial",
+                          //           style: TextStyle(
+                          //               fontWeight: FontWeight.bold,
+                          //               fontSize: 14,
+                          //               decoration: TextDecoration.underline,
+                          //               decorationStyle:
+                          //                   TextDecorationStyle.dashed,
+                          //               color: Colors.white),
+                          //         ),
+                          //         Container(
+                          //           padding: EdgeInsets.all(7),
+                          //           margin:
+                          //               EdgeInsets.only(left: 10, right: 10),
+                          //           decoration: BoxDecoration(
+                          //             color: Color.fromARGB(234, 255, 255, 255),
+                          //             border: Border.all(
+                          //                 width: 0.2, color: Colors.green),
+                          //             // boxShadow: const [
+                          //             //   BoxShadow(blurRadius: 1, color: Colors.grey)
+                          //             // ],
+                          //             borderRadius: BorderRadius.circular(5),
+                          //           ),
+                          //           child: Column(
+                          //             children: [
+                          //               Row(
+                          //                 mainAxisAlignment:
+                          //                     MainAxisAlignment.center,
+                          //                 children: [
+                          //                   const Text("Avg = ",
+                          //                       style: TextStyle(
+                          //                           fontWeight: FontWeight.bold,
+                          //                           fontSize: 10)),
+                          //                   Text(
+                          //                       "${formatter.format(C_avg!)}\$",
+                          //                       style: const TextStyle(
+                          //                           fontSize: 11,
+                          //                           color: Color.fromARGB(
+                          //                               255, 242, 11, 134)))
+                          //                 ],
+                          //               ),
+                          //               Row(
+                          //                 mainAxisAlignment:
+                          //                     MainAxisAlignment.spaceAround,
+                          //                 children: [
+                          //                   Row(
+                          //                     children: [
+                          //                       const Text("Min = ",
+                          //                           style: TextStyle(
+                          //                               fontWeight:
+                          //                                   FontWeight.bold,
+                          //                               fontSize: 10)),
+                          //                       Text(
+                          //                           "${formatter.format(double.parse(maxSqm2))}\$",
+                          //                           style: const TextStyle(
+                          //                               fontSize: 11,
+                          //                               color: Color.fromARGB(
+                          //                                   255, 242, 11, 134)))
+                          //                     ],
+                          //                   ),
+                          //                   Row(
+                          //                     children: [
+                          //                       const Text("Max = ",
+                          //                           style: TextStyle(
+                          //                               fontWeight:
+                          //                                   FontWeight.bold,
+                          //                               fontSize: 10)),
+                          //                       Text(
+                          //                           "${formatter.format(double.parse(minSqm2))}\$",
+                          //                           style: const TextStyle(
+                          //                               fontSize: 11,
+                          //                               color: Color.fromARGB(
+                          //                                   255, 242, 11, 134)))
+                          //                     ],
+                          //                   )
+                          //                 ],
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          Title_promotion2(
+                            title_promo: 'Our Partners',
+                            title_promo1: 'Show all',
+                          ),
+                          Divider(
+                            color: Colors.blueAccent,
+                            thickness: 0.5,
+                          ),
+                          Screen_slider(),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Title_promotion(
+                            title_promo: 'Our Membership',
+                            title_promo1: 'Show all',
+                          ),
+                          Divider(
+                            color: Colors.blueAccent,
+                            thickness: 0.5,
+                          ),
+                          Membership_real(),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Title_promo(),
+                          Promotion(),
+                        ],
+                      ),
                     ),
-                    if (maxSqm1 != null && R_avg != null)
-                      Container(
-                        height: 180,
-                        width: MediaQuery.of(context).size.width * 1,
-                        margin: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 7, 9, 145),
-                          border: Border.all(
-                            width: 0.01,
-                          ),
-                          image: DecorationImage(
-                            opacity: 0.2,
-                            image: AssetImage('assets/images/KFA-Logo.png'),
-                          ),
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    Positioned(
+                      top: 2.0,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width * 1.0,
+                        padding: EdgeInsets.only(top: 10),
+                        child: Stack(
+                          alignment: Alignment.topCenter,
                           children: [
-                            Text(
-                              "Residential",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  decoration: TextDecoration.underline,
-                                  decorationStyle: TextDecorationStyle.dashed,
-                                  color: Colors.white),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(7),
-                              margin: EdgeInsets.only(left: 10, right: 10),
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(234, 255, 255, 255),
-                                border:
-                                    Border.all(width: 0.2, color: Colors.green),
-
-                                borderRadius: BorderRadius.circular(5),
-
-                                // gradient: LinearGradient(
-                                //   begin: Alignment.topLeft,
-                                //   end: Alignment.bottomRight,
-                                //   colors: [
-                                //     Color.fromARGB(255, 244, 249, 255),
-                                //     Color.fromARGB(255, 246, 254, 255)
-                                //   ],
-                                // ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text("Avg = ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 10)),
-                                      Text("${formatter.format(R_avg!)}\$",
-                                          style: const TextStyle(
-                                              fontSize: 11,
-                                              color: Color.fromARGB(
-                                                  255, 242, 11, 134)))
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Add_with_property(
+                                          id: id,
+                                        )));
+                              },
+                              child: Container(
+                                height: 130,
+                                width: 130,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(0, 255, 193, 7),
+                                  // boxShadow: [
+                                  //   BoxShadow(
+                                  //     blurRadius: 15,
+                                  //     color: kImageColor,
+                                  //     blurStyle: BlurStyle.outer,
+                                  //   )
+                                  // ],
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage('assets/earth.gif')),
+                                  borderRadius: BorderRadius.circular(90),
+                                ),
+                                child: DefaultTextStyle(
+                                  style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).textScaleFactor *
+                                            16,
+                                    backgroundColor: Colors.black45,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    shadows: [
+                                      Shadow(
+                                        blurRadius: 15.0,
+                                        color:
+                                            Color.fromARGB(255, 248, 195, 195),
+                                        offset: Offset(0, 0),
+                                      ),
                                     ],
                                   ),
-                                  Row(
+                                  child: AnimatedTextKit(
+                                    repeatForever: true,
+                                    animatedTexts: [
+                                      TypewriterAnimatedText('Cross Check'),
+                                      TypewriterAnimatedText('Your Property'),
+                                    ],
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Add_with_property(
+                                                    id: id,
+                                                  )));
+                                    },
+                                    pause: const Duration(milliseconds: 300),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 95.0,
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.15,
+                                width: MediaQuery.of(context).size.width * 0.87,
+                                decoration: BoxDecoration(
+                                  color: kImageColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 5,
+                                      color: kImageColor,
+                                      blurStyle: BlurStyle.solid,
+                                      spreadRadius: 0.0,
+                                      offset: Offset(0.2, 0.1),
+                                    )
+                                  ],
+                                ),
+                                child: Container(
+                                  margin: EdgeInsets.all(5),
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                        color: Colors.white, width: 2),
+                                  ),
+                                  child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-                                          const Text("Min = ",
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              "Main Balance : ",
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10)),
-                                          Text(
-                                              "${formatter.format(double.parse(maxSqm1))}\$",
-                                              style: const TextStyle(
-                                                  fontSize: 11,
-                                                  color: Color.fromARGB(
-                                                      255, 242, 11, 134)))
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: MediaQuery.of(context)
+                                                        .textScaleFactor *
+                                                    10,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              "${(number_of_vpoint != null) ? number_of_vpoint.toString() + " V Point" : "0 V Point"}",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: MediaQuery.of(context)
+                                                        .textScaleFactor *
+                                                    10,
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
+                                      Divider(
+                                        color: Colors.white,
+                                        endIndent: 15,
+                                        indent: 15,
+                                        height: 1,
+                                        thickness: 1,
+                                      ),
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-                                          const Text("Max = ",
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              "My Plans : ",
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10)),
-                                          Text(
-                                              "${formatter.format(double.parse(minSqm1))}\$",
-                                              style: const TextStyle(
-                                                  fontSize: 11,
-                                                  color: Color.fromARGB(
-                                                      255, 242, 11, 134)))
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: MediaQuery.of(context)
+                                                        .textScaleFactor *
+                                                    10,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              "${(their_plans != null) ? their_plans : ""}",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: MediaQuery.of(context)
+                                                        .textScaleFactor *
+                                                    10,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(
+                                        color: Colors.white,
+                                        endIndent: 15,
+                                        indent: 15,
+                                        height: 1,
+                                        thickness: 1,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              "Valid Until : ",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: MediaQuery.of(context)
+                                                        .textScaleFactor *
+                                                    10,
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              "${(formattedDate != null) ? formattedDate : ""}",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: MediaQuery.of(context)
+                                                        .textScaleFactor *
+                                                    10,
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
-                            Divider(
-                                color: Colors.white, height: 10, thickness: 3),
-                            Text(
-                              "Commercial",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  decoration: TextDecoration.underline,
-                                  decorationStyle: TextDecorationStyle.dashed,
-                                  color: Colors.white),
-                            ),
-                            Container(
-                              padding: EdgeInsets.all(7),
-                              margin: EdgeInsets.only(left: 10, right: 10),
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(234, 255, 255, 255),
-                                border:
-                                    Border.all(width: 0.2, color: Colors.green),
-                                // boxShadow: const [
-                                //   BoxShadow(blurRadius: 1, color: Colors.grey)
-                                // ],
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text("Avg = ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 10)),
-                                      Text("${formatter.format(C_avg!)}\$",
-                                          style: const TextStyle(
-                                              fontSize: 11,
-                                              color: Color.fromARGB(
-                                                  255, 242, 11, 134)))
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Text("Min = ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10)),
-                                          Text(
-                                              "${formatter.format(double.parse(maxSqm2))}\$",
-                                              style: const TextStyle(
-                                                  fontSize: 11,
-                                                  color: Color.fromARGB(
-                                                      255, 242, 11, 134)))
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Text("Max = ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10)),
-                                          Text(
-                                              "${formatter.format(double.parse(minSqm2))}\$",
-                                              style: const TextStyle(
-                                                  fontSize: 11,
-                                                  color: Color.fromARGB(
-                                                      255, 242, 11, 134)))
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    Title_promotion2(
-                      title_promo: 'Our Partners',
-                      title_promo1: 'Show all',
                     ),
-                    Divider(
-                      color: Colors.blueAccent,
-                      thickness: 0.5,
-                    ),
-                    Screen_slider(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Title_promotion(
-                      title_promo: 'Our Membership',
-                      title_promo1: 'Show all',
-                    ),
-                    Divider(
-                      color: Colors.blueAccent,
-                      thickness: 0.5,
-                    ),
-                    Membership_real(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Title_promo(),
-                    Promotion(),
                   ],
                 ),
+              ],
+            ),
+          )
+        : Container(
+            decoration: BoxDecoration(
+              color: kwhite_new,
+              image: DecorationImage(
+                image: AssetImage("assets/images/KFA_CRM.png"),
+                opacity: 0.5,
               ),
-              Positioned(
-                top: 2.0,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  width: MediaQuery.of(context).size.width * 1.0,
-                  padding: EdgeInsets.only(top: 10),
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Add_with_property(
-                                    id: widget.id,
-                                  )));
-                        },
-                        child: Container(
-                          height: 130,
-                          width: 130,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(0, 255, 193, 7),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 15,
-                                color: kImageColor,
-                                blurStyle: BlurStyle.outer,
-                              )
-                            ],
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage('assets/earth.gif')),
-                            borderRadius: BorderRadius.circular(90),
-                          ),
-                          child: DefaultTextStyle(
-                            style: TextStyle(
-                              fontSize:
-                                  MediaQuery.of(context).textScaleFactor * 16,
-                              backgroundColor: Colors.black45,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 15.0,
-                                  color: Color.fromARGB(255, 248, 195, 195),
-                                  offset: Offset(0, 0),
-                                ),
-                              ],
-                            ),
-                            child: AnimatedTextKit(
-                              repeatForever: true,
-                              animatedTexts: [
-                                TypewriterAnimatedText('Cross Check'),
-                                TypewriterAnimatedText('Your Property'),
-                              ],
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => Add_with_property(
-                                          id: widget.id,
-                                        )));
-                              },
-                              pause: const Duration(milliseconds: 300),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 95.0,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.15,
-                          width: MediaQuery.of(context).size.width * 0.87,
-                          decoration: BoxDecoration(
-                            color: kImageColor,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 5,
-                                color: kImageColor,
-                                blurStyle: BlurStyle.solid,
-                                spreadRadius: 0.0,
-                                offset: Offset(0.2, 0.1),
-                              )
-                            ],
-                          ),
-                          child: Container(
-                            margin: EdgeInsets.all(5),
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: Colors.white, width: 2),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "Main Balance : ",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: MediaQuery.of(context)
-                                                  .textScaleFactor *
-                                              10,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "0",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: MediaQuery.of(context)
-                                                  .textScaleFactor *
-                                              10,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Divider(
-                                  color: Colors.white,
-                                  endIndent: 15,
-                                  indent: 15,
-                                  height: 1,
-                                  thickness: 1,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "My Plans : ",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: MediaQuery.of(context)
-                                                  .textScaleFactor *
-                                              10,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "គម្រោង ឬ កញ្ចប់សេវាកម្ម",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: MediaQuery.of(context)
-                                                  .textScaleFactor *
-                                              10,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Divider(
-                                  color: Colors.white,
-                                  endIndent: 15,
-                                  indent: 15,
-                                  height: 1,
-                                  thickness: 1,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "Valid Until : ",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: MediaQuery.of(context)
-                                                  .textScaleFactor *
-                                              10,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        "${formattedDate}",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: MediaQuery.of(context)
-                                                  .textScaleFactor *
-                                              10,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 
   String? options;
