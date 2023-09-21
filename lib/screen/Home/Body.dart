@@ -304,6 +304,11 @@ class _BodyState extends State<Body> {
       wth = w * 0.5;
       wth2 = w * 0.3;
     }
+    if (user == null) {
+      get_control_user(widget.id ?? "");
+    } else if (number_of_vpoint == null) {
+      check_v_point();
+    }
 
     if (expiry != null) {
       DateTime timeNow = DateTime.parse(expiry!);
@@ -324,9 +329,7 @@ class _BodyState extends State<Body> {
         print(id);
       });
     }
-    if (control_user != "") {
-      check_v_point();
-    }
+
     return (user != null)
         ? Scaffold(
             appBar: AppBar(

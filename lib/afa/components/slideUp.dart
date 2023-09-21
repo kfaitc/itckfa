@@ -179,12 +179,15 @@ class _HomePageState extends State<map_cross_verbal> {
         title: Text("Cross property check"),
         centerTitle: true,
         elevation: 0.0,
+        backgroundColor: Colors.indigo[900],
         leading: IconButton(
           onPressed: () {
             setState(() {
               if ((data_adding_correct.length == int.parse(requestModel.num)) &&
                   (groupValue == 0)) {
                 widget.asking_price(adding_price);
+                widget.get_lat(requestModel.lat);
+                widget.get_log(requestModel.lng);
               } else {
                 widget.asking_price(null);
               }
@@ -501,6 +504,7 @@ class _HomePageState extends State<map_cross_verbal> {
               listMarkerIds.add(marker);
               requestModel.lat = argument.latitude.toString();
               requestModel.lng = argument.longitude.toString();
+
               getAddress(argument);
               Show(requestModel);
             });

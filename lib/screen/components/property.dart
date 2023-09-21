@@ -87,7 +87,7 @@ class _PropertyDropdownState extends State<PropertyDropdown> {
 
           decoration: InputDecoration(
             filled: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 15),
+            contentPadding: EdgeInsets.symmetric(vertical: 8),
             fillColor: Colors.white,
             labelText: ((widget.pro == null) ? 'Property' : widget.pro),
             hintText: 'Select one',

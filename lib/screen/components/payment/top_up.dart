@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +50,7 @@ class _TopUpState extends State<TopUp> {
   }
 
   int v_point = 0;
-  void get_count() async {
+  Future<void> get_count() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${set_id_user}'));
@@ -1047,7 +1050,7 @@ class _TopUpState extends State<TopUp> {
                 InkWell(
                   onTap: () async {
                     if (index == 0) {
-                      await createOrder(price, option);
+                      await createOrder(price, option, context);
                     }
                   },
                   child: Card(
@@ -1182,7 +1185,8 @@ class _TopUpState extends State<TopUp> {
   var qrUrl = '$baseUrl2/create/qrcode';
   var loading = false;
   var thier_plan;
-  Future<void> createOrder(var price, var number_order) async {
+  Future<void> createOrder(
+      var price, var number_order, BuildContext context) async {
     if (loading) {
       return;
     }
@@ -1229,10 +1233,9 @@ class _TopUpState extends State<TopUp> {
             forceSafariVC: false,
             forceWebView: false,
           );
-          // ignore: use_build_context_synchronously
-          Navigator.pop(context, HomePage1(id: widget.id_user));
-          // ignore: use_build_context_synchronously
-          Navigator.pop(context, HomePage1(id: widget.id_user));
+
+          await showSuccessDialog(context, price.toString());
+          Navigator.pop(context);
         } else {
           showErrorDialog(response.statusMessage ?? '');
         }
@@ -1266,6 +1269,27 @@ class _TopUpState extends State<TopUp> {
     );
   }
 
+  Future showSuccessDialog(BuildContext context, String success) async {
+    await get_count();
+
+    return AwesomeDialog(
+        context: context,
+        animType: AnimType.leftSlide,
+        headerAnimationLoop: false,
+        dialogType: DialogType.info,
+        showCloseIcon: false,
+        title: "You paid successfuly",
+        autoHide: const Duration(seconds: 5),
+        btnOkOnPress: () {
+          Navigator.pop(context);
+        },
+        btnCancelOnPress: () {
+          Navigator.pop(context);
+        },
+        onDismissCallback: (type) {
+          Navigator.pop(context);
+        }).show();
+  }
   //check payment method upay
 }
 

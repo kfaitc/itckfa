@@ -20,6 +20,7 @@ import 'package:itckfa/Memory_local/save_data_verbal_local.dart';
 import 'package:itckfa/afa/components/slideUp.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Detail.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
+import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
 import 'package:itckfa/screen/components/payment/top_up.dart';
 import 'package:path_provider/path_provider.dart';
@@ -293,7 +294,7 @@ class Add extends StatefulWidget {
   State<Add> createState() => _AddState();
 }
 
-class _AddState extends State<Add> with SingleTickerProviderStateMixin {
+class _AddState extends State<Add> with TickerProviderStateMixin {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   String fromValue = 'Bank';
@@ -342,8 +343,8 @@ class _AddState extends State<Add> with SingleTickerProviderStateMixin {
   late Animation<Offset> offsetAnimation;
   var id_verbal;
   var formatter = NumberFormat("##,###,###,###", "en_US");
-  int number = 0;
-  var control_user;
+  int? number;
+  String? control_user;
   Future get_control_user(String id) async {
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
@@ -351,14 +352,13 @@ class _AddState extends State<Add> with SingleTickerProviderStateMixin {
       var jsonData = jsonDecode(rs.body);
 
       setState(() {
-        print(jsonData[0]['control_user'].toString() + "\n");
         control_user = jsonData[0]['control_user'].toString();
         get_count();
       });
     }
   }
 
-  void get_count() async {
+  Future<void> get_count() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}'));
@@ -370,40 +370,84 @@ class _AddState extends State<Add> with SingleTickerProviderStateMixin {
     }
   }
 
-  Future<void> payment_done() async {
+  Future<void> payment_done(BuildContext context) async {
     final Data = {
       "id_user_control": control_user.toString(),
       "count_autoverbal": "-1",
     };
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0'),
       headers: {
         'Content-Type': 'application/json',
       },
       body: json.encode(Data),
     );
-    setState(() {});
+    if (response.statusCode == 200) {
+      AwesomeDialog(
+          context: context,
+          animType: AnimType.leftSlide,
+          headerAnimationLoop: false,
+          dialogType: DialogType.success,
+          showCloseIcon: false,
+          // title: value.message,
+          autoHide: Duration(seconds: 10),
+          body: Center(
+            child: Text("Do you want to save photo"),
+          ),
+          btnOkOnPress: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => save_image_after_add_verbal(
+                      set_data_verbal: code.toString(),
+                    )));
+          },
+          btnCancelOnPress: () {
+            Navigator.pop(context);
+          },
+          onDismissCallback: (type) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => List_Auto(
+                  verbal_id: widget.id,
+                ),
+              ),
+            );
+          }).show();
+    }
+  }
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  )..repeat(reverse: true);
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.elasticOut,
+  );
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   void initState() {
     _getCurrentPosition();
     get_control_user(widget.id.toString());
-
-    addVerbal(context);
+    get_count();
+    // addVerbal(context);
     lat1;
     log2;
     controller =
         AnimationController(duration: Duration(milliseconds: 645), vsync: this);
     animation = new CurvedAnimation(parent: controller, curve: Curves.linear);
-    controller.repeat();
+    controller.reset();
     offsetAnimation = Tween<Offset>(
       begin: Offset(0, 0),
       end: const Offset(0, -0.3),
     ).animate(CurvedAnimation(
       parent: controller,
-      curve: Curves.easeIn,
+      curve: Curves.easeInOutBack,
     ));
     lb;
 
@@ -438,173 +482,228 @@ class _AddState extends State<Add> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(235, 7, 9, 145),
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios),
-        ),
-        actions: <Widget>[
-          InkWell(
-            onTap: () {
-              if (number >= 1) {
-                if (_file != null) {
-                  uploadt_image(_file!);
-                }
-                uploadt_image_map();
-                List<Map<String, dynamic>> jsonList =
-                    lb.map((item) => item.toJson()).toList();
-                requestModelAuto.user = widget.id;
-                requestModelAuto.verbal_id = code.toString();
-                requestModelAuto.verbal_khan = '${commune}.${district}';
-                requestModelAuto.verbal = jsonList;
-                APIservice apIservice = APIservice();
-                apIservice.saveAutoVerbal(requestModelAuto).then(
-                  (value) async {
-                    if (requestModelAuto.verbal.isEmpty) {
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.error,
-                        animType: AnimType.rightSlide,
-                        headerAnimationLoop: false,
-                        title: 'Error',
-                        desc: "Please add Land/Building at least 1!",
-                        btnOkOnPress: () {},
-                        btnOkIcon: Icons.cancel,
-                        btnOkColor: Colors.red,
-                      ).show();
+    if (number != null) {
+      setState(() {
+        number;
+      });
+    }
+
+    return (number != null)
+        ? Scaffold(
+            appBar: AppBar(
+              backgroundColor: Color.fromARGB(235, 7, 9, 145),
+              elevation: 0,
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(Icons.arrow_back_ios),
+              ),
+              actions: <Widget>[
+                InkWell(
+                  onTap: () async {
+                    await get_count();
+                    if (number! >= 1) {
+                      List<Map<String, dynamic>> jsonList =
+                          lb.map((item) => item.toJson()).toList();
+                      requestModelAuto.user = widget.id;
+                      requestModelAuto.verbal_id = code.toString();
+                      requestModelAuto.verbal_khan = '${commune}.${district}';
+                      requestModelAuto.verbal = jsonList;
+                      APIservice apIservice = APIservice();
+                      apIservice.saveAutoVerbal(requestModelAuto).then(
+                        (value) async {
+                          if (requestModelAuto.verbal.isEmpty) {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Error',
+                              desc: "Please add Land/Building at least 1!",
+                              btnOkOnPress: () {},
+                              btnOkIcon: Icons.cancel,
+                              btnOkColor: Colors.red,
+                            ).show();
+                          } else {
+                            if (value.message == "Save Successfully") {
+                              if (_file != null) {
+                                uploadt_image(_file!);
+                              }
+                              uploadt_image_map();
+                              const snackBar = SnackBar(
+                                content: Text('processing payment...'),
+                                duration: Duration(seconds: 7),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              payment_done(context);
+                            } else {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.rightSlide,
+                                headerAnimationLoop: false,
+                                title: 'Error',
+                                desc: value.message,
+                                btnOkOnPress: () {},
+                                btnOkIcon: Icons.cancel,
+                                btnOkColor: Colors.red,
+                              ).show();
+                            }
+                          }
+                        },
+                      );
                     } else {
-                      if (value.message == "Save Successfully") {
-                        payment_done();
-                        AwesomeDialog(
-                            context: context,
-                            animType: AnimType.leftSlide,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.success,
-                            showCloseIcon: false,
-                            title: value.message,
-                            autoHide: Duration(seconds: 10),
-                            body: Center(
-                              child: Text("Do you want to save photo"),
-                            ),
-                            btnOkOnPress: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      save_image_after_add_verbal(
-                                        set_data_verbal: code.toString(),
-                                      )));
-                            },
-                            btnCancelOnPress: () {
-                              Navigator.pop(context);
-                            },
-                            onDismissCallback: (type) {
-                              Navigator.pop(context);
-                            }).show();
-                      } else {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.error,
-                          animType: AnimType.rightSlide,
-                          headerAnimationLoop: false,
-                          title: 'Error',
-                          desc: value.message,
-                          btnOkOnPress: () {},
-                          btnOkIcon: Icons.cancel,
-                          btnOkColor: Colors.red,
-                        ).show();
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TopUp(
+                            set_phone: "",
+                            id_user: widget.id,
+                          ),
+                        ),
+                      );
                     }
                   },
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TopUp(
-                      set_phone: "",
-                      id_user: widget.id,
-                    ),
-                  ),
-                );
-              }
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 5, top: 15, bottom: 15, right: 4),
-              decoration: BoxDecoration(
-                color: Colors.lightGreen[700],
-                boxShadow: [BoxShadow(color: Colors.green, blurRadius: 5)],
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(80),
-                  bottomLeft: Radius.circular(80),
-                ),
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text("Submit"),
-                  Icon(Icons.save_alt_outlined),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Container(
-                    width: 10,
-                    height: 25,
+                  child: Container(
+                    margin:
+                        EdgeInsets.only(left: 5, top: 15, bottom: 15, right: 4),
                     decoration: BoxDecoration(
-                      color: Colors.red[700],
+                      color: Colors.lightGreen[700],
+                      boxShadow: [
+                        BoxShadow(color: Colors.green, blurRadius: 5)
+                      ],
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        bottomLeft: Radius.circular(5),
+                        topLeft: Radius.circular(80),
+                        bottomLeft: Radius.circular(80),
                       ),
                     ),
-                    alignment: Alignment.topRight,
-                  )
-                ],
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Submit"),
+                        Icon(Icons.save_alt_outlined),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Container(
+                          width: 10,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: Colors.red[700],
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5),
+                            ),
+                          ),
+                          alignment: Alignment.topRight,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+              title: DefaultTextStyle(
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                child: AnimatedTextKit(
+                  animatedTexts: [
+                    WavyAnimatedText('Auto Verbal',
+                        textAlign: TextAlign.center,
+                        textStyle: TextStyle(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            fontSize: 20)),
+                  ],
+                  pause: const Duration(milliseconds: 900),
+                  isRepeatingAnimation: true,
+                  repeatForever: true,
+                  onTap: () {},
+                ),
+              ),
+              toolbarHeight: 80,
+            ),
+            backgroundColor: Color.fromARGB(235, 7, 9, 145),
+            body: Container(
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: addVerbal(context),
               ),
             ),
-          ),
-        ],
-        title: DefaultTextStyle(
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 22.0,
-            fontWeight: FontWeight.bold,
-          ),
-          child: AnimatedTextKit(
-            animatedTexts: [
-              WavyAnimatedText('Auto Verbal',
-                  textAlign: TextAlign.center,
-                  textStyle: TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255), fontSize: 20)),
-            ],
-            pause: const Duration(milliseconds: 900),
-            isRepeatingAnimation: true,
-            repeatForever: true,
-            onTap: () {},
-          ),
-        ),
-        toolbarHeight: 80,
-      ),
-      backgroundColor: Color.fromARGB(235, 7, 9, 145),
-      body: Container(
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: addVerbal(context),
-        ),
-      ),
-    );
+            floatingActionButton: (number! > 0)
+                ? FloatingActionButton.small(
+                    onPressed: () {
+                      setState(() {
+                        number;
+                        _controller.dispose();
+                      });
+                    },
+                    backgroundColor: Colors.white,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${number}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.amber[800],
+                          ),
+                        ),
+                        RotationTransition(
+                          turns: _animation,
+                          child: Container(
+                            height: 15,
+                            width: 15,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage("assets/images/v.png"),
+                                    fit: BoxFit.cover)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : InkWell(
+                    child: Container(
+                      color: Colors.blue[900],
+                      padding: EdgeInsets.all(5),
+                      child: Text(
+                        'Please, Top up now for cross check value',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.amber[800],
+                        ),
+                      ),
+                    ),
+                  ),
+          )
+        : Scaffold(
+            body: Container(
+            decoration: BoxDecoration(
+              color: Color.fromARGB(235, 7, 9, 145),
+              image: DecorationImage(
+                image: AssetImage("assets/images/KFA_CRM.png"),
+                opacity: 0.5,
+              ),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            ),
+          ));
   }
 
   Widget addVerbal(BuildContext context) {
@@ -2318,7 +2417,7 @@ class Add_with_property extends StatefulWidget {
 }
 
 class _Add_with_propertyState extends State<Add_with_property>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   String fromValue = 'Bank';
@@ -2367,9 +2466,99 @@ class _Add_with_propertyState extends State<Add_with_property>
   late Animation<Offset> offsetAnimation;
   var id_verbal;
   var formatter = NumberFormat("##,###,###,###", "en_US");
+  int? number;
+  var control_user;
+  Future get_control_user(String id) async {
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
+    if (rs.statusCode == 200) {
+      var jsonData = jsonDecode(rs.body);
+
+      setState(() {
+        print(jsonData[0]['control_user'].toString() + "\n");
+        control_user = jsonData[0]['control_user'].toString();
+        get_count();
+      });
+    }
+  }
+
+  Future<void> get_count() async {
+    setState(() {});
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}'));
+    if (rs.statusCode == 200) {
+      var jsonData = jsonDecode(rs.body);
+      setState(() {
+        number = jsonData;
+      });
+    }
+  }
+
+  Future<void> payment_done(BuildContext context) async {
+    final Data = {
+      "id_user_control": control_user.toString(),
+      "count_autoverbal": "-1",
+    };
+    final response = await http.post(
+      Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(Data),
+    );
+    if (response.statusCode == 200) {
+      AwesomeDialog(
+          context: context,
+          animType: AnimType.leftSlide,
+          headerAnimationLoop: false,
+          dialogType: DialogType.question,
+          showCloseIcon: false,
+          // title: value.message,
+          autoHide: Duration(seconds: 10),
+          body: Center(
+            child: Text("Do you want to save photo"),
+          ),
+          btnOkOnPress: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => save_image_after_add_verbal(
+                      set_data_verbal: code.toString(),
+                    )));
+          },
+          btnCancelOnPress: () {
+            Navigator.pop(context);
+          },
+          onDismissCallback: (type) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => List_Auto(
+                  verbal_id: widget.id,
+                ),
+              ),
+            );
+          }).show();
+    }
+  }
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  )..repeat(reverse: true);
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.elasticOut,
+  );
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     _getCurrentPosition();
+    get_control_user(widget.id.toString());
+    get_count();
     addVerbal(context);
     lat1;
     log2;
@@ -2417,70 +2606,74 @@ class _Add_with_propertyState extends State<Add_with_property>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(235, 7, 9, 145),
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios),
-        ),
-        actions: <Widget>[
-          InkWell(
-            onTap: () async {
-              if (asking_price != null) {
-                List<Map<String, dynamic>> jsonList =
-                    lb.map((item) => item.toJson()).toList();
-                requestModelAuto.user = widget.id;
-                requestModelAuto.verbal_id = code.toString();
-                requestModelAuto.verbal_khan = '${commune}.${district}';
-                requestModelAuto.verbal = jsonList;
-                APIservice apIservice = APIservice();
-                apIservice.saveAutoVerbal(requestModelAuto).then(
-                  (value) async {
-                    if (requestModelAuto.verbal.isEmpty) {
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.error,
-                        animType: AnimType.rightSlide,
-                        headerAnimationLoop: false,
-                        title: 'Error',
-                        desc: "Please add Land/Building at least 1!",
-                        btnOkOnPress: () {},
-                        btnOkIcon: Icons.cancel,
-                        btnOkColor: Colors.red,
-                      ).show();
-                    } else {
-                      if (value.message == "Save Successfully") {
-                        if (_file != null) {
-                          await uploadt_image();
-                        }
-                        AwesomeDialog(
-                            context: context,
-                            animType: AnimType.leftSlide,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.success,
-                            showCloseIcon: false,
-                            title: value.message,
-                            autoHide: Duration(seconds: 10),
-                            body: Center(
-                              child: Text("Do you want to save photo"),
-                            ),
-                            btnOkOnPress: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      save_image_after_add_verbal(
-                                        set_data_verbal: code.toString(),
-                                      )));
-                            },
-                            btnCancelOnPress: () {
-                              Navigator.pop(context);
-                            },
-                            onDismissCallback: (type) {
-                              Navigator.pop(context);
-                            }).show();
+    if (number != null) {
+      setState(() {
+        number;
+      });
+      get_count();
+    }
+
+    return (number != null)
+        ? Scaffold(
+            appBar: AppBar(
+              backgroundColor: Color.fromARGB(235, 7, 9, 145),
+              elevation: 0,
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(Icons.arrow_back_ios),
+              ),
+              actions: <Widget>[
+                InkWell(
+                  onTap: () async {
+                    await get_count();
+                    if (number! >= 1) {
+                      if (asking_price != null) {
+                        List<Map<String, dynamic>> jsonList =
+                            lb.map((item) => item.toJson()).toList();
+                        requestModelAuto.user = widget.id;
+                        requestModelAuto.verbal_id = code.toString();
+                        requestModelAuto.verbal_khan = '${commune}.${district}';
+                        requestModelAuto.verbal = jsonList;
+                        APIservice apIservice = APIservice();
+                        apIservice.saveAutoVerbal(requestModelAuto).then(
+                          (value) async {
+                            if (requestModelAuto.verbal.isEmpty) {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.rightSlide,
+                                headerAnimationLoop: false,
+                                title: 'Error',
+                                desc: "Please add Land/Building at least 1!",
+                                btnOkOnPress: () {},
+                                btnOkIcon: Icons.cancel,
+                                btnOkColor: Colors.red,
+                              ).show();
+                            } else {
+                              if (value.message == "Save Successfully") {
+                                if (_file != null) {
+                                  await uploadt_image();
+                                }
+
+                                await payment_done(context);
+                              } else {
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.error,
+                                  animType: AnimType.rightSlide,
+                                  headerAnimationLoop: false,
+                                  title: 'Error',
+                                  desc: value.message,
+                                  btnOkOnPress: () {},
+                                  btnOkIcon: Icons.cancel,
+                                  btnOkColor: Colors.red,
+                                ).show();
+                              }
+                            }
+                          },
+                        );
                       } else {
                         AwesomeDialog(
                           context: context,
@@ -2488,89 +2681,148 @@ class _Add_with_propertyState extends State<Add_with_property>
                           animType: AnimType.rightSlide,
                           headerAnimationLoop: false,
                           title: 'Error',
-                          desc: value.message,
+                          desc: "Please select your Location",
                           btnOkOnPress: () {},
                           btnOkIcon: Icons.cancel,
                           btnOkColor: Colors.red,
                         ).show();
                       }
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TopUp(
+                            set_phone: "",
+                            id_user: widget.id,
+                          ),
+                        ),
+                      );
                     }
                   },
-                );
-              } else {
-                AwesomeDialog(
-                  context: context,
-                  dialogType: DialogType.error,
-                  animType: AnimType.rightSlide,
-                  headerAnimationLoop: false,
-                  title: 'Error',
-                  desc: "Please select your Location",
-                  btnOkOnPress: () {},
-                  btnOkIcon: Icons.cancel,
-                  btnOkColor: Colors.red,
-                ).show();
-              }
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 5, top: 15, bottom: 15, right: 4),
-              decoration: BoxDecoration(
-                color: Colors.lightGreen[700],
-                boxShadow: [BoxShadow(color: Colors.green, blurRadius: 5)],
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(80),
-                  bottomLeft: Radius.circular(80),
-                ),
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "Submit",
-                    style: TextStyle(fontSize: 10),
-                  ),
-                  Icon(Icons.save_alt_outlined, size: 15),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Container(
-                    width: 10,
-                    height: 25,
+                  child: Container(
+                    margin:
+                        EdgeInsets.only(left: 5, top: 15, bottom: 15, right: 4),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 235, 32, 32),
+                      color: Colors.lightGreen[700],
+                      boxShadow: [
+                        BoxShadow(color: Colors.green, blurRadius: 5)
+                      ],
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        bottomLeft: Radius.circular(5),
+                        topLeft: Radius.circular(80),
+                        bottomLeft: Radius.circular(80),
                       ),
                     ),
-                    alignment: Alignment.topRight,
-                  )
-                ],
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "Submit",
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        Icon(Icons.save_alt_outlined, size: 15),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Container(
+                          width: 10,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 235, 32, 32),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5),
+                            ),
+                          ),
+                          alignment: Alignment.topRight,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+              title: Text('property check',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 255, 255, 255), fontSize: 18)),
+              toolbarHeight: 80,
+            ),
+            backgroundColor: Color.fromARGB(235, 7, 9, 145),
+            body: Container(
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: addVerbal(context),
               ),
             ),
-          ),
-        ],
-        title: Text('property check',
-            style: TextStyle(
-                color: Color.fromARGB(255, 255, 255, 255), fontSize: 18)),
-        toolbarHeight: 80,
-      ),
-      backgroundColor: Color.fromARGB(235, 7, 9, 145),
-      body: Container(
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: addVerbal(context),
-        ),
-      ),
-    );
+            floatingActionButton: (number! > 0)
+                ? FloatingActionButton.small(
+                    onPressed: () {
+                      setState(() {
+                        number;
+                        _controller.dispose();
+                      });
+                    },
+                    backgroundColor: Colors.white,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${number}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.amber[800],
+                          ),
+                        ),
+                        RotationTransition(
+                          turns: _animation,
+                          child: Container(
+                            height: 15,
+                            width: 15,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage("assets/images/v.png"),
+                                    fit: BoxFit.cover)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : InkWell(
+                    child: Container(
+                      color: Colors.blue[900],
+                      padding: EdgeInsets.all(5),
+                      child: Text(
+                        'Please, Top up now for cross check value',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.amber[800],
+                        ),
+                      ),
+                    ),
+                  ),
+          )
+        : Scaffold(
+            body: Container(
+            decoration: BoxDecoration(
+              color: Color.fromARGB(235, 7, 9, 145),
+              image: DecorationImage(
+                image: AssetImage("assets/images/KFA_CRM.png"),
+                opacity: 0.5,
+              ),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ),
+            ),
+          ));
   }
 
   Widget addVerbal(BuildContext context) {
@@ -3095,13 +3347,13 @@ class _Add_with_propertyState extends State<Add_with_property>
           },
           get_lat: (value) {
             setState(() {
-              lat1 = double.parse(value);
+              lat1 = double.parse(value.toString());
               requestModelAuto.lat = value;
             });
           },
           get_log: (value) {
             setState(() {
-              log2 = double.parse(value);
+              log2 = double.parse(value.toString());
               requestModelAuto.lng = value;
             });
           },

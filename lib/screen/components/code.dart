@@ -75,6 +75,9 @@ class _CodeState extends State<Code> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      codedisplay;
+    });
     return Container(
       alignment: Alignment.topLeft,
       child: loading
