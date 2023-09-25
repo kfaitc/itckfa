@@ -2,18 +2,12 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
 import 'package:itckfa/screen/Account/account.dart';
@@ -79,8 +73,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   late AutoVerbalRequestModel requestModelAuto;
-  String? _currentAddress;
-  Position? _currentPosition;
+
   Uint8List? get_bytes;
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;

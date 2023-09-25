@@ -1,13 +1,15 @@
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/screen/components/payment/get_qrcode/UPay_qr.dart';
 import 'package:itckfa/screen/components/payment/get_qrcode/Wing_qr.dart';
+
+import 'Transtoin_history.dart';
 
 class TopUp extends StatefulWidget {
   const TopUp(
@@ -169,7 +171,15 @@ class _TopUpState extends State<TopUp> {
                         Padding(
                           padding: const EdgeInsets.only(right: 15),
                           child: GFButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return Transtoin_History(
+                                    id: widget.id_user,
+                                  );
+                                },
+                              ));
+                            },
                             text: "Transaction history",
                             textColor: Colors.white,
                             textStyle: const TextStyle(
@@ -809,7 +819,6 @@ class _TopUpState extends State<TopUp> {
     );
   }
 
-  // ignore: non_constant_identifier_names
   Future BottomSheet(
       BuildContext context, String price, String account, String option) {
     return showModalBottomSheet(
