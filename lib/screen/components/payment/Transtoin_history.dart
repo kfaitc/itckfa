@@ -153,19 +153,22 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
         var jsonData = jsonDecode(rs.body);
         list_User_by_id = jsonData;
         if (list_User_by_id[0]['control_user'] != null) {
-          url;
           set_id_user = list_User_by_id[0]['control_user'].toString();
+          print('ID = ${set_id_user}');
           // get_image(list_User_by_id[0]['control_user'].toString());
+          if (set_id_user != null) {
+            print('sdfasdfasdfsadff');
+            Check_Transtoin(id);
+          }
         }
       });
-      await Check_Transtoin(set_id_user);
     }
   }
 
   List list = [];
   Future<void> Check_Transtoin(String id) async {
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/User_Tran/$id'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/User_Tran/54K182F54A'));
     if (rs.statusCode == 200) {
       setState(() {
         var jsonData = jsonDecode(rs.body);

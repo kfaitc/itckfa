@@ -58,6 +58,7 @@ class _BankDropdownState extends State<BankDropdown> {
                 bankvalue = newValue as String;
 
                 widget.bank(bankvalue);
+                print(bankvalue);
                 branch(newValue.toString());
               });
             },
@@ -129,65 +130,67 @@ class _BankDropdownState extends State<BankDropdown> {
             ),
           ),
         ),
-        Container(
-          height: 57,
-          padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: DropdownButtonFormField<String>(
-            isExpanded: true,
+        if (_branch.length != 0)
+          Container(
+            height: 57,
+            padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+            child: DropdownButtonFormField<String>(
+              isExpanded: true,
 
-            onChanged: (String? newValue) {
-              setState(() {
-                branchvalue = newValue!;
-                widget.bankbranch(branchvalue);
+              onChanged: (String? newValue) {
+                setState(() {
+                  branchvalue = newValue!;
+                  widget.bankbranch(branchvalue);
 
-                print(newValue);
-              });
-            },
-            items: _branch
-                .map<DropdownMenuItem<String>>(
-                  (value) => DropdownMenuItem<String>(
-                    value: value["bank_branch_id"].toString(),
-                    child: Text(
-                      value["bank_branch_name"],
-                      overflow: TextOverflow.ellipsis,
+                  print(newValue);
+                });
+              },
+              items: _branch
+                  .map<DropdownMenuItem<String>>(
+                    (value) => DropdownMenuItem<String>(
+                      value: value["bank_branch_id"].toString(),
+                      child: Text(
+                        value["bank_branch_name"],
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                )
-                .toList(),
-            // add extra sugar..
-            icon: Icon(
-              Icons.arrow_drop_down,
-              color: kImageColor,
-            ),
-
-            decoration: InputDecoration(
-              fillColor: kwhite,
-              contentPadding: EdgeInsets.symmetric(vertical: 8),
-              filled: true,
-              labelText: ((widget.brn == null) ? 'Branch' : widget.bn),
-              hintText: 'Select',
-              labelStyle: TextStyle(color: kPrimaryColor),
-              prefixIcon: Icon(
-                Icons.account_tree_rounded,
+                  )
+                  .toList(),
+              // add extra sugar..
+              icon: Icon(
+                Icons.arrow_drop_down,
                 color: kImageColor,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: kPrimaryColor,
+
+              decoration: InputDecoration(
+                fillColor: kwhite,
+                contentPadding: EdgeInsets.symmetric(vertical: 8),
+                filled: true,
+                labelText: ((widget.brn == null) ? 'Branch' : widget.bn),
+                hintText: 'Select',
+                labelStyle: TextStyle(color: kPrimaryColor),
+                prefixIcon: Icon(
+                  Icons.account_tree_rounded,
+                  color: kImageColor,
                 ),
-                borderRadius: BorderRadius.circular(10.0),
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: kPrimaryColor, width: 2.0),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: kPrimaryColor,
+                  ),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                //   decoration: InputDecoration(
+                //       labelText: 'From',
+                //       prefixIcon: Icon(Icons.business_outlined)),
               ),
-              //   decoration: InputDecoration(
-              //       labelText: 'From',
-              //       prefixIcon: Icon(Icons.business_outlined)),
             ),
           ),
-        ),
       ],
     );
   }

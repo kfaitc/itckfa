@@ -22,7 +22,7 @@ class FormN extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
       child: TextFormField(
         // controller: controller,
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.visiblePassword,
         // inputFormatters: <TextInputFormatter>[
         //   // for below version 2 use this
         //   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),

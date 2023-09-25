@@ -63,6 +63,7 @@ class _save_image_after_add_verbalState
   double? total_MAX = 0;
 
   var formatter = NumberFormat("##,###,###,###", "en_US");
+  var formatter1 = NumberFormat("###.#####", "en_US");
   List land = [];
   double? fsvM, fsvN, fx, fn;
   Future<void> Land_building() async {
@@ -500,7 +501,7 @@ class _save_image_after_add_verbalState
                               decoration:
                                   BoxDecoration(border: Border.all(width: 0.4)),
                               child: Text(
-                                  "Latitude: ${list[0]['latlong_log'].toString()}",
+                                  "Latitude: ${formatter1.format(list[0]['latlong_log'])}",
                                   style: const TextStyle(
                                     fontSize: 7,
                                   )),
@@ -512,10 +513,10 @@ class _save_image_after_add_verbalState
                               padding: const EdgeInsets.all(2),
                               alignment: Alignment.centerLeft,
                               height: 18,
-                              decoration:
+                              decoration: 
                                   BoxDecoration(border: Border.all(width: 0.4)),
                               child: Text(
-                                  "Longtitude: ${list[0]['latlong_la'].toString()}",
+                                  "Longtitude: ${formatter1.format(list[0]['latlong_la'])}",
                                   style: const TextStyle(fontSize: 7)),
                             ),
                           ),

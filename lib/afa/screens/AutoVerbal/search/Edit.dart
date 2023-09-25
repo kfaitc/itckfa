@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'package:get/get.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/foundation.dart';
@@ -24,7 +24,6 @@ import '../../../../screen/components/code.dart';
 import '../../../../screen/components/comment.dart';
 import '../../../../screen/components/forceSale.dart';
 import '../../../../screen/components/property.dart';
-import '../../../../screen/components/test google map/Slliderup_Google_Map.dart';
 import '../../../customs/uplandBuilding.dart';
 
 class Edit extends StatefulWidget {
@@ -293,8 +292,8 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                             title: value.message,
                             autoHide: Duration(seconds: 3),
                             onDismissCallback: (type) {
-                              Get.back();
-                              Get.back();
+                              Navigator.pop(context);
+                              Navigator.pop(context);
                             }).show();
                       } else {
                         AwesomeDialog(
@@ -348,7 +347,6 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
         ],
         title: Text.rich(
           TextSpan(
-            // ignore: prefer_const_literals_to_create_immutables
             children: [
               TextSpan(
                 text: "ADD ONE CLICK ",
@@ -424,7 +422,6 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
 
   Widget addVerbal(BuildContext context) {
     return Column(
-      // ignore: prefer_const_literals_to_create_immutables, duplicate_ignore
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),

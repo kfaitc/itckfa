@@ -1,20 +1,31 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_constructors
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
+import 'dart:math';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/screen/Home/Home.dart';
+import 'package:itckfa/screen/components/payment/app_link_payment/app_link_upay.dart';
 import 'package:itckfa/screen/components/payment/get_qrcode/UPay_qr.dart';
 import 'package:itckfa/screen/components/payment/get_qrcode/Wing_qr.dart';
+import 'package:crypto/crypto.dart';
+import 'package:dio/dio.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'Transtoin_history.dart';
 
 class TopUp extends StatefulWidget {
-  const TopUp(
-      {super.key, this.set_email, this.set_phone, this.up_point, this.id_user});
-  final String? set_email;
+  const TopUp({super.key, this.set_phone, this.up_point, this.id_user});
   final String? set_phone;
   final String? up_point;
   final String? id_user;
@@ -26,6 +37,7 @@ class _TopUpState extends State<TopUp> {
   int count_time = 0;
   List list_User_by_id = [];
   var set_id_user;
+  var set_email;
   Future get_control_user(String id) async {
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
@@ -34,12 +46,13 @@ class _TopUpState extends State<TopUp> {
         var jsonData = jsonDecode(rs.body);
         list_User_by_id = jsonData;
         set_id_user = list_User_by_id[0]['control_user'].toString();
+        set_email = list_User_by_id[0]['email'].toString();
       });
     }
   }
 
   int v_point = 0;
-  void get_count() async {
+  Future<void> get_count() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${set_id_user}'));
@@ -61,10 +74,15 @@ class _TopUpState extends State<TopUp> {
   void initState() {
     super.initState();
     check();
+    print(widget.id_user.toString() + "in Top");
   }
 
   @override
   Widget build(BuildContext context) {
+    check();
+    setState(() {
+      v_point;
+    });
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kwhite_new,
@@ -77,7 +95,7 @@ class _TopUpState extends State<TopUp> {
         ),
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, HomePage1(id: widget.id_user));
           },
           icon: const Icon(
             Icons.chevron_left,
@@ -129,9 +147,13 @@ class _TopUpState extends State<TopUp> {
                       children: [
                         Container(
                           margin: const EdgeInsets.only(left: 15),
+                          padding: const EdgeInsets.all(5),
                           height: 30,
                           width: 30,
-                          child: Image.asset("assets/images/v.png"),
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage("assets/images/v.png"),
+                                  fit: BoxFit.cover)),
                         ),
                         const SizedBox(width: 10),
                         Text(
@@ -160,7 +182,7 @@ class _TopUpState extends State<TopUp> {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              widget.set_email!,
+                              set_email ?? "",
                               style: const TextStyle(
                                 fontSize: 10,
                                 color: Colors.white,
@@ -211,6 +233,7 @@ class _TopUpState extends State<TopUp> {
                       margin: const EdgeInsets.all(5),
                       padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
+                        color: kImageColor,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: Colors.white,
@@ -219,9 +242,9 @@ class _TopUpState extends State<TopUp> {
                       ),
                       child: Column(
                         children: [
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               Text(
                                 "Tariff Plans for ",
                                 style: TextStyle(
@@ -232,7 +255,6 @@ class _TopUpState extends State<TopUp> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blue,
-                                    fontSize: 17,
                                     decorationStyle: TextDecorationStyle.dashed,
                                     decoration: TextDecoration.underline),
                               )
@@ -244,8 +266,8 @@ class _TopUpState extends State<TopUp> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  BottomSheet(context, '1.00',
-                                      widget.set_email!, '1  V / Day');
+                                  BottomSheet(context, '1.00', set_email ?? "",
+                                      '1  V / Day');
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.all(6),
@@ -263,9 +285,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -307,8 +328,8 @@ class _TopUpState extends State<TopUp> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  BottomSheet(context, '2.50',
-                                      widget.set_email!, '3  V / Day');
+                                  BottomSheet(context, '2.50', set_email ?? "",
+                                      '3  V / Day');
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.all(6),
@@ -326,9 +347,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -370,8 +390,8 @@ class _TopUpState extends State<TopUp> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  BottomSheet(context, '3.00',
-                                      widget.set_email!, '5  V / Day');
+                                  BottomSheet(context, '3.00', set_email ?? "",
+                                      '5  V / Day');
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.all(6),
@@ -389,9 +409,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -439,8 +458,8 @@ class _TopUpState extends State<TopUp> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  BottomSheet(context, '5.00',
-                                      widget.set_email!, '6  V / Day');
+                                  BottomSheet(context, '5.00', set_email ?? "",
+                                      '6  V / Day');
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.all(6),
@@ -458,9 +477,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -502,8 +520,8 @@ class _TopUpState extends State<TopUp> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  BottomSheet(context, '6.50',
-                                      widget.set_email!, '8  V / Day');
+                                  BottomSheet(context, '6.50', set_email ?? "",
+                                      '8  V / Day');
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.all(6),
@@ -521,9 +539,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -565,8 +582,8 @@ class _TopUpState extends State<TopUp> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  BottomSheet(context, '8.00',
-                                      widget.set_email!, '10  V / Day');
+                                  BottomSheet(context, '8.00', set_email ?? "",
+                                      '10  V / Day');
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.all(6),
@@ -584,9 +601,8 @@ class _TopUpState extends State<TopUp> {
                                           offset: Offset(1.0, 7.0))
                                     ],
                                     border: Border.all(
-                                        width: 1,
-                                        color: const Color.fromRGBO(
-                                            255, 111, 0, 1)),
+                                      width: 1,
+                                    ),
                                   ),
                                   alignment: Alignment.topCenter,
                                   child: Column(
@@ -632,13 +648,13 @@ class _TopUpState extends State<TopUp> {
                       ),
                     ),
                   ),
-                  Positioned(
-                      right: 15,
-                      bottom: -1,
-                      child: Image.asset(
-                        "assets/images/pay.png",
-                        width: 125,
-                      ))
+                  // Positioned(
+                  //     right: 15,
+                  //     bottom: -1,
+                  //     child: Image.asset(
+                  //       "assets/images/pay.png",
+                  //       width: 125,
+                  //     ))
                 ],
               ),
             ),
@@ -668,52 +684,45 @@ class _TopUpState extends State<TopUp> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Row(
+                          const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              const SizedBox(width: 10),
-                              const Text(
+                              SizedBox(width: 10),
+                              Text(
                                 "Tariff Plans for",
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.white),
                               ),
                               SizedBox(
-                                height: 25,
-                                width: 90,
-                                child: DefaultTextStyle(
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                      fontSize: 17,
-                                      decorationStyle:
-                                          TextDecorationStyle.dashed,
-                                      decoration: TextDecoration.underline),
-                                  child: AnimatedTextKit(
-                                    animatedTexts: [
-                                      RotateAnimatedText('WEEK '),
-                                      RotateAnimatedText('MOUNT'),
+                                  height: 25,
+                                  child: Row(
+                                    children: [
+                                      Text("Week&Month",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blue,
+                                              decorationStyle:
+                                                  TextDecorationStyle.dashed,
+                                              decoration:
+                                                  TextDecoration.underline)),
                                     ],
-                                    pause: const Duration(milliseconds: 500),
-                                    repeatForever: true,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
+                                  )),
+                              SizedBox(width: 0),
                             ],
                           ),
                           InkWell(
                             onTap: () {
-                              BottomSheet(context, '10.00', widget.set_email!,
+                              BottomSheet(context, '10.00', set_email ?? "",
                                   '5  V / Week');
                             },
-                            child: Card(
+                            child: const Card(
                               color: Colors.white,
                               elevation: 5,
                               child: ListTile(
                                 minVerticalPadding: 5,
                                 title: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     Text(
                                       "Use ",
                                       style: TextStyle(
@@ -746,23 +755,23 @@ class _TopUpState extends State<TopUp> {
                                     ),
                                   ],
                                 ),
-                                subtitle: const Text("10 \$"),
+                                subtitle: Text("10 \$"),
                               ),
                             ),
                           ),
                           InkWell(
                             onTap: () {
-                              BottomSheet(context, '30.00', widget.set_email!,
-                                  '30  V / Week');
+                              BottomSheet(context, '30.00', set_email ?? "",
+                                  '40  V / Mount');
                             },
-                            child: Card(
+                            child: const Card(
                               color: Colors.white,
                               elevation: 5,
                               child: ListTile(
                                 minVerticalPadding: 5,
                                 title: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: const [
+                                  children: [
                                     Text(
                                       "Use ",
                                       style: TextStyle(
@@ -795,7 +804,7 @@ class _TopUpState extends State<TopUp> {
                                     ),
                                   ],
                                 ),
-                                subtitle: const Text("30 \$"),
+                                subtitle: Text("30 \$"),
                               ),
                             ),
                           ),
@@ -803,12 +812,12 @@ class _TopUpState extends State<TopUp> {
                       ),
                     ),
                   ),
-                  Positioned(
-                      right: 15,
-                      child: Image.asset(
-                        "assets/images/pay.png",
-                        width: 125,
-                      ))
+                  // Positioned(
+                  //     right: 15,
+                  //     child: Image.asset(
+                  //       "assets/images/pay.png",
+                  //       width: 125,
+                  //     ))
                 ],
               ),
             ),
@@ -862,7 +871,7 @@ class _TopUpState extends State<TopUp> {
                     child: InkWell(
                       onTap: () {
                         _dialogBuilder(
-                            context, price, widget.set_email!, option, 0);
+                            context, price, set_email ?? "", option, 0);
                       },
                       child: Column(
                         children: [
@@ -895,7 +904,7 @@ class _TopUpState extends State<TopUp> {
                     child: InkWell(
                       onTap: () {
                         _dialogBuilder(
-                            context, price, widget.set_email!, option, 1);
+                            context, price, set_email ?? "", option, 1);
                       },
                       child: Column(
                         children: [
@@ -928,7 +937,7 @@ class _TopUpState extends State<TopUp> {
                     child: InkWell(
                       onTap: () {
                         _dialogBuilder(
-                            context, price, widget.set_email!, option, 2);
+                            context, price, set_email ?? "", option, 2);
                       },
                       child: Column(
                         children: [
@@ -1001,8 +1010,8 @@ class _TopUpState extends State<TopUp> {
     );
   }
 
-  Future<void> _dialogBuilder(BuildContext context, String price,
-      String account, String option, int index) {
+  Future<void> _dialogBuilder(BuildContext context, var price, String account,
+      String option, int index) {
     List<Image> set_images = [
       Image.asset(
         'assets/images/UPAY-logo.png',
@@ -1048,6 +1057,11 @@ class _TopUpState extends State<TopUp> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
+                  onTap: () async {
+                    if (index == 0) {
+                      await createOrder(price, option, context);
+                    }
+                  },
                   child: Card(
                     elevation: 10,
                     child: Row(
@@ -1079,17 +1093,44 @@ class _TopUpState extends State<TopUp> {
                 ),
                 InkWell(
                   onTap: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => Qr_UPay(
-                                price: price,
-                                accont: account,
-                                phone: widget.set_phone!,
-                                option: option,
-                                id: widget.id_user ?? 'set',
-                                control_user: set_id_user,
-                              )),
-                    );
+                    if (index == 0) {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => Qr_UPay(
+                                  price: price,
+                                  accont: account,
+                                  phone: widget.set_phone!,
+                                  option: option,
+                                  id: widget.id_user ?? 'set',
+                                  control_user: set_id_user,
+                                )),
+                      );
+                    } else if (index == 0) {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => Qr_Wing(
+                                  price: price,
+                                  accont: account,
+                                  phone: widget.set_phone!,
+                                  option: option,
+                                  id: widget.id_user ?? 'set',
+                                  control_user: set_id_user,
+                                )),
+                      );
+                    } else {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => Qr_Wing(
+                                  price: price,
+                                  accont: account,
+                                  phone: widget.set_phone!,
+                                  option: option,
+                                  id: widget.id_user ?? 'set',
+                                  control_user: set_id_user,
+                                )),
+                      );
+                    }
+
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
@@ -1146,5 +1187,168 @@ class _TopUpState extends State<TopUp> {
         );
       },
     );
+  }
+
+  static String baseUrl2 = 'https://dev-upayapi.u-pay.com/upayApi/mc/mcOrder';
+  var appUrl = '$baseUrl2/appCreate';
+  var qrUrl = '$baseUrl2/create/qrcode';
+  var loading = false;
+  var thier_plan;
+  Future<void> createOrder(
+      var price, var number_order, BuildContext context) async {
+    if (loading) {
+      return;
+    }
+    loading = true;
+    setState(() {
+      var count_number = number_order!.split(' ');
+
+      if (count_number[4] == "Day") {
+        thier_plan = 1;
+      } else if (count_number[4] == "Week") {
+        thier_plan = 7;
+      } else if (count_number[4] == "Mount") {
+        thier_plan = 30;
+      }
+      print("kokokok\n\n\n$thier_plan");
+    });
+    if (thier_plan != null) {
+      var merchantKey = '3142e7560039d1661121992cfaafe17e';
+      var order = SignUtil().RandomString(10).toString();
+      Map<String, String> map = {
+        'currency': "USD",
+        'goodsDetail': "0001",
+        'lang': "EN",
+        'mcAbridge': 'test',
+        'mcId': '1674724041055870978',
+        'mcOrderId': order,
+        'money': price.toString(),
+        'returnUrl': "kfa://callback",
+        'notifyUrl':
+            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_upay/${widget.id_user}/8899/${set_id_user}/${price}/${thier_plan}",
+        'version': 'V1',
+      };
+      var sign = SignUtil.getSign(map, merchantKey);
+      map['sign'] = sign;
+      //upayDeeplink
+      try {
+        var response = await Dio().post(appUrl, data: map);
+        if (response.statusCode == 200) {
+          var data = response.data;
+          var upayDeeplink = data['data']['upayDeeplink'].toString();
+          // ignore: deprecated_member_use
+          await launch(
+            '$upayDeeplink',
+            forceSafariVC: false,
+            forceWebView: false,
+          );
+
+          await showSuccessDialog(context, price.toString());
+          Navigator.pop(context);
+        } else {
+          showErrorDialog(response.statusMessage ?? '');
+        }
+      } catch (e) {
+        showErrorDialog(e.toString());
+      }
+      loading = false;
+      setState(() {});
+    }
+  }
+
+  void showErrorDialog(String error) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      // false = user must tap button, true = tap outside dialog
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('title'),
+          content: Text(error),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Done'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future showSuccessDialog(BuildContext context, String success) async {
+    await get_count();
+
+    return AwesomeDialog(
+        context: context,
+        animType: AnimType.leftSlide,
+        headerAnimationLoop: false,
+        dialogType: DialogType.info,
+        showCloseIcon: false,
+        title: "You paid successfuly",
+        autoHide: const Duration(seconds: 5),
+        btnOkOnPress: () {
+          Navigator.pop(context);
+        },
+        btnCancelOnPress: () {
+          Navigator.pop(context);
+        },
+        onDismissCallback: (type) {
+          Navigator.pop(context);
+        }).show();
+  }
+  //check payment method upay
+}
+
+class SignUtil {
+  static StringBuffer getKeys(Map<String, String> inMap, List<String> keys) {
+    StringBuffer sbf = StringBuffer();
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+      if (key != 'sign' && key.isNotEmpty) {
+        var value = inMap[key];
+        if (value == '' || value == null) {
+          continue;
+        }
+        sbf
+          ..write(key)
+          ..write('=')
+          ..write(value);
+        if (i != (keys.length - 1)) {
+          sbf.write('&');
+        }
+      }
+    }
+    return sbf;
+  }
+
+  static String generateMD5(String data) {
+    print(data);
+    Uint8List content = const Utf8Encoder().convert(data);
+    Digest digest = md5.convert(content);
+    return digest.toString();
+  }
+
+  static String getSign(Map<String, String> inMap, String secretKey) {
+    var keys = <String>[];
+    keys.addAll(inMap.keys);
+    keys.sort();
+    var sbf = getKeys(inMap, keys);
+    sbf.write(secretKey);
+    print(sbf.toString());
+    return generateMD5(sbf.toString()).toUpperCase();
+  }
+
+  var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+  String RandomString(int strlen) {
+    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+    String result = "";
+    for (var i = 0; i < strlen; i++) {
+      result += chars[rnd.nextInt(chars.length)];
+    }
+    return result;
   }
 }

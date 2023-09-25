@@ -1,0 +1,25 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.oneclickonedollar.itckfa",
+    "sha256_cert_fingerprints":
+    ["78:98:0E:0E:E8:CE:23:72:EB:94:6D:0F:E9:8E:C6:30:B8:0A:6F:AF:CA:3B:1B:62:E5:E5:32:EA:85:47:EF:C0"]
+  }
+},
+{
+  "relation": ["delegate_permission/common.get_login_creds"],
+  "target": {
+    "namespace": "web",
+    "site": "https://kfaapp.page.link"
+  }
+},
+{
+  "relation": ["delegate_permission/common.get_login_creds"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.oneclickonedollar.itckfa",
+    "sha256_cert_fingerprints":
+    ["78:98:0E:0E:E8:CE:23:72:EB:94:6D:0F:E9:8E:C6:30:B8:0A:6F:AF:CA:3B:1B:62:E5:E5:32:EA:85:47:EF:C0"]
+  }
+}]

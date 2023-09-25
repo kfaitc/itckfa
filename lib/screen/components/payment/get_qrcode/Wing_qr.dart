@@ -116,14 +116,22 @@ class _Qr_WingState extends State<Qr_Wing> {
     });
 
     if (success_payment) {
+      var thier_plan;
       var count_number = widget.option.split(' ');
+      if (count_number[4] == "Day") {
+        thier_plan = 1;
+      } else if (count_number[4] == "Week") {
+        thier_plan = 7;
+      } else if (count_number[4] == "Mount") {
+        thier_plan = 30;
+      }
       final Data = {
         "id_user_control": widget.control_user.toString(),
         "count_autoverbal": int.parse(count_number[0].toString()),
       };
       final response = await http.post(
         Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal'),
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/${thier_plan}'),
         headers: {
           'Content-Type': 'application/json',
         },

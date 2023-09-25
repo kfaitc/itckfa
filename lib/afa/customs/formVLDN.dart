@@ -19,13 +19,13 @@ class FormValidateN extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
       child: TextFormField(
-        keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          // for below version 2 use this
-          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-          // for version 2 and greater youcan also use this
-          FilteringTextInputFormatter.digitsOnly
-        ],
+        keyboardType: TextInputType.text,
+        // inputFormatters: <TextInputFormatter>[
+        //   // for below version 2 use this
+        //   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+        //   // for version 2 and greater youcan also use this
+        //   FilteringTextInputFormatter.digitsOnly
+        // ],
         onChanged: onSaved,
         decoration: InputDecoration(
           fillColor: Color.fromARGB(255, 255, 255, 255),
