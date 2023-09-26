@@ -23,7 +23,7 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
   Future<void> _get(id) async {
     _await = true;
     await Future.wait([
-      Get_ID(id),
+      Check_Transtoin(id),
     ]);
     setState(() {
       _await = false;
@@ -145,30 +145,30 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
 
   List list_User_by_id = [];
   var set_id_user;
-  Future<void> Get_ID(String id) async {
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
-    if (rs.statusCode == 200) {
-      setState(() {
-        var jsonData = jsonDecode(rs.body);
-        list_User_by_id = jsonData;
-        if (list_User_by_id[0]['control_user'] != null) {
-          set_id_user = list_User_by_id[0]['control_user'].toString();
-          print('ID = ${set_id_user}');
-          // get_image(list_User_by_id[0]['control_user'].toString());
-          if (set_id_user != null) {
-            print('sdfasdfasdfsadff');
-            Check_Transtoin(id);
-          }
-        }
-      });
-    }
-  }
+  // Future<void> Get_ID(String id) async {
+  //   var rs = await http.get(Uri.parse(
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
+  //   if (rs.statusCode == 200) {
+  //     setState(() {
+  //       var jsonData = jsonDecode(rs.body);
+  //       list_User_by_id = jsonData;
+  //       if (list_User_by_id[0]['control_user'] != null) {
+  //         set_id_user = list_User_by_id[0]['control_user'].toString();
+  //         print('ID = ${set_id_user}');
+  //         // get_image(list_User_by_id[0]['control_user'].toString());
+  //         if (set_id_user != null) {
+  //           print('sdfasdfasdfsadff');
+  //           Check_Transtoin(id);
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
 
   List list = [];
   Future<void> Check_Transtoin(String id) async {
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/User_Tran/54K182F54A'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/User_Tran/$id'));
     if (rs.statusCode == 200) {
       setState(() {
         var jsonData = jsonDecode(rs.body);
