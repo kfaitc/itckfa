@@ -92,7 +92,7 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
                               CircleAvatar(
                                   radius: 20,
                                   backgroundImage: AssetImage(
-                                    '${list[index]['bank_id'].toString() == '8899' ? 'assets/images/wing.png' : 'assets/images/UPAY-logo.png'}',
+                                    '${list[index]['bank_id'].toString() == '8899' ? 'assets/images/UPAY-logo.png' : 'assets/images/wing.png'}',
                                   )),
                               SizedBox(width: 20),
                               Text(
@@ -105,7 +105,7 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
                                         255, 112, 111, 111)),
                               ),
                               Text(
-                                '${list[index]['bank_id'].toString() == '8899' ? 'WING BANK' : 'UPAY BANK'}',
+                                '${list[index]['bank_id'].toString() == '8899' ? 'UPAY BANK' : 'WING BANK'}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize:
