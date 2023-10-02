@@ -190,11 +190,11 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
   double Private_Area = 0.0;
   int Livingroom = 0;
   int Parking = 0;
-  int size_w = 0;
-  int size_l = 0;
+  double size_w = 0;
+  double size_l = 0;
   int floor = 0;
-  int land_l = 0;
-  int land_w = 0;
+  double land_l = 0;
+  double land_w = 0;
   double size_house = 0.0;
   double total_area = 0.0;
   double price_sqm = 0.0;
@@ -569,17 +569,18 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               type: 'No_Edit',
               l: (value) {
                 setState(() {
-                  land_l = int.parse(value);
+                  land_l = double.parse(value);
                 });
               },
               w: (value) {
                 setState(() {
-                  land_w = int.parse(value);
+                  land_w = double.parse(value);
                 });
               },
               total: (value) {
                 setState(() {
                   land = double.parse(value.toString());
+                  print('Land = $land');
                 });
               },
             ),
@@ -604,17 +605,18 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               type: 'No_Edit',
               l: (value) {
                 setState(() {
-                  size_l = int.parse(value);
+                  size_l = double.parse(value);
                 });
               },
               w: (value) {
                 setState(() {
-                  size_w = int.parse(value);
+                  size_w = double.parse(value);
                 });
               },
               total: (value) {
                 setState(() {
                   size_house = double.parse(value.toString());
+                  print('land =========================== $size_house');
                 });
               },
             ),
@@ -1487,17 +1489,18 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
             Building(
               l: (value) {
                 setState(() {
-                  land_l = int.parse(value);
+                  land_l = double.parse(value);
                 });
               },
               w: (value) {
                 setState(() {
-                  land_w = int.parse(value);
+                  land_w = double.parse(value);
                 });
               },
               total: (value) {
                 setState(() {
                   land = double.parse(value.toString());
+                  print('land =========================== $size_house');
                 });
               },
             ),
@@ -1506,17 +1509,18 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
             Building(
               l: (value) {
                 setState(() {
-                  size_l = int.parse(value);
+                  size_l = double.parse(value);
                 });
               },
               w: (value) {
                 setState(() {
-                  size_w = int.parse(value);
+                  size_w = double.parse(value);
                 });
               },
               total: (value) {
                 setState(() {
                   size_house = double.parse(value.toString());
+                  print('size_house =========================== $size_house');
                 });
               },
             ),

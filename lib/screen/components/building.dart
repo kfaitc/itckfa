@@ -194,7 +194,7 @@ class _MultiplyFormState extends State<Building> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       labelText:
-                          '${(widget.type == "Edit") ? widget.w_value.toString() : "w"}',
+                          '${(widget.type == "Edit") ? widget.total_value.toString() : "Total"}',
                       labelStyle: TextStyle(
                           color: (widget.type == "Edit")
                               ? Color.fromARGB(255, 33, 32, 32)
