@@ -74,7 +74,6 @@ class _TopUpState extends State<TopUp> {
   void initState() {
     super.initState();
     check();
-    print(widget.id_user.toString() + "in Top");
   }
 
   @override

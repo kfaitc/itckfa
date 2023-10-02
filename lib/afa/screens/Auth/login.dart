@@ -377,6 +377,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                       isApiCallProcess = false;
                     });
                     if (value.message == "Login Successfully!") {
+                      PeopleController().deletePeople(0);
                       var people = PeopleModel(
                         id: 0,
                         name: requestModel.email,

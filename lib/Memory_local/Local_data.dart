@@ -171,7 +171,7 @@ class _ShowPeoplePageState extends State<ShowPeoplePage> {
             return Card(
               child: ListTile(
                 onTap: () {
-                  PeopleController().deletePeople(data.id);
+                  PeopleController().updatePeople(data);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const ShowPeoplePage()),
