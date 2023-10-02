@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../Profile/contants.dart';
+import '../../contants.dart';
 
 typedef OnChangeCallback = void Function(dynamic value);
 
@@ -33,7 +33,8 @@ class Building extends StatefulWidget {
 class _MultiplyFormState extends State<Building> {
   TextEditingController _controllerA = TextEditingController();
   TextEditingController _controllerB = TextEditingController();
-  int _total = 0;
+  TextEditingController total = TextEditingController();
+  // double _total = 0;
 
   @override
   void dispose() {
@@ -43,8 +44,9 @@ class _MultiplyFormState extends State<Building> {
   }
 
   void _updateTotal() {
-    int a = int.tryParse(_controllerA.text) ?? 0;
-    int b = int.tryParse(_controllerB.text) ?? 0;
+    double a = double.tryParse(_controllerA.text) ?? 0;
+    double b = double.tryParse(_controllerB.text) ?? 0;
+    double _total = double.tryParse(total.text) ?? 0;
     // int a =
     //     int.tryParse(_controllerA.text) ?? int.parse(widget.l_value.toString());
     // int b =
@@ -52,7 +54,7 @@ class _MultiplyFormState extends State<Building> {
     setState(() {
       // _total = a * b;
 
-      _total = a * b;
+      // _total = a * b;
 
       widget.l(a.toString());
       widget.w(b.toString());
@@ -163,30 +165,70 @@ class _MultiplyFormState extends State<Building> {
                     color: Colors.grey),
               ),
               Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(width: 0.5, color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10)),
-                width: w,
-                height: MediaQuery.of(context).size.height * 0.065,
-                child: (widget.type != 'Edit')
-                    ? Text(
-                        '$_total',
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 100, 99, 99)),
-                      )
-                    // ? Text(
-                    //     '$_total',
-                    //     style: TextStyle(
-                    //         color: Color.fromARGB(255, 112, 112, 112)),
-                    //   )
-                    : Text(
-                        '${_total = int.parse(widget.total_value.toString())}',
-                        style:
-                            TextStyle(color: Color.fromARGB(255, 100, 99, 99)),
+                width: w2,
+                child: TextFormField(
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.015,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  controller: total,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 8),
+                      // prefixIcon: Icon(
+                      //   Icons.width_full_outlined,
+                      //   color: kImageColor,
+                      // ),
+                      fillColor: kwhite,
+                      filled: true,
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Colors.grey, width: 2.0),
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-              )
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      labelText:
+                          '${(widget.type == "Edit") ? widget.w_value.toString() : "w"}',
+                      labelStyle: TextStyle(
+                          color: (widget.type == "Edit")
+                              ? Color.fromARGB(255, 33, 32, 32)
+                              : Colors.grey,
+                          fontSize:
+                              MediaQuery.of(context).size.height * 0.015)),
+                  onChanged: (value) => _updateTotal(),
+                ),
+              ),
+              // Container(
+              //   alignment: Alignment.center,
+              //   decoration: BoxDecoration(
+              //       color: Colors.white,
+              //       border: Border.all(width: 0.5, color: Colors.grey),
+              //       borderRadius: BorderRadius.circular(10)),
+              //   width: w,
+              //   height: MediaQuery.of(context).size.height * 0.065,
+              //   child: (widget.type != 'Edit')
+              //       ? Text(
+              //           '$_total',
+              //           style:
+              //               TextStyle(color: Color.fromARGB(255, 100, 99, 99)),
+              //         )
+              //       // ? Text(
+              //       //     '$_total',
+              //       //     style: TextStyle(
+              //       //         color: Color.fromARGB(255, 112, 112, 112)),
+              //       //   )
+              //       : Text(
+              //           '${_total = double.parse(widget.total_value.toString())}',
+              //           style:
+              //               TextStyle(color: Color.fromARGB(255, 100, 99, 99)),
+              //         ),
+              // )
             ],
           ),
         ),

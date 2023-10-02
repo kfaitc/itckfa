@@ -51,6 +51,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   late String gender = "";
   late String from = "";
   late String tel = "";
+  late String control_user = "";
   static List<PeopleModel> list = [];
   static bool status = false;
   PeopleModel? peopleModel;
@@ -397,6 +398,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => HomePage1(
+                                  control_user: control_user,
                                   log: 0,
                                   lat: 0,
                                   user: username,
@@ -479,6 +481,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
         gender = jsonData['gender'];
         from = jsonData['known_from'];
         tel = jsonData['tel_num'];
+        control_user = jsonData['control_user'];
       });
       print(id.toString());
     }

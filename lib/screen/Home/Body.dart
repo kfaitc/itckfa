@@ -6,6 +6,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/afa/components/contants.dart';
@@ -15,14 +16,12 @@ import 'package:itckfa/screen/Account/account.dart';
 import 'package:itckfa/screen/Home/Customs/Model-responsive.dart';
 import 'package:itckfa/screen/Promotion/membership_real.dart';
 import 'package:itckfa/screen/Promotion/partnerList_real.dart';
-
 // import 'package:itckfa/screen/Home/Customs/MenuCard.dart';
 import 'package:http/http.dart' as http;
 import 'package:itckfa/screen/Promotion/Title_promo.dart';
 import 'package:itckfa/screen/Promotion/promotion.dart';
 import 'package:itckfa/screen/Home/Customs/titleBar.dart';
 import 'package:itckfa/screen/Property/Home_Screen_property.dart';
-import 'package:itckfa/screen/components/map_all/map_in_add_body.dart';
 import 'package:itckfa/screen/components/payment/top_up.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
@@ -204,6 +203,7 @@ class _BodyState extends State<Body> {
     }
   }
 
+  String? v_point;
   Future<void> check_v_point() async {
     final response = await http.get(
       Uri.parse(
@@ -244,6 +244,7 @@ class _BodyState extends State<Body> {
   String? formattedDate;
   @override
   void initState() {
+    ///
     _handleLocationPermission();
     // _getCurrentPosition();
     get_control_user(widget.id ?? "");

@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, import_of_legacy_library_into_null_safe, use_build_context_synchronously, non_constant_identifier_names, unused_import, deprecated_member_use
 
+import 'dart:convert';
 import 'dart:typed_data';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
@@ -20,7 +24,7 @@ import 'package:itckfa/screen/Promotion/PartnerList.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:http/http.dart' as http;
 import 'Customs/Feed_back.dart';
 
 class HomePage1 extends StatefulWidget {
@@ -34,10 +38,12 @@ class HomePage1 extends StatefulWidget {
   final String? id;
   final double? log;
   final double? lat;
+  final String? control_user;
 
   const HomePage1({
     Key? key,
     this.user,
+    this.control_user,
     this.first_name,
     this.last_name,
     this.email,
@@ -71,15 +77,23 @@ class _HomePageState extends State<HomePage1> {
         ));
   }
 
+  String? expiry;
+  List list = [];
+  String? now_day;
   @override
   void initState() {
     super.initState();
+
+    fetchDataFromAPI('${widget.control_user}');
   }
 
   int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    now_day = DateFormat('yyyy-MM-dd').format(now);
+
     final tabs = [
       Body(
         lat: widget.lat,
@@ -236,5 +250,48 @@ class _HomePageState extends State<HomePage1> {
         },
       ),
     );
+  }
+
+  Future<Map<String, dynamic>> fetchDataFromAPI(String userId) async {
+    final apiUrl =
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$userId';
+
+    try {
+      var data;
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          data = json.decode(response.body);
+          print('$data');
+          expiry = data['expiry'];
+          print('Expiry: $expiry');
+          DateTime expiryDate = DateTime.parse(expiry!);
+          DateTime nowDate = DateTime.parse(now_day!);
+          Duration difference = expiryDate.difference(nowDate);
+          print(difference.inDays.toString());
+          if (difference.inDays == 1) {
+            final player = AudioPlayer();
+            player.play(AssetSource('nor.mp3'));
+            Get.snackbar('Message', 'Your V-Point Expiry 1 Days',
+                colorText: const Color.fromARGB(255, 5, 4, 4),
+                icon: CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/KFA_CRM.png'),
+                  backgroundColor: Colors.white,
+                ),
+                snackPosition: SnackPosition.TOP,
+                snackbarStatus: (status) => SnackbarStatus.OPENING,
+                snackStyle: SnackStyle.GROUNDED);
+          } else {
+            print('No Expiry');
+          }
+        });
+        return data;
+      } else {
+        throw Exception('Failed to load data from the API');
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 }
