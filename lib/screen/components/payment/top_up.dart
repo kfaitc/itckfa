@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_const_constructors
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, prefer_typing_uninitialized_variables, avoid_print, unnecessary_brace_in_string_interps, unnecessary_string_interpolations
 
 // ignore_for_file: use_build_context_synchronously
 
@@ -78,7 +78,7 @@ class _TopUpState extends State<TopUp> {
 
   @override
   Widget build(BuildContext context) {
-    check();
+    // check();
     setState(() {
       v_point;
     });
@@ -1044,6 +1044,7 @@ class _TopUpState extends State<TopUp> {
       'Wing',
       'ABA',
     ];
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -1057,8 +1058,15 @@ class _TopUpState extends State<TopUp> {
               children: [
                 InkWell(
                   onTap: () async {
+                    order_reference_no =
+                        "KFA${Random().nextInt(100)}Oukpov${Random().nextInt(1000) + 10}";
+                    print(order_reference_no.toString());
+                    print('Price = $price');
                     if (index == 0) {
                       await createOrder(price, option, context);
+                    } else if (index == 1) {
+                      await createOrder_Wing(price, option, context);
+                      // await createOrder_Wing();
                     }
                   },
                   child: Card(
@@ -1186,6 +1194,135 @@ class _TopUpState extends State<TopUp> {
         );
       },
     );
+  }
+
+  // var intValue = Random().nextInt(99);
+
+  var deeplink_hask;
+  var token;
+  var order_reference_no;
+//Wing Token
+  Future<void> createOrder_Wing(price, option, context) async {
+    var accessToken;
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var url =
+        await Uri.parse('https://ir.wingmoney.com:9443/RestEngine/oauth/token');
+    var body = {
+      'username': 'online.mangogame',
+      'password': '914bade01fd32493a0f2efc583e1a5f6',
+      'grant_type': 'password',
+      'client_id': 'third_party',
+      'client_secret': '16681c9ff419d8ecc7cfe479eb02a7a',
+    };
+
+    // Encode the body as a form-urlencoded string
+    var requestBody = Uri(queryParameters: body).query;
+
+    var response = await http.post(url, headers: headers, body: requestBody);
+
+    if (response.statusCode == 200) {
+      // Parse the JSON response
+      setState(() {
+        var jsonResponse = jsonDecode(response.body);
+        accessToken = jsonResponse['access_token'];
+        var parts = accessToken.split('-');
+        token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
+        // print('Access_Token: ${accessToken}');
+        // print('Access Token: ${token}');
+      });
+      // await deeplink_hask(token);
+      if (token != null) {
+        await deeplinkHask(accessToken, token, price, option, context);
+      }
+    } else {
+      print('Request failed with status: ${response.statusCode}');
+      print('Response: ${response.body}');
+    }
+  }
+
+//Deeplink hask
+
+  Future<void> deeplinkHask(accessToken, token, price, option, context) async {
+    print('or = $order_reference_no');
+    // print('deeplinkHask = $token');
+    final url = await Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
+
+    // Create a POST request
+    final request = http.MultipartRequest('POST', url);
+
+    // Add form fields to the request
+    request.fields.addAll({
+      'str': '1.00#USD#00402#$order_reference_no#kfa://callback',
+      'key': '$token',
+    });
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(await response.stream.bytesToString());
+      setState(() {
+        deeplink_hask = jsonResponse['Deeplink_Hask'];
+      });
+      if (deeplink_hask != null) {
+        var data = await Wing_app(deeplink_hask, accessToken, price);
+      }
+    } else {
+      // If the response status code is not 200, print the reason phrase
+      print('Request failed with status: ${response.reasonPhrase}');
+    }
+  }
+
+  Future Wing_app(deeplink_hask, accessToken, price) async {
+    print('Wing_app $deeplink_hask || $order_reference_no || $accessToken');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $accessToken'
+    };
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://ir.wingmoney.com:9443/RestEngine/api/v4/generatedeeplink'));
+    request.body = json.encode({
+      "order_reference_no": "$order_reference_no",
+      "amount": "$price",
+      "currency": "USD",
+      "merchant_name": "Khmer Foundation Appraisal Co., Ltd",
+      "merchant_id": "00402",
+      "item_name": "Payin",
+      // "success_callback_url":
+      //     "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/Callback",
+      "schema_url": "kfa://callback",
+      "integration_type": "MOBAPP",
+      "txn_hash": "$deeplink_hask",
+      "product_detail": [
+        {
+          "product_id": "6205",
+          "product_type": "Property",
+          "product_qty": 1,
+          "product_unit_price": "$price",
+          "currency": "USD"
+        }
+      ]
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(await response.stream.bytesToString());
+      var redirect_url = jsonResponse['redirect_url'];
+      print("kokoko $redirect_url \n\n\n\n");
+      // ignore: deprecated_member_use
+      launch(
+        '$redirect_url',
+        forceSafariVC: false,
+        forceWebView: false,
+      );
+      return redirect_url;
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 
   static String baseUrl2 = 'https://dev-upayapi.u-pay.com/upayApi/mc/mcOrder';
