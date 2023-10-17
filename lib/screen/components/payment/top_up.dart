@@ -1058,15 +1058,15 @@ class _TopUpState extends State<TopUp> {
               children: [
                 InkWell(
                   onTap: () async {
-                    order_reference_no =
-                        "KFA${Random().nextInt(100)}Oukpov${Random().nextInt(1000) + 10}";
-                    print(order_reference_no.toString());
-                    print('Price = $price');
                     if (index == 0) {
-                      await createOrder(price, option, context);
+                      await createOrder_Upay(price, option, context);
                     } else if (index == 1) {
+                      setState(() {
+                        order_reference_no =
+                            "K${Random().nextInt(100)}F${Random().nextInt(1000)}";
+                      });
+
                       await createOrder_Wing(price, option, context);
-                      // await createOrder_Wing();
                     }
                   },
                   child: Card(
@@ -1227,10 +1227,7 @@ class _TopUpState extends State<TopUp> {
         accessToken = jsonResponse['access_token'];
         var parts = accessToken.split('-');
         token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
-        // print('Access_Token: ${accessToken}');
-        // print('Access Token: ${token}');
       });
-      // await deeplink_hask(token);
       if (token != null) {
         await deeplinkHask(accessToken, token, price, option, context);
       }
@@ -1241,24 +1238,19 @@ class _TopUpState extends State<TopUp> {
   }
 
 //Deeplink hask
-
-  Future<void> deeplinkHask(accessToken, token, price, option, context) async {
+  Future deeplinkHask(accessToken, token, price, option, context) async {
     print('or = $order_reference_no');
     // print('deeplinkHask = $token');
     final url = await Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
-
     // Create a POST request
     final request = http.MultipartRequest('POST', url);
-
     // Add form fields to the request
     request.fields.addAll({
       'str': '1.00#USD#00402#$order_reference_no#kfa://callback',
       'key': '$token',
     });
-
     final response = await request.send();
-
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       setState(() {
@@ -1290,8 +1282,8 @@ class _TopUpState extends State<TopUp> {
       "merchant_name": "Khmer Foundation Appraisal Co., Ltd",
       "merchant_id": "00402",
       "item_name": "Payin",
-      // "success_callback_url":
-      //     "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/Callback",
+      "success_callback_url":
+          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/Callback",
       "schema_url": "kfa://callback",
       "integration_type": "MOBAPP",
       "txn_hash": "$deeplink_hask",
@@ -1306,31 +1298,31 @@ class _TopUpState extends State<TopUp> {
       ]
     });
     request.headers.addAll(headers);
-
     http.StreamedResponse response = await request.send();
-
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       var redirect_url = jsonResponse['redirect_url'];
-      print("kokoko $redirect_url \n\n\n\n");
       // ignore: deprecated_member_use
       launch(
         '$redirect_url',
         forceSafariVC: false,
         forceWebView: false,
       );
+      await showSuccessDialog(context, price.toString());
+      Navigator.pop(context);
       return redirect_url;
     } else {
       print(response.reasonPhrase);
     }
   }
 
+// Upay deeplink
   static String baseUrl2 = 'https://dev-upayapi.u-pay.com/upayApi/mc/mcOrder';
   var appUrl = '$baseUrl2/appCreate';
   var qrUrl = '$baseUrl2/create/qrcode';
   var loading = false;
   var thier_plan;
-  Future<void> createOrder(
+  Future<void> createOrder_Upay(
       var price, var number_order, BuildContext context) async {
     if (loading) {
       return;
@@ -1436,6 +1428,17 @@ class _TopUpState extends State<TopUp> {
         }).show();
   }
   //check payment method upay
+}
+
+Future showCircularProgressIndicatorDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      content: Center(
+        child: CircularProgressIndicator(),
+      ),
+    ),
+  );
 }
 
 class SignUtil {

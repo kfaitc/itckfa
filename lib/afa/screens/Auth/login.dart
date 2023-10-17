@@ -8,6 +8,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:itckfa/Memory_local/Local_data.dart';
+import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/screens/Auth/register.dart';
 import 'package:itckfa/api/api_service.dart';
 import 'package:itckfa/models/login_model.dart';
@@ -58,31 +59,69 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   late TextEditingController Email;
   late TextEditingController Password;
   selectPeople() async {
-    list = await PeopleController().selectPeople();
-    if (list.isEmpty) {
+    // list = await PeopleController().selectPeople();
+    // if (list.isEmpty) {
+    //   setState(() {
+    //     status = false;
+    //   });
+    // } else {
+    //   setState(() {
+    //     int i = list.length - 1;
+    //     status = true;
+    //     Email = TextEditingController(text: list[i].name);
+    //     Password = TextEditingController(text: list[i].password);
+    //   });
+    // }
+
+    slist = await mydb.db.rawQuery('SELECT * FROM user');
+    slist.map((e) {
+      setState(() {
+        datatest = e;
+        print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
+      });
+    });
+    if (slist.isEmpty) {
       setState(() {
         status = false;
       });
     } else {
       setState(() {
-        int i = list.length - 1;
+        int i = slideList.length - 1;
         status = true;
-        Email = TextEditingController(text: list[i].name);
-        Password = TextEditingController(text: list[i].password);
+        print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
+        // Email = TextEditingController(text: list[i].name);
+        // Password = TextEditingController(text: list[i].password);
       });
     }
   }
 
+  getdata() {
+    Future.delayed(Duration(milliseconds: 500), () async {
+      await mydb.open();
+      slist = await mydb.db.rawQuery('SELECT * FROM user');
+      setState(() {
+        setState(() {
+          print("\n\n\n\n\n\n kokokoko =  ${slist.toString()}\n\n\n\n\n\n");
+        });
+      });
+    });
+  }
+
+  Map? datatest;
+  List<Map> slist = [];
+  MyDb mydb = new MyDb();
   late AnimationController controller;
   late Animation<double> animation;
   late PageController _pageController;
-  late List<Widget> slideList;
+  late List slideList;
   late int initialPage;
   @override
   void initState() {
+    // mydb.open();
+    // getdata();
     _pageController = PageController(initialPage: 0);
     initialPage = _pageController.initialPage;
-    selectPeople();
+    // selectPeople();
     status;
     list;
     super.initState();
