@@ -92,11 +92,6 @@ class _Qr_WingState extends State<Qr_Wing> {
       final responseBody = json.decode(response.body);
       setState(() {
         url_qr = responseBody['body']['qr_code_url'];
-        print('\n' +
-            'trace_id ' +
-            responseBody['trace_id '].toString() +
-            '\n' +
-            widget.id);
       });
     } else {
       // Failed to create invoice

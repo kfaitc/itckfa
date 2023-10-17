@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:itckfa/Memory_local/Local_data.dart';
+import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/customs/formVLD.dart';
 import 'package:itckfa/api/api_service.dart';
@@ -57,7 +58,7 @@ class _RegisterState extends State<Register> {
     'Male',
     'Other',
   ];
-
+  MyDb mydb = new MyDb();
   Uint8List? imagebytes;
   final ImagePicker imgpicker = ImagePicker();
   String imagepath = "";
@@ -170,7 +171,7 @@ class _RegisterState extends State<Register> {
   @override
   void initState() {
     get_user_last_id();
-
+    // mydb.open();
     super.initState();
   }
 
@@ -739,12 +740,18 @@ class _RegisterState extends State<Register> {
                           isApiCallProcess = false;
                         });
                         if (value.message == "User successfully registered") {
-                          var people = PeopleModel(
-                            id: 0,
-                            name: requestModel.email,
-                            password: requestModel.password,
-                          );
-                          PeopleController().insertPeople(people);
+                          mydb.db.rawInsert(
+                              "INSERT INTO user (first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ? , ?);",
+                              [
+                                requestModel.first_name,
+                                requestModel.last_name,
+                                requestModel.control_user,
+                                requestModel.gender,
+                                requestModel.tel_num,
+                                requestModel.known_from,
+                                requestModel.email,
+                                requestModel.password
+                              ]);
                           AwesomeDialog(
                             context: context,
                             animType: AnimType.leftSlide,
@@ -754,6 +761,8 @@ class _RegisterState extends State<Register> {
                             title: value.message,
                             autoHide: Duration(seconds: 3),
                             onDismissCallback: (type) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("New User Added")));
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
