@@ -911,7 +911,7 @@ class _TopUpState extends State<TopUp> {
                             height: 65,
                             width: 65,
                             child: Image.asset(
-                              'assets/images/wing.png',
+                              'assets/images/WingBank-Logo_Square.png',
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -1017,7 +1017,7 @@ class _TopUpState extends State<TopUp> {
         fit: BoxFit.scaleDown,
       ),
       Image.asset(
-        'assets/images/wing.png',
+        'assets/images/WingBank-Logo_Square.png',
         fit: BoxFit.scaleDown,
       ),
       Image.asset(
@@ -1058,8 +1058,14 @@ class _TopUpState extends State<TopUp> {
               children: [
                 InkWell(
                   onTap: () async {
-                    order_reference_no =
-                        "KFA${Random().nextInt(100)}Oukpov${Random().nextInt(1000) + 10}";
+                    // launch(
+                    //   'wingbankapp://payment?orderId=ORDER000149195&amount=1.00&currency=USD&merchant_id=00183&merchant_name=Khmer Foundation Appraisal Co., Ltd&serviceType=BILLPAYON&ref_id=KFA60Oukpov888',
+                    //   forceSafariVC: false,
+                    //   forceWebView: false,
+                    // );
+                    order_reference_no = SignUtil().RandomString(10).toString();
+                    // order_reference_no =
+                    //     "KFA${Random().nextInt(100)}${Random().nextInt(1000) + 10}${Random().nextInt(1000) + 20}";
                     print(order_reference_no.toString());
                     print('Price = $price');
                     if (index == 0) {
@@ -1196,19 +1202,18 @@ class _TopUpState extends State<TopUp> {
     );
   }
 
-  // var intValue = Random().nextInt(99);
-
   var deeplink_hask;
   var token;
   var order_reference_no;
-//Wing Token
+
+//Wing create Token
   Future<void> createOrder_Wing(price, option, context) async {
     var accessToken;
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var url =
         await Uri.parse('https://ir.wingmoney.com:9443/RestEngine/oauth/token');
     var body = {
-      'username': 'online.mangogame',
+      'username': 'online.kfausd',
       'password': '914bade01fd32493a0f2efc583e1a5f6',
       'grant_type': 'password',
       'client_id': 'third_party',
@@ -1228,8 +1233,10 @@ class _TopUpState extends State<TopUp> {
         var parts = accessToken.split('-');
         token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
         // print('Access_Token: ${accessToken}');
-        // print('Access Token: ${token}');
+        print('Price : $price');
+        print('Access Token: ${token}');
       });
+
       // await deeplink_hask(token);
       if (token != null) {
         await deeplinkHask(accessToken, token, price, option, context);
@@ -1243,7 +1250,7 @@ class _TopUpState extends State<TopUp> {
 //Deeplink hask
 
   Future<void> deeplinkHask(accessToken, token, price, option, context) async {
-    print('or = $order_reference_no');
+    print('Token !=null = $order_reference_no');
     // print('deeplinkHask = $token');
     final url = await Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
@@ -1253,7 +1260,7 @@ class _TopUpState extends State<TopUp> {
 
     // Add form fields to the request
     request.fields.addAll({
-      'str': '1.00#USD#00402#$order_reference_no#kfa://callback',
+      'str': '$price#USD#00402#$order_reference_no#kfa://callback',
       'key': '$token',
     });
 
@@ -1290,6 +1297,7 @@ class _TopUpState extends State<TopUp> {
       "merchant_name": "Khmer Foundation Appraisal Co., Ltd",
       "merchant_id": "00402",
       "item_name": "Payin",
+      "success_callback_url": "https://kfaapp.page.link/service",
       // "success_callback_url":
       //     "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/Callback",
       "schema_url": "kfa://callback",
@@ -1312,7 +1320,7 @@ class _TopUpState extends State<TopUp> {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       var redirect_url = jsonResponse['redirect_url'];
-      print("kokoko $redirect_url \n\n\n\n");
+      print("kokoko ( $redirect_url ) \n\n\n\n");
       // ignore: deprecated_member_use
       launch(
         '$redirect_url',
