@@ -1,21 +1,16 @@
-// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, prefer_typing_uninitialized_variables, avoid_print, unnecessary_brace_in_string_interps, unnecessary_string_interpolations
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, prefer_typing_uninitialized_variables, avoid_print, unnecessary_brace_in_string_interps, unnecessary_string_interpolations, deprecated_member_use
 
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
 import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/screen/Home/Home.dart';
-import 'package:itckfa/screen/components/payment/app_link_payment/app_link_upay.dart';
 import 'package:itckfa/screen/components/payment/get_qrcode/UPay_qr.dart';
 import 'package:itckfa/screen/components/payment/get_qrcode/Wing_qr.dart';
 import 'package:crypto/crypto.dart';
@@ -75,6 +70,17 @@ class _TopUpState extends State<TopUp> {
     super.initState();
     check();
   }
+
+  // bool _await_callback = false;
+  // Future<void> button(deeplink_hask, accessToken, price) async {
+  //   // _await_callback = true;
+  //   await Future.wait([
+  //     call_back_wing(deeplink_hask, accessToken, price),
+  //   ]);
+  //   setState(() {
+  //     // _await_callback = false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -1009,6 +1015,15 @@ class _TopUpState extends State<TopUp> {
     );
   }
 
+  Future<void> _await(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
   Future<void> _dialogBuilder(BuildContext context, var price, String account,
       String option, int index) {
     List<Image> set_images = [
@@ -1058,21 +1073,15 @@ class _TopUpState extends State<TopUp> {
               children: [
                 InkWell(
                   onTap: () async {
-                    // launch(
-                    //   'wingbankapp://payment?orderId=ORDER000149195&amount=1.00&currency=USD&merchant_id=00183&merchant_name=Khmer Foundation Appraisal Co., Ltd&serviceType=BILLPAYON&ref_id=KFA60Oukpov888',
-                    //   forceSafariVC: false,
-                    //   forceWebView: false,
-                    // );
-                    order_reference_no = SignUtil().RandomString(10).toString();
-                    // order_reference_no =
-                    //     "KFA${Random().nextInt(100)}${Random().nextInt(1000) + 10}${Random().nextInt(1000) + 20}";
+                    // order_reference_no = SignUtil().RandomString(10).toString();
+                    order_reference_no =
+                        "Khmer${Random().nextInt(100)}Fundetion${Random().nextInt(1000) + 10}A";
                     print(order_reference_no.toString());
                     print('Price = $price');
                     if (index == 0) {
                       await createOrder(price, option, context);
                     } else if (index == 1) {
                       await createOrder_Wing(price, option, context);
-                      // await createOrder_Wing();
                     }
                   },
                   child: Card(
@@ -1205,14 +1214,18 @@ class _TopUpState extends State<TopUp> {
   var deeplink_hask;
   var token;
   var order_reference_no;
-
+  var redirect_url;
 //Wing create Token
   Future<void> createOrder_Wing(price, option, context) async {
+    Navigator.pop(context);
+    _await(context);
+
     var accessToken;
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var url =
         await Uri.parse('https://ir.wingmoney.com:9443/RestEngine/oauth/token');
     var body = {
+      // 'username': 'online.mangogame',
       'username': 'online.kfausd',
       'password': '914bade01fd32493a0f2efc583e1a5f6',
       'grant_type': 'password',
@@ -1230,11 +1243,13 @@ class _TopUpState extends State<TopUp> {
       setState(() {
         var jsonResponse = jsonDecode(response.body);
         accessToken = jsonResponse['access_token'];
+
         var parts = accessToken.split('-');
         token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
-        // print('Access_Token: ${accessToken}');
+
+        print('accessToken: ${accessToken}');
+        print('token: ${token}');
         print('Price : $price');
-        print('Access Token: ${token}');
       });
 
       // await deeplink_hask(token);
@@ -1250,7 +1265,7 @@ class _TopUpState extends State<TopUp> {
 //Deeplink hask
 
   Future<void> deeplinkHask(accessToken, token, price, option, context) async {
-    print('Token !=null = $order_reference_no');
+    print('order_reference_no : $order_reference_no');
     // print('deeplinkHask = $token');
     final url = await Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
@@ -1272,35 +1287,32 @@ class _TopUpState extends State<TopUp> {
         deeplink_hask = jsonResponse['Deeplink_Hask'];
       });
       if (deeplink_hask != null) {
-        var data = await Wing_app(deeplink_hask, accessToken, price);
+        print('deeplink_hask != null(200) = $deeplink_hask');
+        var data = await call_back_wing(deeplink_hask, accessToken, price);
+        // var data = await button(deeplink_hask, accessToken, price);
       }
     } else {
-      // If the response status code is not 200, print the reason phrase
       print('Request failed with status: ${response.reasonPhrase}');
     }
   }
 
-  Future Wing_app(deeplink_hask, accessToken, price) async {
-    print('Wing_app $deeplink_hask || $order_reference_no || $accessToken');
+  Future call_back_wing(deeplink_hask, accessToken, price) async {
+    print('call_back_wing');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $accessToken'
     };
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://ir.wingmoney.com:9443/RestEngine/api/v4/generatedeeplink'));
-    request.body = json.encode({
+    var data = json.encode({
       "order_reference_no": "$order_reference_no",
       "amount": "$price",
       "currency": "USD",
       "merchant_name": "Khmer Foundation Appraisal Co., Ltd",
       "merchant_id": "00402",
       "item_name": "Payin",
-      "success_callback_url": "https://kfaapp.page.link/service",
-      // "success_callback_url":
-      //     "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/Callback",
+      "success_callback_url":
+          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/Callback",
       "schema_url": "kfa://callback",
+      // "schema_url": "https://www.wingbank.com.kh/en/",
       "integration_type": "MOBAPP",
       "txn_hash": "$deeplink_hask",
       "product_detail": [
@@ -1313,23 +1325,30 @@ class _TopUpState extends State<TopUp> {
         }
       ]
     });
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
+    var dio = Dio();
+    var response = await dio.request(
+      'https://ir.wingmoney.com:9443/RestEngine/api/v4/generatedeeplink',
+      options: Options(
+        method: 'POST',
+        headers: headers,
+      ),
+      data: data,
+    );
 
     if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(await response.stream.bytesToString());
-      var redirect_url = jsonResponse['redirect_url'];
-      print("kokoko ( $redirect_url ) \n\n\n\n");
-      // ignore: deprecated_member_use
-      launch(
+      print('2000000000000000000000');
+      print(json.encode(response.data));
+      final jsonResponse = jsonDecode(json.encode(response.data));
+      redirect_url = jsonResponse['redirect_url'];
+      await launch(
         '$redirect_url',
         forceSafariVC: false,
         forceWebView: false,
       );
-      return redirect_url;
+      Navigator.pop(context);
+      Navigator.pop(context);
     } else {
-      print(response.reasonPhrase);
+      print(response.statusMessage);
     }
   }
 
@@ -1380,7 +1399,7 @@ class _TopUpState extends State<TopUp> {
         if (response.statusCode == 200) {
           var data = response.data;
           var upayDeeplink = data['data']['upayDeeplink'].toString();
-          // ignore: deprecated_member_use
+
           await launch(
             '$upayDeeplink',
             forceSafariVC: false,
