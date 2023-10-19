@@ -70,6 +70,17 @@
                     android:pathPattern="/service"/>
                 <data android:scheme="kfa" android:host="callback" />
             </intent-filter>
+             <!-- Deep Link-->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="kfaonclick.com"
+                />
+                    <!-- android:pathPrefix="/blog" -->
+            </intent-filter>
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.VIEW" />-->
 

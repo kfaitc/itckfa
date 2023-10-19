@@ -1,17 +1,14 @@
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:image_picker_android/image_picker_android.dart';
-import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:uni_links/uni_links.dart';
 
 // @pragma('vm:entry-point')
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -23,27 +20,27 @@ import 'package:permission_handler/permission_handler.dart';
 // }
 
 void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // SystemChrome.setPreferredOrientations(
+  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  // final ImagePickerPlatform imagePickerImplementation =
+  //     ImagePickerPlatform.instance;
+  // if (imagePickerImplementation is ImagePickerAndroid) {
+  //   imagePickerImplementation.useAndroidPhotoPicker = true;
+  // }
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  final ImagePickerPlatform imagePickerImplementation =
-      ImagePickerPlatform.instance;
-  if (imagePickerImplementation is ImagePickerAndroid) {
-    imagePickerImplementation.useAndroidPhotoPicker = true;
-  }
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   // Check if you received the link via `getInitialLink` first
-  final PendingDynamicLinkData? initialLink =
-      await FirebaseDynamicLinks.instance.getInitialLink();
+  // final PendingDynamicLinkData? initialLink =
+  //     await FirebaseDynamicLinks.instance.getInitialLink();
 
-  if (initialLink != null) {
-    final Uri deepLink = initialLink.link;
-    // Example of using the dynamic link to push the user to a different screen
-  }
+  // if (initialLink != null) {
+  //   final Uri deepLink = initialLink.link;
+  //   // Example of using the dynamic link to push the user to a different screen
+  // }
   runApp(const MyApp());
 }
 
@@ -63,7 +60,7 @@ class _MyAppState extends State<MyApp> {
     } else if (await Permission.requestInstallPackages
         .request()
         .isPermanentlyDenied) {
-      await openAppSettings();
+      // await openAppSettings();
     } else if (await Permission.requestInstallPackages.request().isDenied) {
       // setState(() {
       //   permissionGranted = false;
@@ -75,12 +72,35 @@ class _MyAppState extends State<MyApp> {
   // final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
   // This widget is the root of your application.
 
+  late StreamSubscription streamSubscription;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     _getInstallPermission();
+    incomingLinkHandler();
+  }
+
+  Future incomingLinkHandler() async {
+    try {
+      Uri? uri = await getInitialUri();
+      if (uri != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // openAppLink(uri);
+          print({"====|$uri|===="});
+        });
+      }
+      streamSubscription = uriLinkStream.listen((Uri? uri) {
+        if (uri == null) {
+          return;
+        } else {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            print({"====|Listen|====": uri});
+            // openAppLink(uri);
+          });
+        }
+      });
+    } on PlatformException {}
   }
 
   @override
