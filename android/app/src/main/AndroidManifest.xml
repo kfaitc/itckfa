@@ -41,7 +41,7 @@
         android:requestLegacyExternalStorage="true"
         android:label="OneClick1$"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -58,39 +58,16 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="flutter_deeplinking_enabled"
-                android:value="true" />
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="https"
-                    android:host="kfaapp.page.link"
-                    android:pathPattern="/service"/>
-                <data android:scheme="kfa" android:host="callback" />
-            </intent-filter>
-             <!-- Deep Link-->
+
+            <!-- Deep linking -->
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="true" />
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="https"
-                    android:host="kfaonclick.com"
-                />
-                    <!-- android:pathPrefix="/blog" -->
+                <data android:scheme="https" android:host="oneclickonedollar.com" />
+                <data android:scheme="http" />
             </intent-filter>
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
-
-<!--                <data android:scheme="http" />-->
-<!--                <data android:host="kfaapp.page.link" />-->
-<!--                <data android:pathPattern="/service" />-->
-<!--            </intent-filter>-->
 
         </activity>
 

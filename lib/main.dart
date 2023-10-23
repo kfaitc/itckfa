@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -41,6 +42,16 @@ void main() async {
   //   final Uri deepLink = initialLink.link;
   //   // Example of using the dynamic link to push the user to a different screen
   // }
+
+  //======|One signal |======
+  //Remove this method to stop OneSignal Debugging
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+
+  OneSignal.initialize("d3025f03-32f5-444a-8100-7f7637a7f631");
+// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  OneSignal.Notifications.requestPermission(true);
+  //======|One signal |======
+
   runApp(const MyApp());
 }
 
@@ -67,6 +78,7 @@ class _MyAppState extends State<MyApp> {
       // });
     }
   }
+
   // String link = 'https://kfaapp.page.link/service';
 
   // final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
