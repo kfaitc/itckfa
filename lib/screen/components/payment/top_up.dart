@@ -100,7 +100,7 @@ class _TopUpState extends State<TopUp> {
         ),
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context, HomePage1(id: widget.id_user));
+            Navigator.pop(context, HomePage1());
           },
           icon: const Icon(
             Icons.chevron_left,

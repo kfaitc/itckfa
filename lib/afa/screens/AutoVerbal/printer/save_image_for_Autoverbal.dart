@@ -126,11 +126,8 @@ class _save_image_after_add_verbalState
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          HomePage1(id: list[0]['id'].toString())));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => HomePage1()));
             },
             icon: const Icon(Icons.arrow_back_ios_new_sharp)),
         title: const Text("Get Photo like this"),
@@ -513,7 +510,7 @@ class _save_image_after_add_verbalState
                               padding: const EdgeInsets.all(2),
                               alignment: Alignment.centerLeft,
                               height: 18,
-                              decoration: 
+                              decoration:
                                   BoxDecoration(border: Border.all(width: 0.4)),
                               child: Text(
                                   "Longtitude: ${formatter1.format(list[0]['latlong_la'])}",
@@ -1090,10 +1087,7 @@ class _save_image_after_add_verbalState
             await _saved(capturedImage, context);
             // ignore: use_build_context_synchronously
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        HomePage1(id: list[0]['id'].toString())));
+                context, MaterialPageRoute(builder: (context) => HomePage1()));
           }).catchError((onError) {
             print(onError);
           });

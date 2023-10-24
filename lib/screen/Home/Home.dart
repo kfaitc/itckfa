@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
@@ -28,31 +29,8 @@ import 'package:http/http.dart' as http;
 import 'Customs/Feed_back.dart';
 
 class HomePage1 extends StatefulWidget {
-  final String? user;
-  final String? first_name;
-  final String? last_name;
-  final String? email;
-  final String? gender;
-  final String? from;
-  final String? tel;
-  final String? id;
-  final double? log;
-  final double? lat;
-  final String? control_user;
-
   const HomePage1({
     Key? key,
-    this.user,
-    this.control_user,
-    this.first_name,
-    this.last_name,
-    this.email,
-    this.gender,
-    this.from,
-    this.tel,
-    this.id,
-    this.log,
-    this.lat,
   }) : super(key: key);
 
   @override
@@ -60,6 +38,42 @@ class HomePage1 extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage1> {
+  String? user;
+  String? first_name;
+  String? last_name;
+  String? email;
+  String? gender;
+  String? from;
+  String? tel;
+  int? id;
+  double? log;
+  String? password;
+  String? control_user;
+  getdata() {
+    Future.delayed(Duration(milliseconds: 500), () async {
+      await mydb.open();
+      slist = await mydb.db.rawQuery('SELECT * FROM user');
+      setState(() {
+        if (slist.length > 0) {
+          user = '${slist[0]['first_name']} ${slist[0]['last_name']}';
+          first_name = slist[0]['first_name'];
+          last_name = slist[0]['last_name'];
+          email = slist[0]['email'];
+          gender = slist[0]['gender'];
+          from = slist[0]['known_from'];
+          tel = slist[0]['tel_num'];
+          id = slist[0]['id'];
+          control_user = slist[0]['username'];
+          password = slist[0]['password'];
+          // fetchDataFromAPI(control_user ?? "");
+        }
+      });
+    });
+  }
+
+  Map? datatest;
+  List<Map> slist = [];
+  MyDb mydb = new MyDb();
   Future logOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove('email');
@@ -82,9 +96,8 @@ class _HomePageState extends State<HomePage1> {
   String? now_day;
   @override
   void initState() {
+    getdata();
     super.initState();
-
-    fetchDataFromAPI('${widget.control_user}');
   }
 
   int _currentIndex = 0;
@@ -96,9 +109,16 @@ class _HomePageState extends State<HomePage1> {
 
     final tabs = [
       Body(
-        lat: widget.lat,
-        log: widget.log,
-        id: widget.id ?? '',
+        username: user ?? '',
+        email: email ?? '',
+        first_name: first_name ?? '',
+        last_name: last_name ?? '',
+        gender: gender ?? '',
+        from: from ?? '',
+        tel: tel ?? '',
+        id: id.toString(),
+        password: password ?? "",
+        control_user: control_user ?? "",
       ),
       Center(child: Faps()),
       Center(child: Contacts()),
@@ -120,14 +140,16 @@ class _HomePageState extends State<HomePage1> {
                   context,
                   MaterialPageRoute(builder: (context) {
                     return Account(
-                      username: widget.user ?? '',
-                      email: widget.email ?? '',
-                      first_name: widget.first_name ?? '',
-                      last_name: widget.last_name ?? '',
-                      gender: widget.gender ?? '',
-                      from: widget.from ?? '',
-                      tel: widget.tel ?? '',
-                      id: widget.id ?? '',
+                      username: user ?? '',
+                      email: email ?? '',
+                      first_name: first_name ?? '',
+                      last_name: last_name ?? '',
+                      gender: gender ?? '',
+                      from: from ?? '',
+                      tel: tel ?? '',
+                      id: id.toString(),
+                      password: password ?? "",
+                      control_user: control_user ?? "",
                     );
                   }),
                 );
@@ -141,7 +163,7 @@ class _HomePageState extends State<HomePage1> {
                   context,
                   MaterialPageRoute(builder: (context) {
                     return Add(
-                      id: widget.id ?? '',
+                      id: id.toString(),
                     );
                   }),
                 );
@@ -252,46 +274,40 @@ class _HomePageState extends State<HomePage1> {
     );
   }
 
-  Future<Map<String, dynamic>> fetchDataFromAPI(String userId) async {
-    final apiUrl =
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$userId';
+  // Future<Map<String, dynamic>> fetchDataFromAPI(String userId) async {
+  //   final apiUrl =
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$userId';
 
-    try {
-      var data;
-      final response = await http.get(Uri.parse(apiUrl));
+  //   var data;
+  //   final response = await http.get(Uri.parse(apiUrl));
 
-      if (response.statusCode == 200) {
-        setState(() {
-          data = json.decode(response.body);
-          print('$data');
-          expiry = data['expiry'];
-          print('Expiry: $expiry');
-          DateTime expiryDate = DateTime.parse(expiry!);
-          DateTime nowDate = DateTime.parse(now_day!);
-          Duration difference = expiryDate.difference(nowDate);
-          print(difference.inDays.toString());
-          if (difference.inDays == 1) {
-            final player = AudioPlayer();
-            player.play(AssetSource('nor.mp3'));
-            Get.snackbar('Message', 'Your V-Point Expiry 1 Days',
-                colorText: const Color.fromARGB(255, 5, 4, 4),
-                icon: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/KFA_CRM.png'),
-                  backgroundColor: Colors.white,
-                ),
-                snackPosition: SnackPosition.TOP,
-                snackbarStatus: (status) => SnackbarStatus.OPENING,
-                snackStyle: SnackStyle.GROUNDED);
-          } else {
-            print('No Expiry');
-          }
-        });
-        return data;
-      } else {
-        throw Exception('Failed to load data from the API');
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     setState(() {
+  //       data = json.decode(response.body);
+  //       print('$data');
+  //       expiry = data['expiry'];
+  //       print('Expiry: $expiry');
+  //       DateTime expiryDate = DateTime.parse(expiry!);
+  //       DateTime nowDate = DateTime.parse(now_day!);
+  //       Duration difference = expiryDate.difference(nowDate);
+  //       print(difference.inDays.toString());
+  //       if (difference.inDays == 1) {
+  //         final player = AudioPlayer();
+  //         player.play(AssetSource('nor.mp3'));
+  //         Get.snackbar('Message', 'Your V-Point Expiry 1 Days',
+  //             colorText: const Color.fromARGB(255, 5, 4, 4),
+  //             icon: CircleAvatar(
+  //               backgroundImage: AssetImage('assets/images/KFA_CRM.png'),
+  //               backgroundColor: Colors.white,
+  //             ),
+  //             snackPosition: SnackPosition.TOP,
+  //             snackbarStatus: (status) => SnackbarStatus.OPENING,
+  //             snackStyle: SnackStyle.GROUNDED);
+  //       } else {
+  //         print('No Expiry');
+  //       }
+  //     });
+  //   }
+  //   return data;
+  // }
 }

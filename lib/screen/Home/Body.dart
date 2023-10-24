@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/List.dart';
-import 'package:itckfa/screen/Account/account.dart';
 import 'package:itckfa/screen/Home/Customs/Model-responsive.dart';
 import 'package:itckfa/screen/Promotion/membership_real.dart';
 import 'package:itckfa/screen/Promotion/partnerList_real.dart';
@@ -28,18 +27,33 @@ import 'package:url_launcher/url_launcher.dart';
 
 // import '../../afa/components/slideUp.dart';
 import '../../models/autoVerbal.dart';
+import '../Account/account.dart';
 
 // import 'Customs/googlemapkfa/detailmap.dart';
 
 class Body extends StatefulWidget {
-  final double? lat;
-  final double? log;
-  final String? id;
+  final String username;
+  final String first_name;
+  final String last_name;
+  final String email;
+  final String gender;
+  final String from;
+  final String tel;
+  final String id;
+  final String password;
+  final String control_user;
   const Body({
     Key? key,
-    this.lat,
-    this.log,
-    this.id,
+    required this.username,
+    required this.first_name,
+    required this.last_name,
+    required this.email,
+    required this.gender,
+    required this.from,
+    required this.tel,
+    required this.id,
+    required this.password,
+    required this.control_user,
   }) : super(key: key);
 
   @override
@@ -170,7 +184,7 @@ class _BodyState extends State<Body> {
     });
   }
 
-  String? user;
+  String user = "";
   String first_name = "";
   String last_name = "";
   String email = "";
@@ -179,32 +193,26 @@ class _BodyState extends State<Body> {
   String tel = "";
   String id = "";
   String control_user = "";
+  String password = "";
   String? number_of_vpoint;
   String? their_plans;
   String? expiry;
-  var jsonData = null;
-  Future get_control_user(String id) async {
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
-    if (rs.statusCode == 200) {
-      jsonData = jsonDecode(rs.body);
-      setState(() {
-        user = jsonData[0]['username'].toString();
-        first_name = jsonData[0]['first_name'].toString();
-        last_name = jsonData[0]['last_name'].toString();
-        email = jsonData[0]['email'].toString();
-        gender = jsonData[0]['gender'].toString();
-        from = jsonData[0]['known_from'].toString();
-        tel = jsonData[0]['tel_num'].toString();
-        id = jsonData[0]['id'].toString();
-        control_user = jsonData[0]['control_user'].toString();
-        print(id);
-      });
-    }
-  }
 
   String? v_point;
   Future<void> check_v_point() async {
+    setState(() {
+      user = '${widget.first_name} ${widget.last_name}';
+      first_name = widget.first_name.toString();
+      last_name = widget.last_name.toString();
+      email = widget.email.toString();
+      gender = widget.gender.toString();
+      from = widget.from.toString();
+      tel = widget.tel.toString();
+      id = widget.id.toString();
+      control_user = widget.control_user.toString();
+      password = widget.password.toString();
+      print(id);
+    });
     final response = await http.get(
       Uri.parse(
           'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user'),
@@ -247,7 +255,7 @@ class _BodyState extends State<Body> {
     ///
     _handleLocationPermission();
     // _getCurrentPosition();
-    get_control_user(widget.id ?? "");
+
     super.initState();
 
     requestModelAuto = AutoVerbalRequestModel(
@@ -276,11 +284,11 @@ class _BodyState extends State<Body> {
       // autoVerbal: [requestModelVerbal],
       // data: requestModelVerbal,
     );
-    // Future.delayed(const Duration(seconds: 5), () {
-    //   if (maxSqm1 == null) {
-    //     _getCurrentPosition();
-    //   }
-    // });
+    Future.delayed(const Duration(seconds: 5), () {
+      if (user != null) {
+        check_v_point();
+      }
+    });
   }
 
   var lat;
@@ -298,30 +306,11 @@ class _BodyState extends State<Body> {
       wth = w * 0.5;
       wth2 = w * 0.3;
     }
-    if (user == null) {
-      get_control_user(widget.id ?? "");
-    } else if (number_of_vpoint == null) {
-      check_v_point();
-    }
 
     if (expiry != null) {
       DateTime timeNow = DateTime.parse(expiry!);
 
       formattedDate = DateFormat('d MMMM yyyy').format(timeNow);
-    }
-
-    if (jsonData != null) {
-      setState(() {
-        user = jsonData[0]['username'].toString();
-        first_name = jsonData[0]['first_name'].toString();
-        last_name = jsonData[0]['last_name'].toString();
-        email = jsonData[0]['email'].toString();
-        gender = jsonData[0]['gender'].toString();
-        from = jsonData[0]['known_from'].toString();
-        tel = jsonData[0]['tel_num'].toString();
-        id = jsonData[0]['id'].toString();
-        print(id);
-      });
     }
 
     return (user != null)
@@ -347,19 +336,23 @@ class _BodyState extends State<Body> {
                   child: GFIconButton(
                     padding: const EdgeInsets.all(1),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return Account(
-                          username: user!,
-                          email: email,
-                          first_name: first_name,
-                          last_name: last_name,
-                          gender: gender,
-                          from: from,
-                          tel: tel,
-                          id: id,
-                        );
-                      }));
+                      setState(() {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Account(
+                            username: user,
+                            email: email,
+                            first_name: first_name,
+                            last_name: last_name,
+                            gender: gender,
+                            from: from,
+                            tel: tel,
+                            id: id.toString(),
+                            password: password,
+                            control_user: control_user,
+                          );
+                        }));
+                      });
                     },
                     icon: Icon(
                       Icons.account_circle,

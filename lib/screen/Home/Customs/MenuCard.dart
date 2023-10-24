@@ -155,6 +155,8 @@ class _McardState extends State<Mcard> {
                   from: widget.from,
                   tel: widget.tel,
                   id: widget.id,
+                  password: '',
+                  control_user: '',
                 );
               }));
             },

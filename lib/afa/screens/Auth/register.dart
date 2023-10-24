@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:http/http.dart' as http;
 
@@ -103,8 +104,8 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  PhoneAuthCredential? credential;
+  // FirebaseAuth auth = FirebaseAuth.instance;
+  // PhoneAuthCredential? credential;
   String? smsCode;
   String? set_id_user;
   int? user_last_id;
@@ -114,6 +115,7 @@ class _RegisterState extends State<Register> {
   Uint8List? _byesData;
   void get_user_last_id() async {
     setState(() {});
+    // await Firebase.initializeApp();
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_last_user'));
     if (rs.statusCode == 200) {
@@ -156,7 +158,7 @@ class _RegisterState extends State<Register> {
   }
 
   bool _isObscure = true;
-  RegisterRequestModel requestModel = new RegisterRequestModel(
+  RegisterRequestModel requestModel = RegisterRequestModel(
     email: "",
     password: "",
     first_name: '',
@@ -172,6 +174,7 @@ class _RegisterState extends State<Register> {
   void initState() {
     get_user_last_id();
     // mydb.open();
+
     super.initState();
   }
 
@@ -741,8 +744,9 @@ class _RegisterState extends State<Register> {
                         });
                         if (value.message == "User successfully registered") {
                           mydb.db.rawInsert(
-                              "INSERT INTO user (first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ? , ?);",
+                              "INSERT INTO user (id, first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?);",
                               [
+                                value.user['id'],
                                 requestModel.first_name,
                                 requestModel.last_name,
                                 requestModel.control_user,
@@ -771,6 +775,20 @@ class _RegisterState extends State<Register> {
                               );
                             },
                           ).show();
+                        } else if (value.message ==
+                            "User unsuccessfully registered") {
+                          AwesomeDialog(
+                            context: context,
+                            dialogType: DialogType.error,
+                            animType: AnimType.rightSlide,
+                            headerAnimationLoop: false,
+                            title: 'Error',
+                            desc: "This Email is already registered",
+                            btnOkOnPress: () {},
+                            btnOkIcon: Icons.cancel,
+                            btnOkColor: Colors.red,
+                          ).show();
+                          print(value.message);
                         } else {
                           AwesomeDialog(
                             context: context,
@@ -783,7 +801,6 @@ class _RegisterState extends State<Register> {
                             btnOkIcon: Icons.cancel,
                             btnOkColor: Colors.red,
                           ).show();
-                          print(value.message);
                         }
                       });
                       // await FirebaseAuth.instance.verifyPhoneNumber(

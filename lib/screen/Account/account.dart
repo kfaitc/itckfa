@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:itckfa/Memory_local/Local_data.dart';
+import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/api/api_service.dart';
@@ -37,6 +38,8 @@ class Account extends StatefulWidget {
   final String from;
   final String tel;
   final String id;
+  final String password;
+  final String control_user;
   const Account({
     Key? key,
     required this.username,
@@ -47,6 +50,8 @@ class Account extends StatefulWidget {
     required this.from,
     required this.tel,
     required this.id,
+    required this.password,
+    required this.control_user,
   }) : super(key: key);
 
   @override
@@ -137,21 +142,6 @@ class _AccountState extends State<Account> {
 
   List list_User_by_id = [];
   var set_id_user;
-  void get_control_user_image(String id) async {
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
-    if (rs.statusCode == 200) {
-      setState(() {
-        var jsonData = jsonDecode(rs.body);
-        list_User_by_id = jsonData;
-        if (list_User_by_id[0]['control_user'] != null) {
-          url;
-          set_id_user = list_User_by_id[0]['control_user'].toString();
-          get_image(list_User_by_id[0]['control_user'].toString());
-        }
-      });
-    }
-  }
 
   void get_image(String id) async {
     setState(() {});
@@ -180,40 +170,26 @@ class _AccountState extends State<Account> {
         MaterialPageRoute(builder: (context) => Login()), (route) => false);
   }
 
-  static List<PeopleModel> list = [];
   RegisterRequestModel_update? requestModel;
   late TextEditingController Password;
-  Future<void> selectPeople() async {
-    list = await PeopleController().selectPeople();
-    if (list.isEmpty) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          });
-    } else {
-      setState(() {
-        int i = list.length - 1;
-        Password = TextEditingController(text: list[i].password);
-        requestModel = RegisterRequestModel_update(
-          email: list[i].name,
-          password: list[i].password,
-          first_name: widget.first_name,
-          gender: widget.gender,
-          known_from: widget.from,
-          last_name: widget.last_name,
-          tel_num: widget.tel,
-        );
-      });
-    }
-  }
 
   @override
   void initState() {
-    selectPeople();
-    get_control_user_image(widget.id);
+    setState(() {
+      Password = TextEditingController(text: widget.password);
+      requestModel = RegisterRequestModel_update(
+        email: widget.email,
+        password: widget.password,
+        first_name: widget.first_name,
+        gender: widget.gender,
+        known_from: widget.from,
+        last_name: widget.last_name,
+        tel_num: widget.tel,
+      );
+    });
+    url;
+    set_id_user = widget.control_user;
+    get_image(widget.control_user);
     super.initState();
   }
 
@@ -244,6 +220,13 @@ class _AccountState extends State<Account> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                buttonSelect(context);
+              },
+              icon: Icon(Icons.settings)),
+        ],
         toolbarHeight: 70,
       ),
       body: SingleChildScrollView(
@@ -333,14 +316,13 @@ class _AccountState extends State<Account> {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  if (list_User_by_id.isNotEmpty)
-                                    Text(
-                                      'ID : ${list_User_by_id[0]['control_user'] ?? ''}',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
-                                    )
+                                  Text(
+                                    'ID : ${widget.control_user}',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  )
                                 ],
                               ),
                             )
@@ -495,6 +477,11 @@ class _AccountState extends State<Account> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                kwhite_new,
+                              ),
+                            ),
                             child: Text('Save Change'),
                             onPressed: () async {
                               if (_file != null) {
@@ -507,12 +494,6 @@ class _AccountState extends State<Account> {
                             },
                           ),
                           SizedBox(width: 15),
-                          ElevatedButton(
-                            child: Text('Log Out'),
-                            onPressed: () {
-                              logOut();
-                            },
-                          )
                         ],
                       ),
                     ),
@@ -528,6 +509,109 @@ class _AccountState extends State<Account> {
             )),
       ),
     );
+  }
+
+  Future buttonSelect(BuildContext context) {
+    var check_password;
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 100,
+          color: Colors.black26,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    kwhite_new,
+                  ),
+                ),
+                child: Text('Delete Account'),
+                onPressed: () async {
+                  MyDb mydb = new MyDb();
+                  await mydb.open();
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.info,
+                    animType: AnimType.rightSlide,
+                    headerAnimationLoop: false,
+                    title: 'Error',
+                    desc: "Are you sure you want to delete",
+                    body: Column(
+                      children: [
+                        Text(
+                            "Are you sure you want to delete\nPlease enter your password"),
+                        TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              check_password = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            // border: InputBorder.none,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            hintText: "Enter your password here....",
+                            hintStyle: TextStyle(fontSize: 12),
+                            contentPadding: EdgeInsets.symmetric(vertical: 8),
+                          ),
+                        ),
+                      ],
+                    ),
+                    btnCancel: TextButton(
+                      child: Text("Yes"),
+                      onPressed: () async {
+                        if (check_password == widget.password) {
+                          await mydb.db.rawDelete("DELETE FROM user WHERE 1");
+                          await update();
+                          print("Data Deleted");
+                          Get.to(() => Login());
+                        }
+                      },
+                    ),
+                    btnOk: TextButton(
+                      child: Text("Close"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ).show();
+                },
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    kwhite_new,
+                  ),
+                ),
+                child: Text('Log Out'),
+                onPressed: () {
+                  logOut();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future update() async {
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${widget.control_user}'));
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 }
 

@@ -12,6 +12,7 @@ import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/screens/Auth/register.dart';
 import 'package:itckfa/api/api_service.dart';
 import 'package:itckfa/models/login_model.dart';
+import 'package:itckfa/models/register_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:http/http.dart' as http;
@@ -100,9 +101,14 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
       await mydb.open();
       slist = await mydb.db.rawQuery('SELECT * FROM user');
       setState(() {
-        setState(() {
-          print("\n\n\n\n\n\n kokokoko =  ${slist.toString()}\n\n\n\n\n\n");
-        });
+        if (slist.length > 0) {
+          print("\n\n\n\nkokoko" + slist.toString() + "\n\n\n\nkokoko");
+          status = true;
+          Email = TextEditingController(text: slist[0]['email']);
+          Password = TextEditingController(text: slist[0]['password']);
+        } else {
+          print("\n\n\n\nkakakaka" + slist.toString() + "\n\n\n\nkakakak");
+        }
       });
     });
   }
@@ -115,10 +121,20 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late List slideList;
   late int initialPage;
+  RegisterRequestModel requestModel_sql = RegisterRequestModel(
+    email: "",
+    password: "",
+    first_name: '',
+    gender: '',
+    known_from: '',
+    last_name: '',
+    tel_num: '',
+    password_confirmation: '',
+    control_user: '',
+  );
   @override
   void initState() {
-    // mydb.open();
-    // getdata();
+    getdata();
     _pageController = PageController(initialPage: 0);
     initialPage = _pageController.initialPage;
     // selectPeople();
@@ -410,19 +426,55 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                     isApiCallProcess = true;
                   });
                   APIservice apIservice = APIservice();
-                  apIservice.login(requestModel).then((value) {
+                  apIservice.login(requestModel).then((value) async {
                     Load(value.token);
                     setState(() {
                       isApiCallProcess = false;
                     });
                     if (value.message == "Login Successfully!") {
-                      PeopleController().deletePeople(0);
-                      var people = PeopleModel(
-                        id: 0,
-                        name: requestModel.email,
-                        password: requestModel.password,
-                      );
-                      PeopleController().insertPeople(people);
+                      // PeopleController().deletePeople(0);
+                      // var people = PeopleModel(
+                      //   id: 0,
+                      //   name: requestModel.email,
+                      //   password: requestModel.password,
+                      // );
+                      // PeopleController().insertPeople(people);
+                      if (slist.length == 0) {
+                        await mydb.db.rawInsert(
+                            "INSERT INTO user (id ,first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                            [
+                              value.user['id'],
+                              value.user['first_name'],
+                              value.user['last_name'],
+                              value.user['control_user'],
+                              value.user['gender'],
+                              value.user['tel_num'],
+                              value.user['known_from'],
+                              requestModel.email,
+                              requestModel.password
+                            ]);
+                        print("jksfdjhsdfjhsdhjfghsagddfasdf");
+                      } else {
+                        var check_Sql = await mydb.db.rawQuery(
+                            'SELECT * FROM user  WHERE  email=? AND password=?',
+                            [requestModel.email, requestModel.password]);
+                        if (check_Sql.length == 0) {
+                          mydb.db.rawInsert(
+                              "UPDATE user SET id=? ,first_name=?, last_name=?, username=?, gender=?, tel_num=?, known_from=?, email=?, password=? WHERE 1",
+                              [
+                                value.user!['id'],
+                                value.user['first_name'],
+                                value.user['last_name'],
+                                value.user['control_user'],
+                                value.user['gender'],
+                                value.user['tel_num'],
+                                value.user['known_from'],
+                                requestModel.email,
+                                requestModel.password
+                              ]);
+                        }
+                      }
+                      // ignore: use_build_context_synchronously
                       AwesomeDialog(
                         btnOkOnPress: () {},
                         context: context,
@@ -437,22 +489,23 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomePage1(
-                                  control_user: control_user,
-                                  log: 0,
-                                  lat: 0,
-                                  user: username,
-                                  email: email,
-                                  first_name: first_name,
-                                  last_name: last_name,
-                                  gender: gender,
-                                  from: from,
-                                  tel: tel,
-                                  id: id.toString(),
-                                ),
+                                builder: (context) => HomePage1(),
                               ));
                         },
                       ).show();
+                    } else if (value.message == "Login unSuccessfully!") {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.error,
+                        animType: AnimType.rightSlide,
+                        headerAnimationLoop: false,
+                        title: 'Error',
+                        body: Text("Incorrect Email or Password"),
+                        btnOkOnPress: () {},
+                        btnOkIcon: Icons.cancel,
+                        btnOkColor: Colors.red,
+                      ).show();
+                      print(value.message);
                     } else {
                       AwesomeDialog(
                         context: context,
@@ -460,6 +513,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         animType: AnimType.rightSlide,
                         headerAnimationLoop: false,
                         title: 'Error',
+                        body: Text("Incorrect Email or Password"),
                         desc: value.message,
                         btnOkOnPress: () {},
                         btnOkIcon: Icons.cancel,
