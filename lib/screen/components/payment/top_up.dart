@@ -1276,7 +1276,8 @@ class _TopUpState extends State<TopUp> {
 
     // Add form fields to the request
     request.fields.addAll({
-      'str': '$price#USD#00402#$order_reference_no#kfa://callback',
+      'str':
+          '$price#USD#00402#$order_reference_no#https://oneclickonedollar.com ',
       'key': '$token',
     });
 
@@ -1312,7 +1313,7 @@ class _TopUpState extends State<TopUp> {
       "item_name": "Payin",
       "success_callback_url":
           "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/Callback",
-      "schema_url": "kfa://callback",
+      "schema_url": "https://oneclickonedollar.com",
       // "schema_url": "https://www.wingbank.com.kh/en/",
       "integration_type": "MOBAPP",
       "txn_hash": "$deeplink_hask",
@@ -1337,8 +1338,6 @@ class _TopUpState extends State<TopUp> {
     );
 
     if (response.statusCode == 200) {
-      print('2000000000000000000000');
-      print(json.encode(response.data));
       final jsonResponse = jsonDecode(json.encode(response.data));
       redirect_url = jsonResponse['redirect_url'];
       await launch(
