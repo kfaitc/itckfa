@@ -199,7 +199,7 @@ class _TopUpState extends State<TopUp> {
                         Padding(
                           padding: const EdgeInsets.only(right: 15),
                           child: GFButton(
-                            onPressed: () async{      
+                            onPressed: () async {
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
                                   return Transtoin_History(
@@ -1345,7 +1345,7 @@ class _TopUpState extends State<TopUp> {
       //   forceSafariVC: false,
       //   forceWebView: false,
       // );
-         await launchUrl(Uri.parse(redirect_url));
+      await launchUrl(Uri.parse(redirect_url));
       Navigator.pop(context);
       Navigator.pop(context);
     } else {
@@ -1400,7 +1400,7 @@ class _TopUpState extends State<TopUp> {
         if (response.statusCode == 200) {
           var data = response.data;
           var upayDeeplink = data['data']['upayDeeplink'].toString();
-
+          // await launchUrl(Uri.parse(upayDeeplink));
           await launch(
             '$upayDeeplink',
             forceSafariVC: false,
