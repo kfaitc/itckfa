@@ -42,6 +42,11 @@
         android:label="OneClick1$"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI" />
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -50,6 +55,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
+
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
@@ -65,25 +71,36 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="oneclickonedollar.com" />
+                <!-- <data
+                    android:host="oneclickonedollar.com"
+                    android:scheme="https" />
+                <data
+                    android:host="oneclickonedollar.com"
+                    android:scheme="http" /> -->
+                <!-- If a user clicks on a shared link that uses the "http" scheme, your
+                    app should be able to delegate that traffic to "https". -->
                 <data android:scheme="http" />
+                <data android:scheme="https" />
+
+                <!-- Include one or more domains that should be verified. -->
+                <data android:host="oneclickonedollar.com" />
+
             </intent-filter>
 
         </activity>
 
-        <activity
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+
+        <!-- <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI" />
         <uses-library
             android:name="org.apache.http.legacy"
-            android:required="false" />
-        <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
+            android:required="false" /> -->
+        
     </application>
 </manifest>
