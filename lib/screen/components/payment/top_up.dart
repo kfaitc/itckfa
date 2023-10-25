@@ -199,7 +199,7 @@ class _TopUpState extends State<TopUp> {
                         Padding(
                           padding: const EdgeInsets.only(right: 15),
                           child: GFButton(
-                            onPressed: () {
+                            onPressed: () async{      
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
                                   return Transtoin_History(
@@ -1340,11 +1340,12 @@ class _TopUpState extends State<TopUp> {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(json.encode(response.data));
       redirect_url = jsonResponse['redirect_url'];
-      await launch(
-        '$redirect_url',
-        forceSafariVC: false,
-        forceWebView: false,
-      );
+      // await launch(
+      //   '$redirect_url',
+      //   forceSafariVC: false,
+      //   forceWebView: false,
+      // );
+         await launchUrl(Uri.parse(redirect_url));
       Navigator.pop(context);
       Navigator.pop(context);
     } else {
