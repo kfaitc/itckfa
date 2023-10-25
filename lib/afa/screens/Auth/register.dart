@@ -6,6 +6,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:http/http.dart' as http;
 
@@ -738,12 +739,13 @@ class _RegisterState extends State<Register> {
                         await uploadImage();
                       }
                       APIservice apIservice = APIservice();
-                      apIservice.register(requestModel).then((value) {
+                      apIservice.register(requestModel).then((value) async {
                         setState(() {
                           isApiCallProcess = false;
                         });
                         if (value.message == "User successfully registered") {
-                          mydb.db.rawInsert(
+                          await mydb.open();
+                          await mydb.db.rawInsert(
                               "INSERT INTO user (id, first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?);",
                               [
                                 value.user['id'],
@@ -756,6 +758,7 @@ class _RegisterState extends State<Register> {
                                 requestModel.email,
                                 requestModel.password
                               ]);
+                          // ignore: use_build_context_synchronously
                           AwesomeDialog(
                             context: context,
                             animType: AnimType.leftSlide,
@@ -767,12 +770,7 @@ class _RegisterState extends State<Register> {
                             onDismissCallback: (type) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text("New User Added")));
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Login(),
-                                ),
-                              );
+                              Get.to(() => Login());
                             },
                           ).show();
                         } else if (value.message ==

@@ -3,14 +3,14 @@
 class RegisterReponseModel {
   final String message;
   final String access_token;
-  final Map user;
+  final dynamic user;
   RegisterReponseModel(
       {required this.message, required this.access_token, required this.user});
   factory RegisterReponseModel.fromJson(Map<String, dynamic> json) {
     return RegisterReponseModel(
       message: json["message"] ?? "",
       access_token: json["access_token"] ?? "",
-      user: json["user"] ?? "",
+      user: json["user"],
     );
   }
 }

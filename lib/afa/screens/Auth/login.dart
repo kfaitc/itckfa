@@ -102,10 +102,11 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
       slist = await mydb.db.rawQuery('SELECT * FROM user');
       setState(() {
         if (slist.length > 0) {
+          int i = slist.length - 1;
           print("\n\n\n\nkokoko" + slist.toString() + "\n\n\n\nkokoko");
           status = true;
-          Email = TextEditingController(text: slist[0]['email']);
-          Password = TextEditingController(text: slist[0]['password']);
+          Email = TextEditingController(text: slist[i]['email']);
+          Password = TextEditingController(text: slist[i]['password']);
         } else {
           print("\n\n\n\nkakakaka" + slist.toString() + "\n\n\n\nkakakak");
         }
