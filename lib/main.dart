@@ -77,8 +77,19 @@ class _MyAppState extends State<MyApp> {
       //   permissionGranted = false;
       // });
     }
+    OneSignal.Notifications.addPermissionObserver((state) {
+      print("Has permission " + state.toString());
+    });
+    OneSignal.Debug.setAlertLevel(OSLogLevel.none);
   }
 
+  var _externalUserId = "12345678";
+  void _handleLogin() {
+    print("Setting external user ID");
+    if (_externalUserId == null) return;
+    OneSignal.login(_externalUserId);
+    OneSignal.User.addAlias("fb_id", "12345678");
+  }
   // String link = 'https://kfaapp.page.link/service';
 
   // final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
@@ -91,6 +102,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _getInstallPermission();
     incomingLinkHandler();
+    _handleLogin();
   }
 
   Future incomingLinkHandler() async {
