@@ -16,6 +16,7 @@ import 'package:itckfa/models/register_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../../screen/Customs/responsive.dart';
 import '../../components/contants.dart';
@@ -107,6 +108,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
           status = true;
           Email = TextEditingController(text: slist[i]['email']);
           Password = TextEditingController(text: slist[i]['password']);
+          OneSignal.login(slist[i]['username']);
+          OneSignal.User.addAlias("fb_id", slist[i]['username'].toString());
         } else {
           print("\n\n\n\nkakakaka" + slist.toString() + "\n\n\n\nkakakak");
         }
