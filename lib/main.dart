@@ -83,7 +83,6 @@ class _MyAppState extends State<MyApp> {
     OneSignal.Debug.setAlertLevel(OSLogLevel.none);
   }
 
-
   // String link = 'https://kfaapp.page.link/service';
 
   // final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
@@ -117,6 +116,8 @@ class _MyAppState extends State<MyApp> {
           });
         }
       });
+      OneSignal.Notifications.permission;
+      OneSignal.Notifications.requestPermission(true);
     } on PlatformException {}
   }
 

@@ -284,7 +284,7 @@ class _BodyState extends State<Body> {
       // autoVerbal: [requestModelVerbal],
       // data: requestModelVerbal,
     );
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (user != null) {
         check_v_point();
       }
@@ -1087,7 +1087,7 @@ class _BodyState extends State<Body> {
                                           Expanded(
                                             flex: 1,
                                             child: Text(
-                                              "${(their_plans != null) ? their_plans : ""}",
+                                              "${(their_plans != null) ? their_plans : "0 day"}",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
@@ -1126,7 +1126,7 @@ class _BodyState extends State<Body> {
                                           Expanded(
                                             flex: 1,
                                             child: Text(
-                                              "${(formattedDate != null) ? formattedDate : ""}",
+                                              "${(formattedDate != null) ? formattedDate : "00/00/0000"}",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,

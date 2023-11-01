@@ -1290,7 +1290,8 @@ class _TopUpState extends State<TopUp> {
       });
       if (deeplink_hask != null) {
         print('deeplink_hask != null(200) = $deeplink_hask');
-        var data = await call_back_wing(deeplink_hask, accessToken, price);
+        var data = await call_back_wing(
+            token, deeplink_hask, accessToken, price, option);
         // var data = await button(deeplink_hask, accessToken, price);
       }
     } else {
@@ -1298,7 +1299,8 @@ class _TopUpState extends State<TopUp> {
     }
   }
 
-  Future call_back_wing(deeplink_hask, accessToken, price) async {
+  Future call_back_wing(
+      token, deeplink_hask, accessToken, price, option) async {
     print('call_back_wing');
     var headers = {
       'Content-Type': 'application/json',
@@ -1346,12 +1348,70 @@ class _TopUpState extends State<TopUp> {
       //   forceWebView: false,
       // );
       await launchUrl(Uri.parse(redirect_url));
+      // await check_payment_done_by_wing(token, order_reference_no, option);
       Navigator.pop(context);
       Navigator.pop(context);
     } else {
       print(response.statusMessage);
     }
   }
+
+  // Future check_payment_done_by_wing(token, order_reference_no, option) async {
+  //   var headers = {
+  //     'Authorization': 'bearer $token',
+  //     'Content-Type': 'application/json'
+  //   };
+  //   var request = http.Request(
+  //       'POST',
+  //       Uri.parse(
+  //           'https://ir.wingmoney.com:9443/RestEngine/api/v1/checktxnstatus'));
+  //   request.body = json.encode({
+  //     "order_reference_no": "Khmer80Fundetion558A",
+  //     "merchant_name": "online.kfausd"
+  //   });
+  //   request.headers.addAll(headers);
+
+  //   http.StreamedResponse response = await request.send();
+
+  //   if (response.statusCode == 200) {
+  //     final jsonResponse = jsonDecode(await response.stream.bytesToString());
+  //     if (jsonResponse['error_code'] == "200") {
+  //       var count_number;
+  //       setState(() {
+  //         count_number = option!.split(' ');
+
+  //         if (count_number[4] == "Day") {
+  //           thier_plan = 1;
+  //         } else if (count_number[4] == "Week") {
+  //           thier_plan = 7;
+  //         } else if (count_number[4] == "Mount") {
+  //           thier_plan = 30;
+  //         }
+  //       });
+  //       var headers = {'Content-Type': 'application/json'};
+  //       var request = http.Request(
+  //           'POST',
+  //           Uri.parse(
+  //               'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/add_vpoint'));
+  //       request.body = json.encode({
+  //         "id_user_control": "$set_id_user",
+  //         "day": "$thier_plan",
+  //         "count_autoverbal": "${count_number[0]}"
+  //       });
+  //       request.headers.addAll(headers);
+
+  //       http.StreamedResponse response = await request.send();
+
+  //       if (response.statusCode == 200) {
+  //         print(await response.stream.bytesToString());
+  //       } else {
+  //         print(response.reasonPhrase);
+  //       }
+  //     }
+  //   } else {
+  //     print(response.reasonPhrase);
+  //   }
+  // }
 
   static String baseUrl2 = 'https://dev-upayapi.u-pay.com/upayApi/mc/mcOrder';
   var appUrl = '$baseUrl2/appCreate';

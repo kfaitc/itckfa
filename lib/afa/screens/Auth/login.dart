@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, non_constant_identifier_names, prefer_const_constructors, avoid_print, prefer_is_empty
+// ignore_for_file: unused_import, non_constant_identifier_names, prefer_const_constructors, avoid_print, prefer_is_empty, use_build_context_synchronously
 
 import 'dart:convert';
 
@@ -108,7 +108,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
           status = true;
           Email = TextEditingController(text: slist[i]['email']);
           Password = TextEditingController(text: slist[i]['password']);
-          OneSignal.login(slist[i]['username']);
+          OneSignal.login(slist[i]['username'].toString());
           OneSignal.User.addAlias("fb_id", slist[i]['username'].toString());
         } else {
           print("\n\n\n\nkakakaka" + slist.toString() + "\n\n\n\nkakakak");
@@ -478,7 +478,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                               ]);
                         }
                       }
-                      // ignore: use_build_context_synchronously
+                      OneSignal.User.addEmail('${requestModel.email}');
+
                       AwesomeDialog(
                         btnOkOnPress: () {},
                         context: context,

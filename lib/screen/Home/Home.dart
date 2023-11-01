@@ -22,6 +22,7 @@ import 'package:itckfa/screen/Home/Body.dart';
 import 'package:itckfa/screen/Home/Customs/Drawer_menu.dart';
 import 'package:itckfa/screen/Home/Customs/MyDrawerList.dart';
 import 'package:itckfa/screen/Promotion/PartnerList.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,19 +55,22 @@ class _HomePageState extends State<HomePage1> {
       await mydb.open();
       slist = await mydb.db.rawQuery('SELECT * FROM user');
       setState(() {
+        var i;
         if (slist.length > 0) {
-          user = '${slist[0]['first_name']} ${slist[0]['last_name']}';
-          first_name = slist[0]['first_name'];
-          last_name = slist[0]['last_name'];
-          email = slist[0]['email'];
-          gender = slist[0]['gender'];
-          from = slist[0]['known_from'];
-          tel = slist[0]['tel_num'];
-          id = slist[0]['id'];
-          control_user = slist[0]['username'];
-          password = slist[0]['password'];
+          i = slist.length - 1;
+          user = '${slist[i]['first_name']} ${slist[0]['last_name']}';
+          first_name = slist[i]['first_name'];
+          last_name = slist[i]['last_name'];
+          email = slist[i]['email'];
+          gender = slist[i]['gender'];
+          from = slist[i]['known_from'];
+          tel = slist[i]['tel_num'];
+          id = slist[i]['id'];
+          control_user = slist[i]['username'];
+          password = slist[i]['password'];
           // fetchDataFromAPI(control_user ?? "");
         }
+        OneSignal.User.addEmail(slist[i]['email']);
       });
     });
   }
