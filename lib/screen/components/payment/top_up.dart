@@ -1076,7 +1076,7 @@ class _TopUpState extends State<TopUp> {
                   onTap: () async {
                     // order_reference_no = SignUtil().RandomString(10).toString();
                     order_reference_no =
-                        "Khmer${Random().nextInt(100)}Fundetion${Random().nextInt(1000) + 10}A";
+                        "${set_id_user}_Khmer${Random().nextInt(100)}Fundetion${Random().nextInt(1000) + 10}A";
                     print(order_reference_no.toString());
                     print('Price = $price');
                     if (index == 0) {
