@@ -478,7 +478,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                               ]);
                         }
                       }
-                      OneSignal.User.addEmail('${requestModel.email}');
+                      // OneSignal.User.addEmail('${requestModel.email}');
 
                       AwesomeDialog(
                         btnOkOnPress: () {},

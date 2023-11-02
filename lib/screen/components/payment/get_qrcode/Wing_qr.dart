@@ -130,44 +130,44 @@ class _Qr_WingState extends State<Qr_Wing> {
     }
   }
 
-  bool success_payment = false;
-  Future<void> Load(BuildContext context) async {
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_done?order_reference_no=${order_reference_no}'));
-    var jsonData = jsonDecode(rs.body);
-    setState(() {
-      if (jsonData.toString() == order_reference_no.toString()) {
-        success_payment = true;
-      }
-    });
+  // bool success_payment = false;
+  // Future<void> Load(BuildContext context) async {
+  //   var rs = await http.get(Uri.parse(
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_done?order_reference_no=${order_reference_no}'));
+  //   var jsonData = jsonDecode(rs.body);
+  //   setState(() {
+  //     if (jsonData.toString() == order_reference_no.toString()) {
+  //       success_payment = true;
+  //     }
+  //   });
 
-    if (success_payment) {
-      var thier_plan;
-      var count_number = widget.option.split(' ');
-      if (count_number[4] == "Day") {
-        thier_plan = 1;
-      } else if (count_number[4] == "Week") {
-        thier_plan = 7;
-      } else if (count_number[4] == "Mount") {
-        thier_plan = 30;
-      }
-      final Data = {
-        "id_user_control": widget.control_user.toString(),
-        "count_autoverbal": int.parse(count_number[0].toString()),
-      };
-      final response = await http.post(
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/${thier_plan}'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode(Data),
-      );
-      Future.delayed(const Duration(seconds: 10), () async {
-        Navigator.pop(context);
-      });
-    }
-  }
+  //   if (success_payment) {
+  //     var thier_plan;
+  //     var count_number = widget.option.split(' ');
+  //     if (count_number[4] == "Day") {
+  //       thier_plan = 1;
+  //     } else if (count_number[4] == "Week") {
+  //       thier_plan = 7;
+  //     } else if (count_number[4] == "Mount") {
+  //       thier_plan = 30;
+  //     }
+  //     final Data = {
+  //       "id_user_control": widget.control_user.toString(),
+  //       "count_autoverbal": int.parse(count_number[0].toString()),
+  //     };
+  //     final response = await http.post(
+  //       Uri.parse(
+  //           'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/${thier_plan}'),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: json.encode(Data),
+  //     );
+  //     Future.delayed(const Duration(seconds: 10), () async {
+  //       Navigator.pop(context);
+  //     });
+  //   }
+  // }
 
   bool isChecked = false;
   Future _saved(image, BuildContext context) async {
@@ -208,14 +208,14 @@ class _Qr_WingState extends State<Qr_Wing> {
 
     String actualDate = formatterDate.format(now);
     String actualDate1 = dateTime.format(now);
-    Future.delayed(const Duration(seconds: 10), () async {
-      await Load(context);
-      setState(() {
-        count++;
-      });
-    });
+    // Future.delayed(const Duration(seconds: 10), () async {
+    //   await Load(context);
+    //   setState(() {
+    //     count++;
+    //   });
+    // });
     return Scaffold(
-        backgroundColor: Colors.grey[100],
+        // backgroundColor: Colors.grey[100],
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -278,26 +278,44 @@ class _Qr_WingState extends State<Qr_Wing> {
                   fit: BoxFit.fitWidth,
                 ),
               ),
-              TextField(
-                controller: roll_id,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black),
-              ),
+              // TextField(
+              //   controller: roll_id,
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(color: Colors.black),
+              // ),
               if (url_qr != null)
                 Screenshot(
                   controller: screenshotController,
                   child: Container(
-                    height: 400,
                     color: Colors.white,
-                    margin: const EdgeInsets.only(top: 15, right: 10, left: 10),
-                    child: FadeInImage.assetNetwork(
-                      placeholderCacheHeight: 50,
-                      placeholderCacheWidth: 50,
-                      fit: BoxFit.cover,
-                      placeholderFit: BoxFit.cover,
-                      filterQuality: FilterQuality.high,
-                      placeholder: 'assets/earth.gif',
-                      image: url_qr.toString(),
+                    child: Column(
+                      // alignment: Alignment.bottomCenter,
+                      children: [
+                        Container(
+                          height: 400,
+                          // color: Colors.white,
+                          padding: EdgeInsets.all(0),
+                          color: Colors.red[600],
+                          margin: const EdgeInsets.only(
+                              top: 15, right: 10, left: 10),
+                          child: FadeInImage.assetNetwork(
+                            placeholderCacheHeight: 50,
+                            placeholderCacheWidth: 50,
+                            fit: BoxFit.cover,
+                            placeholderFit: BoxFit.cover,
+                            filterQuality: FilterQuality.high,
+                            placeholder: 'assets/earth.gif',
+                            image: url_qr.toString(),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Image.asset(
+                            "assets/images/WingBank.png",
+                            fit: BoxFit.fill,
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 )
@@ -319,26 +337,26 @@ class _Qr_WingState extends State<Qr_Wing> {
                       fontSize: MediaQuery.textScaleFactorOf(context) * 10),
                 ),
               ),
-              if (success_payment)
-                GFCheckboxListTile(
-                  titleText: 'Payment Success',
-                  size: 25,
-                  activeBgColor: Colors.green,
-                  listItemTextColor: Color.fromRGBO(158, 158, 158, 1),
-                  type: GFCheckboxType.square,
-                  activeIcon: Icon(
-                    Icons.check,
-                    size: 15,
-                    color: Colors.white,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      success_payment = value;
-                    });
-                  },
-                  value: success_payment,
-                  inactiveIcon: null,
-                ),
+              // if (success_payment)
+              //   GFCheckboxListTile(
+              //     titleText: 'Payment Success',
+              //     size: 25,
+              //     activeBgColor: Colors.green,
+              //     listItemTextColor: Color.fromRGBO(158, 158, 158, 1),
+              //     type: GFCheckboxType.square,
+              //     activeIcon: Icon(
+              //       Icons.check,
+              //       size: 15,
+              //       color: Colors.white,
+              //     ),
+              //     onChanged: (value) {
+              //       setState(() {
+              //         success_payment = value;
+              //       });
+              //     },
+              //     value: success_payment,
+              //     inactiveIcon: null,
+              //   ),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
