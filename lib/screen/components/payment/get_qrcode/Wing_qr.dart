@@ -77,12 +77,12 @@ class _Qr_WingState extends State<Qr_Wing> {
       "crc": crc,
       "gateway_setting": {"callback_url": _Url_call_back}
     };
-
+    await Getaccess_token();
     final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 29c618b1-0e16-4306-bbaf-202757d62405'
+        'Authorization': 'Bearer $token'
       },
       body: json.encode(jsonData),
     );
@@ -96,6 +96,37 @@ class _Qr_WingState extends State<Qr_Wing> {
     } else {
       // Failed to create invoice
       // print('Failed to create invoice. Status code: ${response.statusCode}');
+    }
+  }
+
+  var token;
+  Future<void> Getaccess_token() async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://demo-eco-gateway.wingmarket.com/identity/login?username=077771125&password=XjKOQ596gvx%2F9SwedIBZIMsbhQSBb8HGHhE09wHjAva056f9z4RIqGRrO3sv4haMB0uztiSfSyU%2F261by2iwV8GeIB7ekCRD4Et9SQYia8SxeDerELWlOhIQOwwJBcSfpNA4kECW7ubzOPv%2Bg5RBJ8ba4YLGsoMxnVKGEaKs14fatHn%2BqlnpauIhhN2rxiuxPmZhWYjGfe2J%2BEp%2BIO52zcFFy2Bl1x6ujIxtkrU3Ia48f%2BNRAUBdz15jZr3QB7okGkfeft2qHRianhNOzcLAfnw2jYdSRRcrnejl8MzVJFWRXYuDTnBfQ76Pk1Z%2B7JcXHOT2Asa18T2Px3RuwrNKmQ%3D%3D&grant_type=password&client_id=invoicing&client_secret=QhSNJNIjvVKHmEoSCX5qpz0AG1pzkyGP3jgzIC9r99UU5Xtadq2oaO1zhRrSsAb0pMPWX%2BtLK1MAgmp5JEIcceXLu2qsPgW5dyxOUOXxrxdGyYsuOegF0o7dzlkEUbRr3B3xTO5LsKVHi9R1TOkV%2BjlXVPxCLMAaUJ8%2FzmChq9Hsd1kBFCjLcL3oXE7gu2KlsVnGlQLEiJRZWQaBkhMiC8EbA59MT9%2Fowuybu6q%2Fc6LTTgQgyDdC3PA2gmblo7JrZtEgrj5IlM%2BrIUhPMV%2Bi8k9L2SBTfMW69AQAcpbkwmaorjA0%2BbPTNLdJVevV%2Fw%2FZZv6Hs45Ooddikx4GGQ4OIg%3D%3D'));
+
+    request.body = json.encode({
+      "username": "077771125",
+      "password":
+          "XjKOQ596gvx/9SwedIBZIMsbhQSBb8HGHhE09wHjAva056f9z4RIqGRrO3sv4haMB0uztiSfSyU/261by2iwV8GeIB7ekCRD4Et9SQYia8SxeDerELWlOhIQOwwJBcSfpNA4kECW7ubzOPv+g5RBJ8ba4YLGsoMxnVKGEaKs14fatHn+qlnpauIhhN2rxiuxPmZhWYjGfe2J+Ep+IO52zcFFy2Bl1x6ujIxtkrU3Ia48f+NRAUBdz15jZr3QB7okGkfeft2qHRianhNOzcLAfnw2jYdSRRcrnejl8MzVJFWRXYuDTnBfQ76Pk1Z+7JcXHOT2Asa18T2Px3RuwrNKmQ==",
+      "grant_type": "password",
+      "client_id": "invoicing",
+      "client_secret":
+          "QhSNJNIjvVKHmEoSCX5qpz0AG1pzkyGP3jgzIC9r99UU5Xtadq2oaO1zhRrSsAb0pMPWX+tLK1MAgmp5JEIcceXLu2qsPgW5dyxOUOXxrxdGyYsuOegF0o7dzlkEUbRr3B3xTO5LsKVHi9R1TOkV+jlXVPxCLMAaUJ8/zmChq9Hsd1kBFCjLcL3oXE7gu2KlsVnGlQLEiJRZWQaBkhMiC8EbA59MT9/owuybu6q/c6LTTgQgyDdC3PA2gmblo7JrZtEgrj5IlM+rIUhPMV+i8k9L2SBTfMW69AQAcpbkwmaorjA0+bPTNLdJVevV/w/ZZv6Hs45Ooddikx4GGQ4OIg=="
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(await response.stream.bytesToString());
+      setState(() {
+        token = jsonResponse["body"]["access_token"];
+      });
+    } else {
+      print(response.reasonPhrase);
     }
   }
 
