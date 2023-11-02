@@ -6,7 +6,13 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
+		<string>oneclickonedollar.com</string>
 		<string>applinks:oneclickonedollar.com</string>
+		<string>callback</string>
+		<string>applinks:callback</string>
+		<string>applinks:www.callback</string>
+		<string>webcredentials:oneclickonedollar.com</string>
+		<string>webcredentials:callback</string>
 	</array>
 </dict>
 </plist>

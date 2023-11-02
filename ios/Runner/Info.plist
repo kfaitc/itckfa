@@ -32,6 +32,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>app</string>
+				<string>kfa</string>
 				<string>http</string>
 				<string>https</string>
 			</array>
@@ -48,6 +49,9 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>kfa</string>
+				<string>app</string>
+				<string>http</string>
+				<string>https</string>
 			</array>
 		</dict>
 	</array>
