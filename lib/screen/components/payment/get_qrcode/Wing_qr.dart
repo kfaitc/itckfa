@@ -295,7 +295,7 @@ class _Qr_WingState extends State<Qr_Wing> {
                           height: 400,
                           // color: Colors.white,
                           padding: EdgeInsets.all(0),
-                          color: Colors.red[600],
+                          // color: Colors.red[600],
                           margin: const EdgeInsets.only(
                               top: 15, right: 10, left: 10),
                           child: FadeInImage.assetNetwork(
@@ -309,7 +309,8 @@ class _Qr_WingState extends State<Qr_Wing> {
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.65,
+                          margin: EdgeInsets.only(top: 5),
+                          width: MediaQuery.of(context).size.width * 0.38,
                           child: Image.asset(
                             "assets/images/WingBank.png",
                             fit: BoxFit.fill,
