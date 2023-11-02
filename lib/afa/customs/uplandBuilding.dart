@@ -92,15 +92,15 @@ class _LandBuildingState extends State<up_LandBuilding> {
       totalMin = 0;
       area = 0;
 
-      print('list:');
-      print(list);
-      print('listAuto:');
+      // print('list:');
+      // print(list);
+      // print('listAuto:');
     });
     //  print(id);
   }
 
   void deleteItemToList(int Id) {
-    print(Id);
+    // print(Id);
     setState(() {
       list.removeAt(Id);
     });
@@ -291,7 +291,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                         onPressed: () {
                                           if (widget.check_property == 1) {
                                             if (autoverbalTypeValue == '100') {
-                                              print("hjsflda");
+                                              // print("hjsflda");
                                               setState(() {
                                                 if (op == false) {
                                                   AwesomeDialog(
@@ -314,8 +314,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                                           setState(() {
                                                             _selectedValue =
                                                                 value;
-                                                            print(
-                                                                _selectedValue);
+                                                            // print(_selectedValue);
                                                           });
                                                         },
                                                         onSaved: (value) {
@@ -436,7 +435,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                               minSqm = Minimum!;
                                               totalMax = area * maxSqm;
                                               totalMin = area * minSqm;
-                                              print(totalMin);
+                                              // print(totalMin);
                                               addItemToList();
                                             });
                                           }
@@ -506,7 +505,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                     ),
                                     onPressed: () {
                                       deleteItemToList(index);
-                                      print(list);
+                                      // print(list);
                                     },
                                   ),
                                 ),
@@ -654,9 +653,9 @@ class _LandBuildingState extends State<up_LandBuilding> {
     var khan_id = widget.ID_khan;
     var sangkat_id = widget.ID_sangkat;
     setState(() async {
-      print(widget.ID_khan +
-          '==========lasfhjkdhjsgfdhjgsgfdghjksgfdghjksgfdhjksgfdhjk==========' +
-          widget.ID_sangkat);
+      // print(widget.ID_khan +
+      //     '==========lasfhjkdhjsgfdhjgsgfdghjksgfdghjksgfdhjksgfdhjk==========' +
+      //     widget.ID_sangkat);
       if (_selectedValue == 'Commercial') {
         var rs = await http.get(Uri.parse(
             'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/commercial?Khan_ID=${khan_id}&Sangkat_ID=${sangkat_id}'));

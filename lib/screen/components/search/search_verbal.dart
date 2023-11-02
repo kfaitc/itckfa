@@ -44,7 +44,7 @@ class verbal_Search extends SearchDelegate {
         return InkWell(
           onTap: () {
             query = query == "" ? name[i].toString() : result[i].toString();
-            print(query);
+            // print(query);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => detail_searching(

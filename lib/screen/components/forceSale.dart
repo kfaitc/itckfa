@@ -61,7 +61,7 @@ class _ForceSaleAndValuationState extends State<ForceSaleAndValuation> {
                   Value = newValue!;
                   widget.value(Value);
                   // ignore: avoid_print
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               items: forceSale

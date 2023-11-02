@@ -141,14 +141,14 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
         if (h == 0 || h < 250) {
           for (int i = 0; i < search_list!.length; i++) {
             if (search_list!.length == 1) {
-              print('1');
+              // print('1');
               h = MediaQuery.of(context).size.height * 0.09;
             } else if (search_list!.length == 2) {
               h = MediaQuery.of(context).size.height * 0.19;
-              print('2');
+              // print('2');
             } else if (search_list!.length == 3 || search_list!.length > 3) {
               h = MediaQuery.of(context).size.height * 0.28;
-              print('3');
+              // print('3');
             }
           }
         }
@@ -321,7 +321,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                           },
                         ));
 
-                        print(property_type_id);
+                        // print(property_type_id);
                       },
                       child: Text(
                         'View All',
@@ -625,7 +625,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
               child: InkWell(
                 onTap: () {
                   setState(() {
-                    print('one');
+                    // print('one');
                   });
                 },
                 child: ClipRRect(

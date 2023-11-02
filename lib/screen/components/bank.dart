@@ -46,7 +46,7 @@ class _BankDropdownState extends State<BankDropdown> {
                   bankvalue = newValue as String;
 
                   branch(newValue.toString());
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               validator: (String? value) {
@@ -129,7 +129,7 @@ class _BankDropdownState extends State<BankDropdown> {
                 setState(() {
                   branchvalue = newValue!;
                   // ignore: avoid_print
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               items: _branch

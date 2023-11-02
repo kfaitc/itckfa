@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
       // });
     }
     OneSignal.Notifications.addPermissionObserver((state) {
-      print("Has permission " + state.toString());
+      // print("Has permission $state");
     });
     OneSignal.Debug.setAlertLevel(OSLogLevel.none);
   }
@@ -103,7 +103,7 @@ class _MyAppState extends State<MyApp> {
       if (uri != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // openAppLink(uri);
-          print({"====|$uri|===="});
+          // print({"====|$uri|===="});
         });
       }
       streamSubscription = uriLinkStream.listen((Uri? uri) {
@@ -111,7 +111,7 @@ class _MyAppState extends State<MyApp> {
           return;
         } else {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            print({"====|Listen|====": uri});
+            // print({"====|Listen|====": uri});
             // openAppLink(uri);
           });
         }
@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: Login(),
     );

@@ -195,7 +195,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                     // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }).catchError((onError) {
-                    print(onError);
+                    // print(onError);
                   });
                 },
                 icon: const Icon(
@@ -444,7 +444,7 @@ class SignUtil {
   }
 
   static String generateMD5(String data) {
-    print(data);
+    // print(data);
     Uint8List content = const Utf8Encoder().convert(data);
     Digest digest = md5.convert(content);
     return digest.toString();
@@ -456,7 +456,7 @@ class SignUtil {
     keys.sort();
     var sbf = getKeys(inMap, keys);
     sbf.write(secretKey);
-    print(sbf.toString());
+    // print(sbf.toString());
     return generateMD5(sbf.toString()).toUpperCase();
   }
 

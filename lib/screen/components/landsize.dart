@@ -45,7 +45,7 @@ class _LandSizeState extends State<LandSize> {
               onChanged: (String? newValue) {
                 setState(() {
                   widget.land_min(newValue);
-                  print(newValue);
+                  // print(newValue);
                 });
               },
 
@@ -106,7 +106,7 @@ class _LandSizeState extends State<LandSize> {
                   Value = newValue!;
                   widget.land_max(newValue);
 
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               items: _list

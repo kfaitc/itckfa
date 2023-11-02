@@ -25,10 +25,10 @@ class controller_for_hometype extends GetxController {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_all_hometype.value = jsonBody;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 
@@ -40,10 +40,10 @@ class controller_for_hometype extends GetxController {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_all_2SR.value = jsonBody;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 

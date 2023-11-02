@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
                 GestureDetector(
                   onTap: () {
                     if ((searchController.text).replaceAll(" ", "") == "") {
-                      print("Blank search");
+                      // print("Blank search");
                     } else {
                       // Navigator.push(context, MaterialPageRoute(builder: (context) => Search(searchController.text)));
                     }
@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
                     controller: searchController,
                     textInputAction: TextInputAction.search,
                     onSubmitted: (value) {
-                      print(value);
+                      // print(value);
                     },
                     decoration: InputDecoration(
                         border: InputBorder.none, hintText: "Search Health"),
@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        print(navBarItem[index]);
+                        // print(navBarItem[index]);
                       },
                       child: Container(
                         padding:
@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
               return Builder(builder: (BuildContext context) {
                 return InkWell(
                   onTap: () {
-                    print("MUJHE MARRO MAT");
+                    // print("MUJHE MARRO MAT");
                   },
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 5, vertical: 14),

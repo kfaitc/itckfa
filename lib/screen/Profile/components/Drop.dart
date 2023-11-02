@@ -58,7 +58,7 @@ class _BankDropdownState extends State<BankDropdown> {
                 bankvalue = newValue as String;
 
                 widget.bank(bankvalue);
-                print(bankvalue);
+                // print(bankvalue);
                 branch(newValue.toString());
               });
             },
@@ -142,7 +142,7 @@ class _BankDropdownState extends State<BankDropdown> {
                   branchvalue = newValue!;
                   widget.bankbranch(branchvalue);
 
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               items: _branch

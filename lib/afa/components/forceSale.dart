@@ -51,7 +51,7 @@ class _ForceSaleAndValuationState extends State<ForceSaleAndValuation> {
                 setState(() {
                   Value = newValue!;
                   // ignore: avoid_print
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               items: forceSale

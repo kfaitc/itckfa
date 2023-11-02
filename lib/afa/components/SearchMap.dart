@@ -22,7 +22,7 @@ class _MapSearchState extends State<MapSearch> {
             country: 'KH',
             onSelected: (Place place) {
               // ignore: avoid_print
-              print(place.description);
+              // print(place.description);
             },
           ),
         ),

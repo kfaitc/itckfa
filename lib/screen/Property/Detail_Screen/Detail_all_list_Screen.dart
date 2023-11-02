@@ -35,7 +35,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
         break;
       }
     }
-    print(myMatch);
+    // print(myMatch);
 
     myElement = widget.list_get_sale!
         .firstWhere((element) => element['id_ptys'] == myMatch);
@@ -279,7 +279,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
   Widget price(icon, url) {
     return InkWell(
       onTap: () async {
-        print('${myMatch.toString()}');
+        // print('${myMatch.toString()}');
         // await Printing.layoutPdf(
         //     onLayout: (format) =>
         //         _generatePdf(format, widget.list_get_sale!, 1));

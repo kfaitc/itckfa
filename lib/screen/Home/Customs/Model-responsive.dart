@@ -134,7 +134,7 @@ class _ScardState extends State<Scard> {
   var id;
   @override
   void initState() {
-    print(widget.id.toString() + "kokkokokokoko\n");
+    // print(widget.id.toString() + "kokkokokokoko\n");
     super.initState();
   }
 

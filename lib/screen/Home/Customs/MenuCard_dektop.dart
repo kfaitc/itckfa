@@ -43,7 +43,7 @@ class card_Tab extends StatefulWidget {
 class _card_TabState extends State<card_Tab> {
   @override
   void initState() {
-    print("id user is ===  " + widget.id + "\n\n\n\n\n\n\n\n\n");
+    // print("id user is ===  " + widget.id + "\n\n\n\n\n\n\n\n\n");
 
     super.initState();
   }

@@ -51,9 +51,9 @@ class _CommentAndOptionState extends State<CommentAndOption> {
                   widget.value(newValue.split(" ")[0]);
                   widget.id(newValue.split(" ")[1]);
                   // ignore: avoid_print
-                  print(_list.toString());
+                  // print(_list.toString());
                   // ignore: avoid_print
-                  print(newValue);
+                  // print(newValue);
                 });
               },
 

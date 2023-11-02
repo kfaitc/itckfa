@@ -27,7 +27,7 @@ class PeopleController {
   }
 
   Future<void> deleteverbal(String verbalId) {
-    debugPrint(verbalId);
+    // debugPrint(verbalId);
     return _repository.deleteverbal('tbverbal', verbalId);
   }
 
@@ -231,7 +231,7 @@ class _ShowPeoplePageState extends State<ShowPeoplePage1> {
                     context,
                     MaterialPageRoute(builder: (_) => const ShowPeoplePage1()),
                   );
-                  debugPrint('People deleted');
+                  // debugPrint('People deleted');
                 },
                 leading: CircleAvatar(
                   child: InkWell(

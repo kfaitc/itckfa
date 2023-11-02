@@ -243,9 +243,9 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     );
 
     if (response.statusCode == 200) {
-      print('Success value Sale');
+      // print('Success value Sale');
     } else {
-      print('value_property: ${response.reasonPhrase}');
+      // print('value_property: ${response.reasonPhrase}');
     }
   }
 
@@ -264,9 +264,9 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     );
 
     if (response.statusCode == 200) {
-      print('success');
+      // print('success');
     } else {
-      print('Error: ${response.reasonPhrase}');
+      // print('Error: ${response.reasonPhrase}');
     }
   }
 
@@ -287,9 +287,9 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     );
 
     if (response.statusCode == 200) {
-      print('Success latlog');
+      // print('Success latlog');
     } else {
-      print('Error Latlog: ${response.reasonPhrase}');
+      // print('Error Latlog: ${response.reasonPhrase}');
     }
   }
 
@@ -311,9 +311,9 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     );
 
     if (response.statusCode == 200) {
-      print('Success urgent_Sale');
+      // print('Success urgent_Sale');
     } else {
-      print('Urgent: ${response.reasonPhrase}');
+      // print('Urgent: ${response.reasonPhrase}');
     }
   }
 
@@ -375,7 +375,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                     // _images.length == 2
                     // &&
                     lat != 0) {
-                  print('For Sale');
+                  // print('For Sale');
                   await_functino = '1';
                   // await _uploadImag_Multiple('mutiple_image_post');
                   _latlog('lat_log_post');
@@ -387,7 +387,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                     _imageFile != null &&
                     // _images.length == 2 &&
                     lat != null) {
-                  print('For Rent');
+                  // print('For Rent');
                   await_functino = '1';
                   //  await _uploadImag_Multiple('mutiple_imageR_post');
                   _latlog('lat_log_post_rent');
@@ -467,7 +467,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                             } else {
                               urgent = '';
                             }
-                            print(switchValue);
+                            // print(switchValue);
                           });
                         },
                       ),
@@ -580,7 +580,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               total: (value) {
                 setState(() {
                   land = double.parse(value.toString());
-                  print('Land = $land');
+                  // print('Land = $land');
                 });
               },
             ),
@@ -616,7 +616,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               total: (value) {
                 setState(() {
                   size_house = double.parse(value.toString());
-                  print('land =========================== $size_house');
+                  // print('land =========================== $size_house');
                 });
               },
             ),
@@ -986,7 +986,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                               } else {
                                 urgent = 'N/A';
                               }
-                              print(switchValue);
+                              // print(switchValue);
                             });
                           },
                         ),
@@ -1500,7 +1500,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               total: (value) {
                 setState(() {
                   land = double.parse(value.toString());
-                  print('land =========================== $size_house');
+                  // print('land =========================== $size_house');
                 });
               },
             ),
@@ -1520,7 +1520,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               total: (value) {
                 setState(() {
                   size_house = double.parse(value.toString());
-                  print('size_house =========================== $size_house');
+                  // print('size_house =========================== $size_house');
                 });
               },
             ),
@@ -2027,7 +2027,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
-        print(_imageFile);
+        // print(_imageFile);
       });
     }
   }
@@ -2205,7 +2205,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     final response = await request.send();
 
     if (response.statusCode == 200) {
-      print('Images uploaded successfully!');
+      // print('Images uploaded successfully!');
       AwesomeDialog(
           context: context,
           animType: AnimType.leftSlide,
@@ -2222,7 +2222,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
             Navigator.pop(context);
           }).show();
     } else {
-      print('Error uploading images: ${response.reasonPhrase}');
+      // print('Error uploading images: ${response.reasonPhrase}');
     }
   }
 
@@ -2269,9 +2269,9 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               });
               Navigator.pop(context);
             }).show();
-        print('Image Successfully');
+        // print('Image Successfully');
       } else {
-        print('Error uploading image: ${response.reasonPhrase}');
+        // print('Error uploading image: ${response.reasonPhrase}');
       }
     }
   }
@@ -2319,9 +2319,9 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               });
               Navigator.pop(context);
             }).show();
-        print('Image uploaded!');
+        // print('Image uploaded!');
       } else {
-        print('Error uploading image: ${response.reasonPhrase}');
+        // print('Error uploading image: ${response.reasonPhrase}');
       }
     }
   }

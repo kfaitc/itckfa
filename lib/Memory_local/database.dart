@@ -8,8 +8,8 @@ class MyDb {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'demo.db');
     //join is from path package
-    print(
-        path); //output /data/user/0/com.testapp.flutter.testapp/databases/demo.db
+    // print(
+    //     path); //output /data/user/0/com.testapp.flutter.testapp/databases/demo.db
 
     db = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {

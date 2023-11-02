@@ -263,7 +263,7 @@ class _List_Sale_AllState extends State<List_All> {
       list = jsonData;
       setState(() {
         list;
-        print(list.toString());
+        // print(list.toString());
       });
     }
   }
@@ -985,7 +985,7 @@ class _List_Sale_AllState extends State<List_All> {
                   optin_firest = '?property_type_id=$value';
                 } else if (option_ == 'Province') {
                   optin_firest = '?property_type_id=$value';
-                  print(optin_firest);
+                  // print(optin_firest);
                 } else {
                   province_id = '&property_type_id=$value';
                 }

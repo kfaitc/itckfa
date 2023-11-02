@@ -32,7 +32,7 @@ class _Print_propertyState extends State<Print_property> {
         break;
       }
     }
-    print(myMatch);
+    // print(myMatch);
 
     myElement =
         widget.list.firstWhere((element) => element['id_ptys'] == myMatch);

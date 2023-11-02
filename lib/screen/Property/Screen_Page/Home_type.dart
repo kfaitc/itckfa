@@ -504,14 +504,14 @@ class _List_Sale_AllState extends State<Home_Type_use> {
       throw Exception('Delete error occured!');
     }
     setState(() {
-      print('Success Deleted');
+      // print('Success Deleted');
       if (dg == 'Success Deleted') {
         setState(() {
           pro = 2023;
-          print('Ok Refresh ready');
+          // print('Ok Refresh ready');
         });
       } else {
-        print('No Delete');
+        // print('No Delete');
       }
     });
   }
@@ -525,7 +525,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
       throw Exception('Delete error occured!');
     }
     setState(() {
-      print('Success Deleted');
+      // print('Success Deleted');
     });
   }
 

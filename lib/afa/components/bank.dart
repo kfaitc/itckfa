@@ -50,7 +50,7 @@ class _BankDropdownState extends State<BankDropdown> {
 
                   widget.bank(bankvalue);
                   branch(newValue.toString());
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               validator: (String? value) {
@@ -134,7 +134,7 @@ class _BankDropdownState extends State<BankDropdown> {
                   branchvalue = newValue!;
                   widget.bankbranch(branchvalue);
 
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               items: _branch

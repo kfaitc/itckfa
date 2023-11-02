@@ -17,7 +17,7 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
   bool? status;
   selectPeople() async {
     list = await PeopleController().selectverbal();
-    print(list);
+    // print(list);
     if (list.isEmpty) {
       setState(() {
         status = false;

@@ -132,7 +132,7 @@ class _HomeMapState extends State<HomeMap> {
                 country: 'KH',
                 onSelected: (Place place) {
                   address = place.description;
-                  print(place.description);
+                  // print(place.description);
                   getLatLang(address);
                 },
               ),
@@ -274,15 +274,15 @@ class _HomeMapState extends State<HomeMap> {
         list = jsonData['data'];
       });
     }
-    print(requestModel.toJson());
-    print(list.length);
+    // print(requestModel.toJson());
+    // print(list.length);
     Map map = list.asMap();
     // List list = [
     //   {"title": "one", "id": "1", "lat": 11.489, "lon": 105.9214},
     //   {"title": "two", "id": "2", "lat": 11.5, "lon": 104.9314},
     //   {"title": "three", "id": "3", "lat": 11.6, "lon": 104.9414},
     // ];
-    print(map);
+    // print(map);
     for (var i = 0; i < map.length; i++)
     // ignore: curly_braces_in_flow_control_structures
     {

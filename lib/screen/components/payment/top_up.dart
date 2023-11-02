@@ -55,7 +55,7 @@ class _TopUpState extends State<TopUp> {
       var jsonData = jsonDecode(rs.body);
       setState(() {
         v_point = jsonData;
-        print(v_point);
+        // print(v_point);
       });
     }
   }
@@ -1077,8 +1077,8 @@ class _TopUpState extends State<TopUp> {
                     // order_reference_no = SignUtil().RandomString(10).toString();
                     order_reference_no =
                         "${set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
-                    print(order_reference_no.toString());
-                    print('Price = $price');
+                    // print(order_reference_no.toString());
+                    // print('Price = $price');
                     if (index == 0) {
                       await createOrder(price, option, context);
                     } else if (index == 1) {
@@ -1248,9 +1248,9 @@ class _TopUpState extends State<TopUp> {
         var parts = accessToken.split('-');
         token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
 
-        print('accessToken: ${accessToken}');
-        print('token: ${token}');
-        print('Price : $price');
+        // print('accessToken: ${accessToken}');
+        // print('token: ${token}');
+        // print('Price : $price');
       });
 
       // await deeplink_hask(token);
@@ -1258,15 +1258,15 @@ class _TopUpState extends State<TopUp> {
         await deeplinkHask(accessToken, token, price, option, context);
       }
     } else {
-      print('Request failed with status: ${response.statusCode}');
-      print('Response: ${response.body}');
+      // print('Request failed with status: ${response.statusCode}');
+      // print('Response: ${response.body}');
     }
   }
 
 //Deeplink hask
 
   Future<void> deeplinkHask(accessToken, token, price, option, context) async {
-    print('order_reference_no : $order_reference_no');
+    // print('order_reference_no : $order_reference_no');
     // print('deeplinkHask = $token');
     final url = await Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
@@ -1289,19 +1289,19 @@ class _TopUpState extends State<TopUp> {
         deeplink_hask = jsonResponse['Deeplink_Hask'];
       });
       if (deeplink_hask != null) {
-        print('deeplink_hask != null(200) = $deeplink_hask');
+        // print('deeplink_hask != null(200) = $deeplink_hask');
         var data = await call_back_wing(
             token, deeplink_hask, accessToken, price, option);
         // var data = await button(deeplink_hask, accessToken, price);
       }
     } else {
-      print('Request failed with status: ${response.reasonPhrase}');
+      // print('Request failed with status: ${response.reasonPhrase}');
     }
   }
 
   Future call_back_wing(
       token, deeplink_hask, accessToken, price, option) async {
-    print('call_back_wing');
+    // print('call_back_wing');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $accessToken'
@@ -1352,7 +1352,7 @@ class _TopUpState extends State<TopUp> {
       Navigator.pop(context);
       Navigator.pop(context);
     } else {
-      print(response.statusMessage);
+      // print(response.statusMessage);
     }
   }
 
@@ -1434,7 +1434,7 @@ class _TopUpState extends State<TopUp> {
       } else if (count_number[4] == "Mount") {
         thier_plan = 30;
       }
-      print("kokokok\n\n\n$thier_plan");
+      // print("kokokok\n\n\n$thier_plan");
     });
     if (thier_plan != null) {
       var merchantKey = '3142e7560039d1661121992cfaafe17e';
@@ -1549,7 +1549,7 @@ class SignUtil {
   }
 
   static String generateMD5(String data) {
-    print(data);
+    // print(data);
     Uint8List content = const Utf8Encoder().convert(data);
     Digest digest = md5.convert(content);
     return digest.toString();
@@ -1561,7 +1561,7 @@ class SignUtil {
     keys.sort();
     var sbf = getKeys(inMap, keys);
     sbf.write(secretKey);
-    print(sbf.toString());
+    // print(sbf.toString());
     return generateMD5(sbf.toString()).toUpperCase();
   }
 

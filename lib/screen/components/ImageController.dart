@@ -38,9 +38,9 @@ class ImageController extends GetxController {
       _imagePath = message;
       // _pickedFile = null;
       //await getUserInfo();
-      print(message);
+      // print(message);
     } else {
-      print("Error uploading Image");
+      // print("Error uploading Image");
     }
     update();
 

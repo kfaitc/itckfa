@@ -22,7 +22,7 @@ class _MapSearchState extends State<MapSearch> {
                 'AIzaSyCeogkN2j3bqrqyIuv4GD4bT1n_4lpNlnY', // YOUR GOOGLE MAPS API KEY
             country: 'KH',
             onSelected: (Place place) {
-              print(place.description);
+              // print(place.description);
             },
           ),
         ),

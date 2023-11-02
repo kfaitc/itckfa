@@ -42,7 +42,7 @@ class _persoin_UserState extends State<persoin_User> {
       var jsonData = jsonDecode(rs.body);
       setState(() {
         list = jsonData;
-        print(list.toString());
+        // print(list.toString());
       });
     }
     return list;

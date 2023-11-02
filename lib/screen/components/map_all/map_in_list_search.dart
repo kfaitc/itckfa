@@ -1613,7 +1613,7 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
                             title: InkWell(
                               onTap: () {
                                 Tcon;
-                                print(name_place[index]);
+                                // print(name_place[index]);
                                 h = 0;
                                 Tcon;
                                 num =
@@ -1912,7 +1912,7 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
       // );
     } else {
       // Error or invalid response
-      print(response.statusCode);
+      // print(response.statusCode);
     }
   }
 
@@ -1961,7 +1961,7 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
             setState(() {
               // widget.commune(jsonResponse['results'][j]['address_components'][i]
               //     ['short_name']);
-              print('Value ');
+              // print('Value ');
             });
           }
           if (jsonResponse['results'][j]['address_components'][i]['types'][0] ==

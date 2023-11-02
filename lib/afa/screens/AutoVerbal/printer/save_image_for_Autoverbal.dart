@@ -1089,7 +1089,7 @@ class _save_image_after_add_verbalState
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => HomePage1()));
           }).catchError((onError) {
-            print(onError);
+            // print(onError);
           });
         },
         child: const Icon(Icons.screenshot),

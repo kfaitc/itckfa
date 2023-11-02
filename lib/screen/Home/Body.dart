@@ -160,7 +160,7 @@ class _BodyState extends State<Body> {
             2;
       });
     } else {
-      print(response.statusCode);
+      // print(response.statusCode);
     }
   }
 
@@ -211,7 +211,7 @@ class _BodyState extends State<Body> {
       id = widget.id.toString();
       control_user = widget.control_user.toString();
       password = widget.password.toString();
-      print(id);
+      // print(id);
     });
     final response = await http.get(
       Uri.parse(
@@ -242,10 +242,10 @@ class _BodyState extends State<Body> {
           expiry = timeNow.toString();
         }
 
-        print(number_of_vpoint);
+        // print(number_of_vpoint);
       });
     } else {
-      print(response.reasonPhrase);
+      // print(response.reasonPhrase);
     }
   }
 

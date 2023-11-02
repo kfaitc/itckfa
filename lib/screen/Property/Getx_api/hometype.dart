@@ -29,10 +29,10 @@ class Controller_hometype extends GetxController {
         list_hometype.value = jsonBody;
         list_hometype = list_hometype;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 }

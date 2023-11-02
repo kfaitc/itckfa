@@ -48,7 +48,7 @@ class _LandSizeState extends State<LandSize> {
                   // ignore: avoid_print
                   widget.land_min(newValue);
                   // ignore: avoid_print
-                  print(newValue);
+                  // print(newValue);
                 });
               },
 
@@ -109,7 +109,7 @@ class _LandSizeState extends State<LandSize> {
                   Value = newValue!;
                   widget.land_max(newValue);
                   // ignore: avoid_print
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               items: _list

@@ -315,7 +315,7 @@ class _LandBuildingState extends State<LandBuilding> {
                               onChanged: (value) {
                                 setState(() {
                                   _selectedValue = value;
-                                  print(_selectedValue);
+                                  // print(_selectedValue);
                                 });
                               },
                               onSaved: (value) {

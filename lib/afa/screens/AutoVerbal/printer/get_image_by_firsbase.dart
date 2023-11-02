@@ -43,7 +43,7 @@ class _Get_Image_By_FirbaseState extends State<Get_Image_By_Firbase> {
   void Load1() async {
     setState(() {});
     var code = widget.com_id.toString();
-    print("Load 1  = " + code);
+    // print("Load 1  = " + code);
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/list?verbal_id=$code'));
     if (rs.statusCode == 200) {
@@ -59,7 +59,7 @@ class _Get_Image_By_FirbaseState extends State<Get_Image_By_Firbase> {
 
   void Load2() async {
     var code = widget.com_id;
-    print("Load 2  = " + code!);
+    // print("Load 2  = " + code!);
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verbals/list?verbal_id=$code'));
     if (rs.statusCode == 200) {
@@ -1286,7 +1286,7 @@ class _Get_Image_By_FirbaseState extends State<Get_Image_By_Firbase> {
           fn = n * (double.parse(fsv) / 100);
         }
 
-        print("Total mix ${total_MAX}");
+        // print("Total mix ${total_MAX}");
       });
     }
   }
@@ -1318,7 +1318,7 @@ class _Get_Image_By_FirbaseState extends State<Get_Image_By_Firbase> {
           fn = n * (double.parse(fsv) / 100);
         }
 
-        print("Total mix ${total_MAX}");
+        // print("Total mix ${total_MAX}");
       });
     }
   }

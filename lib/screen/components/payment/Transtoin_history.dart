@@ -173,7 +173,7 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
       setState(() {
         var jsonData = jsonDecode(rs.body);
         list = jsonData;
-        print('List = ${list.toString()}');
+        // print('List = ${list.toString()}');
       });
     }
   }

@@ -27,10 +27,10 @@ class _ImageOpenState extends State<ImageOpen> {
       nameFile = result.files.first.name;
     });
 
-    print(nameFile);
-    print(result.files.first.name);
-    print(result.files.first.size);
-    print(result.files.first.path);
+    // print(nameFile);
+    // print(result.files.first.name);
+    // print(result.files.first.size);
+    // print(result.files.first.path);
   }
 
   void _openFile(PlatformFile file) {

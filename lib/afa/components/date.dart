@@ -65,8 +65,8 @@ class _DateComponentsState extends State<DateComponents> {
                   pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
               String formattedDate =
                   DateFormat('yyyy-MM-dd').format(pickedDate);
-              print(
-                  formattedDate); //formatted date output using intl package =>  2021-03-16
+              // print(
+              //     formattedDate); //formatted date output using intl package =>  2021-03-16
               //you can implement different kind of Date Format here according to your requirement
 
               setState(() {
@@ -75,7 +75,7 @@ class _DateComponentsState extends State<DateComponents> {
                     .date(formattedDate); //set output date to TextField value.
               });
             } else {
-              print("Date is not selected");
+              // print("Date is not selected");
             }
           },
         ),

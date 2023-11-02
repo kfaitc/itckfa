@@ -49,7 +49,7 @@ class _MinmaxState extends State<Minmax> {
                   minValue = newValue!;
                   widget.min(newValue);
                   // ignore: avoid_print
-                  print(newValue);
+                  // print(newValue);
                 });
               },
               items: min
@@ -107,7 +107,7 @@ class _MinmaxState extends State<Minmax> {
                   maxValue = newValue!;
                   widget.max(newValue);
                   // ignore: avoid_print
-                  print(newValue);
+                  // print(newValue);
                 });
               },
 

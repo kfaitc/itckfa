@@ -133,10 +133,10 @@ class _AccountState extends State<Account> {
           _file = imagefile as XFile;
         });
       } else {
-        print("No image is selected.");
+        // print("No image is selected.");
       }
     } catch (e) {
-      print("error while picking file.");
+      // print("error while picking file.");
     }
   }
 
@@ -567,7 +567,7 @@ class _AccountState extends State<Account> {
                         if (check_password == widget.password) {
                           await mydb.db.rawDelete("DELETE FROM user WHERE 1");
                           await update();
-                          print("Data Deleted");
+                          // print("Data Deleted");
                           Get.to(() => Login());
                         }
                       },
@@ -608,9 +608,9 @@ class _AccountState extends State<Account> {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      // print(await response.stream.bytesToString());
     } else {
-      print(response.reasonPhrase);
+      // print(response.reasonPhrase);
     }
   }
 }

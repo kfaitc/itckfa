@@ -359,7 +359,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
                         title: InkWell(
                           onTap: () {
                             Tcon;
-                            print(name_place[index]);
+                            // print(name_place[index]);
                             h = 0;
                             Tcon;
                             num =
@@ -602,7 +602,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
       });
     } else {
       // Error or invalid response
-      print(response.statusCode);
+      // print(response.statusCode);
     }
   }
 

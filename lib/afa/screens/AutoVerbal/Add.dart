@@ -1330,10 +1330,10 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
           _file = imagefile as XFile;
         });
       } else {
-        print("No image is selected.");
+        // print("No image is selected.");
       }
     } catch (e) {
-      print("error while picking file.");
+      // print("error while picking file.");
     }
   }
 
@@ -2475,7 +2475,7 @@ class _Add_with_propertyState extends State<Add_with_property>
       var jsonData = jsonDecode(rs.body);
 
       setState(() {
-        print(jsonData[0]['control_user'].toString() + "\n");
+        // print(jsonData[0]['control_user'].toString() + "\n");
         control_user = jsonData[0]['control_user'].toString();
         get_count();
       });
@@ -3369,7 +3369,7 @@ class _Add_with_propertyState extends State<Add_with_property>
 
     setState(() {
       requestModelAuto.image = code.toString();
-      print("\n\n\n asking_price" + asking_price.toString() + "\n\n\n");
+      // print("\n\n\n asking_price" + asking_price.toString() + "\n\n\n");
     });
     if (!mounted) return;
   }
@@ -3458,10 +3458,10 @@ class _Add_with_propertyState extends State<Add_with_property>
           _file = imagefile as XFile;
         });
       } else {
-        print("No image is selected.");
+        // print("No image is selected.");
       }
     } catch (e) {
-      print("error while picking file.");
+      // print("error while picking file.");
     }
   }
 
@@ -3484,7 +3484,7 @@ class _Add_with_propertyState extends State<Add_with_property>
     var response = await request.send();
     var responseData = await response.stream.toBytes();
     var result = String.fromCharCodes(responseData);
-    print(result);
+    // print(result);
   }
 
   //get khan

@@ -97,7 +97,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_edit> {
       ));
       lat1 = position.latitude;
       log1 = position.longitude;
-      print("Yoyoy ${lat1}\n\n\n");
+      // print("Yoyoy ${lat1}\n\n\n");
       latLng = LatLng(lat1!, log1!);
       _addMarker(latLng);
     });
@@ -247,7 +247,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_edit> {
     setState(() {
       maxSqm1 = double.parse(jsonData[0]['Max_Value'].toString());
       minSqm1 = double.parse(jsonData[0]['Min_Value'].toString());
-      print("Max 1 = ${maxSqm1}");
+      // print("Max 1 = ${maxSqm1}");
     });
   }
 
@@ -259,7 +259,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_edit> {
     setState(() {
       maxSqm2 = double.parse(jsonData2[0]['Max_Value'].toString());
       minSqm2 = double.parse(jsonData2[0]['Min_Value'].toString());
-      print("Max 2 = ${maxSqm2}");
+      // print("Max 2 = ${maxSqm2}");
     });
     var rs1 = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/commercial?Khan_ID=${id_khan}&Sangkat_ID=${id_Sangkat}'));
@@ -267,7 +267,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_edit> {
     setState(() {
       maxSqm1 = double.parse(jsonData[0]['Max_Value'].toString());
       minSqm1 = double.parse(jsonData[0]['Min_Value'].toString());
-      print("Max 1 = ${maxSqm1}");
+      // print("Max 1 = ${maxSqm1}");
     });
   }
 
@@ -458,7 +458,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_edit> {
                         title: InkWell(
                           onTap: () {
                             Tcon;
-                            print(name_place[index]);
+                            // print(name_place[index]);
                             h = 0;
                             Tcon;
                             num =
@@ -577,7 +577,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_edit> {
       // );
     } else {
       // Error or invalid response
-      print(response.statusCode);
+      // print(response.statusCode);
     }
   }
 
@@ -626,7 +626,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_edit> {
             setState(() {
               // widget.commune(jsonResponse['results'][j]['address_components'][i]
               //     ['short_name']);
-              print('Value ');
+              // print('Value ');
             });
           }
           if (jsonResponse['results'][j]['address_components'][i]['types'][0] ==

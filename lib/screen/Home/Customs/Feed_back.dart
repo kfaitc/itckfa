@@ -202,7 +202,7 @@ class _FeedbackState extends State<Feed_back> {
                   if (await canLaunchUrl(email)) {
                     await launchUrl(email);
                   } else {
-                    debugPrint('error');
+                    // debugPrint('error');
                   }
                 },
                 child: Container(

@@ -524,7 +524,7 @@ class _HomePageState extends State<map_cross_verbal> {
               country: 'KH',
               onSelected: (Place place) {
                 address = place.description;
-                print(place.description);
+                // print(place.description);
                 getLatLang(address);
               },
             ),
@@ -622,12 +622,12 @@ class _HomePageState extends State<map_cross_verbal> {
                 adding_price +=
                     double.parse(map[i]['comparable_adding_price']) /
                         map.length;
-                print(map[i]['comparable_adding_price']);
+                // print(map[i]['comparable_adding_price']);
               } else if (map[i]['comparable_adding_price'].contains(',')) {
                 adding_price += double.parse(
                         map[i]['comparable_adding_price'].replaceAll(",", "")) /
                     map.length;
-                print(map[i]['comparable_adding_price']);
+                // print(map[i]['comparable_adding_price']);
                 //print(map[i]['comparable_adding_price'].split(",")[0]);
               } else {
                 adding_price +=

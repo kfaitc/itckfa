@@ -79,7 +79,7 @@ class Qr_UPayState extends State<App_link_Upay> {
                   onTap: () {
                     setState(() {
                       createOrder();
-                      print('CreateOrder');
+                      // print('CreateOrder');
                     });
                   },
                   child: Text(
@@ -150,7 +150,7 @@ class Qr_UPayState extends State<App_link_Upay> {
         setState(() {
           url_qr = d2['qrcode'].toString();
           showConfirmationBottomSheet(context);
-          print('Function=====================================');
+          // print('Function=====================================');
         });
       } else {}
     } catch (e) {}
@@ -198,7 +198,7 @@ class Qr_UPayState extends State<App_link_Upay> {
       if (response.statusCode == 200) {
         var data = response.data;
         var upayDeeplink = data['data']['upayDeeplink'].toString();
-        print('upayDeeplink_Pov = $upayDeeplink');
+        // print('upayDeeplink_Pov = $upayDeeplink');
         // ignore: deprecated_member_use
         launch(
           '$upayDeeplink',
@@ -356,7 +356,7 @@ class Qr_UPayState extends State<App_link_Upay> {
                     // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }).catchError((onError) {
-                    print(onError);
+                    // print(onError);
                   });
                 },
                 icon: const Icon(
@@ -614,7 +614,7 @@ class SignUtil {
   }
 
   static String generateMD5(String data) {
-    print(data);
+    // print(data);
     Uint8List content = const Utf8Encoder().convert(data);
     Digest digest = md5.convert(content);
     return digest.toString();
@@ -626,7 +626,7 @@ class SignUtil {
     keys.sort();
     var sbf = getKeys(inMap, keys);
     sbf.write(secretKey);
-    print(sbf.toString());
+    // print(sbf.toString());
     return generateMD5(sbf.toString()).toUpperCase();
   }
 

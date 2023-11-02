@@ -176,7 +176,7 @@ class _ShowPeoplePageState extends State<ShowPeoplePage> {
                     context,
                     MaterialPageRoute(builder: (_) => const ShowPeoplePage()),
                   );
-                  debugPrint('People deleted');
+                  // debugPrint('People deleted');
                 },
                 leading: CircleAvatar(
                   child: Text(data.id.toString()),

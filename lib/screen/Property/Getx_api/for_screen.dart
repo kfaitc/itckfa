@@ -25,12 +25,12 @@ class controller_for_sale extends GetxController {
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_all.value = jsonBody;
-        print(list_value_all.toString());
+        // print(list_value_all.toString());
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 
@@ -42,10 +42,10 @@ class controller_for_sale extends GetxController {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_hometype.value = jsonBody;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 }

@@ -20,17 +20,17 @@ class Contacts extends StatefulWidget {
 class _ContactsState extends State<Contacts> {
   Future<void> _makePhoneCall(String url) async {
     await launch(url);
-    print("Could get Url");
+    // print("Could get Url");
   }
 
   Future<void> _googleMap(String url) async {
     if (await canLaunch(url)) {
-      print('can launch $url');
+      // print('can launch $url');
       await launch(
         url,
       );
     } else {
-      print('Could not launch $url');
+      // print('Could not launch $url');
     }
   }
 

@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return ListTile(
                     onTap: () {
                       _controller.text = _placeList[index]["description"];
-                      print(_placeList[index]["description"]);
+                      // print(_placeList[index]["description"]);
                     },
                     title: Text(_placeList[index]["description"]),
                   );

@@ -45,10 +45,10 @@ class _CodeState extends State<Code> {
         code = jsonData;
         codedisplay = int.parse(code[0]['verbal_id']) + 1;
         // ignore: avoid_print
-        print(code[0]['verbal_id']);
+        // print(code[0]['verbal_id']);
         widget.code(codedisplay);
         // ignore: avoid_print
-        print(codedisplay);
+        // print(codedisplay);
 
         // print(_list);
       });

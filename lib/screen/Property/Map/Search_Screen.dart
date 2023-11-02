@@ -162,7 +162,7 @@ class _SearchPlacesScreenState extends State<Map_List_search_property> {
       onDragEnd: (value) {
         latLng = value;
         Find_by_piont(value.latitude, value.longitude);
-        print('marker');
+        // print('marker');
       },
       onTap: () {
         AwesomeDialog(
@@ -200,7 +200,7 @@ class _SearchPlacesScreenState extends State<Map_List_search_property> {
       Find_by_piont(latLng.latitude, latLng.longitude);
       log_verbal;
       lat_verbal;
-      print('Pointer');
+      // print('Pointer');
       // print('lat = ${lat_verbal} and log =${log_verbal}');
       // add the new marker to the list of markers
     });
@@ -218,7 +218,7 @@ class _SearchPlacesScreenState extends State<Map_List_search_property> {
       infoWindow: InfoWindow(
           snippet: "${Type} More ...",
           onTap: () {
-            print('Ok');
+            // print('Ok');
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => Detail_property_sale_all(
@@ -263,7 +263,7 @@ class _SearchPlacesScreenState extends State<Map_List_search_property> {
         });
       }
     } else {
-      print('For Rent');
+      // print('For Rent');
 
       final response = await http.get(Uri.parse(
           'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property_sale_map_rent/$lat_verbal/$log_verbal?start=$start&end=$end'));
@@ -273,7 +273,7 @@ class _SearchPlacesScreenState extends State<Map_List_search_property> {
         setState(() {
           data_of_verbal = jsonResponse;
           data_of_verbal;
-          print('latlog Rent = ${data_of_verbal.toString()}');
+          // print('latlog Rent = ${data_of_verbal.toString()}');
           for (int i = 0; i < data_of_verbal.length; i++) {
             _addMarker_by_datavelbal(
                 LatLng(data_of_verbal[i]['lat'], data_of_verbal[i]['log']),
@@ -479,7 +479,7 @@ class _SearchPlacesScreenState extends State<Map_List_search_property> {
                       title: InkWell(
                         onTap: () {
                           Tcon;
-                          print(name_place[index]);
+                          // print(name_place[index]);
                           h = 0;
                           Tcon;
                           num = 1; // use num for when user click on list search
@@ -603,7 +603,7 @@ class _SearchPlacesScreenState extends State<Map_List_search_property> {
       }
     } else {
       // Error or invalid response
-      print(response.statusCode);
+      // print(response.statusCode);
     }
   }
 
@@ -652,7 +652,7 @@ class _SearchPlacesScreenState extends State<Map_List_search_property> {
             setState(() {
               // widget.commune(jsonResponse['results'][j]['address_components'][i]
               //     ['short_name']);
-              print('Value ');
+              // print('Value ');
             });
           }
           if (jsonResponse['results'][j]['address_components'][i]['types'][0] ==

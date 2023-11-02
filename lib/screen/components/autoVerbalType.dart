@@ -48,8 +48,8 @@ class _AutoVerbalTypeDropdownState extends State<AutoVerbalTypeDropdown> {
             widget.name(newValue.split(",")[1]);
             widget.id(newValue.split(",")[0]);
             // ignore: avoid_print
-            print(newValue.split(" ")[0]);
-            print(newValue.split(" ")[1]);
+            // print(newValue.split(" ")[0]);
+            // print(newValue.split(" ")[1]);
           });
         },
         items: _list

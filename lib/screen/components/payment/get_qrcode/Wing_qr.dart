@@ -88,14 +88,14 @@ class _Qr_WingState extends State<Qr_Wing> {
     );
 
     if (response.statusCode == 200) {
-      print('Invoice created successfully. ${response}');
+      // print('Invoice created successfully. ${response}');
       final responseBody = json.decode(response.body);
       setState(() {
         url_qr = responseBody['body']['qr_code_url'];
       });
     } else {
       // Failed to create invoice
-      print('Failed to create invoice. Status code: ${response.statusCode}');
+      // print('Failed to create invoice. Status code: ${response.statusCode}');
     }
   }
 
@@ -161,7 +161,7 @@ class _Qr_WingState extends State<Qr_Wing> {
           TextEditingController(text: 'ID Paymemt : ' + order_reference_no);
       _Url_call_back =
           'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back/${widget.control_user}/6560';
-      print("\n" + crc + "\n" + order_reference_no + "\n" + widget.price);
+      // print("\n" + crc + "\n" + order_reference_no + "\n" + widget.price);
     });
     Future.delayed(const Duration(seconds: 2), () {
       createInvoice();
@@ -217,7 +217,7 @@ class _Qr_WingState extends State<Qr_Wing> {
                     // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }).catchError((onError) {
-                    print(onError);
+                    // print(onError);
                   });
                 },
                 icon: const Icon(

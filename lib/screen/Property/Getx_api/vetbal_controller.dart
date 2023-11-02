@@ -29,10 +29,10 @@ class Controller_verbal extends GetxController {
         final List<dynamic> jsonBody = jsonDecode(response.body)['data'];
         bank.value = jsonBody;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 
@@ -44,10 +44,10 @@ class Controller_verbal extends GetxController {
         final List<dynamic> jsonBody = jsonDecode(response.body)['data'];
         list_hometype.value = jsonBody;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 
@@ -59,10 +59,10 @@ class Controller_verbal extends GetxController {
         final List<dynamic> jsonBody = jsonDecode(response.body)['data'];
         list_cummone.value = jsonBody;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 
@@ -75,10 +75,10 @@ class Controller_verbal extends GetxController {
         list_last_verbalID.value = jsonBody;
         id_last = list_last_verbalID[0]['id_ptys'] + 1;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 }

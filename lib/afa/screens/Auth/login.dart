@@ -79,7 +79,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     slist.map((e) {
       setState(() {
         datatest = e;
-        print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
+        // print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
       });
     });
     if (slist.isEmpty) {
@@ -90,7 +90,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
       setState(() {
         int i = slideList.length - 1;
         status = true;
-        print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
+        // print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
         // Email = TextEditingController(text: list[i].name);
         // Password = TextEditingController(text: list[i].password);
       });
@@ -104,14 +104,14 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
       setState(() {
         if (slist.length > 0) {
           int i = slist.length - 1;
-          print("\n\n\n\nkokoko" + slist.toString() + "\n\n\n\nkokoko");
+          // print("\n\n\n\nkokoko" + slist.toString() + "\n\n\n\nkokoko");
           status = true;
           Email = TextEditingController(text: slist[i]['email']);
           Password = TextEditingController(text: slist[i]['password']);
           OneSignal.login(slist[i]['username'].toString());
           OneSignal.User.addAlias("fb_id", slist[i]['username'].toString());
         } else {
-          print("\n\n\n\nkakakaka" + slist.toString() + "\n\n\n\nkakakak");
+          // print("\n\n\n\nkakakaka" + slist.toString() + "\n\n\n\nkakakak");
         }
       });
     });
@@ -457,7 +457,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                               requestModel.email,
                               requestModel.password
                             ]);
-                        print("jksfdjhsdfjhsdhjfghsagddfasdf");
+                        // print("jksfdjhsdfjhsdhjfghsagddfasdf");
                       } else {
                         var check_Sql = await mydb.db.rawQuery(
                             'SELECT * FROM user  WHERE  email=? AND password=?',
@@ -510,7 +510,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         btnOkIcon: Icons.cancel,
                         btnOkColor: Colors.red,
                       ).show();
-                      print(value.message);
+                      // print(value.message);
                     } else {
                       AwesomeDialog(
                         context: context,
@@ -524,10 +524,10 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         btnOkIcon: Icons.cancel,
                         btnOkColor: Colors.red,
                       ).show();
-                      print(value.message);
+                      // print(value.message);
                     }
                   });
-                  print(requestModel.toJson());
+                  // print(requestModel.toJson());
                 }
               },
             ),
@@ -582,7 +582,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
         tel = jsonData['tel_num'];
         control_user = jsonData['control_user'];
       });
-      print(id.toString());
+      // print(id.toString());
     }
   }
 

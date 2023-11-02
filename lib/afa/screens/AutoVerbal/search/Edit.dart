@@ -183,7 +183,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
       Load_khan(district);
     } else {
       // Error or invalid response
-      print(response.statusCode);
+      // print(response.statusCode);
     }
   }
 
@@ -268,7 +268,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                     .saveAutoVerbal_Update(requestModelAuto, widget.verbal_id)
                     .then(
                   (value) async {
-                    print(json.encode(requestModelAuto.toJson()));
+                    // print(json.encode(requestModelAuto.toJson()));
                     if (requestModelAuto.verbal.isEmpty) {
                       AwesomeDialog(
                         context: context,
@@ -307,7 +307,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                           btnOkIcon: Icons.cancel,
                           btnOkColor: Colors.red,
                         ).show();
-                        print(value.message);
+                        // print(value.message);
                       }
                     }
                   },
@@ -945,10 +945,10 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
           _file = imagefile as XFile;
         });
       } else {
-        print("No image is selected.");
+        // print("No image is selected.");
       }
     } catch (e) {
-      print("error while picking file.");
+      // print("error while picking file.");
     }
   }
 
@@ -974,7 +974,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
     var response = await request.send();
     var responseData = await response.stream.toBytes();
     var result = String.fromCharCodes(responseData);
-    print(result);
+    // print(result);
   }
 
   int i = 0;

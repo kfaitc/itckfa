@@ -43,7 +43,7 @@ class _ResultState extends State<Result> {
               setState(() {
                 propertyValue = newValue as String;
                 // ignore: avoid_print
-                print(newValue);
+                // print(newValue);
               });
             },
             // items: property

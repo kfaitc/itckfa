@@ -58,7 +58,7 @@ class SearchPropertyState extends State<For_Sale> {
     _initData();
     _getCurrentPosition();
     super.initState();
-    print('list get');
+    // print('list get');
   }
 
   String? commune;

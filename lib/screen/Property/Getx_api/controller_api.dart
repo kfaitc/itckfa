@@ -22,10 +22,10 @@ class controller_api extends GetxController {
         list_value_all.value = jsonBody;
         province = list_value_all[0]['Name_cummune'].toString();
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 }

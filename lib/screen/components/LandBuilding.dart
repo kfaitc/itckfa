@@ -276,7 +276,7 @@ class _LandBuildingState extends State<LandBuilding> {
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedValue = value;
-                                      print(_selectedValue);
+                                      // print(_selectedValue);
                                     });
                                   },
                                   onSaved: (value) {
@@ -444,7 +444,7 @@ class _LandBuildingState extends State<LandBuilding> {
                             minSqm = Minimum!;
                             totalMax = area * maxSqm;
                             totalMin = area * minSqm;
-                            print(totalMin);
+                            // print(totalMin);
                             addItemToList();
                           });
                         }
@@ -503,7 +503,7 @@ class _LandBuildingState extends State<LandBuilding> {
                                                 onPressed: () {
                                                   setState(() {
                                                     deleteItemToList(index);
-                                                    print(list);
+                                                    // print(list);
                                                     if (list.length == 0) {
                                                       Navigator.pop(context);
                                                     }

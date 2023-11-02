@@ -74,7 +74,7 @@ class _RegisterState extends State<Register> {
       imagefile = File(imagepath); //convert Path to File
       get_bytes = await imagefile!.readAsBytes(); //convert to bytes
     } else {
-      print("No image is selected.");
+      // print("No image is selected.");
     }
   }
 
@@ -448,7 +448,7 @@ class _RegisterState extends State<Register> {
                       setState(() {
                         genderValue = newValue!;
                         requestModel.gender = genderValue.toString();
-                        print(newValue);
+                        // print(newValue);
                       });
                     },
                     items: gender
@@ -786,7 +786,7 @@ class _RegisterState extends State<Register> {
                             btnOkIcon: Icons.cancel,
                             btnOkColor: Colors.red,
                           ).show();
-                          print(value.message);
+                          // print(value.message);
                         } else {
                           AwesomeDialog(
                             context: context,

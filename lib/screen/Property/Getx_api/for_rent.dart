@@ -26,10 +26,10 @@ class controller_for_Rent extends GetxController {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_all.value = jsonBody;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 
@@ -41,10 +41,10 @@ class controller_for_Rent extends GetxController {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_pid.value = jsonBody;
       } else {
-        print('Error value_all_list');
+        // print('Error value_all_list');
       }
     } catch (e) {
-      print('Error value_all_list $e');
+      // print('Error value_all_list $e');
     }
   }
 }
