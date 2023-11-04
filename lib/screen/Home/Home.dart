@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage1> {
         password: password ?? "",
         control_user: control_user ?? "",
       ),
-      Center(child: Faps()),
+      //Center(child: Faps()),
       Center(child: Contacts()),
       Center(child: Abouts()),
       Center(child: Feed_back()),
@@ -183,18 +183,18 @@ class _HomePageState extends State<HomePage1> {
               title: 'Wallet',
               Press: () {},
             ),
-            MyDrawerList(
-              icon: Icons.question_answer,
-              title: 'FAQ',
-              Press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return FapsSidebar();
-                  }),
-                );
-              },
-            ),
+            // MyDrawerList(
+            //   icon: Icons.question_answer,
+            //   title: 'FAQ',
+            //   Press: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) {
+            //         return FapsSidebar();
+            //       }),
+            //     );
+            //   },
+            // ),
             MyDrawerList(
               icon: Icons.contact_phone,
               title: 'Contact Us',
@@ -248,11 +248,11 @@ class _HomePageState extends State<HomePage1> {
             label: "Home",
             backgroundColor: kwhite_new,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.question_answer),
-            label: "FAQ",
-            backgroundColor: kwhite_new,
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.question_answer),
+          //   label: "FAQ",
+          //   backgroundColor: kwhite_new,
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.contact_phone),
             label: "Contact",
