@@ -39,9 +39,10 @@ import '../../../screen/components/property.dart';
 import '../../components/LandBuilding.dart';
 
 class Menu_Add_verbal extends StatefulWidget {
-  const Menu_Add_verbal({super.key, required this.id});
+  const Menu_Add_verbal(
+      {super.key, required this.id, required this.id_control_user});
   final String id;
-
+  final String id_control_user;
   @override
   State<Menu_Add_verbal> createState() => _Menu_Add_verbalState();
 }
@@ -114,6 +115,7 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
                         MaterialPageRoute(
                           builder: (context) => Add(
                             id: widget.id,
+                            id_control_user: widget.id_control_user,
                           ),
                         ),
                       );
@@ -142,6 +144,7 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
                         MaterialPageRoute(
                           builder: (context) => Add_with_property(
                             id: widget.id,
+                            id_control_user: widget.id_control_user,
                           ),
                         ),
                       );
@@ -174,6 +177,7 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
                         MaterialPageRoute(
                           builder: (context) => List_Auto(
                             verbal_id: widget.id,
+                            id_control_user: widget.id_control_user,
                           ),
                         ),
                       );
@@ -287,9 +291,9 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
 
 // ===========================          Add_Auto       =====================
 class Add extends StatefulWidget {
-  const Add({super.key, required this.id});
+  const Add({super.key, required this.id, required this.id_control_user});
   final String id;
-
+  final String id_control_user;
   @override
   State<Add> createState() => _AddState();
 }
@@ -359,7 +363,9 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   }
 
   Future<void> get_count() async {
-    setState(() {});
+    setState(() {
+      control_user = widget.id_control_user;
+    });
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}'));
     if (rs.statusCode == 200) {
@@ -409,6 +415,7 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
               MaterialPageRoute(
                 builder: (context) => List_Auto(
                   verbal_id: widget.id,
+                  id_control_user: widget.id_control_user,
                 ),
               ),
             );
@@ -433,7 +440,6 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   @override
   void initState() {
     _getCurrentPosition();
-    get_control_user(widget.id.toString());
     get_count();
     // addVerbal(context);
     lat1;
@@ -1540,8 +1546,10 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
 
 // ===========================          List_Auto       =====================
 class List_Auto extends StatefulWidget {
-  const List_Auto({super.key, required this.verbal_id});
+  const List_Auto(
+      {super.key, required this.verbal_id, required this.id_control_user});
   final String verbal_id;
+  final String id_control_user;
   @override
   State<List_Auto> createState() => _List_AutoState();
 }
@@ -2409,9 +2417,10 @@ class RPSCustomPainter extends CustomPainter {
 
 // ===========================          Add_Auto_by new map       =====================
 class Add_with_property extends StatefulWidget {
-  const Add_with_property({super.key, required this.id});
+  const Add_with_property(
+      {super.key, required this.id, required this.id_control_user});
   final String id;
-
+  final String id_control_user;
   @override
   State<Add_with_property> createState() => _Add_with_propertyState();
 }
@@ -2483,7 +2492,9 @@ class _Add_with_propertyState extends State<Add_with_property>
   }
 
   Future<void> get_count() async {
-    setState(() {});
+    setState(() {
+      control_user = widget.id_control_user;
+    });
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}'));
     if (rs.statusCode == 200) {
@@ -2533,6 +2544,7 @@ class _Add_with_propertyState extends State<Add_with_property>
               MaterialPageRoute(
                 builder: (context) => List_Auto(
                   verbal_id: widget.id,
+                  id_control_user: widget.id_control_user,
                 ),
               ),
             );
@@ -2557,7 +2569,7 @@ class _Add_with_propertyState extends State<Add_with_property>
   @override
   void initState() {
     _getCurrentPosition();
-    get_control_user(widget.id.toString());
+    // get_control_user(widget.id.toString());
     get_count();
     addVerbal(context);
     lat1;

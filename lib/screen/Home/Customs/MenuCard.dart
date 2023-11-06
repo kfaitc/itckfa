@@ -165,16 +165,16 @@ class _McardState extends State<Mcard> {
             svgPic: 'assets/icons/addverbal.svg',
             title: 'one click 1\$',
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return Menu_Add_verbal(
-                      id: widget.id,
-                    );
-                  },
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return Menu_Add_verbal(
+              //         id: widget.id,
+              //       );
+              //     },
+              //   ),
+              // );
             },
           ),
           Card(

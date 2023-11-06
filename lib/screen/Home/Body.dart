@@ -476,6 +476,8 @@ class _BodyState extends State<Body> {
                                           builder: (context) {
                                             return Menu_Add_verbal(
                                               id: id,
+                                              id_control_user:
+                                                  widget.control_user,
                                             );
                                           },
                                         ),
@@ -941,6 +943,7 @@ class _BodyState extends State<Body> {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => Add_with_property(
                                           id: id,
+                                          id_control_user: '',
                                         )));
                               },
                               child: Container(
@@ -990,6 +993,8 @@ class _BodyState extends State<Body> {
                                               builder: (context) =>
                                                   Add_with_property(
                                                     id: id,
+                                                    id_control_user:
+                                                        widget.control_user,
                                                   )));
                                     },
                                     pause: const Duration(milliseconds: 300),

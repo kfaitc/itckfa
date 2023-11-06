@@ -168,6 +168,7 @@ class _HomePageState extends State<HomePage1> {
                   MaterialPageRoute(builder: (context) {
                     return Add(
                       id: id.toString(),
+                      id_control_user: control_user ?? "",
                     );
                   }),
                 );
