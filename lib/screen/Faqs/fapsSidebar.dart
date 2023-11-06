@@ -58,63 +58,38 @@ class _FapsSidebarState extends State<FapsSidebar> {
                 ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+             children: [
                 // QuestionList(),
 
                 QuestionList(
-                  question: 'What is going on?',
+                  question: 'What is One Click One Dollar?',
                   answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+                      'One ckick one dollar is an mobile app of KFA company that allows client can search markit price of real estate in Cambodia.',
                 ),
                 QuestionList(
-                  question: 'What is going on?',
+                  question: 'How to add property?',
                   answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+                      'Go to home page click on feature property and click on button Add Property after that you can add property.',
                 ),
                 QuestionList(
-                  question: 'What is going on?',
+                  question: 'How to check Verbal list?',
                   answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+                      'Go to home page click on Verbal list feature then there are two button for searching verbal list. The first one is for searhing with map and the second one is for searching with list.',
                 ),
                 QuestionList(
-                  question: 'What is going on?',
+                  question: 'How to add verbal?',
                   answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+                      '1. Go to Home page click on Cross Check feature then click on add auto verbal after that complete data and click button submit',
                 ),
                 QuestionList(
-                  question: 'What is going on?',
+                  question: 'How to search property?',
                   answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+                      'Go to home page click on Property feature fill property you want to search in button search at ther top of app.',
                 ),
                 QuestionList(
-                  question: 'What is going on?',
+                  question: 'How to View property in Map?',
                   answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
-                ),
-                QuestionList(
-                  question: 'What is going on?',
-                  answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
-                ),
-                QuestionList(
-                  question: 'What is going on?',
-                  answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
-                ),
-                QuestionList(
-                  question: 'What is going on?',
-                  answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
-                ),
-                QuestionList(
-                  question: 'What is going on?',
-                  answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
-                ),
-                QuestionList(
-                  question: 'What is going on?',
-                  answer:
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+                      'Go to home page click on Property feature and click Property Search Google map button then set date you want to search.',
                 ),
               ],
             ),
