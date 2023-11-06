@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
+import 'package:itckfa/screen/Property/Home_Screen_property.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 // import 'package:firebase_messaging/firebase_messaging.dart';

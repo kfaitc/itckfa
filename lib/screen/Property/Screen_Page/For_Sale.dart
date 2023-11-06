@@ -244,27 +244,6 @@ class SearchPropertyState extends State<For_Sale> {
                   ),
                 ),
               ]),
-              InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return Map_Sale_full(
-                        get_commune: (value) {},
-                        get_district: (value) {},
-                        get_lat: (value) {},
-                        get_log: (value) {},
-                        get_max1: (value) {},
-                        get_min1: (value) {},
-                        get_min2: (value) {},
-                        get_province: (value) {},
-                        get_max2: (value) {},
-                      );
-                    },
-                  ));
-                },
-                child: Image_select(
-                    'https://maps.googleapis.com/maps/api/staticmap?center=${lat.toString()},${log.toString()}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${lat.toString()},${log.toString()}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
-              ),
               SizedBox(
                 height: 10,
               ),
@@ -286,7 +265,7 @@ class SearchPropertyState extends State<For_Sale> {
             child: Await_value(hometype: 'No', type: 'Yes'),
           )
         : Container(
-            height: MediaQuery.of(context).size.height * 0.6,
+            height: MediaQuery.of(context).size.height * 0.8,
             width: double.infinity,
             decoration: BoxDecoration(
                 color: Colors.white,

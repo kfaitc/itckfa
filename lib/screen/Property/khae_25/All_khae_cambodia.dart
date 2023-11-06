@@ -149,7 +149,8 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
     'Pai lin',
     'Mondolkiri',
     'Kohkong',
-
+    'Kampong_Cham',
+    'KampongChhnang',
     // //
     // 'Kratie',
   ];
@@ -189,8 +190,8 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
     'assets/images/25_commune/munduolmiri.jpg',
     // /////
     'assets/images/25_commune/Kohkong.jpg',
-    // 'assets/images/25_commune/munduolmiri.jpg',
-    // 'assets/images/25_commune/munduolmiri.jpg',
+    'assets/images/25_commune/Kampong_Cham.jpg',
+    'assets/images/25_commune/KampongChhnang.jpg',
   ];
   Widget girdview() {
     return Container(
@@ -209,6 +210,7 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
                   return List_detail(
+                    index_P: index.toString(),
                     listget: [],
                     reloard: 'No',
                     add: 'add',

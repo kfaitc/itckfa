@@ -3,6 +3,9 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
@@ -16,6 +19,7 @@ import '../Getx_api/for_rent.dart';
 class List_detail extends StatefulWidget {
   List_detail(
       {super.key,
+      this.index_P,
       required this.listget,
       this.type,
       this.add,
@@ -26,6 +30,7 @@ class List_detail extends StatefulWidget {
   String? reloard;
   String? type;
   String? add;
+  String? index_P;
   @override
   State<List_detail> createState() => _Show_allState();
 }
@@ -34,6 +39,7 @@ class _Show_allState extends State<List_detail> {
   @override
   void initState() {
     super.initState();
+    slider_ds();
     province(widget.province_id.toString());
   }
 
@@ -65,7 +71,11 @@ class _Show_allState extends State<List_detail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _appbar(),
-              (widget.add.toString() == 'add') ? add() : SizedBox(),
+              (imageList.length == 0)
+                  ? SizedBox()
+                  : (widget.add.toString() == 'add')
+                      ? add()
+                      : SizedBox(),
               SizedBox(height: 5),
               (isLoading25 && widget.reloard.toString() == "No")
                   ? Center(child: awiat_reload())
@@ -81,37 +91,72 @@ class _Show_allState extends State<List_detail> {
     );
   }
 
-  final List<String> imageList = [
-    "https://cdn.pixabay.com/photo/2017/12/03/18/04/christmas-balls-2995437_960_720.jpg",
-    "https://cdn.pixabay.com/photo/2017/12/13/00/23/christmas-3015776_960_720.jpg",
-    "https://cdn.pixabay.com/photo/2019/12/19/10/55/christmas-market-4705877_960_720.jpg",
-    "https://cdn.pixabay.com/photo/2019/12/20/00/03/road-4707345_960_720.jpg",
-    "https://cdn.pixabay.com/photo/2019/12/22/04/18/x-mas-4711785__340.jpg",
-    "https://cdn.pixabay.com/photo/2016/11/22/07/09/spruce-1848543__340.jpg"
-  ];
+  List imageList = [];
+  Future<void> slider_ds() async {
+    var dio = Dio();
+    var response = await dio.request(
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/image/province_get/slider/${widget.index_P}',
+      options: Options(
+        method: 'GET',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      // print(json.encode(response.data));
+      setState(() {
+        imageList = jsonDecode(json.encode(response.data))['data'];
+        print(imageList.toString());
+      });
+    } else {
+      print(response.statusMessage);
+    }
+  }
+
+  int a = 0;
+
   Widget add() {
     return Padding(
-      padding: const EdgeInsets.only(right: 10, left: 10),
-      child: GFCarousel(
-        autoPlay: true,
-        autoPlayInterval: Duration(seconds: 2),
-        autoPlayAnimationDuration: const Duration(milliseconds: 800),
-        items: imageList.map(
-          (url) {
-            return Container(
-              margin: EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                child: Image.network(url, fit: BoxFit.cover, width: 1000.0),
+      padding: const EdgeInsets.only(top: 15, right: 15, left: 0),
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.25,
+        width: double.infinity,
+        child: CarouselSlider.builder(
+          itemCount: imageList.length,
+          itemBuilder: (context, index, realIndex) {
+            return Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    print('one');
+                  });
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: FadeInImage.assetNetwork(
+                    placeholder: 'assets/earth.gif',
+                    image: imageList[index]['url'].toString(),
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                ),
               ),
             );
           },
-        ).toList(),
-        onPageChanged: (index) {
-          setState(() {
-            index;
-          });
-        },
+          options: CarouselOptions(
+            autoPlay: true,
+            autoPlayInterval: Duration(seconds: 2),
+            viewportFraction: 1,
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            enlargeCenterPage: true,
+            enlargeStrategy: CenterPageEnlargeStrategy.height,
+            onPageChanged: (index, reason) {
+              setState(() {
+                a = index;
+              });
+            },
+          ),
+        ),
       ),
     );
   }
