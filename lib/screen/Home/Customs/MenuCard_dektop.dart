@@ -86,16 +86,16 @@ class _card_TabState extends State<card_Tab> {
             svgPic: 'assets/icons/AddVerbal.svg',
             title: 'Add Verbal',
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return Add(
-                      id: widget.id,
-                    );
-                  },
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return Add(
+              //         id: widget.id,
+              //       );
+              //     },
+              //   ),
+              // );
             },
           ),
           Card(

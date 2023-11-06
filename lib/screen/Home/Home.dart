@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage1> {
       textColor: Colors.blue,
       fontSize: 20,
     );
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => Login(),
@@ -168,6 +168,7 @@ class _HomePageState extends State<HomePage1> {
                   MaterialPageRoute(builder: (context) {
                     return Add(
                       id: id.toString(),
+                      id_control_user: control_user ?? "",
                     );
                   }),
                 );

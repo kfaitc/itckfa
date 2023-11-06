@@ -206,16 +206,16 @@ class _ScardState extends State<Scard> {
             title: 'Cross Check',
             press: () {
               setState(() {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return Menu_Add_verbal(
-                        id: widget.id,
-                      );
-                    },
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) {
+                //       return Menu_Add_verbal(
+                //         id: widget.id,
+                //       );
+                //     },
+                //   ),
+                // );
               });
             },
           ),

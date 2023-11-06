@@ -58,11 +58,11 @@ class _Screen_addState extends State<Screen_add> {
                 onTap: () {
                   onTap:
                   () {
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) {
-                        return Add(id: '22');
-                      },
-                    ));
+                    // Navigator.push(context, MaterialPageRoute(
+                    //   builder: (context) {
+                    //     return Add(id: '22');
+                    //   },
+                    // ));
                   };
                 },
                 child: Container(

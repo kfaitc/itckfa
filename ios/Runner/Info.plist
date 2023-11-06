@@ -28,23 +28,6 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>oneclickonedollar.com</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>app</string>
-				<string>kfa</string>
-				<string>http</string>
-				<string>https</string>
-			</array>
-		</dict>
-		
-	</array>
-	<key>CFBundleURLTypes</key>
-	<array>
-	<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
 			<string>callback</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
@@ -62,22 +45,22 @@
 		<string>googlechromes</string>
 		<string>comgooglemaps</string>
 		<string>sms</string>
-        <string>tel</string>
+		<string>tel</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Access to the camera is required to capture photos.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
+	<string>Your location use to make cross check value property.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+	<string>Your location use to make cross check value property.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+	<string>Your location use to make cross check value property.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>MFMailComposeViewController</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Access to photo library is required to select images.</string>
+	<string>Your photo use to set profile image for your account,add to cross check value and add to autoverbal.</string>
 	<key>NSPhotoLisbraryUsageDescription</key>
 	<string>Allow this app to access your photos</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

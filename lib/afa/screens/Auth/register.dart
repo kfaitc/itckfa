@@ -375,7 +375,8 @@ class _RegisterState extends State<Register> {
                     padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
                     child: TextFormField(
                       readOnly: true,
-                      initialValue: 'Identity ${set_id_user}',
+                       initialValue: 'Register ID: ${set_id_user}',
+                      //initialValue: '${set_id_user}',
                       style: TextStyle(
                           fontWeight: FontWeight.w600, color: Colors.grey),
                       decoration: InputDecoration(
@@ -429,7 +430,7 @@ class _RegisterState extends State<Register> {
                 height: 10,
               ),
               // FormValidate(
-              //     onSaved: (input) => requestModel.username = input!,
+              //   //  onSaved: (input) => requestModel.username = input!,
               //     label: 'Username',
               //     iconname: Icon(
               //       Icons.person,
@@ -438,7 +439,7 @@ class _RegisterState extends State<Register> {
               SizedBox(
                 height: 10,
               ),
-              // ignore: sized_box_for_whitespace
+              //ignore: sized_box_for_whitespace
               Container(
                 height: 60,
                 child: Padding(
@@ -464,7 +465,6 @@ class _RegisterState extends State<Register> {
                       Icons.arrow_drop_down,
                       color: kImageColor,
                     ),
-
                     decoration: InputDecoration(
                       fillColor: kwhite,
                       filled: true,
@@ -752,7 +752,7 @@ class _RegisterState extends State<Register> {
                                 requestModel.first_name,
                                 requestModel.last_name,
                                 requestModel.control_user,
-                                requestModel.gender,
+                                requestModel.gender??"",
                                 requestModel.tel_num,
                                 requestModel.known_from,
                                 requestModel.email,
