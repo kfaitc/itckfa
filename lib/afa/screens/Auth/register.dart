@@ -375,7 +375,8 @@ class _RegisterState extends State<Register> {
                     padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
                     child: TextFormField(
                       readOnly: true,
-                      initialValue: 'Identity ${set_id_user}',
+                       initialValue: 'Register ID: ${set_id_user}',
+                      //initialValue: '${set_id_user}',
                       style: TextStyle(
                           fontWeight: FontWeight.w600, color: Colors.grey),
                       decoration: InputDecoration(
@@ -425,70 +426,70 @@ class _RegisterState extends State<Register> {
                     Icons.person,
                     color: kImageColor,
                   )),
-              // SizedBox(
-              //   height: 10,
-              // ),
+              SizedBox(
+                height: 10,
+              ),
               // FormValidate(
-              //     onSaved: (input) => requestModel.username = input!,
+              //   //  onSaved: (input) => requestModel.username = input!,
               //     label: 'Username',
               //     iconname: Icon(
               //       Icons.person,
               //       color: kImageColor,
               //     )),
-              // SizedBox(
-              //   height: 10,
-              // ),
-              // ignore: sized_box_for_whitespace
-              // Container(
-              //   height: 60,
-              //   child: Padding(
-              //     padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-              //     child: DropdownButtonFormField<String>(
-              //       onChanged: (String? newValue) {
-              //         setState(() {
-              //           genderValue = newValue!;
-              //           requestModel.gender = genderValue.toString();
-              //           // print(newValue);
-              //         });
-              //       },
-              //       items: gender
-              //           .map<DropdownMenuItem<String>>(
-              //             (String value) => DropdownMenuItem<String>(
-              //               value: value,
-              //               child: Text(value),
-              //             ),
-              //           )
-              //           .toList(),
-              //       // add extra sugar..
-              //       icon: Icon(
-              //         Icons.arrow_drop_down,
-              //         color: kImageColor,
-              //       ),
-              //       decoration: InputDecoration(
-              //         fillColor: kwhite,
-              //         filled: true,
-              //         labelText: 'Gender',
-              //         hintText: 'Select one',
-              //         prefixIcon: Icon(
-              //           Icons.accessibility_new_sharp,
-              //           color: kImageColor,
-              //         ),
-              //         focusedBorder: OutlineInputBorder(
-              //           borderSide:
-              //               const BorderSide(color: kPrimaryColor, width: 2.0),
-              //           borderRadius: BorderRadius.circular(10.0),
-              //         ),
-              //         enabledBorder: OutlineInputBorder(
-              //           borderSide: BorderSide(
-              //             width: 1,
-              //             color: kPrimaryColor,
-              //           ),
-              //           borderRadius: BorderRadius.circular(10.0),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
+              SizedBox(
+                height: 10,
+              ),
+              //ignore: sized_box_for_whitespace
+              Container(
+                height: 60,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                  child: DropdownButtonFormField<String>(
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        genderValue = newValue!;
+                        requestModel.gender = genderValue.toString();
+                        // print(newValue);
+                      });
+                    },
+                    items: gender
+                        .map<DropdownMenuItem<String>>(
+                          (String value) => DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          ),
+                        )
+                        .toList(),
+                    // add extra sugar..
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: kImageColor,
+                    ),
+                    decoration: InputDecoration(
+                      fillColor: kwhite,
+                      filled: true,
+                      labelText: 'Gender',
+                      hintText: 'Select one',
+                      prefixIcon: Icon(
+                        Icons.accessibility_new_sharp,
+                        color: kImageColor,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: kPrimaryColor, width: 2.0),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: kPrimaryColor,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 10,
               ),

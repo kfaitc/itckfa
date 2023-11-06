@@ -460,11 +460,11 @@ class _BodyState extends State<Body> {
                                     )
                                   ],
                                 ),
-                                // SCard(
-                                //   svgPic: 'assets/icons/wallet.svg',
-                                //   title: 'Wallet',
-                                //   press: () {},
-                                // ),
+                                SCard(
+                                  svgPic: 'assets/icons/wallet.svg',
+                                  title: 'Wallet',
+                                  press: () {},
+                                ),
                                 SCard(
                                   svgPic: 'assets/icons/addverbal.svg',
                                   title: 'Cross Check',
