@@ -635,17 +635,20 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
               toolbarHeight: 80,
             ),
             backgroundColor: Color.fromARGB(235, 7, 9, 145),
-            body: Container(
-              height: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+            body: RefreshIndicator(
+              onRefresh: () => get_count(),
+              child: Container(
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
                 ),
-              ),
-              child: SingleChildScrollView(
-                child: addVerbal(context),
+                child: SingleChildScrollView(
+                  child: addVerbal(context),
+                ),
               ),
             ),
             floatingActionButton: (number! > 0)
@@ -2758,17 +2761,20 @@ class _Add_with_propertyState extends State<Add_with_property>
               toolbarHeight: 80,
             ),
             backgroundColor: Color.fromARGB(235, 7, 9, 145),
-            body: Container(
-              height: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+            body: RefreshIndicator(
+              onRefresh: () => get_count(),
+              child: Container(
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
                 ),
-              ),
-              child: SingleChildScrollView(
-                child: addVerbal(context),
+                child: SingleChildScrollView(
+                  child: addVerbal(context),
+                ),
               ),
             ),
             floatingActionButton: (number! > 0)

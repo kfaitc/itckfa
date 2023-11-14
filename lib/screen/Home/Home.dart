@@ -70,9 +70,11 @@ class _HomePageState extends State<HomePage1> {
           id = slist[i]['id'];
           control_user = slist[i]['username'];
           password = slist[i]['password'];
-          // fetchDataFromAPI(control_user ?? "");
+          OneSignal.login(slist[i]['username'].toString());
+          OneSignal.User.addAlias("fb_id$id", slist[i]['username'].toString());
+          OneSignal.User.addTagWithKey(
+              "fb_id$id", slist[i]['username'].toString());
         }
-        OneSignal.User.addEmail(slist[i]['email']);
       });
     });
   }

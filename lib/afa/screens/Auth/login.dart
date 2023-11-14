@@ -46,7 +46,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   bool _isObscure = true;
   late LoginRequestModel requestModel;
   bool isApiCallProcess = false;
-  late int id = 0;
+  int? id;
   late String username = "";
   late String first_name = "";
   late String last_name = "";
@@ -60,42 +60,42 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   PeopleModel? peopleModel;
   late TextEditingController Email;
   late TextEditingController Password;
-  selectPeople() async {
-    // list = await PeopleController().selectPeople();
-    // if (list.isEmpty) {
-    //   setState(() {
-    //     status = false;
-    //   });
-    // } else {
-    //   setState(() {
-    //     int i = list.length - 1;
-    //     status = true;
-    //     Email = TextEditingController(text: list[i].name);
-    //     Password = TextEditingController(text: list[i].password);
-    //   });
-    // }
+  // selectPeople() async {
+  //   // list = await PeopleController().selectPeople();
+  //   // if (list.isEmpty) {
+  //   //   setState(() {
+  //   //     status = false;
+  //   //   });
+  //   // } else {
+  //   //   setState(() {
+  //   //     int i = list.length - 1;
+  //   //     status = true;
+  //   //     Email = TextEditingController(text: list[i].name);
+  //   //     Password = TextEditingController(text: list[i].password);
+  //   //   });
+  //   // }
 
-    slist = await mydb.db.rawQuery('SELECT * FROM user');
-    slist.map((e) {
-      setState(() {
-        datatest = e;
-        // print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
-      });
-    });
-    if (slist.isEmpty) {
-      setState(() {
-        status = false;
-      });
-    } else {
-      setState(() {
-        int i = slideList.length - 1;
-        status = true;
-        // print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
-        // Email = TextEditingController(text: list[i].name);
-        // Password = TextEditingController(text: list[i].password);
-      });
-    }
-  }
+  //   slist = await mydb.db.rawQuery('SELECT * FROM user');
+  //   slist.map((e) {
+  //     setState(() {
+  //       datatest = e;
+  //       // print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
+  //     });
+  //   });
+  //   if (slist.isEmpty) {
+  //     setState(() {
+  //       status = false;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       int i = slideList.length - 1;
+  //       status = true;
+  //       // print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
+  //       // Email = TextEditingController(text: list[i].name);
+  //       // Password = TextEditingController(text: list[i].password);
+  //     });
+  //   }
+  // }
 
   getdata() {
     Future.delayed(Duration(milliseconds: 500), () async {
@@ -106,10 +106,10 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
           int i = slist.length - 1;
           // print("\n\n\n\nkokoko" + slist.toString() + "\n\n\n\nkokoko");
           status = true;
+          id = slist[i]['id'];
+          print("objects: " + id.toString());
           Email = TextEditingController(text: slist[i]['email']);
           Password = TextEditingController(text: slist[i]['password']);
-          OneSignal.login(slist[i]['username'].toString());
-          OneSignal.User.addAlias("fb_id", slist[i]['username'].toString());
         } else {
           // print("\n\n\n\nkakakaka" + slist.toString() + "\n\n\n\nkakakak");
         }
@@ -491,6 +491,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         autoHide: Duration(seconds: 3),
                         onDismissCallback: (type) {
                           // debugPrint('Dialog Dissmiss from callback $type');
+
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
