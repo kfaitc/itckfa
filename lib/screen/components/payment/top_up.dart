@@ -951,7 +951,7 @@ class _TopUpState extends State<TopUp> {
                             height: 65,
                             width: 65,
                             child: Image.asset(
-                              'assets/images/Partners/ABA_Logo.png',
+                              'assets/images/Partners/KHQR.png',
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -963,50 +963,50 @@ class _TopUpState extends State<TopUp> {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 5,
-                              offset: Offset(3, -3),
-                              color: kwhite_new)
-                        ]),
-                    child: InkWell(
-                      onTap: () async {
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => Qr_Wing(
-                                    price: price,
-                                    accont: account,
-                                    phone: widget.set_phone!,
-                                    option: option,
-                                    id: widget.id_user ?? 'set',
-                                    control_user: set_id_user,
-                                  )),
-                        );
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 65,
-                            width: 65,
-                            child: Image.asset(
-                              'assets/images/bakong.png',
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                          const Text(
-                            'Bakong',
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Container(
+                  //   margin: const EdgeInsets.all(10),
+                  //   decoration: const BoxDecoration(
+                  //       color: Colors.white,
+                  //       boxShadow: [
+                  //         BoxShadow(
+                  //             blurRadius: 5,
+                  //             offset: Offset(3, -3),
+                  //             color: kwhite_new)
+                  //       ]),
+                  //   child: InkWell(
+                  //     onTap: () async {
+                  //       await Navigator.of(context).push(
+                  //         MaterialPageRoute(
+                  //             builder: (context) => Qr_Wing(
+                  //                   price: price,
+                  //                   accont: account,
+                  //                   phone: widget.set_phone!,
+                  //                   option: option,
+                  //                   id: widget.id_user ?? 'set',
+                  //                   control_user: set_id_user,
+                  //                 )),
+                  //       );
+                  //       Navigator.of(context).pop();
+                  //       Navigator.of(context).pop();
+                  //     },
+                  //     child: Column(
+                  //       children: [
+                  //         SizedBox(
+                  //           height: 65,
+                  //           width: 65,
+                  //           child: Image.asset(
+                  //             'assets/images/bakong.png',
+                  //             fit: BoxFit.fill,
+                  //           ),
+                  //         ),
+                  //         const Text(
+                  //           'Bakong',
+                  //           style: TextStyle(fontSize: 12),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ],
@@ -1037,7 +1037,7 @@ class _TopUpState extends State<TopUp> {
         fit: BoxFit.scaleDown,
       ),
       Image.asset(
-        'assets/images/Partners/ABA_Logo.png',
+        'assets/images/Partners/KHQR.png',
         fit: BoxFit.scaleDown,
       ),
     ];
@@ -1060,7 +1060,31 @@ class _TopUpState extends State<TopUp> {
       'Wing',
       'ABA',
     ];
-
+    List Qr_Image = [
+      {
+        'image': 'assets/images/Partners/KHQR.png',
+      },
+      {
+        'image': 'assets/images/Partners/KHQR.png',
+      },
+      {
+        'image': 'assets/images/Partners/KHQR.png',
+      }
+    ];
+    List text_bank = [
+      {
+        'bank': 'ABA KHQR',
+        'subscrip': 'Scan to pay with any banking app',
+      },
+      {
+        'bank': 'ABA KHQR',
+        'subscrip': 'Scan to pay with any banking app',
+      },
+      {
+        'bank': 'ABA KHQR',
+        'subscrip': 'Scan to pay with any banking app',
+      },
+    ];
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -1072,48 +1096,51 @@ class _TopUpState extends State<TopUp> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                InkWell(
-                  onTap: () async {
-                    // order_reference_no = SignUtil().RandomString(10).toString();
-                    order_reference_no =
-                        "${set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
-                    // print(order_reference_no.toString());
-                    // print('Price = $price');
-                    if (index == 0) {
-                      await createOrder(price, option, context);
-                    } else if (index == 1) {
-                      await createOrder_Wing(price, option, context);
-                    }
-                  },
-                  child: Card(
-                    elevation: 10,
-                    child: Row(
-                      children: [
-                        Card(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 50,
-                                width: 60,
-                                child: set_images.elementAt(index),
-                              ),
-                              set_title.elementAt(index),
-                            ],
+                if (index == 2)
+                  SizedBox()
+                else
+                  InkWell(
+                    onTap: () async {
+                      // order_reference_no = SignUtil().RandomString(10).toString();
+                      order_reference_no =
+                          "${set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
+                      // print(order_reference_no.toString());
+                      // print('Price = $price');
+                      if (index == 0) {
+                        await createOrder(price, option, context);
+                      } else if (index == 1) {
+                        await createOrder_Wing(price, option, context);
+                      }
+                    },
+                    child: Card(
+                      elevation: 10,
+                      child: Row(
+                        children: [
+                          Card(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 50,
+                                  width: 60,
+                                  child: set_images.elementAt(index),
+                                ),
+                                set_title.elementAt(index),
+                              ],
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Tap to pay with ${set_Subtitle.elementAt(index)} App",
-                          style: TextStyle(
-                              overflow: TextOverflow.visible,
-                              color: Color.fromRGBO(158, 158, 158, 1),
-                              fontWeight: FontWeight.w500,
-                              fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 10),
-                        ),
-                      ],
+                          Text(
+                            "Tap to pay with ${set_Subtitle.elementAt(index)} App",
+                            style: TextStyle(
+                                overflow: TextOverflow.visible,
+                                color: Color.fromRGBO(158, 158, 158, 1),
+                                fontWeight: FontWeight.w500,
+                                fontSize:
+                                    MediaQuery.textScaleFactorOf(context) * 10),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
                 InkWell(
                   onTap: () async {
                     if (index == 0) {
@@ -1162,32 +1189,43 @@ class _TopUpState extends State<TopUp> {
                     child: Row(
                       children: [
                         Card(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 50,
-                                width: 60,
-                                child: Image.asset(
-                                  'assets/images/KHQR.jpg',
-                                  fit: BoxFit.scaleDown,
-                                ),
-                              ),
-                              const Text(
-                                'KHQR',
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                          child: Container(
+                            height: 50,
+                            width: 60,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        '${Qr_Image[index]['image']}'),
+                                    fit: BoxFit.cover)),
                           ),
                         ),
-                        Text(
-                          "Tap to pay with KHQR",
-                          style: TextStyle(
-                              overflow: TextOverflow.visible,
-                              color: Color.fromRGBO(158, 158, 158, 1),
-                              fontWeight: FontWeight.w500,
-                              fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 10),
+                        SizedBox(width: 3),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${text_bank[index]['bank']}",
+                              style: TextStyle(
+                                  overflow: TextOverflow.visible,
+                                  color: Color.fromARGB(255, 21, 21, 21),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize:
+                                      MediaQuery.textScaleFactorOf(context) *
+                                          14),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              "${text_bank[index]['subscrip']}",
+                              style: TextStyle(
+                                  overflow: TextOverflow.visible,
+                                  color: Color.fromRGBO(158, 158, 158, 1),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize:
+                                      MediaQuery.textScaleFactorOf(context) *
+                                          8),
+                            ),
+                          ],
                         ),
                       ],
                     ),

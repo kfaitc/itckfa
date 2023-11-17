@@ -94,6 +94,7 @@ class Qr_UPayState extends State<Qr_UPay> {
         var d2 = json.decode(d1);
         setState(() {
           url_qr = d2['qrcode'].toString();
+          print(url_qr);
         });
       } else {}
     } catch (e) {}
