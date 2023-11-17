@@ -11,6 +11,7 @@ import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
+import 'package:itckfa/afa/screens/walletscreen.dart';
 import 'package:itckfa/screen/Abouts/Abouts.dart';
 import 'package:itckfa/screen/Abouts/aboutSideBar.dart';
 import 'package:itckfa/screen/Account/account.dart';
@@ -22,6 +23,7 @@ import 'package:itckfa/screen/Home/Body.dart';
 import 'package:itckfa/screen/Home/Customs/Drawer_menu.dart';
 import 'package:itckfa/screen/Home/Customs/MyDrawerList.dart';
 import 'package:itckfa/screen/Promotion/PartnerList.dart';
+import 'package:itckfa/screen/Property/Home_Screen_property.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,9 +70,11 @@ class _HomePageState extends State<HomePage1> {
           id = slist[i]['id'];
           control_user = slist[i]['username'];
           password = slist[i]['password'];
-          // fetchDataFromAPI(control_user ?? "");
+          OneSignal.login(slist[i]['username'].toString());
+          OneSignal.User.addAlias("fb_id$id", slist[i]['username'].toString());
+          OneSignal.User.addTagWithKey(
+              "fb_id$id", slist[i]['username'].toString());
         }
-        OneSignal.User.addEmail(slist[i]['email']);
       });
     });
   }
@@ -177,12 +181,25 @@ class _HomePageState extends State<HomePage1> {
             MyDrawerList(
               icon: Icons.villa,
               title: 'Property',
-              Press: () {},
+              Press: () {
+                 Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return Home_Screen_property();
+                                      },
+                                    ));
+              },
             ),
             MyDrawerList(
               icon: Icons.wallet,
               title: 'Wallet',
-              Press: () {},
+              Press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return Walletscreen();
+                  }),
+                );         
+              },
             ),
             MyDrawerList(
               icon: Icons.question_answer,

@@ -48,14 +48,17 @@ class _TopUpState extends State<TopUp> {
 
   int v_point = 0;
   Future<void> get_count() async {
-    setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${set_id_user}'));
-    if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
+    final response = await http.get(
+      Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=${set_id_user}'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
       setState(() {
-        v_point = jsonData;
-        // print(v_point);
+        v_point = int.parse(jsonData['vpoint'].toString());
       });
     }
   }

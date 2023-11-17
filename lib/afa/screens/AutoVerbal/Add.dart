@@ -635,17 +635,20 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
               toolbarHeight: 80,
             ),
             backgroundColor: Color.fromARGB(235, 7, 9, 145),
-            body: Container(
-              height: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+            body: RefreshIndicator(
+              onRefresh: () => get_count(),
+              child: Container(
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
                 ),
-              ),
-              child: SingleChildScrollView(
-                child: addVerbal(context),
+                child: SingleChildScrollView(
+                  child: addVerbal(context),
+                ),
               ),
             ),
             floatingActionButton: (number! > 0)
@@ -2622,9 +2625,7 @@ class _Add_with_propertyState extends State<Add_with_property>
       setState(() {
         number;
       });
-      get_count();
     }
-
     return (number != null)
         ? Scaffold(
             appBar: AppBar(
@@ -2760,17 +2761,20 @@ class _Add_with_propertyState extends State<Add_with_property>
               toolbarHeight: 80,
             ),
             backgroundColor: Color.fromARGB(235, 7, 9, 145),
-            body: Container(
-              height: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+            body: RefreshIndicator(
+              onRefresh: () => get_count(),
+              child: Container(
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
                 ),
-              ),
-              child: SingleChildScrollView(
-                child: addVerbal(context),
+                child: SingleChildScrollView(
+                  child: addVerbal(context),
+                ),
               ),
             ),
             floatingActionButton: (number! > 0)
@@ -3226,20 +3230,28 @@ class _Add_with_propertyState extends State<Add_with_property>
         ),
         PropertyDropdown(
           name: (value) {
-            propertyType = value;
+            setState(() {
+              propertyType = value;
+            });
           },
           id: (value) {
-            requestModelAuto.property_type_id = value;
+            setState(() {
+              requestModelAuto.property_type_id = value;
+            });
           },
           // pro: list[0]['property_type_name'],
         ),
 
         BankDropdown(
           bank: (value) {
-            requestModelAuto.bank_id = value;
+            setState(() {
+              requestModelAuto.bank_id = value;
+            });
           },
           bankbranch: (value) {
-            requestModelAuto.bank_branch_id = value;
+            setState(() {
+              requestModelAuto.bank_branch_id = value;
+            });
           },
         ),
         SizedBox(
