@@ -1065,10 +1065,10 @@ class _TopUpState extends State<TopUp> {
     ];
     List Qr_Image = [
       {
-        'image': 'assets/images/Partners/KHQR.png',
+        'image': 'assets/images/KHQR.jpg',
       },
       {
-        'image': 'assets/images/Partners/KHQR.png',
+        'image': 'assets/images/KHQR.jpg',
       },
       {
         'image': 'assets/images/Partners/KHQR.png',
@@ -1077,11 +1077,11 @@ class _TopUpState extends State<TopUp> {
     List text_bank = [
       {
         'bank': 'ABA KHQR',
-        'subscrip': 'Scan to pay with any banking app',
+        'subscrip': 'Tap to pay with KHQR',
       },
       {
         'bank': 'ABA KHQR',
-        'subscrip': 'Scan to pay with any banking app',
+        'subscrip': 'Tap to pay with KHQR',
       },
       {
         'bank': 'ABA KHQR',
@@ -1091,164 +1091,291 @@ class _TopUpState extends State<TopUp> {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('PLease choose option'),
-          titleTextStyle: const TextStyle(fontSize: 15, color: Colors.black),
-          content: Container(
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                if (index == 2)
-                  SizedBox()
-                else
-                  InkWell(
-                    onTap: () async {
-                      // order_reference_no = SignUtil().RandomString(10).toString();
-                      order_reference_no =
-                          "${set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
-                      // print(order_reference_no.toString());
-                      // print('Price = $price');
-                      if (index == 0) {
-                        await createOrder(price, option, context);
-                      } else if (index == 1) {
-                        await createOrder_Wing(price, option, context);
-                      }
-                    },
-                    child: Card(
-                      elevation: 10,
-                      child: Row(
-                        children: [
-                          Card(
-                            child: Column(
-                              children: [
-                                SizedBox(
+        return (index == 2)
+            ? AlertDialog(
+                title: const Text('PLease choose option'),
+                titleTextStyle:
+                    const TextStyle(fontSize: 15, color: Colors.black),
+                content: Container(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          if (index == 0) {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => Qr_UPay(
+                                        price: price,
+                                        accont: account,
+                                        phone: widget.set_phone!,
+                                        option: option,
+                                        id: widget.id_user ?? 'set',
+                                        control_user: set_id_user,
+                                      )),
+                            );
+                          } else if (index == 0) {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => Qr_Wing(
+                                        price: price,
+                                        accont: account,
+                                        phone: widget.set_phone!,
+                                        option: option,
+                                        id: widget.id_user ?? 'set',
+                                        control_user: set_id_user,
+                                      )),
+                            );
+                          } else {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => Qr_Wing(
+                                        price: price,
+                                        accont: account,
+                                        phone: widget.set_phone!,
+                                        option: option,
+                                        id: widget.id_user ?? 'set',
+                                        control_user: set_id_user,
+                                      )),
+                            );
+                          }
+
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: Card(
+                          elevation: 10,
+                          child: Row(
+                            children: [
+                              Card(
+                                child: Container(
                                   height: 50,
                                   width: 60,
-                                  child: set_images.elementAt(index),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      image: DecorationImage(
+                                          image: AssetImage(
+                                              '${Qr_Image[index]['image']}'),
+                                          fit: BoxFit.cover)),
                                 ),
-                                set_title.elementAt(index),
+                              ),
+                              SizedBox(width: 3),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${text_bank[index]['bank']}",
+                                    style: TextStyle(
+                                        overflow: TextOverflow.visible,
+                                        color: Color.fromARGB(255, 21, 21, 21),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: MediaQuery.textScaleFactorOf(
+                                                context) *
+                                            14),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    "${text_bank[index]['subscrip']}",
+                                    style: TextStyle(
+                                        overflow: TextOverflow.visible,
+                                        color: Color.fromRGBO(158, 158, 158, 1),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: MediaQuery.textScaleFactorOf(
+                                                context) *
+                                            10),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: const Text('Close'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              )
+            : AlertDialog(
+                title: const Text('PLease choose option'),
+                titleTextStyle:
+                    const TextStyle(fontSize: 15, color: Colors.black),
+                content: Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      if (index == 2)
+                        SizedBox()
+                      else
+                        InkWell(
+                          onTap: () async {
+                            // order_reference_no = SignUtil().RandomString(10).toString();
+                            order_reference_no =
+                                "${set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
+                            // print(order_reference_no.toString());
+                            // print('Price = $price');
+                            if (index == 0) {
+                              await createOrder(price, option, context);
+                            } else if (index == 1) {
+                              await createOrder_Wing(price, option, context);
+                            }
+                          },
+                          child: Card(
+                            elevation: 10,
+                            child: Row(
+                              children: [
+                                Card(
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 50,
+                                        width: 60,
+                                        child: set_images.elementAt(index),
+                                      ),
+                                      set_title.elementAt(index),
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  "Tap to pay with ${set_Subtitle.elementAt(index)} App",
+                                  style: TextStyle(
+                                      overflow: TextOverflow.visible,
+                                      color: Color.fromRGBO(158, 158, 158, 1),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: MediaQuery.textScaleFactorOf(
+                                              context) *
+                                          10),
+                                ),
                               ],
                             ),
                           ),
-                          Text(
-                            "Tap to pay with ${set_Subtitle.elementAt(index)} App",
-                            style: TextStyle(
-                                overflow: TextOverflow.visible,
-                                color: Color.fromRGBO(158, 158, 158, 1),
-                                fontWeight: FontWeight.w500,
-                                fontSize:
-                                    MediaQuery.textScaleFactorOf(context) * 10),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                InkWell(
-                  onTap: () async {
-                    if (index == 0) {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => Qr_UPay(
-                                  price: price,
-                                  accont: account,
-                                  phone: widget.set_phone!,
-                                  option: option,
-                                  id: widget.id_user ?? 'set',
-                                  control_user: set_id_user,
-                                )),
-                      );
-                    } else if (index == 0) {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => Qr_Wing(
-                                  price: price,
-                                  accont: account,
-                                  phone: widget.set_phone!,
-                                  option: option,
-                                  id: widget.id_user ?? 'set',
-                                  control_user: set_id_user,
-                                )),
-                      );
-                    } else {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => Qr_Wing(
-                                  price: price,
-                                  accont: account,
-                                  phone: widget.set_phone!,
-                                  option: option,
-                                  id: widget.id_user ?? 'set',
-                                  control_user: set_id_user,
-                                )),
-                      );
-                    }
+                        ),
+                      InkWell(
+                        onTap: () async {
+                          if (index == 0) {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => Qr_UPay(
+                                        price: price,
+                                        accont: account,
+                                        phone: widget.set_phone!,
+                                        option: option,
+                                        id: widget.id_user ?? 'set',
+                                        control_user: set_id_user,
+                                      )),
+                            );
+                          } else if (index == 0) {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => Qr_Wing(
+                                        price: price,
+                                        accont: account,
+                                        phone: widget.set_phone!,
+                                        option: option,
+                                        id: widget.id_user ?? 'set',
+                                        control_user: set_id_user,
+                                      )),
+                            );
+                          } else {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => Qr_Wing(
+                                        price: price,
+                                        accont: account,
+                                        phone: widget.set_phone!,
+                                        option: option,
+                                        id: widget.id_user ?? 'set',
+                                        control_user: set_id_user,
+                                      )),
+                            );
+                          }
 
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  child: Card(
-                    elevation: 10,
-                    child: Row(
-                      children: [
-                        Card(
-                          child: Container(
-                            height: 50,
-                            width: 60,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        '${Qr_Image[index]['image']}'),
-                                    fit: BoxFit.cover)),
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: Card(
+                          elevation: 10,
+                          child: Row(
+                            children: [
+                              Column(
+                                children: [
+                                  Card(
+                                    child: Container(
+                                      height: 50,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                '${Qr_Image[index]['image']}'),
+                                          )),
+                                    ),
+                                  ),
+                                  Text(
+                                    'KHQR',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                              SizedBox(width: 3),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${text_bank[index]['bank']}",
+                                    style: TextStyle(
+                                        overflow: TextOverflow.visible,
+                                        color: Color.fromARGB(255, 21, 21, 21),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: MediaQuery.textScaleFactorOf(
+                                                context) *
+                                            14),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    "${text_bank[index]['subscrip']}",
+                                    style: TextStyle(
+                                        overflow: TextOverflow.visible,
+                                        color: Color.fromRGBO(158, 158, 158, 1),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: MediaQuery.textScaleFactorOf(
+                                                context) *
+                                            10),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(width: 3),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${text_bank[index]['bank']}",
-                              style: TextStyle(
-                                  overflow: TextOverflow.visible,
-                                  color: Color.fromARGB(255, 21, 21, 21),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize:
-                                      MediaQuery.textScaleFactorOf(context) *
-                                          14),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              "${text_bank[index]['subscrip']}",
-                              style: TextStyle(
-                                  overflow: TextOverflow.visible,
-                                  color: Color.fromRGBO(158, 158, 158, 1),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize:
-                                      MediaQuery.textScaleFactorOf(context) *
-                                          8),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+                actions: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: const Text('Close'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
       },
     );
   }
