@@ -9,16 +9,12 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 
 import 'package:screenshot/screenshot.dart';
-import 'package:uuid/uuid.dart';
 import 'package:dio/dio.dart';
-import 'package:dotted_border/dotted_border.dart';
 
 class Qr_UPay extends StatefulWidget {
   const Qr_UPay(
@@ -52,7 +48,7 @@ class Qr_UPayState extends State<Qr_UPay> {
   final TextEditingController signText = TextEditingController();
   final TextEditingController langText = TextEditingController();
   var loading = false;
-  static String baseUrl2 = 'https://dev-upayapi.u-pay.com/upayApi/mc/mcOrder';
+  static String baseUrl2 = 'https://upayapi.u-pay.com/upayApi/mc/mcOrder';
   var appUrl = '$baseUrl2/appCreate';
   var qrUrl = '$baseUrl2/create/qrcode';
   var url_qr;
@@ -74,7 +70,7 @@ class Qr_UPayState extends State<Qr_UPay> {
       'currency': ccy,
       'goodsDetail': goods,
       'lang': language,
-      'mcAbridge': 'test',
+      'mcAbridge': 'Khmer Foundation Apprais',
       'mcId': merchantId,
       'mcOrderId': orderId,
       'money': amount,
@@ -138,8 +134,8 @@ class Qr_UPayState extends State<Qr_UPay> {
       }
     });
     if (thier_plan != null) {
-      idText.text = '1674724041055870978';
-      keyText.text = '3142e7560039d1661121992cfaafe17e';
+      idText.text = '1726454244928921602';
+      keyText.text = '83ef634e4c80809edd6e2d53a8d49454';
       nameText.text = widget.option ?? "";
       amountText.text = widget.price ?? "";
       usdText.text = 'USD';

@@ -959,7 +959,7 @@ class _TopUpState extends State<TopUp> {
                             ),
                           ),
                           const Text(
-                            'ABA',
+                            'ABA KHQR',
                             style: TextStyle(fontSize: 12),
                           ),
                         ],
@@ -1061,7 +1061,7 @@ class _TopUpState extends State<TopUp> {
     List<String> set_Subtitle = [
       'U-Pay',
       'Wing',
-      'ABA',
+      'ABA KHQR',
     ];
     List Qr_Image = [
       {
@@ -1084,7 +1084,7 @@ class _TopUpState extends State<TopUp> {
         'subscrip': 'Tap to pay with KHQR',
       },
       {
-        'bank': 'ABA KHQR',
+        'bank': 'ABA',
         'subscrip': 'Scan to pay with any banking app',
       },
     ];
@@ -1093,7 +1093,7 @@ class _TopUpState extends State<TopUp> {
       builder: (BuildContext context) {
         return (index == 2)
             ? AlertDialog(
-                title: const Text('PLease choose option'),
+                title: const Text('Please choose option'),
                 titleTextStyle:
                     const TextStyle(fontSize: 15, color: Colors.black),
                 contentPadding: EdgeInsets.only(left: 5, right: 5, top: 10),
@@ -1169,7 +1169,7 @@ class _TopUpState extends State<TopUp> {
                                     "${text_bank[index]['bank']}",
                                     style: TextStyle(
                                         overflow: TextOverflow.visible,
-                                        color: Color.fromARGB(255, 21, 21, 21),
+                                        color: Color.fromARGB(255, 57, 57, 57),
                                         fontWeight: FontWeight.w500,
                                         fontSize: MediaQuery.textScaleFactorOf(
                                                 context) *
@@ -1188,6 +1188,20 @@ class _TopUpState extends State<TopUp> {
                                   ),
                                 ],
                               ),
+                              Spacer(),
+                              Container(
+                                height: 25,
+                                width: 25,
+                                decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 239, 239, 239),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Color.fromARGB(255, 88, 87, 87),
+                                  size: 15,
+                                ),
+                              ),
+                              SizedBox(width: 4)
                             ],
                           ),
                         ),
@@ -1276,7 +1290,7 @@ class _TopUpState extends State<TopUp> {
                                         control_user: set_id_user,
                                       )),
                             );
-                          } else if (index == 0) {
+                          } else if (index == 1) {
                             await Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) => Qr_Wing(
@@ -1582,7 +1596,7 @@ class _TopUpState extends State<TopUp> {
   //   }
   // }
 
-  static String baseUrl2 = 'https://dev-upayapi.u-pay.com/upayApi/mc/mcOrder';
+  static String baseUrl2 = 'https://upayapi.u-pay.com/upayApi/mc/mcOrder';
   var appUrl = '$baseUrl2/appCreate';
   var qrUrl = '$baseUrl2/create/qrcode';
   var loading = false;
@@ -1606,14 +1620,14 @@ class _TopUpState extends State<TopUp> {
       // print("kokokok\n\n\n$thier_plan");
     });
     if (thier_plan != null) {
-      var merchantKey = '3142e7560039d1661121992cfaafe17e';
+      var merchantKey = '83ef634e4c80809edd6e2d53a8d49454';
       var order = SignUtil().RandomString(10).toString();
       Map<String, String> map = {
         'currency': "USD",
         'goodsDetail': "0001",
         'lang': "EN",
-        'mcAbridge': 'test',
-        'mcId': '1674724041055870978',
+        'mcAbridge': 'KFA',
+        'mcId': '1726454244928921602',
         'mcOrderId': order,
         'money': price.toString(),
         'returnUrl': "kfa://callback",
