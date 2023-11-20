@@ -1076,11 +1076,11 @@ class _TopUpState extends State<TopUp> {
     ];
     List text_bank = [
       {
-        'bank': 'ABA KHQR',
+        'bank': 'U-Pay KHQR',
         'subscrip': 'Tap to pay with KHQR',
       },
       {
-        'bank': 'ABA KHQR',
+        'bank': 'Wing KHQR',
         'subscrip': 'Tap to pay with KHQR',
       },
       {
@@ -1096,6 +1096,7 @@ class _TopUpState extends State<TopUp> {
                 title: const Text('PLease choose option'),
                 titleTextStyle:
                     const TextStyle(fontSize: 15, color: Colors.black),
+                contentPadding: EdgeInsets.only(left: 5, right: 5, top: 10),
                 content: Container(
                   height: MediaQuery.of(context).size.height * 0.1,
                   child: Column(
@@ -1183,7 +1184,7 @@ class _TopUpState extends State<TopUp> {
                                         fontWeight: FontWeight.w500,
                                         fontSize: MediaQuery.textScaleFactorOf(
                                                 context) *
-                                            10),
+                                            9),
                                   ),
                                 ],
                               ),
@@ -1353,7 +1354,7 @@ class _TopUpState extends State<TopUp> {
                                         fontWeight: FontWeight.w500,
                                         fontSize: MediaQuery.textScaleFactorOf(
                                                 context) *
-                                            10),
+                                            9),
                                   ),
                                 ],
                               ),
