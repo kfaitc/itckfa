@@ -45,7 +45,7 @@ class _Qr_WingState extends State<Qr_Wing> {
   var url_qr;
   void createInvoice() async {
     final url = Uri.parse(
-        'https://demo-eco-gateway.wingmarket.com/invoicing/api/invoice/ext/create');
+        'https://eco-gateway.wingmarket.com/invoicing/api/invoice/ext/create');
 
     // JSON data
     final jsonData = {
@@ -78,6 +78,16 @@ class _Qr_WingState extends State<Qr_Wing> {
       "gateway_setting": {"callback_url": _Url_call_back}
     };
     await Getaccess_token();
+    print("order_reference_no\n" +
+        order_reference_no.toString() +
+        "\nprice" +
+        widget.price.toString() +
+        "\naccont\n" +
+        widget.accont.toString() +
+        "\ntoken\n" +
+        token.toString() +
+        "\ncrc\n" +
+        crc.toString());
     final response = await http.post(
       url,
       headers: {
@@ -95,7 +105,8 @@ class _Qr_WingState extends State<Qr_Wing> {
       });
     } else {
       // Failed to create invoice
-      // print('Failed to create invoice. Status code: ${response.statusCode}');
+      print(
+          'Failed to create invoice. Status code: ${response.statusCode} \n ${response.body}');
     }
   }
 
@@ -105,16 +116,15 @@ class _Qr_WingState extends State<Qr_Wing> {
     var request = http.Request(
         'POST',
         Uri.parse(
-            'https://demo-eco-gateway.wingmarket.com/identity/login?username=077771125&password=XjKOQ596gvx%2F9SwedIBZIMsbhQSBb8HGHhE09wHjAva056f9z4RIqGRrO3sv4haMB0uztiSfSyU%2F261by2iwV8GeIB7ekCRD4Et9SQYia8SxeDerELWlOhIQOwwJBcSfpNA4kECW7ubzOPv%2Bg5RBJ8ba4YLGsoMxnVKGEaKs14fatHn%2BqlnpauIhhN2rxiuxPmZhWYjGfe2J%2BEp%2BIO52zcFFy2Bl1x6ujIxtkrU3Ia48f%2BNRAUBdz15jZr3QB7okGkfeft2qHRianhNOzcLAfnw2jYdSRRcrnejl8MzVJFWRXYuDTnBfQ76Pk1Z%2B7JcXHOT2Asa18T2Px3RuwrNKmQ%3D%3D&grant_type=password&client_id=invoicing&client_secret=QhSNJNIjvVKHmEoSCX5qpz0AG1pzkyGP3jgzIC9r99UU5Xtadq2oaO1zhRrSsAb0pMPWX%2BtLK1MAgmp5JEIcceXLu2qsPgW5dyxOUOXxrxdGyYsuOegF0o7dzlkEUbRr3B3xTO5LsKVHi9R1TOkV%2BjlXVPxCLMAaUJ8%2FzmChq9Hsd1kBFCjLcL3oXE7gu2KlsVnGlQLEiJRZWQaBkhMiC8EbA59MT9%2Fowuybu6q%2Fc6LTTgQgyDdC3PA2gmblo7JrZtEgrj5IlM%2BrIUhPMV%2Bi8k9L2SBTfMW69AQAcpbkwmaorjA0%2BbPTNLdJVevV%2Fw%2FZZv6Hs45Ooddikx4GGQ4OIg%3D%3D'));
-
+            'https://eco-gateway.wingmarket.com/v2/identity/login?username=100224779&password=L3pvo4EiVkZ9vKVMeO2yu43nsGBV0LBs8zpYqKnydLMkCwS16wdEH1+wH2/ay3oTDCjWvEwYeplrKTRzWfCUFl/savqtmGZVUSNSY2nxAlnsKQNr8mzg1iBxwzEY1CAlnFD/Hp3DGscz3YLGcV9mO22DQG6ibxmCX0E4aHmUmPafRRwsG9RQ5n1gY+0q6vPKQNZAHvYWH9tnkXrj8Hsm1QQdjzgPH8L2k+ROaJXcn/w5Asro7G9wJsAJcPasD3jsGml77MXm4XCkpaYzvPV5Zxgo1BFdek4Sl+jCJ4uYqjzDoc9q0jR4ZJGrzKeupMo6yL/EvAmLFYs0H0vM+jP5ow==&grant_type=password&client_id=kfa&client_secret=YetKZu7yEHhnMxNatpjSaeQS8c+xXkgSJ8jqS/LCn/F5dp3oI+uiNZ5niwiDQWsyTfD+7LLk2yqT1HMWVL+AcdAF62OyPVgqsg3m0g/H7YbaZo1n5dj3W7I1F25hNo/KykTmB5V4p/6lBlIsmfG9sz+7h8rPxRRYoY+2mkUlP++rK7PVfYkFBeJR1c9+AseHzU+2Edvw62lQdoibFhie0foerppUBg//510U0s1jFxoJEW6U7UoqujLIE08xuVqU9ro8eELUIQJsm47Wh6Jnp8KSy28q9H27D2CYauM0dgw/Xa0QB2YBY34oji6cgOQnASYsZtXufOkvVIHQvVAlqw=='));
     request.body = json.encode({
-      "username": "077771125",
+      "username": "100224779",
       "password":
-          "XjKOQ596gvx/9SwedIBZIMsbhQSBb8HGHhE09wHjAva056f9z4RIqGRrO3sv4haMB0uztiSfSyU/261by2iwV8GeIB7ekCRD4Et9SQYia8SxeDerELWlOhIQOwwJBcSfpNA4kECW7ubzOPv+g5RBJ8ba4YLGsoMxnVKGEaKs14fatHn+qlnpauIhhN2rxiuxPmZhWYjGfe2J+Ep+IO52zcFFy2Bl1x6ujIxtkrU3Ia48f+NRAUBdz15jZr3QB7okGkfeft2qHRianhNOzcLAfnw2jYdSRRcrnejl8MzVJFWRXYuDTnBfQ76Pk1Z+7JcXHOT2Asa18T2Px3RuwrNKmQ==",
+          "L3pvo4EiVkZ9vKVMeO2yu43nsGBV0LBs8zpYqKnydLMkCwS16wdEH1+wH2/ay3oTDCjWvEwYeplrKTRzWfCUFl/savqtmGZVUSNSY2nxAlnsKQNr8mzg1iBxwzEY1CAlnFD/Hp3DGscz3YLGcV9mO22DQG6ibxmCX0E4aHmUmPafRRwsG9RQ5n1gY+0q6vPKQNZAHvYWH9tnkXrj8Hsm1QQdjzgPH8L2k+ROaJXcn/w5Asro7G9wJsAJcPasD3jsGml77MXm4XCkpaYzvPV5Zxgo1BFdek4Sl+jCJ4uYqjzDoc9q0jR4ZJGrzKeupMo6yL/EvAmLFYs0H0vM+jP5ow==",
       "grant_type": "password",
-      "client_id": "invoicing",
+      "client_id": "kfa",
       "client_secret":
-          "QhSNJNIjvVKHmEoSCX5qpz0AG1pzkyGP3jgzIC9r99UU5Xtadq2oaO1zhRrSsAb0pMPWX+tLK1MAgmp5JEIcceXLu2qsPgW5dyxOUOXxrxdGyYsuOegF0o7dzlkEUbRr3B3xTO5LsKVHi9R1TOkV+jlXVPxCLMAaUJ8/zmChq9Hsd1kBFCjLcL3oXE7gu2KlsVnGlQLEiJRZWQaBkhMiC8EbA59MT9/owuybu6q/c6LTTgQgyDdC3PA2gmblo7JrZtEgrj5IlM+rIUhPMV+i8k9L2SBTfMW69AQAcpbkwmaorjA0+bPTNLdJVevV/w/ZZv6Hs45Ooddikx4GGQ4OIg=="
+          "YetKZu7yEHhnMxNatpjSaeQS8c+xXkgSJ8jqS/LCn/F5dp3oI+uiNZ5niwiDQWsyTfD+7LLk2yqT1HMWVL+AcdAF62OyPVgqsg3m0g/H7YbaZo1n5dj3W7I1F25hNo/KykTmB5V4p/6lBlIsmfG9sz+7h8rPxRRYoY+2mkUlP++rK7PVfYkFBeJR1c9+AseHzU+2Edvw62lQdoibFhie0foerppUBg//510U0s1jFxoJEW6U7UoqujLIE08xuVqU9ro8eELUIQJsm47Wh6Jnp8KSy28q9H27D2CYauM0dgw/Xa0QB2YBY34oji6cgOQnASYsZtXufOkvVIHQvVAlqw=="
     });
     request.headers.addAll(headers);
 
@@ -182,7 +192,7 @@ class _Qr_WingState extends State<Qr_Wing> {
     order_reference_no =
         '${random.nextInt(999).toString()}k${random.nextInt(9999).toString()}f${random.nextInt(9999).toString()}';
     String state =
-        r"$2a$05$m3RX2lLwe9IoFqvwTh53e.p.UcdyLYstudb.9Hqa4uz0iqRH8h6xi" +
+        r"$2a$10$fVrLAzVSkx7s0/N7WOWFsOM2W7L0gh.UgbAxoqDc5B9a.aqyR4MqK" +
             order_reference_no.toString() +
             "|USD|" +
             widget.price.toString();
@@ -190,6 +200,7 @@ class _Qr_WingState extends State<Qr_Wing> {
       crc = generateCRC(state);
       roll_id =
           TextEditingController(text: 'ID Paymemt : ' + order_reference_no);
+
       _Url_call_back =
           'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back/${widget.control_user}/6560';
       // print("\n" + crc + "\n" + order_reference_no + "\n" + widget.price);

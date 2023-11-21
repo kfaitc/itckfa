@@ -1104,46 +1104,46 @@ class _TopUpState extends State<TopUp> {
                     children: [
                       InkWell(
                         onTap: () async {
-                          if (index == 0) {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => Qr_UPay(
-                                        price: price,
-                                        accont: account,
-                                        phone: widget.set_phone!,
-                                        option: option,
-                                        id: widget.id_user ?? 'set',
-                                        control_user: set_id_user,
-                                      )),
-                            );
-                          } else if (index == 0) {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => Qr_Wing(
-                                        price: price,
-                                        accont: account,
-                                        phone: widget.set_phone!,
-                                        option: option,
-                                        id: widget.id_user ?? 'set',
-                                        control_user: set_id_user,
-                                      )),
-                            );
-                          } else {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => Qr_Wing(
-                                        price: price,
-                                        accont: account,
-                                        phone: widget.set_phone!,
-                                        option: option,
-                                        id: widget.id_user ?? 'set',
-                                        control_user: set_id_user,
-                                      )),
-                            );
-                          }
+                          // if (index == 0) {
+                          //   await Navigator.of(context).push(
+                          //     MaterialPageRoute(
+                          //         builder: (context) => Qr_UPay(
+                          //               price: price,
+                          //               accont: account,
+                          //               phone: widget.set_phone!,
+                          //               option: option,
+                          //               id: widget.id_user ?? 'set',
+                          //               control_user: set_id_user,
+                          //             )),
+                          //   );
+                          // } else if (index == 0) {
+                          //   await Navigator.of(context).push(
+                          //     MaterialPageRoute(
+                          //         builder: (context) => Qr_Wing(
+                          //               price: price,
+                          //               accont: account,
+                          //               phone: widget.set_phone!,
+                          //               option: option,
+                          //               id: widget.id_user ?? 'set',
+                          //               control_user: set_id_user,
+                          //             )),
+                          //   );
+                          // } else {
+                          //   await Navigator.of(context).push(
+                          //     MaterialPageRoute(
+                          //         builder: (context) => Qr_Wing(
+                          //               price: price,
+                          //               accont: account,
+                          //               phone: widget.set_phone!,
+                          //               option: option,
+                          //               id: widget.id_user ?? 'set',
+                          //               control_user: set_id_user,
+                          //             )),
+                          //   );
+                          // }
 
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
+                          // Navigator.of(context).pop();
+                          // Navigator.of(context).pop();
                         },
                         child: Card(
                           elevation: 10,
@@ -1303,17 +1303,17 @@ class _TopUpState extends State<TopUp> {
                                       )),
                             );
                           } else {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => Qr_Wing(
-                                        price: price,
-                                        accont: account,
-                                        phone: widget.set_phone!,
-                                        option: option,
-                                        id: widget.id_user ?? 'set',
-                                        control_user: set_id_user,
-                                      )),
-                            );
+                            // await Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //       builder: (context) => Qr_Wing(
+                            //             price: price,
+                            //             accont: account,
+                            //             phone: widget.set_phone!,
+                            //             option: option,
+                            //             id: widget.id_user ?? 'set',
+                            //             control_user: set_id_user,
+                            //           )),
+                            // );
                           }
 
                           Navigator.of(context).pop();
@@ -1399,28 +1399,28 @@ class _TopUpState extends State<TopUp> {
   var token;
   var order_reference_no;
   var redirect_url;
+  var accessToken;
 //Wing create Token
   Future<void> createOrder_Wing(price, option, context) async {
     Navigator.pop(context);
     _await(context);
 
-    var accessToken;
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var url =
-        await Uri.parse('https://ir.wingmoney.com:9443/RestEngine/oauth/token');
+    var url = await Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token');
     var body = {
       // 'username': 'online.mangogame',
-      'username': 'online.kfausd',
-      'password': '914bade01fd32493a0f2efc583e1a5f6',
-      'grant_type': 'password',
-      'client_id': 'third_party',
-      'client_secret': '16681c9ff419d8ecc7cfe479eb02a7a',
+      // 'username': 'online.kfausd',
+      // 'password': '914bade01fd32493a0f2efc583e1a5f6',
+      // 'grant_type': 'password',
+      // 'client_id': 'third_party',
+      // 'client_secret': '16681c9ff419d8ecc7cfe479eb02a7a',
     };
 
     // Encode the body as a form-urlencoded string
-    var requestBody = Uri(queryParameters: body).query;
+    // var requestBody = Uri(queryParameters: body).query;
 
-    var response = await http.post(url, headers: headers, body: requestBody);
+    var response = await http.post(url, headers: headers);
 
     if (response.statusCode == 200) {
       // Parse the JSON response
@@ -1431,9 +1431,9 @@ class _TopUpState extends State<TopUp> {
         var parts = accessToken.split('-');
         token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
 
-        // print('accessToken: ${accessToken}');
-        // print('token: ${token}');
-        // print('Price : $price');
+        print('accessToken: ${accessToken}');
+        print('token: ${token}');
+        print('Price : $price');
       });
 
       // await deeplink_hask(token);
@@ -1441,8 +1441,8 @@ class _TopUpState extends State<TopUp> {
         await deeplinkHask(accessToken, token, price, option, context);
       }
     } else {
-      // print('Request failed with status: ${response.statusCode}');
-      // print('Response: ${response.body}');
+      print('T: Request failed with status: ${response.statusCode}');
+      print('T: Response: ${response.body}');
     }
   }
 
@@ -1460,7 +1460,7 @@ class _TopUpState extends State<TopUp> {
     // Add form fields to the request
     request.fields.addAll({
       'str':
-          '$price#USD#00402#$order_reference_no#https://oneclickonedollar.com ',
+          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com ',
       'key': '$token',
     });
 
@@ -1472,70 +1472,69 @@ class _TopUpState extends State<TopUp> {
         deeplink_hask = jsonResponse['Deeplink_Hask'];
       });
       if (deeplink_hask != null) {
-        // print('deeplink_hask != null(200) = $deeplink_hask');
-        var data = await call_back_wing(
-            token, deeplink_hask, accessToken, price, option);
+        print(
+            'deeplink_hask != null(200) = $deeplink_hask \n $order_reference_no');
+        await call_back_wing(token, deeplink_hask, accessToken, price, option);
         // var data = await button(deeplink_hask, accessToken, price);
       }
     } else {
-      // print('Request failed with status: ${response.reasonPhrase}');
+      print('D: Request failed with status: ${response.reasonPhrase}');
     }
   }
 
   Future call_back_wing(
       token, deeplink_hask, accessToken, price, option) async {
     // print('call_back_wing');
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $accessToken'
-    };
-    var data = json.encode({
+    // var headers = {
+    //   'Content-Type': 'application/json',
+    //   'Authorization': 'Bearer $accessToken'
+    // };
+    // var data = {
+    //   "order_reference_no": "$order_reference_no",
+    //   "amount": "$price",
+    //   "currency": "USD",
+    //   "merchant_name": "Khmer Foundation Appraisal Co.,Ltd",
+    //   "merchant_id": "00432",
+    //   "item_name": "Payin",
+    //   "success_callback_url":
+    //       "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/Callback",
+    //   "schema_url": "https://oneclickonedollar.com",
+    //   // "schema_url": "https://www.wingbank.com.kh/en/",
+    //   "integration_type": "MOBAPP",
+    //   "txn_hash": "$deeplink_hask",
+    //   "product_detail": [
+    //     {
+    //       "product_id": "6205",
+    //       "product_type": "Property",
+    //       "product_qty": 1,
+    //       "product_unit_price": "$price",
+    //       "currency": "USD"
+    //     }
+    //   ]
+    // };
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing'));
+    request.body = json.encode({
       "order_reference_no": "$order_reference_no",
       "amount": "$price",
-      "currency": "USD",
-      "merchant_name": "Khmer Foundation Appraisal Co., Ltd",
-      "merchant_id": "00402",
-      "item_name": "Payin",
-      "success_callback_url":
-          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Client/Wing/Callback",
-      "schema_url": "https://oneclickonedollar.com",
-      // "schema_url": "https://www.wingbank.com.kh/en/",
-      "integration_type": "MOBAPP",
       "txn_hash": "$deeplink_hask",
-      "product_detail": [
-        {
-          "product_id": "6205",
-          "product_type": "Property",
-          "product_qty": 1,
-          "product_unit_price": "$price",
-          "currency": "USD"
-        }
-      ]
+      "accessToken": "$accessToken"
     });
-    var dio = Dio();
-    var response = await dio.request(
-      'https://ir.wingmoney.com:9443/RestEngine/api/v4/generatedeeplink',
-      options: Options(
-        method: 'POST',
-        headers: headers,
-      ),
-      data: data,
-    );
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(json.encode(response.data));
+      final jsonResponse = jsonDecode(await response.stream.bytesToString());
       redirect_url = jsonResponse['redirect_url'];
-      // await launch(
-      //   '$redirect_url',
-      //   forceSafariVC: false,
-      //   forceWebView: false,
-      // );
       await launchUrl(Uri.parse(redirect_url));
-      // await check_payment_done_by_wing(token, order_reference_no, option);
       Navigator.pop(context);
       Navigator.pop(context);
     } else {
-      // print(response.statusMessage);
+      print(response.reasonPhrase);
     }
   }
 
