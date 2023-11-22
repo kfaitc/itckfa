@@ -998,7 +998,7 @@ class _BodyState extends State<Body> {
                                                     Add_with_property(
                                                       id: id,
                                                       id_control_user:
-                                                          widget.control_user,
+                                                          control_user,
                                                     )));
                                       },
                                       pause: const Duration(milliseconds: 300),

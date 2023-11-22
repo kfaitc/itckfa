@@ -97,7 +97,6 @@ class _OptionPaymentState extends State<OptionPayment> {
   WING wing = WING();
 
   var order_reference_no;
-  var set_id_user;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,13 +118,18 @@ class _OptionPaymentState extends State<OptionPayment> {
                 onTap: () {
                   setState(() {
                     order_reference_no =
-                        "${set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
-
+                        "${widget.set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
+                    print("\n" + widget.set_id_user + "\n");
                     if (index == 0) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ABA(),
+                            builder: (context) => ABA(
+                              id_set_use: widget.set_id_user,
+                              option: widget.option,
+                              price: widget.price,
+                              tran_id: order_reference_no,
+                            ),
                           ));
                     } else if (index == 1) {
                       alertDialog(context, widget.price, widget.set_email ?? "",
@@ -326,11 +330,11 @@ class _OptionPaymentState extends State<OptionPayment> {
                   onTap: () async {
                     // order_reference_no = SignUtil().RandomString(10).toString();
                     order_reference_no =
-                        "${set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
+                        "${widget.set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
                     if (index == 0) {}
                     if (index == 1) {
                       await upay.createOrder(
-                          price, widget.option, widget.id_user, context);
+                          price, widget.option, widget.set_id_user, context);
                     } else {
                       // await createOrder_Wing(price, option, context);
                       wing.createOrder_Wing(price, option, context);
