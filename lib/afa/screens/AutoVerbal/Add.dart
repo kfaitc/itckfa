@@ -22,7 +22,7 @@ import 'package:itckfa/afa/screens/AutoVerbal/Detail.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
-import 'package:itckfa/screen/components/payment/top_up.dart';
+import 'package:itckfa/screen/components/payment/class/top_up.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../contants.dart';

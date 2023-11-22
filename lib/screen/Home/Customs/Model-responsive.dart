@@ -11,7 +11,7 @@ import 'package:itckfa/screen/Customs/responsive.dart';
 import 'package:itckfa/screen/Home/Customs/MenuCard.dart';
 
 import 'package:itckfa/screen/Profile/profile.dart';
-import 'package:itckfa/screen/components/payment/top_up.dart';
+import 'package:itckfa/screen/components/payment/class/top_up.dart';
 import 'package:itckfa/screen/Property/Home_Screen_property.dart';
 import 'package:url_launcher/url_launcher.dart';
 
