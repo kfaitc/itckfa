@@ -1,12 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.dart';
 import 'package:getwidget/types/gf_checkbox_type.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:intl/intl.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class ABA extends StatefulWidget {
   const ABA(
@@ -29,13 +32,16 @@ class _ABAState extends State<ABA> {
 
   var url_qr;
 
-  var success_payment;
+  bool success_payment = false;
   Future _saved(image, BuildContext context) async {
     // ignore: unused_local_variable
     final result = await ImageGallerySaver.saveImage(image);
   }
 
+  String? reqTime;
   Future traslation_aba() async {
+    DateTime currentDateTime = DateTime.now();
+    reqTime = DateFormat('yyyyMMddHHmmss').format(currentDateTime);
     var count_number = widget.option.split(' ');
     var thier_plan;
     if (count_number[4] == "Day") {
@@ -51,6 +57,7 @@ class _ABAState extends State<ABA> {
         Uri.parse(
             'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/transaction/aba'));
     request.body = json.encode({
+      "req_time": reqTime,
       "tran_id": widget.tran_id,
       "firstname": "virak",
       "lastname": "oum",
@@ -73,9 +80,124 @@ class _ABAState extends State<ABA> {
             jsonResponse['qr_string'].toString());
         url_qr = jsonResponse['qr_string'];
       });
+      if (url_qr != null) {
+        await openDeepLink(jsonResponse['abapay_deeplink']);
+      }
     } else {
       print(response.reasonPhrase);
     }
+  }
+
+  Future check_traslation_aba() async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_transaction/aba'));
+    request.body =
+        json.encode({"req_time": reqTime, "tran_id": widget.tran_id});
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(await response.stream.bytesToString());
+      setState(() {
+        if (jsonResponse['status'] == 0) {
+          isChecked = true;
+          success_payment = true;
+          _showCustomSnackbar("Payment is successfully");
+        } else {
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            // false = user must tap button, true = tap outside dialog
+            builder: (BuildContext dialogContext) {
+              return AlertDialog(
+                title: Text('Your'),
+                content: Text("Payment isn't successfully"),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Done'),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop(); // Dismiss alert dialog
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      });
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  Future openDeepLink(var qrString) async {
+    try {
+      // ignore: deprecated_member_use
+      if (await canLaunch(qrString)) {
+        if (Platform.isAndroid) {
+          final marketUrl =
+              'https://play.google.com/store/apps/details?id=com.paygo24.ibank';
+          // ignore: deprecated_member_use
+          if (await canLaunch(marketUrl)) {
+          } else {
+            throw 'Could not open the app store';
+          }
+        } else if (Platform.isIOS) {
+          final marketUrl =
+              'https://itunes.apple.com/al/app/aba-mobile-bank/id968860649?mt=8';
+          // ignore: deprecated_member_use
+          if (await canLaunch(marketUrl)) {
+          } else {
+            throw 'Could not open the app store';
+          }
+        }
+      } else {
+        // ignore: deprecated_member_use
+        bool lh = await launch(qrString);
+        if (lh == true) {
+          await check_traslation_aba();
+        }
+
+        // ignore: deprecated_member_use
+      }
+    } catch (ex) {
+      print('Error: $ex');
+    }
+  }
+
+  Future _showCustomSnackbar(String message) async {
+    final snackbar = SnackBar(
+      content: Container(
+        alignment: Alignment.center,
+        height: 45,
+        width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 60),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(20)),
+        child: Row(
+          children: [
+            const CircleAvatar(
+              radius: 25,
+              backgroundColor: Colors.white,
+              backgroundImage: AssetImage('assets/images/done.png'),
+            ),
+            Text(
+              message,
+              style: const TextStyle(color: Colors.black, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+      duration: const Duration(seconds: 2),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   @override
@@ -228,29 +350,30 @@ class _ABAState extends State<ABA> {
                       fontSize: MediaQuery.textScaleFactorOf(context) * 10),
                 ),
               ),
-              // if (success_payment)
-              //   GFCheckboxListTile(
-              //     titleText: 'Payment Success',
-              //     size: 20,
-              //     activeBgColor: Colors.green,
-              //     color: Colors.white,
-              //     margin:
-              //         const EdgeInsets.symmetric(vertical: 25, horizontal: 16),
-              //     listItemTextColor: const Color.fromARGB(255, 0, 0, 0),
-              //     type: GFCheckboxType.square,
-              //     activeIcon: const Icon(
-              //       Icons.check,
-              //       size: 15,
-              //       color: Colors.white,
-              //     ),
-              //     onChanged: (value) {
-              //       setState(() {
-              //         success_payment = value;
-              //       });
-              //     },
-              //     value: success_payment,
-              //     inactiveIcon: null,
-              //   ),
+
+              if (success_payment)
+                GFCheckboxListTile(
+                  titleText: 'Payment Success',
+                  size: 20,
+                  activeBgColor: Colors.green,
+                  color: Colors.white,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 25, horizontal: 16),
+                  listItemTextColor: const Color.fromARGB(255, 0, 0, 0),
+                  type: GFCheckboxType.square,
+                  activeIcon: const Icon(
+                    Icons.check,
+                    size: 15,
+                    color: Colors.white,
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      success_payment = value;
+                    });
+                  },
+                  value: success_payment,
+                  inactiveIcon: null,
+                ),
               //============================================================================================================
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),

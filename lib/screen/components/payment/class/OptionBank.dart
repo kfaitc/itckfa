@@ -138,8 +138,8 @@ class _OptionPaymentState extends State<OptionPayment> {
                       alertDialog(context, widget.price, widget.set_email ?? "",
                           widget.option, index);
 
-                      // _showCustomSnackbar(
-                      //     context, 'Payment not successful please try again');
+                      _showCustomSnackbar(
+                          context, 'Payment not successful please try again');
                     }
                   });
                 },

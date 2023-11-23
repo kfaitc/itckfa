@@ -103,7 +103,9 @@ class _MyAppState extends State<MyApp> {
       if (uri != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // openAppLink(uri);
-          // print({"====|$uri|===="});
+          setState(() {
+            print({"\n\n====|$uri|====\n\n"});
+          });
         });
       }
       streamSubscription = uriLinkStream.listen((Uri? uri) {
@@ -111,7 +113,12 @@ class _MyAppState extends State<MyApp> {
           return;
         } else {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            // print({"====|Listen|====": uri});
+            setState(() {
+              print("\n\n====|Listen|====" +
+                  uri.toString() +
+                  "\n\n====|Listen|====");
+            });
+
             // openAppLink(uri);
           });
         }
