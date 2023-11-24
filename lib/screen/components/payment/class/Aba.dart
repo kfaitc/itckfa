@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.dart';
 import 'package:getwidget/types/gf_checkbox_type.dart';
@@ -29,8 +31,52 @@ class ABA extends StatefulWidget {
 class _ABAState extends State<ABA> {
   ScreenshotController screenshotController = ScreenshotController();
   bool isChecked = false;
-
+  int _secondsRemaining = 600;
+  late Timer _timer;
   var url_qr;
+  void startTimer() {
+    const oneSecond = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSecond,
+      (Timer timer) {
+        if (_secondsRemaining == 0) {
+          timer.cancel();
+          // Do something when the countdown is complete
+        } else {
+          setState(() {
+            _secondsRemaining--;
+          });
+        }
+      },
+    );
+  }
+
+  String _formatTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+
+    // if (minutes % 2 == 0) {
+    //   const snackBar = SnackBar(
+    //     content: Text('Please process your payment'),
+    //     duration: Duration(seconds: 4),
+    //   );
+    //   // ignore: use_build_context_synchronously
+    //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // }
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  void fetchData() async {
+    // Simulating an asynchronous operation, like a network request
+    await Future.delayed(Duration(seconds: 2), () {
+      // Check if the widget is still mounted before calling setState
+      if (mounted) {
+        setState(() {
+          print("\nData loaded successfully!\n");
+        });
+      }
+    });
+  }
 
   bool success_payment = false;
   Future _saved(image, BuildContext context) async {
@@ -74,10 +120,7 @@ class _ABAState extends State<ABA> {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       setState(() {
-        print("\nkokok" +
-            widget.option +
-            "\nkokok" +
-            jsonResponse['qr_string'].toString());
+        print("\nkokok" + reqTime.toString() + "\nkokok" + widget.tran_id);
         url_qr = jsonResponse['qr_string'];
       });
       if (url_qr != null) {
@@ -90,47 +133,77 @@ class _ABAState extends State<ABA> {
 
   Future check_traslation_aba() async {
     var headers = {'Content-Type': 'application/json'};
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_transaction/aba'));
-    request.body =
-        json.encode({"req_time": reqTime, "tran_id": widget.tran_id});
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
+    var data =
+        json.encode({"req_time": "$reqTime", "tran_id": "${widget.tran_id}"});
+    var dio = Dio();
+    var response = await dio.request(
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_transaction/aba',
+      options: Options(
+        method: 'POST',
+        headers: headers,
+      ),
+      data: data,
+    );
 
     if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(await response.stream.bytesToString());
-      setState(() {
-        if (jsonResponse['status'] == 0) {
-          isChecked = true;
-          success_payment = true;
-          _showCustomSnackbar("Payment is successfully");
-        } else {
-          showDialog<void>(
-            context: context,
-            barrierDismissible: false,
-            // false = user must tap button, true = tap outside dialog
-            builder: (BuildContext dialogContext) {
-              return AlertDialog(
-                title: Text('Your'),
-                content: Text("Payment isn't successfully"),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('Done'),
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop(); // Dismiss alert dialog
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      });
+      var data = response.data['status'];
+      if (data.toString() == "0") {
+        // setState(() {
+        //   isChecked = true;
+        //   success_payment = true;
+        // });
+
+        _showCustomSnackbar("Payment Success");
+        Navigator.pop(context);
+      }
     } else {
-      print(response.reasonPhrase);
+      print(response.statusMessage);
+    }
+  }
+
+  Future check_traslation_aba_is_not() async {
+    var headers = {'Content-Type': 'application/json'};
+    var data =
+        json.encode({"req_time": "$reqTime", "tran_id": "${widget.tran_id}"});
+    var dio = Dio();
+    var response = await dio.request(
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_transaction/aba',
+      options: Options(
+        method: 'POST',
+        headers: headers,
+      ),
+      data: data,
+    );
+
+    if (response.statusCode == 200) {
+      var data = response.data['status'];
+      if (data.toString() != "0") {
+        final snackbar = SnackBar(
+          content: Container(
+            alignment: Alignment.center,
+            height: 45,
+            width: double.infinity,
+            margin: const EdgeInsets.only(bottom: 60),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(20)),
+            child: const Text(
+              "Payment not Success,please try again!",
+              style: TextStyle(color: Colors.black, fontSize: 12),
+            ),
+          ),
+          duration: const Duration(seconds: 5),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        );
+        // ignore: use_build_context_synchronously, await_only_futures
+        await ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+      } else {
+        await _showCustomSnackbar("Payment Success");
+      }
+    } else {
+      print(response.statusMessage);
     }
   }
 
@@ -158,9 +231,6 @@ class _ABAState extends State<ABA> {
       } else {
         // ignore: deprecated_member_use
         bool lh = await launch(qrString);
-        if (lh == true) {
-          await check_traslation_aba();
-        }
 
         // ignore: deprecated_member_use
       }
@@ -204,10 +274,23 @@ class _ABAState extends State<ABA> {
   void initState() {
     super.initState();
     traslation_aba();
+    // _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    //   check_traslation_aba();
+    // });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel(); // Cancel the timer when the widget is disposed
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration(seconds: 5), () {
+      check_traslation_aba();
+      print("Delayed code executed!");
+    });
     return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
@@ -215,7 +298,8 @@ class _ABAState extends State<ABA> {
           elevation: 0,
           leading: IconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                check_traslation_aba_is_not();
               },
               icon: const Icon(
                 Icons.arrow_back_ios,
@@ -341,17 +425,40 @@ class _ABAState extends State<ABA> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 height: 50,
-                child: Text(
-                  'Scan with Bakong App Or Mobile Banking app that support KHQR',
-                  style: TextStyle(
-                      overflow: TextOverflow.visible,
-                      color: const Color.fromRGBO(158, 158, 158, 1),
-                      fontWeight: FontWeight.w500,
-                      fontSize: MediaQuery.textScaleFactorOf(context) * 10),
+                child: RichText(
+                  text: TextSpan(
+                    text:
+                        'Scan with Bakong App Or Mobile Banking app that support KHQR ',
+                    style: TextStyle(
+                        overflow: TextOverflow.visible,
+                        color: const Color.fromRGBO(158, 158, 158, 1),
+                        fontWeight: FontWeight.w500,
+                        fontSize: MediaQuery.textScaleFactorOf(context) * 10),
+                    children: [
+                      // TextSpan(
+                      //     text: ' ${_formatTime(_secondsRemaining)}',
+                      //     style: TextStyle(
+                      //         fontWeight: FontWeight.bold,
+                      //         fontSize:
+                      //             MediaQuery.textScaleFactorOf(context) * 12)),
+                    ],
+                  ),
                 ),
               ),
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * 0.7,
+              //   height: 50,
+              //   child: Text(
+              //     'Scan with Bakong App Or Mobile Banking app that support KHQR  ${_formatTime(_secondsRemaining)}',
+              //     style: TextStyle(
+              //         overflow: TextOverflow.visible,
+              //         color: const Color.fromRGBO(158, 158, 158, 1),
+              //         fontWeight: FontWeight.w500,
+              //         fontSize: MediaQuery.textScaleFactorOf(context) * 10),
+              //   ),
+              // ),
 
-              if (success_payment)
+              if (success_payment == true)
                 GFCheckboxListTile(
                   titleText: 'Payment Success',
                   size: 20,
@@ -381,7 +488,7 @@ class _ABAState extends State<ABA> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Subtotal',
+                      'Subtotal :',
                       style: TextStyle(
                           overflow: TextOverflow.visible,
                           color: const Color.fromRGBO(158, 158, 158, 1),

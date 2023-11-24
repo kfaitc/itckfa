@@ -41,7 +41,7 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
+class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isObscure = true;
   late LoginRequestModel requestModel;
@@ -146,10 +146,11 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     list;
     super.initState();
     requestModel = LoginRequestModel(email: "", password: "");
-    controller =
-        AnimationController(duration: const Duration(seconds: 5), vsync: this);
-    animation = new CurvedAnimation(parent: controller, curve: Curves.linear);
-    controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   bool welcome = false;

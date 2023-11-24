@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
+import 'package:itckfa/screen/Home/Home.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 // import 'package:firebase_messaging/firebase_messaging.dart';
@@ -51,9 +52,37 @@ void main() async {
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
   OneSignal.Notifications.requestPermission(true);
   //======|One signal |======
-
+  // handleIncomingLinks();
   runApp(const MyApp());
 }
+
+// Future<void> handleIncomingLinks() async {
+//   // Get the initial link when the app is launched
+//   String? initialLink = await getInitialLink();
+//   if (initialLink != null) {
+//     // Handle the initial link, e.g., parse and navigate
+//     print('\n\nInitial link received: $initialLink\n\n');
+//     var data = initialLink.toString().split('/');
+//     var value = data[1].toString();
+//     if (value.toString() == "app") {
+//       HomePage1();
+//     }
+//   }
+
+//   // Listen for incoming links
+//   // ignore: deprecated_member_use
+//   getLinksStream().listen((String? link) {
+//     if (link != null) {
+//       // Handle the link, e.g., parse and navigate
+//       print('\n\nLink received: $link\n\n');
+//       var data = link.toString().split('/');
+//       var value = data[1].toString();
+//       if (value.toString() == "app") {
+//         HomePage1();
+//       }
+//     }
+//   });
+// }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -92,47 +121,107 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    super.initState();
-    _getInstallPermission();
     incomingLinkHandler();
+    super.initState();
+    // _getInstallPermission();
   }
 
   Future incomingLinkHandler() async {
-    try {
-      Uri? uri = await getInitialUri();
-      if (uri != null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          // openAppLink(uri);
-          setState(() {
-            print({"\n\n====|$uri|====\n\n"});
-          });
-        });
-      }
-      streamSubscription = uriLinkStream.listen((Uri? uri) {
-        if (uri == null) {
-          return;
-        } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {
-              print("\n\n====|Listen|====" +
-                  uri.toString() +
-                  "\n\n====|Listen|====");
-            });
-
-            // openAppLink(uri);
-          });
+    // Get the initial link when the app is launched
+    String? initialLink = await getInitialLink();
+    if (initialLink != null) {
+      // Handle the initial link, e.g., parse and navigate
+      print('\n\nInitial link received: $initialLink\n\n');
+      var data = initialLink.toString().split('com/');
+      if (data.length >= 1) {
+        var value = data[1].toString();
+        if (data.length > 1) {
+          Get.to(() => HomePage1(pf: true));
+          // MaterialPageRoute(
+          //   builder: (context) {
+          //     return HomePage1();
+          //   },
+          // );
         }
-      });
-      OneSignal.Notifications.permission;
-      OneSignal.Notifications.requestPermission(true);
-    } on PlatformException {}
+      }
+    }
+
+    // Listen for incoming links
+    // ignore: deprecated_member_use
+    getLinksStream().listen((String? link) {
+      if (link != null) {
+        // Handle the link, e.g., parse and navigate
+        print('\n\nLink received: $link\n\n');
+        var data = initialLink.toString().split('com/');
+        if (data.isNotEmpty) {
+          Get.to(() => HomePage1(pf: true));
+        }
+      }
+    });
+    // try {
+    //   Uri? uri = await getInitialUri();
+    //   if (uri != null) {
+    //     WidgetsBinding.instance.addPostFrameCallback((_) {
+    //       // openAppLink(uri);
+    //       setState(() {
+    //         var data = uri.toString().split('/');
+    //         var value = data[1].toString();
+    //         print("\n\n\n\nobject2 : \n $value\n\n\n\n\n");
+    //       });
+    //     });
+    //   }
+    //   streamSubscription = uriLinkStream.listen((Uri? uri) {
+    //     if (uri == null) {
+    //       return;
+    //     } else {
+    //       WidgetsBinding.instance.addPostFrameCallback((_) {
+    //         var data = uri.toString().split('/');
+    //         var value = data[1].toString();
+    //         print("\n\n\n\nobject : \n $value\n\n\n\n\n");
+    //         // if (value.toString() == "app") {
+    //         //   MaterialPageRoute(
+    //         //     builder: (context) {
+    //         //       return HomePage1();
+    //         //     },
+    //         //   );
+    //         // }
+    //       });
+    //     }
+    //   });
+    //   OneSignal.Notifications.permission;
+    //   OneSignal.Notifications.requestPermission(true);
+    // } on PlatformException {}
   }
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Login(),
+      onGenerateRoute: (RouteSettings settings) {
+        final args = settings.name;
+        // Then, extract the required data from
+        // the arguments and pass the data to the
+        // correct screen.
+        if (args != null) {
+          var data = settings.name!.split('com');
+          if (data.length > 1) {
+            Get.to(() => HomePage1(pf: true));
+          }
+          // var value = data[1].toString();
+          // if (value.toString() == "app") {
+          //   return MaterialPageRoute(
+          //     builder: (context) {
+          //       return HomePage1();
+          //     },
+          //   );
+          // }
+        }
+      },
+      initialRoute: '/',
+      routes: {
+        '/': (context) => Login(),
+        '/app': (context) => const HomePage1(pf: true)
+      },
     );
   }
 }

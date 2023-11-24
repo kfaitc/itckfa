@@ -98,6 +98,11 @@ class _OptionPaymentState extends State<OptionPayment> {
 
   var order_reference_no;
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 247, 246, 246),
