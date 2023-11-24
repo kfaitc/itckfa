@@ -335,7 +335,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                   onTap: () async {
                     // order_reference_no = SignUtil().RandomString(10).toString();
                     order_reference_no =
-                        "${widget.set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
+                        "${widget.set_id_user}24K${Random().nextInt(10)}F${Random().nextInt(10) + 10}A";
                     if (index == 0) {}
                     if (index == 1) {
                       await upay.createOrder(

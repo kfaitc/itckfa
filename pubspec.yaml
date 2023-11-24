@@ -104,6 +104,8 @@ dependencies:
   onesignal_flutter: ^5.0.0
   flutter_inappwebview: ^5.8.0
   dio: ^4.0.6
+  any_link_preview: ^3.0.0
+  webview_flutter: ^4.4.2
 
 flutter_launcher_icons:
   android: "launcher_icon"

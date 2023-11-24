@@ -2,13 +2,17 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.dart';
 import 'package:getwidget/types/gf_checkbox_type.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
+import 'package:itckfa/screen/Home/Home.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
@@ -120,8 +124,8 @@ class _ABAState extends State<ABA> {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       setState(() {
-        print("\nkokok" + reqTime.toString() + "\nkokok" + widget.tran_id);
-        url_qr = jsonResponse['qr_string'];
+        url_qr = jsonResponse['checkout_qr_url'];
+        print("\n" + jsonResponse.toString() + "\nkokok" + widget.tran_id);
       });
       if (url_qr != null) {
         await openDeepLink(jsonResponse['abapay_deeplink']);
@@ -148,13 +152,12 @@ class _ABAState extends State<ABA> {
     if (response.statusCode == 200) {
       var data = response.data['status'];
       if (data.toString() == "0") {
-        // setState(() {
-        //   isChecked = true;
-        //   success_payment = true;
-        // });
-
         _showCustomSnackbar("Payment Success");
-        Navigator.pop(context);
+        // ignore: use_build_context_synchronously
+        Get.to(() => HomePage1(pf: true));
+        dispose();
+      } else {
+        print("\n\n\n\nDelayed code executed!\n\n\n\n");
       }
     } else {
       print(response.statusMessage);
@@ -201,6 +204,9 @@ class _ABAState extends State<ABA> {
         Navigator.pop(context);
       } else {
         await _showCustomSnackbar("Payment Success");
+        // ignore: use_build_context_synchronously
+        Get.to(() => HomePage1(pf: true));
+        dispose();
       }
     } else {
       print(response.statusMessage);
@@ -274,8 +280,12 @@ class _ABAState extends State<ABA> {
   void initState() {
     super.initState();
     traslation_aba();
-    // _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      check_traslation_aba();
+    });
+    // Future.delayed(const Duration(seconds: 2), () {
     //   check_traslation_aba();
+    //   print("\n\n\n\nDelayed code executed!\n\n\n\n");
     // });
   }
 
@@ -287,10 +297,6 @@ class _ABAState extends State<ABA> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 5), () {
-      check_traslation_aba();
-      print("Delayed code executed!");
-    });
     return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
@@ -346,231 +352,44 @@ class _ABAState extends State<ABA> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                color: Colors.white,
-                height: MediaQuery.of(context).size.height * 0.13,
-                width: double.infinity,
-                alignment: Alignment.topCenter,
-                child: Image.asset(
-                  'assets/images/New_KFA_Logo_pdf.png',
-                  fit: BoxFit.fitWidth,
-                ),
-              ),
               if (url_qr != null)
                 Screenshot(
                   controller: screenshotController,
-                  child: Container(
-                    height: 465,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    padding: const EdgeInsets.only(top: 65),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        image: const DecorationImage(
-                            image: AssetImage("assets/images/logoqr.png"),
-                            fit: BoxFit.fill)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "\t\t\t\t\t\t\t\tKFA",
-                          style: TextStyle(
-                              color: const Color.fromRGBO(121, 121, 121, 1),
-                              fontWeight: FontWeight.w700,
-                              fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 20),
-                        ),
-                        Text(
-                          "\t\t\t\t\t\t\t\t${widget.price ?? ""} \$",
-                          style: TextStyle(
-                              color: const Color.fromRGBO(63, 63, 63, 1),
-                              fontWeight: FontWeight.w700,
-                              fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 20),
-                        ),
-                        //  Text(
-                        //   '------------------------------------------------',
-                        //   style: TextStyle(
-                        //     overflow: TextOverflow.ellipsis,
-                        //   ),
-                        // ),
-
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 45),
-                          child: Center(
-                            child: BarcodeWidget(
-                                width: 226,
-                                height: 226,
-                                barcode: Barcode.qrCode(),
-                                data: url_qr,
-                                color: Colors.black,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                ),
-                                backgroundColor: Colors.white),
-                          ),
-                        ),
-                      ],
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.9,
+                    width: double.infinity,
+                    child: InAppWebView(
+                      initialUrlRequest: URLRequest(url: Uri.parse("$url_qr")),
                     ),
                   ),
-                )
-              else
-                Container(
-                  height: 400,
-                  color: Colors.white,
-                  margin: const EdgeInsets.only(top: 15, right: 10, left: 10),
                 ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: 50,
-                child: RichText(
-                  text: TextSpan(
-                    text:
-                        'Scan with Bakong App Or Mobile Banking app that support KHQR ',
-                    style: TextStyle(
-                        overflow: TextOverflow.visible,
-                        color: const Color.fromRGBO(158, 158, 158, 1),
-                        fontWeight: FontWeight.w500,
-                        fontSize: MediaQuery.textScaleFactorOf(context) * 10),
+              if (url_qr != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // TextSpan(
-                      //     text: ' ${_formatTime(_secondsRemaining)}',
-                      //     style: TextStyle(
-                      //         fontWeight: FontWeight.bold,
-                      //         fontSize:
-                      //             MediaQuery.textScaleFactorOf(context) * 12)),
+                      Text(
+                        'V-Point',
+                        style: TextStyle(
+                            overflow: TextOverflow.visible,
+                            color: const Color.fromRGBO(158, 158, 158, 1),
+                            fontWeight: FontWeight.w800,
+                            fontSize:
+                                MediaQuery.textScaleFactorOf(context) * 11),
+                      ),
+                      Text(
+                        " ${widget.option}",
+                        style: TextStyle(
+                            overflow: TextOverflow.visible,
+                            color: const Color.fromRGBO(158, 158, 158, 1),
+                            fontWeight: FontWeight.w800,
+                            fontSize:
+                                MediaQuery.textScaleFactorOf(context) * 11),
+                      ),
                     ],
                   ),
                 ),
-              ),
-              // SizedBox(
-              //   width: MediaQuery.of(context).size.width * 0.7,
-              //   height: 50,
-              //   child: Text(
-              //     'Scan with Bakong App Or Mobile Banking app that support KHQR  ${_formatTime(_secondsRemaining)}',
-              //     style: TextStyle(
-              //         overflow: TextOverflow.visible,
-              //         color: const Color.fromRGBO(158, 158, 158, 1),
-              //         fontWeight: FontWeight.w500,
-              //         fontSize: MediaQuery.textScaleFactorOf(context) * 10),
-              //   ),
-              // ),
-
-              if (success_payment == true)
-                GFCheckboxListTile(
-                  titleText: 'Payment Success',
-                  size: 20,
-                  activeBgColor: Colors.green,
-                  color: Colors.white,
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 25, horizontal: 16),
-                  listItemTextColor: const Color.fromARGB(255, 0, 0, 0),
-                  type: GFCheckboxType.square,
-                  activeIcon: const Icon(
-                    Icons.check,
-                    size: 15,
-                    color: Colors.white,
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      success_payment = value;
-                    });
-                  },
-                  value: success_payment,
-                  inactiveIcon: null,
-                ),
-              //============================================================================================================
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Subtotal :',
-                      style: TextStyle(
-                          overflow: TextOverflow.visible,
-                          color: const Color.fromRGBO(158, 158, 158, 1),
-                          fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 11),
-                    ),
-                    // Text(' ${count.toString()}'),
-                    Text(
-                      " ${widget.price} USD",
-                      style: TextStyle(
-                          overflow: TextOverflow.visible,
-                          color: const Color.fromRGBO(158, 158, 158, 1),
-                          fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 11),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(
-                thickness: 1,
-                color: Colors.black,
-                indent: 50,
-                endIndent: 50,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'V-Point',
-                      style: TextStyle(
-                          overflow: TextOverflow.visible,
-                          color: const Color.fromRGBO(158, 158, 158, 1),
-                          fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 11),
-                    ),
-                    Text(
-                      " ${widget.option}",
-                      style: TextStyle(
-                          overflow: TextOverflow.visible,
-                          color: const Color.fromRGBO(158, 158, 158, 1),
-                          fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 11),
-                    ),
-                  ],
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: Text(
-                  '................................................................................................................................',
-                  style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Total:',
-                      style: TextStyle(
-                          overflow: TextOverflow.visible,
-                          color: const Color.fromRGBO(158, 158, 158, 1),
-                          fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 12),
-                    ),
-                    Text(
-                      " ${widget.price} USD",
-                      style: TextStyle(
-                          overflow: TextOverflow.visible,
-                          color: const Color.fromRGBO(158, 158, 158, 1),
-                          fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 12),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 50),
             ],
           ),
         ));

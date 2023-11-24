@@ -22,10 +22,18 @@ import 'package:url_launcher/url_launcher.dart';
 import 'Transtoin_history.dart';
 
 class TopUp extends StatefulWidget {
-  const TopUp({super.key, this.set_phone, this.up_point, this.id_user});
+  const TopUp(
+      {super.key,
+      this.set_phone,
+      this.up_point,
+      this.id_user,
+      this.set_id_user,
+      this.set_email});
   final String? set_phone;
   final String? up_point;
   final String? id_user;
+  final String? set_id_user;
+  final String? set_email;
   @override
   State<TopUp> createState() => _TopUpState();
 }
@@ -33,27 +41,12 @@ class TopUp extends StatefulWidget {
 class _TopUpState extends State<TopUp> {
   int count_time = 0;
   List list_User_by_id = [];
-  var set_id_user;
-  var set_email;
-  Future get_control_user(String id) async {
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
-    if (rs.statusCode == 200) {
-      setState(() {
-        var jsonData = jsonDecode(rs.body);
-        list_User_by_id = jsonData;
-        set_id_user = list_User_by_id[0]['control_user'].toString();
-        set_email = list_User_by_id[0]['email'].toString();
-        getVpoint.get_count(set_id_user);
-      });
-    }
-  }
 
   int v_point = 0;
   Future<void> get_count() async {
     final response = await http.get(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=${set_id_user}'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=${widget.set_id_user}'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -67,7 +60,6 @@ class _TopUpState extends State<TopUp> {
   }
 
   Future<void> check() async {
-    await get_control_user(widget.id_user.toString());
     get_count();
   }
 
@@ -184,7 +176,7 @@ class _TopUpState extends State<TopUp> {
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                set_email ?? "",
+                                widget.set_email ?? "",
                                 style: const TextStyle(
                                   fontSize: 10,
                                   color: Colors.white,
@@ -274,12 +266,12 @@ class _TopUpState extends State<TopUp> {
                                         MaterialPageRoute(
                                           builder: (context) => OptionPayment(
                                             id_user: widget.id_user,
-                                            set_email: set_email ?? "",
+                                            set_email: widget.set_email ?? "",
                                             set_phone: widget.set_phone,
                                             option: '1  V / Day',
                                             price: '1.00',
                                             up_point: widget.up_point,
-                                            set_id_user: set_id_user,
+                                            set_id_user: widget.set_id_user,
                                           ),
                                         ));
                                   },
@@ -347,12 +339,12 @@ class _TopUpState extends State<TopUp> {
                                         MaterialPageRoute(
                                           builder: (context) => OptionPayment(
                                             id_user: widget.id_user,
-                                            set_email: set_email ?? "",
+                                            set_email: widget.set_email ?? "",
                                             set_phone: widget.set_phone,
                                             option: '3  V / Day',
                                             price: '2.50',
                                             up_point: widget.up_point,
-                                            set_id_user: set_id_user,
+                                            set_id_user: widget.set_id_user,
                                           ),
                                         ));
                                   },
@@ -420,12 +412,12 @@ class _TopUpState extends State<TopUp> {
                                         MaterialPageRoute(
                                           builder: (context) => OptionPayment(
                                             id_user: widget.id_user,
-                                            set_email: set_email ?? "",
+                                            set_email: widget.set_email ?? "",
                                             set_phone: widget.set_phone,
                                             option: '5  V / Day',
                                             price: '3.00',
                                             up_point: widget.up_point,
-                                            set_id_user: set_id_user,
+                                            set_id_user: widget.set_id_user,
                                           ),
                                         ));
                                   },
@@ -499,12 +491,12 @@ class _TopUpState extends State<TopUp> {
                                         MaterialPageRoute(
                                           builder: (context) => OptionPayment(
                                             id_user: widget.id_user,
-                                            set_email: set_email ?? "",
+                                            set_email: widget.set_email ?? "",
                                             set_phone: widget.set_phone,
                                             option: '6  V / Day',
                                             price: '5.00',
                                             up_point: widget.up_point,
-                                            set_id_user: set_id_user,
+                                            set_id_user: widget.set_id_user,
                                           ),
                                         ));
                                   },
@@ -572,12 +564,12 @@ class _TopUpState extends State<TopUp> {
                                         MaterialPageRoute(
                                           builder: (context) => OptionPayment(
                                             id_user: widget.id_user,
-                                            set_email: set_email ?? "",
+                                            set_email: widget.set_email ?? "",
                                             set_phone: widget.set_phone,
                                             option: '8  V / Day',
                                             price: '6.50',
                                             up_point: widget.up_point,
-                                            set_id_user: set_id_user,
+                                            set_id_user: widget.set_id_user,
                                           ),
                                         ));
                                   },
@@ -645,12 +637,12 @@ class _TopUpState extends State<TopUp> {
                                         MaterialPageRoute(
                                           builder: (context) => OptionPayment(
                                             id_user: widget.id_user,
-                                            set_email: set_email ?? "",
+                                            set_email: widget.set_email ?? "",
                                             set_phone: widget.set_phone,
                                             option: '10  V / Day',
                                             price: '8.00',
                                             up_point: widget.up_point,
-                                            set_id_user: set_id_user,
+                                            set_id_user: widget.set_id_user,
                                           ),
                                         ));
                                   },
@@ -779,12 +771,12 @@ class _TopUpState extends State<TopUp> {
                                     MaterialPageRoute(
                                       builder: (context) => OptionPayment(
                                         id_user: widget.id_user,
-                                        set_email: set_email ?? "",
+                                        set_email: widget.set_email ?? "",
                                         set_phone: widget.set_phone,
                                         option: '5  V / Week',
                                         price: '10.00',
                                         up_point: widget.up_point,
-                                        set_id_user: set_id_user,
+                                        set_id_user: widget.set_id_user,
                                       ),
                                     ));
                               },
@@ -841,12 +833,12 @@ class _TopUpState extends State<TopUp> {
                                     MaterialPageRoute(
                                       builder: (context) => OptionPayment(
                                         id_user: widget.id_user,
-                                        set_email: set_email ?? "",
+                                        set_email: widget.set_email ?? "",
                                         set_phone: widget.set_phone,
                                         option: '40  V / Mount',
                                         price: '30.00',
                                         up_point: widget.up_point,
-                                        set_id_user: set_id_user,
+                                        set_id_user: widget.set_id_user,
                                       ),
                                     ));
                               },

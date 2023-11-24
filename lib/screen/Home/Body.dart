@@ -433,6 +433,8 @@ class _BodyState extends State<Body> {
                                                   builder: (context) => TopUp(
                                                     set_phone: tel,
                                                     id_user: id.toString(),
+                                                    set_id_user: control_user,
+                                                    set_email: email,
                                                   ),
                                                 ),
                                               );

@@ -56,30 +56,59 @@ class _HomePageState extends State<HomePage1> {
   String? password;
   String? control_user;
   getdata() {
-    Future.delayed(Duration(milliseconds: 500), () async {
-      await mydb.open();
-      slist = await mydb.db.rawQuery('SELECT * FROM user');
-      setState(() {
-        var i;
-        if (slist.length > 0) {
-          i = slist.length - 1;
-          user = '${slist[i]['first_name']} ${slist[0]['last_name']}';
-          first_name = slist[i]['first_name'];
-          last_name = slist[i]['last_name'];
-          email = slist[i]['email'];
-          gender = slist[i]['gender'];
-          from = slist[i]['known_from'];
-          tel = slist[i]['tel_num'];
-          id = slist[i]['id'];
-          control_user = slist[i]['username'];
-          password = slist[i]['password'];
-          OneSignal.login(slist[i]['username'].toString());
-          OneSignal.User.addAlias("fb_id$id", slist[i]['username'].toString());
-          OneSignal.User.addTagWithKey(
-              "fb_id$id", slist[i]['username'].toString());
-        }
+    if (widget.pf != null) {
+      Future.delayed(Duration(seconds: 7), () async {
+        await mydb.open();
+        slist = await mydb.db.rawQuery('SELECT * FROM user');
+        setState(() {
+          var i;
+          if (slist.length > 0) {
+            i = slist.length - 1;
+            user = '${slist[i]['first_name']} ${slist[0]['last_name']}';
+            first_name = slist[i]['first_name'];
+            last_name = slist[i]['last_name'];
+            email = slist[i]['email'];
+            gender = slist[i]['gender'];
+            from = slist[i]['known_from'];
+            tel = slist[i]['tel_num'];
+            id = slist[i]['id'];
+            control_user = slist[i]['username'];
+            password = slist[i]['password'];
+            OneSignal.login(slist[i]['username'].toString());
+            OneSignal.User.addAlias(
+                "fb_id$id", slist[i]['username'].toString());
+            OneSignal.User.addTagWithKey(
+                "fb_id$id", slist[i]['username'].toString());
+          }
+        });
       });
-    });
+    } else {
+      Future.delayed(Duration(seconds: 1), () async {
+        await mydb.open();
+        slist = await mydb.db.rawQuery('SELECT * FROM user');
+        setState(() {
+          var i;
+          if (slist.length > 0) {
+            i = slist.length - 1;
+            user = '${slist[i]['first_name']} ${slist[0]['last_name']}';
+            first_name = slist[i]['first_name'];
+            last_name = slist[i]['last_name'];
+            email = slist[i]['email'];
+            gender = slist[i]['gender'];
+            from = slist[i]['known_from'];
+            tel = slist[i]['tel_num'];
+            id = slist[i]['id'];
+            control_user = slist[i]['username'];
+            password = slist[i]['password'];
+            OneSignal.login(slist[i]['username'].toString());
+            OneSignal.User.addAlias(
+                "fb_id$id", slist[i]['username'].toString());
+            OneSignal.User.addTagWithKey(
+                "fb_id$id", slist[i]['username'].toString());
+          }
+        });
+      });
+    }
   }
 
   Map? datatest;
@@ -141,7 +170,7 @@ class _HomePageState extends State<HomePage1> {
     getdata();
     if (widget.pf != null) {
       check = true;
-      Future.delayed(Duration(seconds: 5), () {
+      Future.delayed(Duration(seconds: 3), () {
         setState(() {
           check = false;
         });
@@ -175,275 +204,296 @@ class _HomePageState extends State<HomePage1> {
       Center(child: Abouts()),
       Center(child: Feed_back()),
     ];
-
-    return (check == false)
-        ? Scaffold(
-            body: tabs[_currentIndex],
-            drawer: Drawer(
-              width: 270,
-              child: ListView(
-                children: [
-                  //MyHeaderDrawer(),
-                  MyDrawerList(
-                    icon: Icons.people,
-                    title: 'Account',
-                    Press: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return Account(
-                            username: user ?? '',
-                            email: email ?? '',
-                            first_name: first_name ?? '',
-                            last_name: last_name ?? '',
-                            gender: gender ?? '',
-                            from: from ?? '',
-                            tel: tel ?? '',
-                            id: id.toString(),
-                            password: password ?? "",
-                            control_user: control_user ?? "",
-                          );
-                        }),
-                      );
-                    },
-                  ),
-                  MyDrawerList(
-                    icon: Icons.list,
-                    title: 'Add Verbal',
-                    Press: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return Add(
-                            id: id.toString(),
-                            id_control_user: control_user ?? "",
-                          );
-                        }),
-                      );
-                    },
-                  ),
-                  MyDrawerList(
-                    icon: Icons.villa,
-                    title: 'Property',
-                    Press: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return Home_Screen_property();
-                        },
-                      ));
-                    },
-                  ),
-                  MyDrawerList(
-                    icon: Icons.wallet,
-                    title: 'Wallet',
-                    Press: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return Walletscreen();
-                        }),
-                      );
-                    },
-                  ),
-                  MyDrawerList(
-                    icon: Icons.question_answer,
-                    title: 'FAQ',
-                    Press: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return FapsSidebar();
-                        }),
-                      );
-                    },
-                  ),
-                  MyDrawerList(
-                    icon: Icons.contact_phone,
-                    title: 'Contact Us',
-                    Press: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return ContactsSidebar();
-                        }),
-                      );
-                    },
-                  ),
-                  MyDrawerList(
-                    icon: Icons.people,
-                    title: 'About Us',
-                    Press: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return AboutSidebar();
-                        }),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Divider(
-                    color: Colors.blueAccent,
-                  ),
-                  MyDrawerList(
-                    icon: Icons.lock,
-                    title: 'Log Out',
-                    Press: () {
-                      logOut();
-                    },
-                  ),
-                ],
-              ),
-            ),
-            bottomNavigationBar: BottomNavigationBar(
-              selectedItemColor: kwhite_new,
-              currentIndex: _currentIndex,
-              type: BottomNavigationBarType.fixed,
-              iconSize: 25,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home,
-                  ),
-                  label: "Home",
-                  backgroundColor: kwhite_new,
+    if (slist.length > 0) {
+      if ((check == false)) {
+        return Scaffold(
+          body: tabs[_currentIndex],
+          drawer: Drawer(
+            width: 270,
+            child: ListView(
+              children: [
+                //MyHeaderDrawer(),
+                MyDrawerList(
+                  icon: Icons.people,
+                  title: 'Account',
+                  Press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return Account(
+                          username: user ?? '',
+                          email: email ?? '',
+                          first_name: first_name ?? '',
+                          last_name: last_name ?? '',
+                          gender: gender ?? '',
+                          from: from ?? '',
+                          tel: tel ?? '',
+                          id: id.toString(),
+                          password: password ?? "",
+                          control_user: control_user ?? "",
+                        );
+                      }),
+                    );
+                  },
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.question_answer),
-                  label: "FAQ",
-                  backgroundColor: kwhite_new,
+                MyDrawerList(
+                  icon: Icons.list,
+                  title: 'Add Verbal',
+                  Press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return Add(
+                          id: id.toString(),
+                          id_control_user: control_user ?? "",
+                        );
+                      }),
+                    );
+                  },
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.contact_phone),
-                  label: "Contact",
-                  backgroundColor: kwhite_new,
+                MyDrawerList(
+                  icon: Icons.villa,
+                  title: 'Property',
+                  Press: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return Home_Screen_property();
+                      },
+                    ));
+                  },
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people),
-                  label: "About",
-                  backgroundColor: kwhite_new,
+                MyDrawerList(
+                  icon: Icons.wallet,
+                  title: 'Wallet',
+                  Press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return Walletscreen();
+                      }),
+                    );
+                  },
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.contact_phone),
-                  label: "FeedBack",
-                  backgroundColor: kwhite_new,
+                MyDrawerList(
+                  icon: Icons.question_answer,
+                  title: 'FAQ',
+                  Press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return FapsSidebar();
+                      }),
+                    );
+                  },
+                ),
+                MyDrawerList(
+                  icon: Icons.contact_phone,
+                  title: 'Contact Us',
+                  Press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return ContactsSidebar();
+                      }),
+                    );
+                  },
+                ),
+                MyDrawerList(
+                  icon: Icons.people,
+                  title: 'About Us',
+                  Press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return AboutSidebar();
+                      }),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Divider(
+                  color: Colors.blueAccent,
+                ),
+                MyDrawerList(
+                  icon: Icons.lock,
+                  title: 'Log Out',
+                  Press: () {
+                    logOut();
+                  },
                 ),
               ],
-              onTap: (index) {
+            ),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            selectedItemColor: kwhite_new,
+            currentIndex: _currentIndex,
+            type: BottomNavigationBarType.fixed,
+            iconSize: 25,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                ),
+                label: "Home",
+                backgroundColor: kwhite_new,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.question_answer),
+                label: "FAQ",
+                backgroundColor: kwhite_new,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.contact_phone),
+                label: "Contact",
+                backgroundColor: kwhite_new,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.people),
+                label: "About",
+                backgroundColor: kwhite_new,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.contact_phone),
+                label: "FeedBack",
+                backgroundColor: kwhite_new,
+              ),
+            ],
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+          ),
+        );
+      } else {
+        return Scaffold(
+          body: SafeArea(
+            child: InkWell(
+              onTap: () {
                 setState(() {
-                  _currentIndex = index;
+                  check = false;
                 });
               },
-            ),
-          )
-        : Scaffold(
-            body: SafeArea(
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    check = false;
-                  });
-                },
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.fitHeight,
-                          opacity: 0.4,
-                          filterQuality: FilterQuality.medium,
-                          image: AssetImage('assets/images/design_page.png')),
-                      gradient: LinearGradient(colors: [
-                        const Color.fromARGB(227, 76, 175, 79),
-                        const Color.fromARGB(212, 255, 235, 59)
-                      ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
-                  child: Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        height: 90,
-                        width: double.infinity,
-                        color: Colors.white38,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Thank you for payment\t",
-                              style: TextStyle(
-                                  overflow: TextOverflow.visible,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize:
-                                      MediaQuery.textScaleFactorOf(context) *
-                                          18),
-                            ),
-                            Icon(
-                              Icons.chevron_right_outlined,
-                              color: Colors.black,
-                              size: 40,
-                            )
-                          ],
-                        ),
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        fit: BoxFit.fitHeight,
+                        opacity: 0.4,
+                        filterQuality: FilterQuality.medium,
+                        image: AssetImage('assets/images/design_page.png')),
+                    gradient: LinearGradient(colors: [
+                      const Color.fromARGB(227, 76, 175, 79),
+                      const Color.fromARGB(212, 255, 235, 59)
+                    ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      height: 90,
+                      width: double.infinity,
+                      color: Colors.white38,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Thank you for payment\t",
+                            style: TextStyle(
+                                overflow: TextOverflow.visible,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800,
+                                fontSize:
+                                    MediaQuery.textScaleFactorOf(context) * 18),
+                          ),
+                          Icon(
+                            Icons.chevron_right_outlined,
+                            color: Colors.black,
+                            size: 40,
+                          )
+                        ],
                       ),
-                      Positioned(
-                          top: 200,
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                width: MediaQuery.of(context).size.width * 1,
-                                padding: EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 20, color: Colors.grey)
-                                  ],
-                                  shape: BoxShape.circle,
-                                  // borderRadius: BorderRadius.only(
-                                  //     topLeft: Radius.circular(50),
-                                  //     bottomRight: Radius.circular(50)),
-                                ),
-                                child: SizedBox(
-                                  height: 200,
-                                  child: Image.asset(
-                                    'assets/images/check-mark.png',
-                                    fit: BoxFit.fitHeight,
-                                  ),
+                    ),
+                    Positioned(
+                        top: 200,
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              width: MediaQuery.of(context).size.width * 1,
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(blurRadius: 20, color: Colors.grey)
+                                ],
+                                shape: BoxShape.circle,
+                                // borderRadius: BorderRadius.only(
+                                //     topLeft: Radius.circular(50),
+                                //     bottomRight: Radius.circular(50)),
+                              ),
+                              child: SizedBox(
+                                height: 200,
+                                child: Image.asset(
+                                  'assets/images/check-mark.png',
+                                  fit: BoxFit.fitHeight,
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(top: 10),
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 20, color: Colors.grey)
-                                  ],
-                                ),
-                                child: Text(
-                                  "Payment Successfully\t",
-                                  style: TextStyle(
-                                      overflow: TextOverflow.visible,
-                                      color: const Color.fromRGBO(0, 225, 1, 1),
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: MediaQuery.textScaleFactorOf(
-                                              context) *
-                                          20),
-                                ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(blurRadius: 20, color: Colors.grey)
+                                ],
                               ),
-                            ],
-                          ))
-                    ],
-                  ),
+                              child: Text(
+                                "Payment Successfully\t",
+                                style: TextStyle(
+                                    overflow: TextOverflow.visible,
+                                    color: const Color.fromRGBO(0, 225, 1, 1),
+                                    fontWeight: FontWeight.w800,
+                                    fontSize:
+                                        MediaQuery.textScaleFactorOf(context) *
+                                            20),
+                              ),
+                            ),
+                          ],
+                        ))
+                  ],
                 ),
               ),
             ),
-          );
+          ),
+        );
+      }
+    } else {
+      return Scaffold(
+        body: SafeArea(
+          child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fill,
+                      opacity: 0.4,
+                      filterQuality: FilterQuality.medium,
+                      image: AssetImage('assets/images/first.gif')),
+                  gradient: LinearGradient(colors: [
+                    Color.fromARGB(226, 76, 83, 175),
+                    Color.fromARGB(211, 101, 59, 255)
+                  ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+              child: Center(
+                child: CircularProgressIndicator(),
+              )),
+        ),
+      );
+    }
   }
 
   // Future<Map<String, dynamic>> fetchDataFromAPI(String userId) async {
