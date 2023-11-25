@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage1> {
   String? control_user;
   getdata() {
     if (widget.pf != null) {
-      Future.delayed(Duration(seconds: 7), () async {
+      Future.delayed(Duration(seconds: 2), () async {
         await mydb.open();
         slist = await mydb.db.rawQuery('SELECT * FROM user');
         setState(() {
@@ -80,6 +80,14 @@ class _HomePageState extends State<HomePage1> {
             OneSignal.User.addTagWithKey(
                 "fb_id$id", slist[i]['username'].toString());
           }
+        });
+      });
+      setState(() {
+        check = true;
+      });
+      Future.delayed(Duration(seconds: 3), () {
+        setState(() {
+          check = false;
         });
       });
     } else {
@@ -168,14 +176,7 @@ class _HomePageState extends State<HomePage1> {
   @override
   void initState() {
     getdata();
-    if (widget.pf != null) {
-      check = true;
-      Future.delayed(Duration(seconds: 3), () {
-        setState(() {
-          check = false;
-        });
-      });
-    }
+
     super.initState();
   }
 
