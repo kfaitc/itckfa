@@ -145,6 +145,12 @@ class Qr_UPayState extends State<Qr_UPay> {
     }
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   ScreenshotController screenshotController = ScreenshotController();
   @override
   Widget build(BuildContext context) {
@@ -154,7 +160,7 @@ class Qr_UPayState extends State<Qr_UPay> {
 
     // String actualDate = formatterDate.format(now);
     // String actualDate1 = dateTime.format(now);
-    Load();
+
     return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(

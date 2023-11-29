@@ -142,9 +142,6 @@ class _OptionPaymentState extends State<OptionPayment> {
                     } else {
                       alertDialog(context, widget.price, widget.set_email ?? "",
                           widget.option, index);
-
-                      _showCustomSnackbar(
-                          context, 'Payment not successful please try again');
                     }
                   });
                 },
@@ -336,7 +333,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                     // order_reference_no = SignUtil().RandomString(10).toString();
                     order_reference_no =
                         "${widget.set_id_user}24K${Random().nextInt(10)}F${Random().nextInt(10) + 10}A";
-                    if (index == 0) {}
+
                     if (index == 1) {
                       await upay.createOrder(
                           price, widget.option, widget.set_id_user, context);
@@ -376,8 +373,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                 ),
                 InkWell(
                   onTap: () async {
-                    if (index == 0) {
-                    } else if (index == 1) {
+                    if (index == 2) {
                       // print(
                       //     'price = $price || account = $account || set_phone = ${widget.set_phone} || option = $option || id_user = ${widget.id_user} || set_id_user = ${getVpoint.set_id_user} ');
                       await Navigator.of(context).push(
@@ -391,7 +387,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                                   control_user: widget.set_id_user,
                                 )),
                       );
-                    } else {
+                    } else if (index == 1) {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (context) => Qr_UPay(
