@@ -55,6 +55,7 @@ class _ABAState extends State<ABA> {
     );
   }
 
+  // ignore: unused_element
   String _formatTime(int seconds) {
     int minutes = seconds ~/ 60;
     int remainingSeconds = seconds % 60;
@@ -115,7 +116,7 @@ class _ABAState extends State<ABA> {
       "amount": widget.price,
       "payment_option": "abapay_khqr_deeplink",
       "return_url":
-          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_upay/6467/${widget.id_set_use}/${widget.price}/${thier_plan}"
+          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/${thier_plan}?amount=${widget.price}"
     });
     request.headers.addAll(headers);
 
@@ -125,7 +126,6 @@ class _ABAState extends State<ABA> {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       setState(() {
         url_qr = jsonResponse['checkout_qr_url'];
-        print("\n" + jsonResponse.toString() + "\nkokok" + widget.tran_id);
       });
       if (url_qr != null) {
         await openDeepLink(jsonResponse['abapay_deeplink']);

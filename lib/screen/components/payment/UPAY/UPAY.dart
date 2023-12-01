@@ -49,7 +49,7 @@ class UPAY extends GetxController {
         'money': price.toString(),
         'returnUrl': "kfa://callback",
         'notifyUrl':
-            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_upay/8899/${id_user}/${price}/${thier_plan}",
+            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/8899/${id_user}/${price}/${thier_plan}",
         'version': 'V1',
       };
       var sign = SignUtil.getSign(map, merchantKey);

@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/List.dart';
+import 'package:itckfa/afa/screens/walletscreen.dart';
 import 'package:itckfa/screen/Home/Customs/Model-responsive.dart';
 import 'package:itckfa/screen/Promotion/membership_real.dart';
 import 'package:itckfa/screen/Promotion/partnerList_real.dart';
@@ -469,7 +470,14 @@ class _BodyState extends State<Body> {
                                   SCard(
                                     svgPic: 'assets/icons/wallet.svg',
                                     title: 'Wallet',
-                                    press: () {},
+                                    press: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) {
+                                          return Walletscreen();
+                                        }),
+                                      );
+                                    },
                                   ),
                                   SCard(
                                     svgPic: 'assets/icons/addverbal.svg',

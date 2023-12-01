@@ -74,16 +74,6 @@ class _Qr_WingState extends State<Qr_Wing> {
       "gateway_setting": {"callback_url": _Url_call_back}
     };
     await Getaccess_token();
-    print("order_reference_no\n" +
-        order_reference_no.toString() +
-        "\nprice" +
-        widget.price.toString() +
-        "\naccont\n" +
-        widget.accont.toString() +
-        "\ntoken\n" +
-        token.toString() +
-        "\ncrc\n" +
-        crc.toString());
     final response = await http.post(
       url,
       headers: {

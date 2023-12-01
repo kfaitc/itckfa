@@ -21,7 +21,9 @@ class WING extends GetxController {
 
   var token;
   var accessToken;
-  Future<void> createOrder_Wing(price, option, context) async {
+
+  Future<void> createOrder_Wing(
+      price, option, context, order_reference_no) async {
     Navigator.pop(context);
     _await(context);
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
@@ -55,7 +57,8 @@ class WING extends GetxController {
 
       // await deeplink_hask(token);
       if (token != null) {
-        await deeplinkHask(accessToken, token, price, option, context);
+        await deeplinkHask(
+            accessToken, token, price, option, context, order_reference_no);
       }
     } else {
       print('T: Request failed with status: ${response.statusCode}');
@@ -65,7 +68,8 @@ class WING extends GetxController {
 
   //Deeplink hask
   var deeplink_hask;
-  Future<void> deeplinkHask(accessToken, token, price, option, context) async {
+  Future<void> deeplinkHask(
+      accessToken, token, price, option, context, order_reference_no) async {
     // print('order_reference_no : $order_reference_no');
     // print('deeplinkHask = $token');
     final url = await Uri.parse(
@@ -89,7 +93,7 @@ class WING extends GetxController {
       if (deeplink_hask != null) {
         print(
             'deeplink_hask != null(200) = $deeplink_hask \n $order_reference_no');
-        await call_back_wing(context, price);
+        await call_back_wing(context, price, order_reference_no);
         // var data = await button(deeplink_hask, accessToken, price);
       }
     } else {
@@ -99,7 +103,7 @@ class WING extends GetxController {
 
   var redirect_url;
   var order_reference_no;
-  Future call_back_wing(BuildContext context, price) async {
+  Future call_back_wing(BuildContext context, price, order_reference_no) async {
     // print('call_back_wing');
     // var headers = {
     //   'Content-Type': 'application/json',
@@ -145,6 +149,7 @@ class WING extends GetxController {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
+
       redirect_url = jsonResponse['redirect_url'];
       await launchUrl(Uri.parse(redirect_url));
       Navigator.pop(context);

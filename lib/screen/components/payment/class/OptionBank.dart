@@ -123,8 +123,8 @@ class _OptionPaymentState extends State<OptionPayment> {
                 onTap: () {
                   setState(() {
                     order_reference_no =
-                        "${widget.set_id_user}24K${Random().nextInt(100)}F${Random().nextInt(1000) + 10}A";
-                    print("\n" + widget.set_id_user + "\n");
+                        "${widget.set_id_user}24K${RandomString(2)}F${RandomString(3)}A";
+
                     if (index == 0) {
                       Navigator.push(
                           context,
@@ -136,9 +136,6 @@ class _OptionPaymentState extends State<OptionPayment> {
                               tran_id: order_reference_no,
                             ),
                           ));
-                    } else if (index == 1) {
-                      alertDialog(context, widget.price, widget.set_email ?? "",
-                          widget.option, index);
                     } else {
                       alertDialog(context, widget.price, widget.set_email ?? "",
                           widget.option, index);
@@ -257,6 +254,17 @@ class _OptionPaymentState extends State<OptionPayment> {
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
+  var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+  String RandomString(int strlen) {
+    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+    String result = "";
+    for (var i = 0; i < strlen; i++) {
+      result += chars[rnd.nextInt(chars.length)];
+    }
+    return result;
+  }
+
   Future<void> alertDialog(BuildContext context, var price, String account,
       String option, int index) {
     List<Image> set_images = [
@@ -331,15 +339,16 @@ class _OptionPaymentState extends State<OptionPayment> {
                 InkWell(
                   onTap: () async {
                     // order_reference_no = SignUtil().RandomString(10).toString();
-                    order_reference_no =
-                        "${widget.set_id_user}24K${Random().nextInt(10)}F${Random().nextInt(10) + 10}A";
+                    // order_reference_no =
+                    //     "${widget.set_id_user}24K${RandomString(2)}F${Random().nextInt(10) + 10}A";
 
                     if (index == 1) {
                       await upay.createOrder(
                           price, widget.option, widget.set_id_user, context);
-                    } else {
+                    } else if (index == 2) {
                       // await createOrder_Wing(price, option, context);
-                      wing.createOrder_Wing(price, option, context);
+                      wing.createOrder_Wing(
+                          price, option, context, order_reference_no);
                     }
                   },
                   child: Card(
