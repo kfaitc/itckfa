@@ -76,7 +76,7 @@ class WING extends GetxController {
     // Add form fields to the request
     request.fields.addAll({
       'str':
-          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com',
+          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com/app',
       'key': '$token',
     });
 

@@ -28,11 +28,11 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>callback</string>
+			<string>oneclickonedollar.com</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kfa</string>
 				<string>app</string>
+				<string>kfa</string>
 				<string>http</string>
 				<string>https</string>
 			</array>
