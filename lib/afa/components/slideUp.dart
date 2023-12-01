@@ -17,7 +17,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/models/search_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
-import 'package:itckfa/screen/components/property.dart';
+import 'package:itckfa/afa/components/property.dart';
 import 'package:location_geocoder/location_geocoder.dart';
 import 'package:search_map_location/utils/google_search/place.dart';
 import 'package:search_map_location/widget/search_widget.dart';

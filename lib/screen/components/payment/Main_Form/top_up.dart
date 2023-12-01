@@ -11,10 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/screen/Home/Home.dart';
-import 'package:itckfa/screen/components/payment/class/OptionBank.dart';
-import 'package:itckfa/screen/components/payment/componnet/show_dialogFun.dart';
-import 'package:itckfa/screen/components/payment/UPAY/UPay_qr.dart';
-import 'package:itckfa/screen/components/payment/WING/Wing_qr.dart';
+import 'package:itckfa/screen/components/payment/Main_Form/OptionBank.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -191,7 +188,7 @@ class _TopUpState extends State<TopUp> {
                                 Navigator.push(context, MaterialPageRoute(
                                   builder: (context) {
                                     return Transtoin_History(
-                                      id: widget.id_user,
+                                      id: widget.set_id_user,
                                     );
                                   },
                                 ));

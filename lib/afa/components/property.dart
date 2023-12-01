@@ -2,14 +2,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'contants.dart';
+import 'package:itckfa/afa/components/contants.dart';
 
 typedef OnChangeCallback = void Function(dynamic value);
 
 class PropertyDropdown extends StatefulWidget {
   final OnChangeCallback name;
   final OnChangeCallback id;
-  const PropertyDropdown({Key? key, required this.name, required this.id})
+  final OnChangeCallback? check_onclick;
+  final String? pro;
+  const PropertyDropdown(
+      {Key? key,
+      required this.name,
+      required this.id,
+      this.pro,
+      this.check_onclick})
       : super(key: key);
 
   @override
@@ -37,56 +44,83 @@ class _PropertyDropdownState extends State<PropertyDropdown> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 55,
-      padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-      child: DropdownButtonFormField<String>(
-        isExpanded: true,
-        //value: genderValue,
-        onChanged: (newValue) {
-          setState(() {
-            propertyValue = newValue as String;
-            widget.name(newValue.split(" ")[1]);
-            widget.id(newValue.split(" ")[0]);
-            // ignore: avoid_print
-            // print(newValue.split(" ")[0]);
-            // print(newValue.split(" ")[1]);
-          });
-        },
-        items: _list
-            .map<DropdownMenuItem<String>>(
-              (value) => DropdownMenuItem<String>(
-                value: value["property_type_id"].toString() +
-                    " " +
-                    value["property_type_name"],
-                child: Text(value["property_type_name"]),
-              ),
-            )
-            .toList(),
-        // add extra sugar..
-        icon: Icon(
-          Icons.arrow_drop_down,
-          color: kImageColor,
-        ),
+      height: 57,
+      margin: EdgeInsets.only(bottom: 10),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+        child: DropdownButtonFormField<String>(
+          isExpanded: true,
+          //value: genderValue,
+          onTap: () {
+            setState(() {
+              widget.check_onclick!(true);
+            });
+          },
+          onChanged: (newValue) {
+            setState(() {
+              propertyValue = newValue as String;
+              widget.name(newValue.split(" ")[1]);
+              widget.id(newValue.split(" ")[0]);
+              // ignore: avoid_print
+              // print(newValue.split(" ")[0]);
+              // print(newValue.split(" ")[1]);
+            });
+          },
 
-        decoration: InputDecoration(
-          fillColor: kwhite,
-          filled: true,
-          labelText: 'Property',
-          hintText: 'Select one',
-          prefixIcon: Icon(
-            Icons.business_outlined,
+          items: _list
+              .map<DropdownMenuItem<String>>(
+                (value) => DropdownMenuItem<String>(
+                  value: value["property_type_id"].toString() +
+                      " " +
+                      value["property_type_name"],
+                  child: Text(
+                    value["property_type_name"],
+                  ),
+                ),
+              )
+              .toList(),
+          // add extra sugar..
+          icon: Icon(
+            Icons.arrow_drop_down,
             color: kImageColor,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 1,
-              color: kPrimaryColor,
+
+          decoration: InputDecoration(
+            filled: true,
+            contentPadding: EdgeInsets.symmetric(vertical: 8),
+            fillColor: Colors.white,
+            labelText: ((widget.pro == null) ? 'Property' : widget.pro),
+            hintText: 'Select one',
+            labelStyle: TextStyle(color: kPrimaryColor),
+            prefixIcon: Icon(
+              Icons.business_outlined,
+              color: kImageColor,
             ),
-            borderRadius: BorderRadius.circular(10.0),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                width: 1,
+                color: kPrimaryColor,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                width: 1,
+                color: kerror,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                width: 5,
+                color: kerror,
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
           ),
         ),
       ),
@@ -102,8 +136,6 @@ class _PropertyDropdownState extends State<PropertyDropdown> {
 
       setState(() {
         _list = jsonData['property'];
-
-        //print(_list);
       });
     }
   }

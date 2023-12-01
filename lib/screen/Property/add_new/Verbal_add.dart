@@ -22,7 +22,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui;
 
 import '../../../contants.dart';
-import '../../components/building.dart';
+import '../../../afa/components/building.dart';
 import '../Getx_api/vetbal_controller.dart';
 
 import '../Map/map_in_add_verbal.dart';

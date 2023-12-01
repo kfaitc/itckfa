@@ -17,12 +17,13 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/Memory_local/save_data_verbal_local.dart';
+import 'package:itckfa/afa/components/LandBuilding.dart';
 import 'package:itckfa/afa/components/slideUp.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Detail.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
-import 'package:itckfa/screen/components/payment/class/top_up.dart';
+import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../contants.dart';
@@ -32,11 +33,10 @@ import '../../../models/model_bl_new.dart';
 import '../../../screen/Customs/form.dart';
 import '../../../screen/Customs/formTwinN.dart';
 import '../../../screen/Profile/components/Drop.dart';
-import '../../../screen/components/code.dart';
-import '../../../screen/components/comment.dart';
+import '../../components/code.dart';
+import '../../components/comment.dart';
 import '../../../screen/components/map_all/map_in_list_search.dart';
-import '../../../screen/components/property.dart';
-import '../../components/LandBuilding.dart';
+import '../../components/property.dart';
 
 class Menu_Add_verbal extends StatefulWidget {
   const Menu_Add_verbal(
@@ -2566,6 +2566,7 @@ class _Add_with_propertyState extends State<Add_with_property>
   @override
   void dispose() {
     _controller.dispose();
+
     super.dispose();
   }
 

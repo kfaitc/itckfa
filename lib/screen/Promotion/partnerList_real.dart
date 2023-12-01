@@ -19,7 +19,7 @@ class _Screen_sliderState extends State<Screen_slider> {
 
   final imageList = [
     'assets/images/Partners/APD-Bank-1-1.jpg',
-    'assets/images/Partners/ABA_Logo.png',
+    'assets/images/Partners/KFAGroup.png',
     'assets/images/Partners/BIC-bank.png',
     'assets/images/Partners/Caltex.png',
     'assets/images/Partners/Maritime.png',
@@ -55,7 +55,7 @@ class _Screen_sliderState extends State<Screen_slider> {
 
   final url_list = [
     'https://apdbank.com.kh/home/',
-    'https://www.ababank.com/?gclid=CjwKCAjwkaSaBhA4EiwALBgQaP0MV-5iGu_ICbjomRngEn_YxlDjWtE9gemNlMKxYbBwrZZypgdFJRoCeggQAvD_BwE',
+    'https://kfa.com.kh/',
     'https://www.bicbank.com.kh/',
     'https://www.caltex.com/kh/en/motorists/products-and-services/caltex-with-techron.html',
     'https://maritimebank.com.kh/',

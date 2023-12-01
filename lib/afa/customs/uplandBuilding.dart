@@ -5,10 +5,10 @@ import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:itckfa/afa/components/autoVerbalType.dart';
 
 import '../../contants.dart';
 import '../../screen/Customs/ProgressHUD.dart';
-import '../../screen/components/autoVerbalType.dart';
 import '../Customs/formVLDN.dart';
 import '../Customs/formnum.dart';
 import '../customs/form.dart';

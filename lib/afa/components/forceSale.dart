@@ -1,15 +1,17 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
-import 'package:itckfa/afa/customs/formShN.dart';
+import 'package:itckfa/screen/Customs/formShN.dart';
 
-import 'contants.dart';
+import 'package:itckfa/afa/components/contants.dart';
+
+typedef OnChangeCallback = void Function(dynamic value);
 
 class ForceSaleAndValuation extends StatefulWidget {
-  const ForceSaleAndValuation(
-      {Key? key, required Null Function(dynamic value) value})
+  final String? fsl;
+  ForceSaleAndValuation({Key? key, required this.value, this.fsl})
       : super(key: key);
-
+  final OnChangeCallback value;
   @override
   State<ForceSaleAndValuation> createState() => _ForceSaleAndValuationState();
 }
@@ -17,6 +19,13 @@ class ForceSaleAndValuation extends StatefulWidget {
 class _ForceSaleAndValuationState extends State<ForceSaleAndValuation> {
   String Value = '30';
   var forceSale = ['10', '20', '30', '40', '50', '0'];
+  @override
+  void initState() {
+    widget.value(Value);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -50,6 +59,7 @@ class _ForceSaleAndValuationState extends State<ForceSaleAndValuation> {
               onChanged: (String? newValue) {
                 setState(() {
                   Value = newValue!;
+                  widget.value(Value);
                   // ignore: avoid_print
                   // print(newValue);
                 });
@@ -74,6 +84,7 @@ class _ForceSaleAndValuationState extends State<ForceSaleAndValuation> {
               decoration: InputDecoration(
                 fillColor: kwhite,
                 filled: true,
+                labelStyle: TextStyle(color: kPrimaryColor),
                 labelText: 'Force Sale',
                 hintText: 'Select one',
                 prefixIcon: Icon(

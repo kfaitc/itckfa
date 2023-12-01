@@ -1,4 +1,3 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types, unused_import, unused_local_variable, avoid_print, empty_catches, unnecessary_overrides, unnecessary_brace_in_string_interps, prefer_typing_uninitialized_variables, deprecated_member_use
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'UPay_qr.dart';
-import '../componnet/show_dialogFun.dart';
 
 class UPAY extends GetxController {
   @override
@@ -49,7 +47,7 @@ class UPAY extends GetxController {
         'money': price.toString(),
         'returnUrl': "kfa://callback",
         'notifyUrl':
-            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/8899/${id_user}/${price}/${thier_plan}",
+            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6591/${id_user}/${price}/${thier_plan}",
         'version': 'V1',
       };
       var sign = SignUtil.getSign(map, merchantKey);
@@ -66,15 +64,9 @@ class UPAY extends GetxController {
             forceSafariVC: false,
             forceWebView: false,
           );
-
-          await showSuccessDialog(context, price.toString(), context);
           Navigator.pop(context);
-        } else {
-          showErrorDialog(response.statusMessage ?? '', context);
-        }
-      } catch (e) {
-        showErrorDialog(e.toString(), context);
-      }
+        } else {}
+      } catch (e) {}
       loading = false;
     }
   }

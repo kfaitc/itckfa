@@ -877,7 +877,7 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
     Daun_Penh.add(LatLng(11.560331, 104.937483));
     Daun_Penh.add(LatLng(11.559836, 104.937731));
     Daun_Penh.add(LatLng(11.559447, 104.938019));
-    Daun_Penh.add(LatLng(11.558899, 104.938367));
+    Daun_Penh.add(LatLng(11.556591, 104.938367));
     Daun_Penh.add(LatLng(11.558855, 104.938556));
     Daun_Penh.add(LatLng(11.558333, 104.939228));
     Daun_Penh.add(LatLng(11.557957, 104.939576));

@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:itckfa/afa/components/LandBuilding.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/models/model_bl_new.dart';
 import 'package:itckfa/screen/components/map_all/map_in_edit_verbal.dart';
@@ -18,12 +19,11 @@ import '../../../../models/autoVerbal.dart';
 import '../../../../screen/Customs/formTwinN.dart';
 import '../../../../screen/Customs/responsive.dart';
 import '../../../../screen/Profile/components/Drop.dart';
-import '../../../../screen/components/ApprovebyAndVerifyby.dart';
-import '../../../../screen/components/LandBuilding.dart';
-import '../../../../screen/components/code.dart';
-import '../../../../screen/components/comment.dart';
-import '../../../../screen/components/forceSale.dart';
-import '../../../../screen/components/property.dart';
+import '../../../components/ApprovebyAndVerifyby.dart';
+import '../../../components/code.dart';
+import '../../../components/comment.dart';
+import '../../../components/forceSale.dart';
+import '../../../components/property.dart';
 import '../../../customs/uplandBuilding.dart';
 
 class Edit extends StatefulWidget {

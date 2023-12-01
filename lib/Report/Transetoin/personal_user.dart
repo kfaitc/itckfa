@@ -173,7 +173,7 @@ class _DataSource extends DataTableSource {
         cells: [
           DataCell(
             Text(
-              '${(item['bank_id'].toString() == '8899') ? item['orderId'].toString() : item['order_reference_no'].toString()}',
+              '${(item['bank_id'].toString() == '6591') ? item['orderId'].toString() : item['order_reference_no'].toString()}',
               style: TextStyle(fontSize: 10),
               overflow: TextOverflow.ellipsis,
             ),
@@ -203,7 +203,7 @@ class _DataSource extends DataTableSource {
           ),
           DataCell(
             Text(
-              '${(item['bank_id'].toString() == '8899') ? item['payAmount'].toString() : item['amount'].toString()}',
+              '${(item['bank_id'].toString() == '6591') ? item['payAmount'].toString() : item['amount'].toString()}',
               style: TextStyle(fontSize: 10),
               overflow: TextOverflow.ellipsis,
             ),

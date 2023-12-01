@@ -138,7 +138,7 @@ class Qr_UPayState extends State<Qr_UPay> {
       usdText.text = 'USD';
       versionText.text = 'V1';
       notifyText.text =
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/8899/${widget.control_user}/${widget.price}/${thier_plan}';
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6591/${widget.control_user}/${widget.price}/${thier_plan}';
       returnText.text = 'kfa://callback';
       langText.text = 'EN';
       createOrderQR();

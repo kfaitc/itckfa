@@ -1,16 +1,24 @@
-import 'package:flutter/material.dart';
-import 'contants.dart';
+// ignore_for_file: avoid_print, non_constant_identifier_names
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:itckfa/afa/components/contants.dart';
 
 typedef OnChangeCallback = void Function(dynamic value);
 
 class ApprovebyAndVerifyby extends StatefulWidget {
   const ApprovebyAndVerifyby(
-      {Key? key, required this.approve, required this.verify})
+      {Key? key,
+      required this.approve,
+      required this.verify,
+      this.vfy,
+      this.appro})
       : super(key: key);
   final OnChangeCallback approve;
   final OnChangeCallback verify;
+  final String? vfy;
+  final String? appro;
   @override
   State<ApprovebyAndVerifyby> createState() => _ApprovebyAndVerifybyState();
 }
@@ -19,12 +27,16 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
   String valueapp = '';
   String valueagent = '';
   late List<dynamic> listApprove;
+  late List<dynamic> listApprove2;
   late List<dynamic> listVerify;
+  late List<dynamic> listVerify2;
   @override
   void initState() {
     super.initState();
     listApprove = [];
     listVerify = [];
+    listVerify2 = [];
+    listApprove2 = [];
     // ignore: unnecessary_new
     LoadApprove();
     LoadVerify();
@@ -36,23 +48,22 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
       children: [
         Expanded(
           child: Container(
-            height: 55,
+            height: 58,
             padding: const EdgeInsets.only(left: 30),
             child: DropdownButtonFormField<String>(
               //value: genderValue,
               isExpanded: true,
-              onChanged: (String? newValue) {
+              onChanged: (newValue) {
                 setState(() {
                   valueagent = newValue!;
 
                   widget.verify(valueagent);
-                  // print(newValue);
                 });
               },
               items: listVerify
                   .map<DropdownMenuItem<String>>(
                     (value) => DropdownMenuItem<String>(
-                      value: value["agenttype_id"],
+                      value: value["agenttype_id"].toString(),
                       child: Text(value["agenttype_name"]),
                     ),
                   )
@@ -66,7 +77,8 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
               decoration: InputDecoration(
                 fillColor: kwhite,
                 filled: true,
-                labelText: 'Verify by',
+                labelStyle: TextStyle(color: kPrimaryColor),
+                labelText: (widget.vfy != null) ? widget.vfy : 'Verify by',
                 hintText: 'Select one',
                 prefixIcon: const Icon(
                   Icons.person_sharp,
@@ -78,8 +90,7 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  // ignore: prefer_const_constructors
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     width: 1,
                     color: kPrimaryColor,
                   ),
@@ -89,34 +100,33 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 10.0,
         ),
         Expanded(
           child: Container(
-            height: 55,
-            padding: EdgeInsets.only(right: 30),
+            height: 58,
+            padding: const EdgeInsets.only(right: 30),
             child: DropdownButtonFormField<String>(
               //value: genderValue,
               isExpanded: true,
-              onChanged: (String? newValue) {
+              onChanged: (newValue) {
                 setState(() {
                   valueapp = newValue!;
 
                   widget.approve(valueapp);
-                  // print(newValue);
                 });
               },
               items: listApprove
                   .map<DropdownMenuItem<String>>(
                     (value) => DropdownMenuItem<String>(
-                      value: value["approve_id"],
+                      value: value["approve_id"].toString(),
                       child: Text(value["approve_name"]),
                     ),
                   )
                   .toList(),
               // add extra sugar..
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_drop_down,
                 color: kImageColor,
               ),
@@ -124,9 +134,10 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
               decoration: InputDecoration(
                 fillColor: kwhite,
                 filled: true,
-                labelText: 'Approve by',
+                labelStyle: TextStyle(color: kPrimaryColor),
+                labelText: (widget.appro != null) ? widget.appro : 'Approve by',
                 hintText: 'Select one',
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.person_outlined,
                   color: kImageColor,
                 ),
@@ -136,7 +147,7 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     width: 1,
                     color: kPrimaryColor,
                   ),
@@ -164,6 +175,20 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
     }
   }
 
+  // void LoadApprove2(id) async {
+  //   setState(() {});
+  //   var rs = await http.get(Uri.parse(
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/approve?approve_id=${id}'));
+  //   if (rs.statusCode == 200) {
+  //     var jsonData = jsonDecode(rs.body);
+
+  //     setState(() {
+  //       listApprove2 = jsonData;
+  //       // print(_list);
+  //     });
+  //   }
+  // }
+
   void LoadVerify() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
@@ -177,4 +202,18 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
       });
     }
   }
+
+  // void LoadVerify2(id) async {
+  //   setState(() {});
+  //   var rs = await http.get(Uri.parse(
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verify_by?agenttype_id=${id}'));
+  //   if (rs.statusCode == 200) {
+  //     var jsonData = jsonDecode(rs.body);
+
+  //     setState(() {
+  //       listVerify2 = jsonData;
+  //       //print(_list);
+  //     });
+  //   }
+  // }
 }

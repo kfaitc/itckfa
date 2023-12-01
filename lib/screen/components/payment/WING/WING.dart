@@ -7,15 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../UPAY/UPay_qr.dart';
-import '../componnet/show_dialogFun.dart';
 
 class WING extends GetxController {
-  var list_value_all = [].obs;
-  String? province;
-
   @override
   void onInit() {
-    list_value_all;
     super.onInit();
   }
 
@@ -81,7 +76,7 @@ class WING extends GetxController {
     // Add form fields to the request
     request.fields.addAll({
       'str':
-          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com ',
+          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com',
       'key': '$token',
     });
 
@@ -149,7 +144,6 @@ class WING extends GetxController {
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
-
       redirect_url = jsonResponse['redirect_url'];
       await launchUrl(Uri.parse(redirect_url));
       Navigator.pop(context);

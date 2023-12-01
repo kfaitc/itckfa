@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:itckfa/screen/components/payment/class/Aba.dart';
-import 'package:itckfa/screen/components/payment/componnet/GetVpoint.dart';
-
+import 'package:itckfa/screen/components/payment/ABA/Aba.dart';
 import '../../../../afa/components/contants.dart';
 import '../UPAY/UPay_qr.dart';
 import '../WING/Wing_qr.dart';
@@ -404,7 +402,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                                   accont: account,
                                   phone: widget.set_phone!,
                                   option: option,
-                                  id: widget.id_user ?? 'set',
+                                  id: widget.set_id_user ?? 'set',
                                   control_user: widget.set_id_user,
                                 )),
                       );

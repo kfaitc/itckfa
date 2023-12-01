@@ -33,7 +33,7 @@ class _Detai_VPointState extends State<Detai_VPoint> {
     index = int.parse(widget.index_get.toString());
     // list = widget.list[int.parse(widget.index_get.toString())];
     if (widget.b == true) {
-      if (widget.typebank == '8899') {
+      if (widget.typebank == '6591') {
         widget.TypePayment_bank = 'payAmount';
       } else {
         widget.TypePayment_bank = 'amount';
