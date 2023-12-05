@@ -31,7 +31,7 @@ class _All_partnerState extends State<All_partner> {
           PartnersCard(
             img: 'assets/images/Partners/APD-Bank-1-1.jpg',
             press: () async {
-              const url = 'https://apdbank.com.kh/home/';
+              const url = 'https://kfa.com.kh/';
               await launch(
                 url,
                 forceSafariVC: false,
@@ -40,7 +40,7 @@ class _All_partnerState extends State<All_partner> {
             },
           ),
           PartnersCard(
-            img: 'assets/images/Partners/ABA_Logo.png',
+            img: 'assets/images/Partners/KFAGroup.png',
             press: () async {
               const url = 'https://mef.gov.kh/';
               await launch(

@@ -57,12 +57,37 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
   Widget _body(BuildContext context) {
     return ListView(
       children: [
-        if (aba_upay[0].isNotEmpty)
+        Container(
+            height: 55,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                    child: const Text('pay by UPay'),
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll<Color>(
+                        const Color.fromRGBO(40, 53, 147, 1),
+                      ),
+                    )),
+                TextButton(child: const Text('pay by Wing'), onPressed: () {}),
+                TextButton(child: const Text('pay by ABA'), onPressed: () {}),
+              ],
+            )),
+        if (aba_upay.isNotEmpty)
+          for (int i = 0; i < aba_upay[0].length; i++)
+            Container(
+              margin: EdgeInsets.all(10),
+              height: 50,
+              color: Colors.indigo[800],
+            ),
+        if (wing_khqr.isNotEmpty)
           for (int i = 0; i < aba_upay[0].length; i++)
             Container(
               margin: EdgeInsets.all(20),
               height: 80,
-              color: Colors.amber,
+              color: Colors.red,
             ),
       ],
     );
@@ -86,7 +111,6 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
       wing_khqr.add(data['wing_khqr']);
       wing_deeplink.add(data['wing_deeplink']);
       aba_upay.add(data['aba_upay']);
-      print(aba_upay[0]);
     } else {
       print(response.reasonPhrase);
     }

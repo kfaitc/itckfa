@@ -23,11 +23,15 @@ class ABA extends StatefulWidget {
       required this.price,
       required this.option,
       required this.id_set_use,
-      required this.tran_id});
+      required this.tran_id,
+      required this.set_email,
+      required this.set_phone});
   final String price;
   final String option;
   final String id_set_use;
   final String tran_id;
+  final String set_email;
+  final String set_phone;
   @override
   State<ABA> createState() => _ABAState();
 }
@@ -110,13 +114,14 @@ class _ABAState extends State<ABA> {
     request.body = json.encode({
       "req_time": reqTime,
       "tran_id": widget.tran_id,
-      "firstname": "virak",
-      "lastname": "oum",
-      "phone": "+855966519115",
+      // "firstname": "${widget.id_set_use.toString()}",
+      // "lastname": "$thier_plan",
+      "email": "${widget.set_email}",
+      "phone": "${widget.set_phone}",
       "amount": widget.price,
       "payment_option": "abapay_khqr_deeplink",
       "return_url":
-          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/${thier_plan}?amount=${widget.price}"
+          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/${thier_plan}?amount=${widget.price}&orderId=${widget.tran_id}"
     });
     request.headers.addAll(headers);
 

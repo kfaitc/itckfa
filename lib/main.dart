@@ -130,67 +130,19 @@ class _MyAppState extends State<MyApp> {
     // Get the initial link when the app is launched
     String? initialLink = await getInitialLink();
     if (initialLink != null) {
-      // Handle the initial link, e.g., parse and navigate
-      print('\n\nInitial link received: $initialLink\n\n');
-      var data = initialLink.toString().split('com/');
-      if (data.length >= 1) {
-        var value = data[1].toString();
-        if (data.length > 1) {
-          Get.to(() => HomePage1(pf: true));
-          // MaterialPageRoute(
-          //   builder: (context) {
-          //     return HomePage1();
-          //   },
-          // );
-        }
+      if (initialLink.contains('app')) {
+        Get.to(() => const HomePage1(pf: true));
       }
     }
 
-    // Listen for incoming links
     // ignore: deprecated_member_use
     getLinksStream().listen((String? link) {
       if (link != null) {
-        // Handle the link, e.g., parse and navigate
-        print('\n\nLink received: $link\n\n');
-        var data = initialLink.toString().split('com/');
-        if (data.isNotEmpty) {
-          Get.to(() => HomePage1(pf: true));
+        if (link.contains('app')) {
+          Get.to(() => const HomePage1(pf: true));
         }
       }
     });
-    // try {
-    //   Uri? uri = await getInitialUri();
-    //   if (uri != null) {
-    //     WidgetsBinding.instance.addPostFrameCallback((_) {
-    //       // openAppLink(uri);
-    //       setState(() {
-    //         var data = uri.toString().split('/');
-    //         var value = data[1].toString();
-    //         print("\n\n\n\nobject2 : \n $value\n\n\n\n\n");
-    //       });
-    //     });
-    //   }
-    //   streamSubscription = uriLinkStream.listen((Uri? uri) {
-    //     if (uri == null) {
-    //       return;
-    //     } else {
-    //       WidgetsBinding.instance.addPostFrameCallback((_) {
-    //         var data = uri.toString().split('/');
-    //         var value = data[1].toString();
-    //         print("\n\n\n\nobject : \n $value\n\n\n\n\n");
-    //         // if (value.toString() == "app") {
-    //         //   MaterialPageRoute(
-    //         //     builder: (context) {
-    //         //       return HomePage1();
-    //         //     },
-    //         //   );
-    //         // }
-    //       });
-    //     }
-    //   });
-    //   OneSignal.Notifications.permission;
-    //   OneSignal.Notifications.requestPermission(true);
-    // } on PlatformException {}
   }
 
   @override
@@ -199,22 +151,11 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (RouteSettings settings) {
         final args = settings.name;
-        // Then, extract the required data from
-        // the arguments and pass the data to the
         // correct screen.
         if (args != null) {
-          var data = settings.name!.split('com');
-          if (data.length > 1) {
-            Get.to(() => HomePage1(pf: true));
+          if (args.contains('app')) {
+            Get.to(() => const HomePage1(pf: true));
           }
-          // var value = data[1].toString();
-          // if (value.toString() == "app") {
-          //   return MaterialPageRoute(
-          //     builder: (context) {
-          //       return HomePage1();
-          //     },
-          //   );
-          // }
         }
       },
       initialRoute: '/',

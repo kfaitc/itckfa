@@ -132,6 +132,8 @@ class _OptionPaymentState extends State<OptionPayment> {
                               option: widget.option,
                               price: widget.price,
                               tran_id: order_reference_no,
+                              set_email: widget.set_email,
+                              set_phone: widget.set_phone.toString(),
                             ),
                           ));
                     } else {
