@@ -146,7 +146,16 @@ class WING extends GetxController {
           throw 'Could not launch $playStoreUrl';
         }
       }
-      if (Platform.isIOS) {}
+      if (Platform.isIOS) {
+        final playStoreUrl = 'https://onelink.to/dagdt6';
+        // ignore: deprecated_member_use
+        if (await canLaunch(playStoreUrl)) {
+          // ignore: deprecated_member_use
+          await launch(playStoreUrl);
+        } else {
+          throw 'Could not launch $playStoreUrl';
+        }
+      }
     }
   }
 }
