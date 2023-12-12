@@ -124,18 +124,21 @@ class _OptionPaymentState extends State<OptionPayment> {
                         "${widget.set_id_user}24K${RandomString(2)}F${RandomString(3)}A";
 
                     if (index == 0) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ABA(
-                              id_set_use: widget.set_id_user,
-                              option: widget.option,
-                              price: widget.price,
-                              tran_id: order_reference_no,
-                              set_email: widget.set_email,
-                              set_phone: widget.set_phone.toString(),
-                            ),
-                          ));
+                      var tran_id_ref = RandomString(10);
+                      if (tran_id_ref != null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ABA(
+                                id_set_use: widget.set_id_user,
+                                option: widget.option,
+                                price: widget.price,
+                                tran_id: tran_id_ref,
+                                set_email: widget.set_email,
+                                set_phone: widget.set_phone.toString(),
+                              ),
+                            ));
+                      }
                     } else {
                       alertDialog(context, widget.price, widget.set_email ?? "",
                           widget.option, index);

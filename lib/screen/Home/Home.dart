@@ -176,7 +176,6 @@ class _HomePageState extends State<HomePage1> {
   @override
   void initState() {
     getdata();
-
     super.initState();
   }
 

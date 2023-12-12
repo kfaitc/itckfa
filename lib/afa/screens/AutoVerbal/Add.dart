@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:itckfa/Memory_local/save_data_verbal_local.dart';
 import 'package:itckfa/afa/components/LandBuilding.dart';
 import 'package:itckfa/afa/components/slideUp.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Detail.dart';
@@ -1569,21 +1568,17 @@ class _List_AutoState extends State<List_Auto> {
 
       setState(() {
         list1 = jsonData;
+        print("object${list1.length}");
         check_data1 = true;
       });
     }
   }
 
   bool b1 = true, b2 = false;
-  List<verbalModel> list = [];
-  selectVERBAL() async {
-    list = await PeopleController().selectverbal();
-  }
 
   @override
   void initState() {
     get_by_user_autoverbal();
-    selectVERBAL();
     super.initState();
   }
 
@@ -1642,12 +1637,8 @@ class _List_AutoState extends State<List_Auto> {
                       GFButton(
                         onPressed: () {
                           setState(() {
-                            selectVERBAL();
-                            list;
                             b1 = false;
                             b2 = true;
-                            selectVERBAL();
-                            list;
                           });
                         },
                         color:
@@ -1950,31 +1941,31 @@ class _List_AutoState extends State<List_Auto> {
                                           children: [
                                             GFButton(
                                               onPressed: () async {
-                                                var data = verbalModel(
-                                                  verbalId:
-                                                      '${list1[i]["verbal_id"] ?? ''}',
-                                                  bank_branch_name:
-                                                      '${list1[i]["bank_branch_name"] ?? ''}',
-                                                  bank_name:
-                                                      '${list1[i]["bank_name"] ?? ''}',
-                                                  property_type_name:
-                                                      '${list1[i]["property_type_name"] ?? ''}',
-                                                  tel_num:
-                                                      '${list1[i]["tel_num"] ?? ''}',
-                                                  username:
-                                                      '${list1[i]["username"] ?? ''}',
-                                                  verbal_address:
-                                                      '${list1[i]["verbal_address"] ?? ''}',
-                                                  verbal_contact:
-                                                      '${list1[i]["verbal_contact"] ?? ''}',
-                                                  verbal_date:
-                                                      '${list1[i]["verbal_date"] ?? ''}',
-                                                  verbal_owner:
-                                                      '${list1[i]["verbal_owner"] ?? ''}',
-                                                );
+                                                // var data = verbalModel(
+                                                //   verbalId:
+                                                //       '${list1[i]["verbal_id"] ?? ''}',
+                                                //   bank_branch_name:
+                                                //       '${list1[i]["bank_branch_name"] ?? ''}',
+                                                //   bank_name:
+                                                //       '${list1[i]["bank_name"] ?? ''}',
+                                                //   property_type_name:
+                                                //       '${list1[i]["property_type_name"] ?? ''}',
+                                                //   tel_num:
+                                                //       '${list1[i]["tel_num"] ?? ''}',
+                                                //   username:
+                                                //       '${list1[i]["username"] ?? ''}',
+                                                //   verbal_address:
+                                                //       '${list1[i]["verbal_address"] ?? ''}',
+                                                //   verbal_contact:
+                                                //       '${list1[i]["verbal_contact"] ?? ''}',
+                                                //   verbal_date:
+                                                //       '${list1[i]["verbal_date"] ?? ''}',
+                                                //   verbal_owner:
+                                                //       '${list1[i]["verbal_owner"] ?? ''}',
+                                                // );
 
-                                                await PeopleController()
-                                                    .insertverbal(data);
+                                                // await PeopleController()
+                                                //     .insertverbal(data);
 
                                                 final snackBar = SnackBar(
                                                   content:
@@ -2075,294 +2066,294 @@ class _List_AutoState extends State<List_Auto> {
                 else
                   Container(
                     height: MediaQuery.of(context).size.height * 0.8,
-                    child: Visibility(
-                      visible: true,
-                      replacement: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      child: ListView.builder(
-                        itemCount: list.length,
-                        itemBuilder: (context, i) {
-                          return Stack(
-                            children: [
-                              Container(
-                                height: 140,
-                                margin: EdgeInsets.all(10),
-                                padding: EdgeInsets.only(left: 10),
-                                decoration: BoxDecoration(
-                                    color: Color.fromARGB(217, 255, 255, 255),
-                                    // border: Border.all(
-                                    //     width: 1,
-                                    //     color: Color.fromRGBO(67, 160, 71, 1)),
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Verbal ID\t\t:\t\t',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: MediaQuery.of(context)
-                                                      .textScaleFactor *
-                                                  10,
-                                              shadows: [
-                                                BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 16, 22, 192),
-                                                    blurRadius: 3,
-                                                    offset: Offset(-0.2, -1))
-                                              ]),
-                                        ),
-                                        Text(
-                                          " ${list[i].verbalId}",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: MediaQuery.of(context)
-                                                      .textScaleFactor *
-                                                  9,
-                                              shadows: [
-                                                BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 16, 22, 192),
-                                                    blurRadius: 3,
-                                                    offset: Offset(-0.2, -1))
-                                              ]),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Bank\t\t\t:\t\t',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: MediaQuery.of(context)
-                                                      .textScaleFactor *
-                                                  10,
-                                              shadows: [
-                                                BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 16, 22, 192),
-                                                    blurRadius: 3,
-                                                    offset: Offset(-0.2, -1))
-                                              ]),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.7,
-                                          child: Text(
-                                            " ${list[i].bank_name}",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: MediaQuery.of(context)
-                                                        .textScaleFactor *
-                                                    9,
-                                                overflow: TextOverflow.ellipsis,
-                                                shadows: [
-                                                  BoxShadow(
-                                                      color: Color.fromARGB(
-                                                          255, 16, 22, 192),
-                                                      blurRadius: 3,
-                                                      offset: Offset(-0.2, -1))
-                                                ]),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Bank Branch\t\t\t:\t\t',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: MediaQuery.of(context)
-                                                      .textScaleFactor *
-                                                  10,
-                                              shadows: [
-                                                BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 16, 22, 192),
-                                                    blurRadius: 3,
-                                                    offset: Offset(-0.2, -1))
-                                              ]),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.5,
-                                          child: Text(
-                                            " ${list[i].bank_branch_name}",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: MediaQuery.of(context)
-                                                        .textScaleFactor *
-                                                    9,
-                                                overflow: TextOverflow.ellipsis,
-                                                shadows: [
-                                                  BoxShadow(
-                                                      color: Color.fromARGB(
-                                                          255, 16, 22, 192),
-                                                      blurRadius: 3,
-                                                      offset: Offset(-0.2, -1))
-                                                ]),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Property Type\t\t\t:\t\t',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: MediaQuery.of(context)
-                                                      .textScaleFactor *
-                                                  10,
-                                              shadows: [
-                                                BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 16, 22, 192),
-                                                    blurRadius: 3,
-                                                    offset: Offset(-0.2, -1))
-                                              ]),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.5,
-                                          child: Text(
-                                            " ${list[i].property_type_name}",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: MediaQuery.of(context)
-                                                        .textScaleFactor *
-                                                    9,
-                                                overflow: TextOverflow.ellipsis,
-                                                shadows: [
-                                                  BoxShadow(
-                                                      color: Color.fromARGB(
-                                                          255, 16, 22, 192),
-                                                      blurRadius: 3,
-                                                      offset: Offset(-0.2, -1))
-                                                ]),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Date :\t\t\t:\t\t',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: MediaQuery.of(context)
-                                                      .textScaleFactor *
-                                                  10,
-                                              shadows: [
-                                                BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 16, 22, 192),
-                                                    blurRadius: 3,
-                                                    offset: Offset(-0.2, -1))
-                                              ]),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.5,
-                                          child: Text(
-                                            " ${list[i].verbal_date}",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: MediaQuery.of(context)
-                                                        .textScaleFactor *
-                                                    9,
-                                                overflow: TextOverflow.ellipsis,
-                                                shadows: [
-                                                  BoxShadow(
-                                                      color: Color.fromARGB(
-                                                          255, 16, 22, 192),
-                                                      blurRadius: 3,
-                                                      offset: Offset(-0.2, -1))
-                                                ]),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                right: 1,
-                                top: -1,
-                                child: GFButton(
-                                  onPressed: () async {
-                                    setState(() {
-                                      list;
-                                      selectVERBAL();
-                                      list;
-                                    });
+                    // child: Visibility(
+                    //   visible: true,
+                    //   replacement: const Center(
+                    //     child: CircularProgressIndicator(),
+                    //   ),
+                    //   child: ListView.builder(
+                    //     itemCount: list.length,
+                    //     itemBuilder: (context, i) {
+                    //       return Stack(
+                    //         children: [
+                    //           Container(
+                    //             height: 140,
+                    //             margin: EdgeInsets.all(10),
+                    //             padding: EdgeInsets.only(left: 10),
+                    //             decoration: BoxDecoration(
+                    //                 color: Color.fromARGB(217, 255, 255, 255),
+                    //                 // border: Border.all(
+                    //                 //     width: 1,
+                    //                 //     color: Color.fromRGBO(67, 160, 71, 1)),
+                    //                 borderRadius: BorderRadius.circular(5)),
+                    //             child: Column(
+                    //               mainAxisAlignment:
+                    //                   MainAxisAlignment.spaceAround,
+                    //               crossAxisAlignment: CrossAxisAlignment.start,
+                    //               children: [
+                    //                 Row(
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.start,
+                    //                   children: [
+                    //                     Text(
+                    //                       'Verbal ID\t\t:\t\t',
+                    //                       style: TextStyle(
+                    //                           color: Colors.black,
+                    //                           fontSize: MediaQuery.of(context)
+                    //                                   .textScaleFactor *
+                    //                               10,
+                    //                           shadows: [
+                    //                             BoxShadow(
+                    //                                 color: Color.fromARGB(
+                    //                                     255, 16, 22, 192),
+                    //                                 blurRadius: 3,
+                    //                                 offset: Offset(-0.2, -1))
+                    //                           ]),
+                    //                     ),
+                    //                     Text(
+                    //                       " ${list[i].verbalId}",
+                    //                       style: TextStyle(
+                    //                           color: Colors.black,
+                    //                           fontSize: MediaQuery.of(context)
+                    //                                   .textScaleFactor *
+                    //                               9,
+                    //                           shadows: [
+                    //                             BoxShadow(
+                    //                                 color: Color.fromARGB(
+                    //                                     255, 16, 22, 192),
+                    //                                 blurRadius: 3,
+                    //                                 offset: Offset(-0.2, -1))
+                    //                           ]),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //                 Row(
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.start,
+                    //                   children: [
+                    //                     Text(
+                    //                       'Bank\t\t\t:\t\t',
+                    //                       style: TextStyle(
+                    //                           color: Colors.black,
+                    //                           fontSize: MediaQuery.of(context)
+                    //                                   .textScaleFactor *
+                    //                               10,
+                    //                           shadows: [
+                    //                             BoxShadow(
+                    //                                 color: Color.fromARGB(
+                    //                                     255, 16, 22, 192),
+                    //                                 blurRadius: 3,
+                    //                                 offset: Offset(-0.2, -1))
+                    //                           ]),
+                    //                     ),
+                    //                     SizedBox(
+                    //                       width: MediaQuery.of(context)
+                    //                               .size
+                    //                               .width *
+                    //                           0.7,
+                    //                       child: Text(
+                    //                         " ${list[i].bank_name}",
+                    //                         style: TextStyle(
+                    //                             color: Colors.black,
+                    //                             fontSize: MediaQuery.of(context)
+                    //                                     .textScaleFactor *
+                    //                                 9,
+                    //                             overflow: TextOverflow.ellipsis,
+                    //                             shadows: [
+                    //                               BoxShadow(
+                    //                                   color: Color.fromARGB(
+                    //                                       255, 16, 22, 192),
+                    //                                   blurRadius: 3,
+                    //                                   offset: Offset(-0.2, -1))
+                    //                             ]),
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //                 Row(
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.start,
+                    //                   children: [
+                    //                     Text(
+                    //                       'Bank Branch\t\t\t:\t\t',
+                    //                       style: TextStyle(
+                    //                           color: Colors.black,
+                    //                           fontSize: MediaQuery.of(context)
+                    //                                   .textScaleFactor *
+                    //                               10,
+                    //                           shadows: [
+                    //                             BoxShadow(
+                    //                                 color: Color.fromARGB(
+                    //                                     255, 16, 22, 192),
+                    //                                 blurRadius: 3,
+                    //                                 offset: Offset(-0.2, -1))
+                    //                           ]),
+                    //                     ),
+                    //                     SizedBox(
+                    //                       width: MediaQuery.of(context)
+                    //                               .size
+                    //                               .width *
+                    //                           0.5,
+                    //                       child: Text(
+                    //                         " ${list[i].bank_branch_name}",
+                    //                         style: TextStyle(
+                    //                             color: Colors.black,
+                    //                             fontSize: MediaQuery.of(context)
+                    //                                     .textScaleFactor *
+                    //                                 9,
+                    //                             overflow: TextOverflow.ellipsis,
+                    //                             shadows: [
+                    //                               BoxShadow(
+                    //                                   color: Color.fromARGB(
+                    //                                       255, 16, 22, 192),
+                    //                                   blurRadius: 3,
+                    //                                   offset: Offset(-0.2, -1))
+                    //                             ]),
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //                 Row(
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.start,
+                    //                   children: [
+                    //                     Text(
+                    //                       'Property Type\t\t\t:\t\t',
+                    //                       style: TextStyle(
+                    //                           color: Colors.black,
+                    //                           fontSize: MediaQuery.of(context)
+                    //                                   .textScaleFactor *
+                    //                               10,
+                    //                           shadows: [
+                    //                             BoxShadow(
+                    //                                 color: Color.fromARGB(
+                    //                                     255, 16, 22, 192),
+                    //                                 blurRadius: 3,
+                    //                                 offset: Offset(-0.2, -1))
+                    //                           ]),
+                    //                     ),
+                    //                     SizedBox(
+                    //                       width: MediaQuery.of(context)
+                    //                               .size
+                    //                               .width *
+                    //                           0.5,
+                    //                       child: Text(
+                    //                         " ${list[i].property_type_name}",
+                    //                         style: TextStyle(
+                    //                             color: Colors.black,
+                    //                             fontSize: MediaQuery.of(context)
+                    //                                     .textScaleFactor *
+                    //                                 9,
+                    //                             overflow: TextOverflow.ellipsis,
+                    //                             shadows: [
+                    //                               BoxShadow(
+                    //                                   color: Color.fromARGB(
+                    //                                       255, 16, 22, 192),
+                    //                                   blurRadius: 3,
+                    //                                   offset: Offset(-0.2, -1))
+                    //                             ]),
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //                 Row(
+                    //                   mainAxisAlignment:
+                    //                       MainAxisAlignment.start,
+                    //                   children: [
+                    //                     Text(
+                    //                       'Date :\t\t\t:\t\t',
+                    //                       style: TextStyle(
+                    //                           color: Colors.black,
+                    //                           fontSize: MediaQuery.of(context)
+                    //                                   .textScaleFactor *
+                    //                               10,
+                    //                           shadows: [
+                    //                             BoxShadow(
+                    //                                 color: Color.fromARGB(
+                    //                                     255, 16, 22, 192),
+                    //                                 blurRadius: 3,
+                    //                                 offset: Offset(-0.2, -1))
+                    //                           ]),
+                    //                     ),
+                    //                     SizedBox(
+                    //                       width: MediaQuery.of(context)
+                    //                               .size
+                    //                               .width *
+                    //                           0.5,
+                    //                       child: Text(
+                    //                         " ${list[i].verbal_date}",
+                    //                         style: TextStyle(
+                    //                             color: Colors.black,
+                    //                             fontSize: MediaQuery.of(context)
+                    //                                     .textScaleFactor *
+                    //                                 9,
+                    //                             overflow: TextOverflow.ellipsis,
+                    //                             shadows: [
+                    //                               BoxShadow(
+                    //                                   color: Color.fromARGB(
+                    //                                       255, 16, 22, 192),
+                    //                                   blurRadius: 3,
+                    //                                   offset: Offset(-0.2, -1))
+                    //                             ]),
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           Positioned(
+                    //             right: 1,
+                    //             top: -1,
+                    //             child: GFButton(
+                    //               onPressed: () async {
+                    //                 setState(() {
+                    //                   list;
+                    //                   selectVERBAL();
+                    //                   list;
+                    //                 });
 
-                                    await PeopleController()
-                                        .deleteverbal(list[i].verbalId);
+                    //                 await PeopleController()
+                    //                     .deleteverbal(list[i].verbalId);
 
-                                    final snackBar = SnackBar(
-                                      content: const Text('Deleted !'),
-                                      action: SnackBarAction(
-                                        label: 'Replese',
-                                        onPressed: () {
-                                          setState(() {
-                                            list;
-                                            selectVERBAL();
-                                            list;
-                                          });
-                                        },
-                                      ),
-                                    );
+                    //                 final snackBar = SnackBar(
+                    //                   content: const Text('Deleted !'),
+                    //                   action: SnackBarAction(
+                    //                     label: 'Replese',
+                    //                     onPressed: () {
+                    //                       setState(() {
+                    //                         list;
+                    //                         selectVERBAL();
+                    //                         list;
+                    //                       });
+                    //                     },
+                    //                   ),
+                    //                 );
 
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  },
-                                  text: "\tDelete\t",
-                                  size: GFSize.MEDIUM,
-                                  color: Colors.red,
-                                  icon: Icon(
-                                    Icons.delete_outline,
-                                    color: Colors.white,
-                                    size: 20,
-                                    shadows: [
-                                      Shadow(
-                                          color: Colors.black,
-                                          blurRadius: 5,
-                                          offset: Offset(1, 0.5))
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    ),
+                    //                 ScaffoldMessenger.of(context)
+                    //                     .showSnackBar(snackBar);
+                    //               },
+                    //               text: "\tDelete\t",
+                    //               size: GFSize.MEDIUM,
+                    //               color: Colors.red,
+                    //               icon: Icon(
+                    //                 Icons.delete_outline,
+                    //                 color: Colors.white,
+                    //                 size: 20,
+                    //                 shadows: [
+                    //                   Shadow(
+                    //                       color: Colors.black,
+                    //                       blurRadius: 5,
+                    //                       offset: Offset(1, 0.5))
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           )
+                    //         ],
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                   ),
               ],
             ),
@@ -2480,6 +2471,7 @@ class _Add_with_propertyState extends State<Add_with_property>
   var formatter = NumberFormat("##,###,###,###", "en_US");
   int? number;
   var control_user;
+  var list_user;
   Future get_control_user(String id) async {
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
@@ -2488,8 +2480,7 @@ class _Add_with_propertyState extends State<Add_with_property>
 
       setState(() {
         // print(jsonData[0]['control_user'].toString() + "\n");
-        control_user = jsonData[0]['control_user'].toString();
-        get_count();
+        list_user = jsonData[0];
       });
     }
   }
@@ -2643,70 +2634,74 @@ class _Add_with_propertyState extends State<Add_with_property>
                   onTap: () async {
                     await get_count();
                     if (number! >= 1) {
-                      if (asking_price != null) {
-                        List<Map<String, dynamic>> jsonList =
-                            lb.map((item) => item.toJson()).toList();
-                        requestModelAuto.user = widget.id;
-                        requestModelAuto.verbal_id = code.toString();
-                        requestModelAuto.verbal_khan = '${commune}.${district}';
-                        requestModelAuto.verbal = jsonList;
-                        APIservice apIservice = APIservice();
-                        apIservice.saveAutoVerbal(requestModelAuto).then(
-                          (value) async {
-                            if (requestModelAuto.verbal.isEmpty) {
+                      // if (asking_price != null) {
+                      List<Map<String, dynamic>> jsonList =
+                          lb.map((item) => item.toJson()).toList();
+                      requestModelAuto.user = widget.id;
+                      requestModelAuto.verbal_id = code.toString();
+                      requestModelAuto.verbal_khan = '${commune}.${district}';
+                      requestModelAuto.verbal = jsonList;
+                      APIservice apIservice = APIservice();
+                      apIservice.saveAutoVerbal(requestModelAuto).then(
+                        (value) async {
+                          if (requestModelAuto.verbal.isEmpty) {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Error',
+                              desc: "Please add Land/Building at least 1!",
+                              btnOkOnPress: () {},
+                              btnOkIcon: Icons.cancel,
+                              btnOkColor: Colors.red,
+                            ).show();
+                          } else {
+                            if (value.message == "Save Successfully") {
+                              if (_file != null) {
+                                await uploadt_image();
+                              }
+
+                              await payment_done(context);
+                            } else {
                               AwesomeDialog(
                                 context: context,
                                 dialogType: DialogType.error,
                                 animType: AnimType.rightSlide,
                                 headerAnimationLoop: false,
                                 title: 'Error',
-                                desc: "Please add Land/Building at least 1!",
+                                desc: value.message,
                                 btnOkOnPress: () {},
                                 btnOkIcon: Icons.cancel,
                                 btnOkColor: Colors.red,
                               ).show();
-                            } else {
-                              if (value.message == "Save Successfully") {
-                                if (_file != null) {
-                                  await uploadt_image();
-                                }
-
-                                await payment_done(context);
-                              } else {
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.error,
-                                  animType: AnimType.rightSlide,
-                                  headerAnimationLoop: false,
-                                  title: 'Error',
-                                  desc: value.message,
-                                  btnOkOnPress: () {},
-                                  btnOkIcon: Icons.cancel,
-                                  btnOkColor: Colors.red,
-                                ).show();
-                              }
                             }
-                          },
-                        );
-                      } else {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.error,
-                          animType: AnimType.rightSlide,
-                          headerAnimationLoop: false,
-                          title: 'Error',
-                          desc: "Please select your Location",
-                          btnOkOnPress: () {},
-                          btnOkIcon: Icons.cancel,
-                          btnOkColor: Colors.red,
-                        ).show();
-                      }
+                          }
+                        },
+                      );
+                      // } else {
+                      //   AwesomeDialog(
+                      //     context: context,
+                      //     dialogType: DialogType.error,
+                      //     animType: AnimType.rightSlide,
+                      //     headerAnimationLoop: false,
+                      //     title: 'Error',
+                      //     desc: "Please select your Location",
+                      //     btnOkOnPress: () {},
+                      //     btnOkIcon: Icons.cancel,
+                      //     btnOkColor: Colors.red,
+                      //   ).show();
+                      // }
                     } else {
+                      await get_control_user(widget.id);
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => TopUp(
-                            set_phone: "",
+                            set_phone: list_user['tel_num'].toString(),
+                            set_id_user: list_user['control_user'].toString(),
+                            set_email: list_user['email'].toString(),
                             id_user: widget.id,
                           ),
                         ),
@@ -2793,7 +2788,7 @@ class _Add_with_propertyState extends State<Add_with_property>
                         Text(
                           '${number}',
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 10,
                             color: Colors.amber[800],
                           ),
                         ),
@@ -3342,7 +3337,7 @@ class _Add_with_propertyState extends State<Add_with_property>
           ),
         ),
         SizedBox(
-          height: 3.0,
+          height: 40.0,
         ),
       ],
     );

@@ -185,11 +185,11 @@ class _HomePageState extends State<map_cross_verbal> {
             setState(() {
               if ((data_adding_correct.length == int.parse(requestModel.num)) &&
                   (groupValue == 0)) {
-                widget.asking_price(adding_price);
+                widget.asking_price(adding_price ?? 0);
                 widget.get_lat(requestModel.lat);
                 widget.get_log(requestModel.lng);
               } else {
-                widget.asking_price(null);
+                widget.asking_price(0);
               }
             });
             Navigator.pop(context);
@@ -1137,7 +1137,7 @@ class _HomePageState extends State<map_cross_verbal> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     title: Text(
-                      "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
+                      "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
                           color: kPrimaryColor, fontWeight: FontWeight.bold),
                     ),
@@ -1248,7 +1248,7 @@ class _HomePageState extends State<map_cross_verbal> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     title: Text(
-                      "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
+                      "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
                           color: kPrimaryColor, fontWeight: FontWeight.bold),
                     ),
@@ -1359,7 +1359,7 @@ class _HomePageState extends State<map_cross_verbal> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     title: Text(
-                      "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
+                      "Property: ${i + 1} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
                           color: kPrimaryColor, fontWeight: FontWeight.bold),
                     ),
@@ -1464,6 +1464,7 @@ class _HomePageState extends State<map_cross_verbal> {
   Future Dialog(BuildContext context) {
     min = adding_price - (0.1 * adding_price);
     max = adding_price - (0.05 * adding_price);
+    var avg = (min!.toDouble() + max!.toDouble()) / 2;
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1544,7 +1545,7 @@ class _HomePageState extends State<map_cross_verbal> {
                 ),
                 Text(
                     "Avg price of property : " +
-                        formatter.format(adding_price).toString() +
+                        formatter.format(avg).toString() +
                         "\$",
                     textAlign: TextAlign.center,
                     style: TextStyle(

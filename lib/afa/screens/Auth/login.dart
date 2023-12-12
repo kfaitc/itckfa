@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:itckfa/Memory_local/Local_data.dart';
 import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/screens/Auth/register.dart';
 import 'package:itckfa/api/api_service.dart';
@@ -55,9 +54,7 @@ class _LoginState extends State<Login> {
   late String from = "";
   late String tel = "";
   late String control_user = "";
-  static List<PeopleModel> list = [];
   static bool status = false;
-  PeopleModel? peopleModel;
   late TextEditingController Email;
   late TextEditingController Password;
   // selectPeople() async {
@@ -143,7 +140,6 @@ class _LoginState extends State<Login> {
     initialPage = _pageController.initialPage;
     // selectPeople();
     status;
-    list;
     super.initState();
     requestModel = LoginRequestModel(email: "", password: "");
   }

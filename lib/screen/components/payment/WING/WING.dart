@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, camel_case_types, unused_import, unused_local_variable, avoid_print, empty_catches, unnecessary_overrides, unnecessary_brace_in_string_interps, prefer_typing_uninitialized_variables
 import 'dart:convert';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -107,8 +108,12 @@ class WING extends GetxController {
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       redirect_url = jsonResponse['redirect_url'];
-      await launchUrl(Uri.parse(redirect_url));
+      print("\n$redirect_url\n");
+      // await launchUrl(Uri.parse(redirect_url));
+      await openDeepLink("$redirect_url");
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } else {
       print(response.reasonPhrase);
@@ -119,9 +124,30 @@ class WING extends GetxController {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       },
     );
+  }
+
+  Future openDeepLink(var qrString) async {
+    // ignore: deprecated_member_use
+    try {
+      // ignore: deprecated_member_use
+      bool check_link = await launch(qrString);
+      print("check_link ${check_link}");
+    } catch (e) {
+      if (Platform.isAndroid) {
+        final playStoreUrl = 'https://onelink.to/dagdt6';
+        // ignore: deprecated_member_use
+        if (await canLaunch(playStoreUrl)) {
+          // ignore: deprecated_member_use
+          await launch(playStoreUrl);
+        } else {
+          throw 'Could not launch $playStoreUrl';
+        }
+      }
+      if (Platform.isIOS) {}
+    }
   }
 }
 

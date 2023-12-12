@@ -954,11 +954,15 @@ class _BodyState extends State<Body> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => Add_with_property(
-                                            id: id,
-                                            id_control_user: '',
-                                          )));
+                                  setState(() {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Add_with_property(
+                                                  id: id,
+                                                  id_control_user: control_user,
+                                                )));
+                                  });
                                 },
                                 child: Container(
                                   height: 130,
@@ -1002,14 +1006,18 @@ class _BodyState extends State<Body> {
                                         TypewriterAnimatedText('Your Property'),
                                       ],
                                       onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Add_with_property(
-                                                      id: id,
-                                                      id_control_user:
-                                                          control_user,
-                                                    )));
+                                        setState(() {
+                                          print(
+                                              "id $id \n control_user $control_user");
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Add_with_property(
+                                                        id: id,
+                                                        id_control_user:
+                                                            control_user,
+                                                      )));
+                                        });
                                       },
                                       pause: const Duration(milliseconds: 300),
                                     ),

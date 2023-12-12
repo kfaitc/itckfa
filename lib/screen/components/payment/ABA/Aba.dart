@@ -131,6 +131,7 @@ class _ABAState extends State<ABA> {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       setState(() {
         url_qr = jsonResponse['checkout_qr_url'];
+        print("\n\tran_id = ${widget.tran_id}\n\n\n${jsonResponse}\n");
       });
       if (url_qr != null) {
         await openDeepLink(jsonResponse['abapay_deeplink']);
@@ -221,32 +222,31 @@ class _ABAState extends State<ABA> {
   Future openDeepLink(var qrString) async {
     try {
       // ignore: deprecated_member_use
-      if (await canLaunch(qrString)) {
-        if (Platform.isAndroid) {
-          final marketUrl =
-              'https://play.google.com/store/apps/details?id=com.paygo24.ibank';
+      bool check_link = await launch(qrString);
+      print("check_link ${check_link}");
+    } catch (e) {
+      if (Platform.isAndroid) {
+        final playStoreUrl =
+            'https://play.google.com/store/apps/details?id=com.paygo24.ibank';
+        // ignore: deprecated_member_use
+        if (await canLaunch(playStoreUrl)) {
           // ignore: deprecated_member_use
-          if (await canLaunch(marketUrl)) {
-          } else {
-            throw 'Could not open the app store';
-          }
-        } else if (Platform.isIOS) {
-          final marketUrl =
-              'https://itunes.apple.com/al/app/aba-mobile-bank/id968860649?mt=8';
-          // ignore: deprecated_member_use
-          if (await canLaunch(marketUrl)) {
-          } else {
-            throw 'Could not open the app store';
-          }
+          await launch(playStoreUrl);
+        } else {
+          throw 'Could not launch $playStoreUrl';
         }
-      } else {
-        // ignore: deprecated_member_use
-        bool lh = await launch(qrString);
-
-        // ignore: deprecated_member_use
       }
-    } catch (ex) {
-      print('Error: $ex');
+      if (Platform.isIOS) {
+        final playStoreUrl =
+            'https://itunes.apple.com/al/app/aba-mobile-bank/id968860649?mt=8';
+        // ignore: deprecated_member_use
+        if (await canLaunch(playStoreUrl)) {
+          // ignore: deprecated_member_use
+          await launch(playStoreUrl);
+        } else {
+          throw 'Could not launch $playStoreUrl';
+        }
+      }
     }
   }
 
