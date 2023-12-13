@@ -588,7 +588,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                           ),
                         ),
                         Text(
-                          "Tap to pay with ${set_Subtitle.elementAt(index)} App",
+                          "Tap to pay with ${set_Subtitle.elementAt(index)} Bank",
                           style: TextStyle(
                               overflow: TextOverflow.visible,
                               color: const Color.fromRGBO(158, 158, 158, 1),
