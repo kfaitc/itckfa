@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage1> {
   String? control_user;
   getdata() {
     if (widget.pf != null) {
-      Future.delayed(Duration(seconds: 2), () async {
+      Future.delayed(Duration(seconds: 1), () async {
         await mydb.open();
         slist = await mydb.db.rawQuery('SELECT * FROM user');
         setState(() {

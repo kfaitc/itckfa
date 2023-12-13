@@ -18,10 +18,9 @@ class WING extends GetxController {
   var token;
   var accessToken;
 
-  Future<void> createOrder_Wing(
+  Future<bool> createOrder_Wing(
       price, option, context, order_reference_no) async {
-    Navigator.pop(context);
-    _await(context);
+    // Navigator.pop(context);
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var url = await Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token');
@@ -55,11 +54,14 @@ class WING extends GetxController {
       if (token != null) {
         await deeplinkHask(
             accessToken, token, price, option, context, order_reference_no);
+        return true;
       }
     } else {
       print('T: Request failed with status: ${response.statusCode}');
       print('T: Response: ${response.body}');
+      return false;
     }
+    return false;
   }
 
   //Deeplink hask
@@ -118,15 +120,6 @@ class WING extends GetxController {
     } else {
       print(response.reasonPhrase);
     }
-  }
-
-  Future<void> _await(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
   }
 
   Future openDeepLink(var qrString) async {

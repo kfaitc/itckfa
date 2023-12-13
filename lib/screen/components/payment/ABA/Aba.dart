@@ -209,7 +209,7 @@ class _ABAState extends State<ABA> {
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
       } else {
-        await _showCustomSnackbar("Payment Success");
+        await _showCustomSnackbar("Payment successfully");
         // ignore: use_build_context_synchronously
         Get.to(() => HomePage1(pf: true));
         dispose();
@@ -288,10 +288,6 @@ class _ABAState extends State<ABA> {
     _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       check_traslation_aba();
     });
-    // Future.delayed(const Duration(seconds: 2), () {
-    //   check_traslation_aba();
-    //   print("\n\n\n\nDelayed code executed!\n\n\n\n");
-    // });
   }
 
   @override
