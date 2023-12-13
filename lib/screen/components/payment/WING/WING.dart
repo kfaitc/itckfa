@@ -131,29 +131,46 @@ class WING extends GetxController {
 
   Future openDeepLink(var qrString) async {
     // ignore: deprecated_member_use
-    try {
-      // ignore: deprecated_member_use
-      bool check_link = await launch(qrString);
-      print("check_link ${check_link}");
-    } catch (e) {
-      if (Platform.isAndroid) {
-        final playStoreUrl = 'https://onelink.to/dagdt6';
+    if (Platform.isIOS) {
+      try {
         // ignore: deprecated_member_use
-        if (await canLaunch(playStoreUrl)) {
+        bool check_link = await launchUrl(Uri.parse(qrString));
+        print("check_link ${check_link}");
+        if (check_link == false) {
+          final playStoreUrl = 'https://onelink.to/dagdt6';
           // ignore: deprecated_member_use
-          await launch(playStoreUrl);
-        } else {
-          throw 'Could not launch $playStoreUrl';
+          if (await canLaunch(playStoreUrl)) {
+            // ignore: deprecated_member_use
+            await launch(playStoreUrl);
+          } else {
+            throw 'Could not launch $playStoreUrl';
+          }
         }
-      }
-      if (Platform.isIOS) {
-        final playStoreUrl = 'https://onelink.to/dagdt6';
+      } catch (e) {}
+    } else if (Platform.isAndroid) {
+      try {
         // ignore: deprecated_member_use
-        if (await canLaunch(playStoreUrl)) {
+        bool check_link = await launch(qrString);
+        if (check_link == false) {
+          final playStoreUrl = 'https://onelink.to/dagdt6';
           // ignore: deprecated_member_use
-          await launch(playStoreUrl);
-        } else {
-          throw 'Could not launch $playStoreUrl';
+          if (await canLaunch(playStoreUrl)) {
+            // ignore: deprecated_member_use
+            await launch(playStoreUrl);
+          } else {
+            throw 'Could not launch $playStoreUrl';
+          }
+        }
+      } catch (e) {
+        if (Platform.isAndroid) {
+          final playStoreUrl = 'https://onelink.to/dagdt6';
+          // ignore: deprecated_member_use
+          if (await canLaunch(playStoreUrl)) {
+            // ignore: deprecated_member_use
+            await launch(playStoreUrl);
+          } else {
+            throw 'Could not launch $playStoreUrl';
+          }
         }
       }
     }
