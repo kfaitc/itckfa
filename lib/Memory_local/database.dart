@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 class MyDb {
   late Database db;
-  Future open() async {
+  Future open_user() async {
     // Get a location using getDatabasesPath
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'demo.db');
@@ -26,49 +26,114 @@ class MyDb {
                         email varchar(255)  not null,
                         password varchar(255)  not null
                       );
-                  ''');
-      await db.execute('''
 
-                    CREATE TABLE IF NOT EXISTS verbal_models(
-                          id primary key,
-                          verbal_id  varchar(255)  DEFAULT NULL,
-                          verbal_property_id  varchar(255)  DEFAULT NULL,
-                          verbal_property_code varchar(100) DEFAULT NULL,
-                          verbal_bank_id  varchar(255)  DEFAULT NULL,
-                          verbal_bank_branch_id int(10)  DEFAULT NULL,
+                       CREATE TABLE IF NOT EXISTS verbal_models(
+                          id_v primary key,
+                          verbal_id varchar(255)  not null,
+                          verbal_khan varchar(255)  not null,
+                          verbal_property_id varchar(100) not null,
+                          verbal_bank_id varchar(255)  not null,
+                          verbal_bank_branch_id varchar(255)  not null
                           verbal_bank_contact varchar(200) DEFAULT NULL,
-                          verbal_owner varchar(255) DEFAULT NULL,
-                          verbal_contact varchar(191) DEFAULT NULL,
-                          verbal_date TEXT DEFAULT NULL,
-                          verbal_bank_officer varchar(255) DEFAULT NULL,
-                          verbal_address varchar(255) DEFAULT NULL,
-                          verbal_province_id  varchar(255)  DEFAULT NULL,
-                          verbal_district_id  varchar(255)  DEFAULT NULL,
-                          verbal_commune_id  varchar(255)  DEFAULT NULL,
-                          verbal_approve_id  varchar(255)  DEFAULT NULL,
-                          verbal_approves_id  varchar(255)  DEFAULT NULL,
-                          verbal_comment varchar(255) DEFAULT NULL,
-                          verbal_image BLOB DEFAULT NULL,
-                          latlong_log double  DEFAULT NULL,
-                          latlong_la double  DEFAULT NULL,
-                          verbal_com varchar(50) DEFAULT NULL,
-                          verbal_con int(10)  DEFAULT NULL,
-                          verbal_option int(10)  DEFAULT NULL,
-                          verbal_status_id  varchar(255) DEFAULT 1,
-                          verbal_published int(1)  DEFAULT NULL,
-                          verbal_user int(100)  DEFAULT NULL,
-                          verbal_comp int(10)  DEFAULT NULL,
-                          VerifyAgent int(10)  DEFAULT NULL,
-                          verbal_created_by  varchar(255)  DEFAULT NULL,
-                          verbal_created_date TEXT DEFAULT NULL,
-                          verbal_modify_by  varchar(255)  DEFAULT NULL,
-                          verbal_khan varchar(255) DEFAULT NULL
+                          verbal_owner varchar(255)  not null,
+                          verbal_contact varchar(255)  not null,
+                          verbal_date text DEFAULT NULL,
+                          verbal_bank_officer varchar(255)  not null,
+                          verbal_address varchar(255)  not null,
+                          verbal_approve_id varchar(255)  not null,
+                          VerifyAgent varchar(255)  not null,
+                          verbal_comment varchar(255)  not null,
+                          latlong_log varchar(255)  not null,
+                          latlong_la varchar(255)  not null,
+                          verbal_image varchar(255)  not null,
+                          verbal_com varchar(255)  not null,
+                          verbal_con varchar(255)  not null,
+                          verbal_property_code varchar(255)  not null,
+                          verbal_user varchar(255)  not null,
+                          verbal_option varchar(255)  not null
                       );
 
+                     
+
+                  ''');
+      await db.execute('''
+ CREATE TABLE IF NOT EXISTS comverbal_land_models(
+                          id_lb primary key,
+                          verbal_landid varchar(255)  not null,
+                          verbal_land_dp varchar(255)  not null,
+                          verbal_land_type varchar(255)  not null,
+                          verbal_land_des varchar(255)  not null,
+                          verbal_land_area varchar(255)  not null,
+                          verbal_land_minsqm varchar(255)  not null,
+                          verbal_land_maxsqm varchar(255)  not null,
+                          verbal_land_minvalue varchar(255)  not null,
+                          verbal_land_maxvalue varchar(255)  not null,
+                          address varchar(255)  not null
+                      );
+                  ''');
+      // await db.execute('''
+
+      //             ''');
+    });
+  }
+
+  Future open_land_verbal() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'demo1.db');
+    db = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute('''
+          CREATE TABLE IF NOT EXISTS comverbal_land_models(
+                                    
+                                    verbal_landid varchar(255)  not null,
+                                    verbal_land_dp varchar(255)  not null,
+                                    verbal_land_type varchar(255)  not null,
+                                    verbal_land_des varchar(255)  not null,
+                                    verbal_land_area double  not null,
+                                    verbal_land_minsqm double  not null,
+                                    verbal_land_maxsqm double  not null,
+                                    verbal_land_minvalue double  not null,
+                                    verbal_land_maxvalue double  not null,
+                                    address varchar(255)  not null
+                                );
                   ''');
     });
   }
 
+  Future open_verbal() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'demo2.db');
+    db = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute('''
+          CREATE TABLE IF NOT EXISTS verbal_models(
+                          id_v primary key,
+                          verbal_id varchar(255)  not null,
+                          verbal_khan varchar(255)  not null,
+                          verbal_property_id varchar(100) not null,
+                          verbal_bank_id varchar(255)  not null,
+                          verbal_bank_branch_id varchar(255)  not null,
+                          verbal_bank_contact varchar(200) DEFAULT NULL,
+                          verbal_owner varchar(255)  not null,
+                          verbal_contact varchar(255)  not null,
+                          verbal_date text DEFAULT NULL,
+                          verbal_bank_officer varchar(255)  not null,
+                          verbal_address varchar(255)  not null,
+                          verbal_approve_id varchar(255)  not null,
+                          VerifyAgent varchar(255)  not null,
+                          verbal_comment varchar(255)  not null,
+                          latlong_log varchar(255)  not null,
+                          latlong_la varchar(255)  not null,
+                          verbal_image BLOB  DEFAULT null,
+                          verbal_com varchar(255)  not null,
+                          verbal_con varchar(255)  not null,
+                          verbal_property_code varchar(255)  not null,
+                          verbal_user varchar(255)  not null,
+                          verbal_option varchar(255)  not null
+                      );
+                  ''');
+    });
+  }
   // Future<Map<dynamic, dynamic>?> getStudent(int rollno) async {
   //   List<Map> maps =
   //       await db.query('students', where: 'roll_no = ?', whereArgs: [rollno]);

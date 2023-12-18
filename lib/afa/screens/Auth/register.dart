@@ -776,7 +776,7 @@ class _RegisterState extends State<Register> {
                           isApiCallProcess = false;
                         });
                         if (value.message == "User successfully registered") {
-                          await mydb.open();
+                          await mydb.open_user();
                           await mydb.db.rawInsert(
                               "INSERT INTO user (id, first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?);",
                               [

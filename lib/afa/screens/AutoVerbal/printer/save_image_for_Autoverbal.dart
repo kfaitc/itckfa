@@ -36,10 +36,11 @@ class _save_image_after_add_verbalState
     if (rs.statusCode == 200) {
       setState(() {
         list = jsonDecode(rs.body);
+        print("object : ${widget.set_data_verbal}");
         Land_building();
         image_m =
             'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_log"]},${list[0]["latlong_la"]}&zoom=18&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_log"]},${list[0]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI';
-        getimage();
+        image_i = list[0]["verbal_image"];
       });
     }
   }
@@ -302,7 +303,7 @@ class _save_image_after_add_verbalState
                       padding: const EdgeInsets.all(2),
                       alignment: Alignment.topLeft,
                       decoration: BoxDecoration(border: Border.all(width: 0.4)),
-                      height: 17,
+                      height: 25,
                       child: Text(
                           "Referring to your request letter for verbal check by ${list[0]['bank_name'].toString()}, we estimated the value of property as below.",
                           overflow: TextOverflow.clip,
@@ -533,14 +534,8 @@ class _save_image_after_add_verbalState
                         child: Row(
                           children: [
                             Expanded(
-                              flex: 2,
-                              child: FadeInImage.assetNetwork(
-                                fit: BoxFit.cover,
-                                placeholderFit: BoxFit.fill,
-                                placeholder: 'assets/earth.gif',
-                                image: image_i.toString(),
-                              ),
-                            ),
+                                flex: 2,
+                                child: Image.memory(base64Decode(image_i))),
                             const SizedBox(height: 10),
                             Expanded(
                               flex: 2,

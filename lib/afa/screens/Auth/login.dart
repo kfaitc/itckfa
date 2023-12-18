@@ -96,7 +96,7 @@ class _LoginState extends State<Login> {
 
   getdata() {
     Future.delayed(Duration(milliseconds: 500), () async {
-      await mydb.open();
+      await mydb.open_user();
       slist = await mydb.db.rawQuery('SELECT * FROM user');
       setState(() {
         if (slist.length > 0) {

@@ -6,6 +6,7 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:getwidget/components/animation/gf_animation.dart';
 import 'package:getwidget/getwidget.dart';
@@ -16,10 +17,12 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/components/LandBuilding.dart';
 import 'package:itckfa/afa/components/slideUp.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Detail.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
+import 'package:itckfa/afa/screens/AutoVerbal/search/protect.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
@@ -288,6 +291,17 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
   }
 }
 
+var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+String RandomString(int strlen) {
+  Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+  String result = "";
+  for (var i = 0; i < strlen; i++) {
+    result += chars[rnd.nextInt(chars.length)];
+  }
+  return result;
+}
+
 // ===========================          Add_Auto       =====================
 class Add extends StatefulWidget {
   const Add({super.key, required this.id, required this.id_control_user});
@@ -329,10 +343,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   double? log2;
   var a;
   String? filePath;
-
+  MyDb mydb_lb = new MyDb();
+  MyDb mydb_vb = new MyDb();
   var opt_type_id = '0';
   var list;
-  List<L_B> lb = [L_B('', '', '', '', 0, 0, 0, 0, 0, 0)];
+  List<L_B> lb = [L_B('null', 'null', 'null', 'null', 0, 0, 0, 0, 0, 0)];
   void deleteItemToList(int Id) {
     setState(() {
       lb.removeAt(Id);
@@ -362,6 +377,8 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   }
 
   Future<void> get_count() async {
+    await mydb_vb.open_verbal();
+    await mydb_lb.open_land_verbal();
     setState(() {
       control_user = widget.id_control_user;
     });
@@ -430,6 +447,7 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
     parent: _controller,
     curve: Curves.elasticOut,
   );
+  var verbal_id;
   @override
   void dispose() {
     _controller.dispose();
@@ -438,9 +456,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    verbal_id = widget.id_control_user.toString() + RandomString(9);
     _getCurrentPosition();
     get_count();
-    // addVerbal(context);
+    mydb_vb.open_verbal();
+    mydb_lb.open_land_verbal();
     lat1;
     log2;
     controller =
@@ -459,29 +479,29 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
     super.initState();
 
     requestModelAuto = AutoVerbalRequestModel(
-      property_type_id: "",
-      lat: "",
-      lng: "",
-      address: '',
-      approve_id: "",
-      agent: "",
-      bank_branch_id: "",
-      bank_contact: "",
-      bank_id: "",
-      bank_officer: "",
-      code: "",
-      comment: "",
-      contact: "",
-      date: "",
-      image: "",
-      option: "",
-      owner: "",
-      user: "",
-      verbal_com: '',
+      property_type_id: "0",
+      lat: "0",
+      lng: "0",
+      address: '0',
+      approve_id: "0",
+      agent: "0",
+      bank_branch_id: "0",
+      bank_contact: "0",
+      bank_id: "0",
+      bank_officer: "0",
+      code: "0",
+      comment: "0",
+      contact: "0",
+      date: "0",
+      image: "0",
+      option: "0",
+      owner: "0",
+      user: widget.id_control_user,
+      verbal_com: '0',
       verbal_con: "30",
       verbal: [],
       verbal_id: '0',
-      verbal_khan: '',
+      verbal_khan: '0',
     );
   }
 
@@ -508,12 +528,14 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                 InkWell(
                   onTap: () async {
                     await get_count();
-                    if (number! >= 1) {
-                      List<Map<String, dynamic>> jsonList =
-                          lb.map((item) => item.toJson()).toList();
+                    setState(() {
                       requestModelAuto.user = widget.id;
                       requestModelAuto.verbal_id = code.toString();
                       requestModelAuto.verbal_khan = '${commune}.${district}';
+                    });
+                    List<Map<String, dynamic>> jsonList =
+                        lb.map((item) => item.toJson()).toList();
+                    if (number! >= 1) {
                       requestModelAuto.verbal = jsonList;
                       APIservice apIservice = APIservice();
                       apIservice.saveAutoVerbal(requestModelAuto).then(
@@ -560,6 +582,155 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                         },
                       );
                     } else {
+                      if (jsonList.length <= 1) {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.error,
+                          animType: AnimType.rightSlide,
+                          headerAnimationLoop: false,
+                          title: 'Error',
+                          desc: "Please add Land/Building at least 1!",
+                          btnOkOnPress: () {},
+                          btnOkIcon: Icons.cancel,
+                          btnOkColor: Colors.red,
+                        ).show();
+                      } else {
+                        int lb = 0, vb = 0;
+                        for (int i = 1; i < jsonList.length; i++) {
+                          lb = await mydb_lb.db.rawInsert(
+                              "INSERT INTO comverbal_land_models (verbal_landid, verbal_land_dp, verbal_land_type, verbal_land_des, verbal_land_area, verbal_land_minsqm, verbal_land_maxsqm, verbal_land_minvalue, verbal_land_maxvalue, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                              [
+                                verbal_id.toString(),
+                                int.parse(jsonList[i]['verbal_land_dp']),
+                                "${jsonList[i]['verbal_land_type'].toString() ?? "0"}",
+                                "${jsonList[i]['verbal_land_des'].toString() ?? "0"}",
+                                double.parse(
+                                    jsonList[i]['verbal_land_area'].toString()),
+                                double.parse(jsonList[i]['verbal_land_minsqm']
+                                    .toString()),
+                                double.parse(jsonList[i]['verbal_land_maxsqm']
+                                    .toString()),
+                                double.parse(jsonList[i]['verbal_land_minvalue']
+                                    .toString()),
+                                double.parse(jsonList[i]['verbal_land_maxvalue']
+                                    .toString()),
+                                "${jsonList[i]['address'].toString() ?? "0"}"
+                              ]);
+                        }
+                        if (_image != null) {
+                          Uint8List? imagebytes =
+                              await FlutterImageCompress.compressWithFile(
+                            _image!.absolute.path,
+                            minHeight: 1280,
+                            minWidth: 720,
+                            quality: 80,
+                          );
+                          String base64string = base64.encode(imagebytes!);
+                          vb = await mydb_vb.db.rawInsert(
+                              "INSERT INTO verbal_models (verbal_id, verbal_khan, verbal_property_id, verbal_bank_id, verbal_bank_branch_id, verbal_bank_contact, verbal_owner, verbal_contact, verbal_date, verbal_bank_officer,verbal_address,verbal_approve_id,VerifyAgent,verbal_comment,latlong_log,latlong_la,verbal_image,verbal_com,verbal_con,verbal_property_code,verbal_user,verbal_option) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);",
+                              [
+                                verbal_id ?? "No",
+                                requestModelAuto.verbal_khan,
+                                requestModelAuto.property_type_id,
+                                requestModelAuto.bank_id,
+                                requestModelAuto.bank_branch_id,
+                                requestModelAuto.bank_contact,
+                                requestModelAuto.owner,
+                                requestModelAuto.contact,
+                                requestModelAuto.date,
+                                requestModelAuto.bank_officer,
+                                requestModelAuto.address,
+                                requestModelAuto.approve_id,
+                                requestModelAuto.agent,
+                                requestModelAuto.comment,
+                                requestModelAuto.lat,
+                                requestModelAuto.lng,
+                                base64string,
+                                requestModelAuto.verbal_com,
+                                requestModelAuto.verbal_con,
+                                "No",
+                                widget.id_control_user,
+                                requestModelAuto.option
+                              ]);
+                        } else {
+                          vb = await mydb_vb.db.rawInsert(
+                              "INSERT INTO verbal_models (verbal_id, verbal_khan, verbal_property_id, verbal_bank_id, verbal_bank_branch_id, verbal_bank_contact, verbal_owner, verbal_contact, verbal_date, verbal_bank_officer,verbal_address,verbal_approve_id,VerifyAgent,verbal_comment,latlong_log,latlong_la,verbal_image ,verbal_com,verbal_con,verbal_property_code,verbal_user,verbal_option) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);",
+                              [
+                                verbal_id,
+                                requestModelAuto.verbal_khan,
+                                requestModelAuto.property_type_id,
+                                requestModelAuto.bank_id,
+                                requestModelAuto.bank_branch_id,
+                                requestModelAuto.bank_contact,
+                                requestModelAuto.owner,
+                                requestModelAuto.contact,
+                                requestModelAuto.date,
+                                requestModelAuto.bank_officer,
+                                requestModelAuto.address,
+                                requestModelAuto.approve_id,
+                                requestModelAuto.agent,
+                                requestModelAuto.comment,
+                                requestModelAuto.lat,
+                                requestModelAuto.lng,
+                                "null",
+                                requestModelAuto.verbal_com,
+                                requestModelAuto.verbal_con,
+                                "No",
+                                widget.id_control_user,
+                                requestModelAuto.option
+                              ]);
+                        }
+                        setState(() {
+                          if (lb == 1 && vb == 1) {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.success,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Success',
+                              desc:
+                                  "Please go to payment for processing this Data",
+                              autoHide: Duration(seconds: 3),
+                              onDismissCallback: (type) {
+                                // debugPrint('Dialog Dissmiss from callback $type');
+
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProtectDataCrossCheck(
+                                        id_user: widget.id_control_user,
+                                      ),
+                                    ));
+                              },
+                            ).show();
+                          } else if (lb == 0 && vb == 1) {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Error',
+                              desc: "Please add Land/Building at least 1!",
+                              btnOkOnPress: () {},
+                              btnOkIcon: Icons.cancel,
+                              btnOkColor: Colors.red,
+                            ).show();
+                          } else if (lb == 1 && vb == 0) {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Error',
+                              desc: "Please check find that your input",
+                              btnOkOnPress: () {},
+                              btnOkIcon: Icons.cancel,
+                              btnOkColor: Colors.red,
+                            ).show();
+                          } else {}
+                        });
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -717,11 +888,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   Widget addVerbal(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 10),
         Code(
+          cd: verbal_id,
           code: (value) {
             setState(() {
-              code = value;
+              // code = value;
             });
           },
           check_property: 1,
@@ -1042,7 +1213,7 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                 height: 200,
                 width: 400,
                 // child: Image.file(File(_file!.path)),
-                child: Image.memory(imagebytes!),
+                child: Image.file(_image!),
               ),
             // if (_file == null)
             TextButton(
@@ -1248,9 +1419,6 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
       ),
     );
 
-    setState(() {
-      requestModelAuto.image = code.toString();
-    });
     if (!mounted) return;
   }
 
@@ -1292,7 +1460,7 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   }
 
 //===================== Upload Image to MySql Server
-  late File _image;
+  File? _image;
   final picker = ImagePicker();
   late String base64string;
   XFile? _file;
@@ -1325,17 +1493,12 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
             CropAspectRatioPreset.square,
           ],
         );
-        _file = XFile(cropFile!.path);
-        // imagebytes = _file.path;
-        // imagepath = pickedFile.path;
-        File? imagefile = File(cropFile.path); //convert Path to File
-        imagebytes = await imagefile.readAsBytes(); //convert to bytes
-        String base64string =
-            base64.encode(imagebytes!); //convert bytes to base64 string
-        Uint8List decodedbytes = base64.decode(base64string);
-        //decode base64 stirng to bytes
+
         setState(() {
-          _file = imagefile as XFile;
+          _file = XFile(cropFile!.path);
+          // imagebytes = _file.path;
+          // imagepath = pickedFile.path;
+          _image = File(cropFile.path); //
         });
       } else {
         // print("No image is selected.");
@@ -1562,7 +1725,7 @@ class _List_AutoState extends State<List_Auto> {
   void get_by_user_autoverbal() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/list_new?verbal_user=${widget.verbal_id}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/list_new?verbal_user=${widget.id_control_user}'));
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
 
@@ -2472,6 +2635,8 @@ class _Add_with_propertyState extends State<Add_with_property>
   int? number;
   var control_user;
   var list_user;
+  MyDb mydb_lb = new MyDb();
+  MyDb mydb_vb = new MyDb();
   Future get_control_user(String id) async {
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
@@ -2561,10 +2726,12 @@ class _Add_with_propertyState extends State<Add_with_property>
     super.dispose();
   }
 
+  var verbal_id;
   @override
   void initState() {
     _getCurrentPosition();
     // get_control_user(widget.id.toString());
+    verbal_id = widget.id_control_user.toString() + RandomString(9);
     get_count();
     addVerbal(context);
     lat1;
@@ -2633,18 +2800,198 @@ class _Add_with_propertyState extends State<Add_with_property>
                 InkWell(
                   onTap: () async {
                     await get_count();
-                    if (number! >= 1) {
-                      // if (asking_price != null) {
-                      List<Map<String, dynamic>> jsonList =
-                          lb.map((item) => item.toJson()).toList();
+                    MyDb mydb = new MyDb();
+                    List<Map<String, dynamic>> jsonList =
+                        lb.map((item) => item.toJson()).toList();
+                    setState(() {
                       requestModelAuto.user = widget.id;
                       requestModelAuto.verbal_id = code.toString();
                       requestModelAuto.verbal_khan = '${commune}.${district}';
                       requestModelAuto.verbal = jsonList;
-                      APIservice apIservice = APIservice();
-                      apIservice.saveAutoVerbal(requestModelAuto).then(
-                        (value) async {
-                          if (requestModelAuto.verbal.isEmpty) {
+                    });
+                    if (number! >= 1) {
+                      Uint8List? imagebytes =
+                          await FlutterImageCompress.compressWithFile(
+                        _image.absolute.path,
+                        minHeight: 1280,
+                        minWidth: 720,
+                        quality: 80,
+                      );
+                      String base64string = base64.encode(imagebytes!);
+                      requestModelAuto.image = base64string;
+
+                      if (asking_price != null) {
+                        APIservice apIservice = APIservice();
+                        apIservice.saveAutoVerbal(requestModelAuto).then(
+                          (value) async {
+                            if (requestModelAuto.verbal.isEmpty) {
+                              AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.error,
+                                animType: AnimType.rightSlide,
+                                headerAnimationLoop: false,
+                                title: 'Error',
+                                desc: "Please add Land/Building at least 1!",
+                                btnOkOnPress: () {},
+                                btnOkIcon: Icons.cancel,
+                                btnOkColor: Colors.red,
+                              ).show();
+                            } else {
+                              if (value.message == "Save Successfully") {
+                                await payment_done(context);
+                              } else {
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.error,
+                                  animType: AnimType.rightSlide,
+                                  headerAnimationLoop: false,
+                                  title: 'Error',
+                                  desc: value.message,
+                                  btnOkOnPress: () {},
+                                  btnOkIcon: Icons.cancel,
+                                  btnOkColor: Colors.red,
+                                ).show();
+                              }
+                            }
+                          },
+                        );
+                      } else {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.error,
+                          animType: AnimType.rightSlide,
+                          headerAnimationLoop: false,
+                          title: 'Error',
+                          desc: "Please select your Location",
+                          btnOkOnPress: () {},
+                          btnOkIcon: Icons.cancel,
+                          btnOkColor: Colors.red,
+                        ).show();
+                      }
+                    } else {
+                      if (jsonList.length <= 1) {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.error,
+                          animType: AnimType.rightSlide,
+                          headerAnimationLoop: false,
+                          title: 'Error',
+                          desc: "Please add Land/Building at least 1!",
+                          btnOkOnPress: () {},
+                          btnOkIcon: Icons.cancel,
+                          btnOkColor: Colors.red,
+                        ).show();
+                      } else {
+                        int lb = 0, vb = 0;
+                        for (int i = 1; i < jsonList.length; i++) {
+                          lb = await mydb_lb.db.rawInsert(
+                              "INSERT INTO comverbal_land_models (verbal_landid, verbal_land_dp, verbal_land_type, verbal_land_des, verbal_land_area, verbal_land_minsqm, verbal_land_maxsqm, verbal_land_minvalue, verbal_land_maxvalue, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                              [
+                                verbal_id.toString(),
+                                int.parse(jsonList[i]['verbal_land_dp']),
+                                "${jsonList[i]['verbal_land_type'].toString() ?? "0"}",
+                                "${jsonList[i]['verbal_land_des'].toString() ?? "0"}",
+                                double.parse(
+                                    jsonList[i]['verbal_land_area'].toString()),
+                                double.parse(jsonList[i]['verbal_land_minsqm']
+                                    .toString()),
+                                double.parse(jsonList[i]['verbal_land_maxsqm']
+                                    .toString()),
+                                double.parse(jsonList[i]['verbal_land_minvalue']
+                                    .toString()),
+                                double.parse(jsonList[i]['verbal_land_maxvalue']
+                                    .toString()),
+                                "${jsonList[i]['address'].toString() ?? "0"}"
+                              ]);
+                        }
+                        if (_image != null) {
+                          Uint8List? imagebytes =
+                              await FlutterImageCompress.compressWithFile(
+                            _image!.absolute.path,
+                            minHeight: 1280,
+                            minWidth: 720,
+                            quality: 80,
+                          );
+                          String base64string = base64.encode(imagebytes!);
+                          vb = await mydb_vb.db.rawInsert(
+                              "INSERT INTO verbal_models (verbal_id, verbal_khan, verbal_property_id, verbal_bank_id, verbal_bank_branch_id, verbal_bank_contact, verbal_owner, verbal_contact, verbal_date, verbal_bank_officer,verbal_address,verbal_approve_id,VerifyAgent,verbal_comment,latlong_log,latlong_la,verbal_image,verbal_com,verbal_con,verbal_property_code,verbal_user,verbal_option) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);",
+                              [
+                                verbal_id ?? "No",
+                                requestModelAuto.verbal_khan,
+                                requestModelAuto.property_type_id,
+                                requestModelAuto.bank_id,
+                                requestModelAuto.bank_branch_id,
+                                requestModelAuto.bank_contact,
+                                requestModelAuto.owner,
+                                requestModelAuto.contact,
+                                requestModelAuto.date,
+                                requestModelAuto.bank_officer,
+                                requestModelAuto.address,
+                                requestModelAuto.approve_id,
+                                requestModelAuto.agent,
+                                requestModelAuto.comment,
+                                requestModelAuto.lat,
+                                requestModelAuto.lng,
+                                base64string,
+                                requestModelAuto.verbal_com,
+                                requestModelAuto.verbal_con,
+                                "No",
+                                widget.id_control_user,
+                                requestModelAuto.option
+                              ]);
+                        } else {
+                          vb = await mydb_vb.db.rawInsert(
+                              "INSERT INTO verbal_models (verbal_id, verbal_khan, verbal_property_id, verbal_bank_id, verbal_bank_branch_id, verbal_bank_contact, verbal_owner, verbal_contact, verbal_date, verbal_bank_officer,verbal_address,verbal_approve_id,VerifyAgent,verbal_comment,latlong_log,latlong_la,verbal_image ,verbal_com,verbal_con,verbal_property_code,verbal_user,verbal_option) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);",
+                              [
+                                verbal_id,
+                                requestModelAuto.verbal_khan,
+                                requestModelAuto.property_type_id,
+                                requestModelAuto.bank_id,
+                                requestModelAuto.bank_branch_id,
+                                requestModelAuto.bank_contact,
+                                requestModelAuto.owner,
+                                requestModelAuto.contact,
+                                requestModelAuto.date,
+                                requestModelAuto.bank_officer,
+                                requestModelAuto.address,
+                                requestModelAuto.approve_id,
+                                requestModelAuto.agent,
+                                requestModelAuto.comment,
+                                requestModelAuto.lat,
+                                requestModelAuto.lng,
+                                "null",
+                                requestModelAuto.verbal_com,
+                                requestModelAuto.verbal_con,
+                                "No",
+                                widget.id_control_user,
+                                requestModelAuto.option
+                              ]);
+                        }
+                        setState(() {
+                          if (lb == 1 && vb == 1) {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.success,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Success',
+                              desc:
+                                  "Please go to payment for processing this Data",
+                              autoHide: Duration(seconds: 3),
+                              onDismissCallback: (type) {
+                                // debugPrint('Dialog Dissmiss from callback $type');
+
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProtectDataCrossCheck(
+                                        id_user: widget.id_control_user,
+                                      ),
+                                    ));
+                              },
+                            ).show();
+                          } else if (lb == 0 && vb == 1) {
                             AwesomeDialog(
                               context: context,
                               dialogType: DialogType.error,
@@ -2656,43 +3003,21 @@ class _Add_with_propertyState extends State<Add_with_property>
                               btnOkIcon: Icons.cancel,
                               btnOkColor: Colors.red,
                             ).show();
-                          } else {
-                            if (value.message == "Save Successfully") {
-                              if (_file != null) {
-                                await uploadt_image();
-                              }
-
-                              await payment_done(context);
-                            } else {
-                              AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.error,
-                                animType: AnimType.rightSlide,
-                                headerAnimationLoop: false,
-                                title: 'Error',
-                                desc: value.message,
-                                btnOkOnPress: () {},
-                                btnOkIcon: Icons.cancel,
-                                btnOkColor: Colors.red,
-                              ).show();
-                            }
-                          }
-                        },
-                      );
-                      // } else {
-                      //   AwesomeDialog(
-                      //     context: context,
-                      //     dialogType: DialogType.error,
-                      //     animType: AnimType.rightSlide,
-                      //     headerAnimationLoop: false,
-                      //     title: 'Error',
-                      //     desc: "Please select your Location",
-                      //     btnOkOnPress: () {},
-                      //     btnOkIcon: Icons.cancel,
-                      //     btnOkColor: Colors.red,
-                      //   ).show();
-                      // }
-                    } else {
+                          } else if (lb == 1 && vb == 0) {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Error',
+                              desc: "Please check find that your input",
+                              btnOkOnPress: () {},
+                              btnOkIcon: Icons.cancel,
+                              btnOkColor: Colors.red,
+                            ).show();
+                          } else {}
+                        });
+                      }
                       await get_control_user(widget.id);
 
                       Navigator.push(
@@ -2844,9 +3169,10 @@ class _Add_with_propertyState extends State<Add_with_property>
         Code(
           code: (value) {
             setState(() {
-              code = value;
+              // code = value;
             });
           },
+          cd: verbal_id,
           check_property: 1,
         ),
         if (lat != null && lat1 == null)
@@ -3168,7 +3494,7 @@ class _Add_with_propertyState extends State<Add_with_property>
                 height: 200,
                 width: 400,
                 // child: Image.file(File(_file!.path)),
-                child: Image.memory(imagebytes!),
+                child: Image.file(_image),
               ),
             // if (_file == null)
             TextButton(
@@ -3387,10 +3713,6 @@ class _Add_with_propertyState extends State<Add_with_property>
       ),
     );
 
-    setState(() {
-      requestModelAuto.image = code.toString();
-      // print("\n\n\n asking_price" + asking_price.toString() + "\n\n\n");
-    });
     if (!mounted) return;
   }
 
@@ -3465,17 +3787,12 @@ class _Add_with_propertyState extends State<Add_with_property>
             CropAspectRatioPreset.square,
           ],
         );
-        _file = XFile(cropFile!.path);
-        // imagebytes = _file.path;
-        // imagepath = pickedFile.path;
-        File? imagefile = File(cropFile.path); //convert Path to File
-        imagebytes = await imagefile.readAsBytes(); //convert to bytes
-        String base64string =
-            base64.encode(imagebytes!); //convert bytes to base64 string
-        Uint8List decodedbytes = base64.decode(base64string);
-        //decode base64 stirng to bytes
+
         setState(() {
-          _file = imagefile as XFile;
+          _file = XFile(cropFile!.path);
+          // imagebytes = _file.path;
+          // imagepath = pickedFile.path;
+          _image = File(cropFile.path); //convert Path to File
         });
       } else {
         // print("No image is selected.");

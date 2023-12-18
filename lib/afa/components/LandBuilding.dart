@@ -53,7 +53,7 @@ class LandBuilding extends StatefulWidget {
 
 class _LandBuildingState extends State<LandBuilding> {
   List list = [];
-  var formatter = NumberFormat("##,###,###,##0.00", "en_US");
+  var formatter = NumberFormat("##,###,###,###.00", "en_US");
   int? min;
   int? max;
   String? des;

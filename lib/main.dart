@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/shape/gf_button_shape.dart';
+import 'package:getwidget/size/gf_size.dart';
+import 'package:getwidget/types/gf_button_type.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -121,7 +125,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    incomingLinkHandler();
+    // incomingLinkHandler();
     super.initState();
     // _getInstallPermission();
   }
@@ -153,6 +157,11 @@ class _MyAppState extends State<MyApp> {
         final args = settings.name;
         // correct screen.
         if (args != null) {
+          if (args.contains('wing')) {
+            Get.to(() => const ThankYouPage(
+                  title: 'Wing',
+                ));
+          }
           if (args.contains('app')) {
             Get.to(() => const HomePage1(pf: true));
           }
@@ -161,8 +170,132 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/': (context) => Login(),
-        '/app': (context) => const HomePage1(pf: true)
+        '/app': (context) => const HomePage1(pf: true),
+        '/wing': (context) => const ThankYouPage(
+              title: 'Wing',
+            )
       },
+    );
+  }
+}
+
+class ThankYouPage extends StatefulWidget {
+  const ThankYouPage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  State<ThankYouPage> createState() => _ThankYouPageState();
+}
+
+Color themeColor = const Color(0xFF43D19E);
+
+class _ThankYouPageState extends State<ThankYouPage> {
+  double screenWidth = 600;
+  double screenHeight = 400;
+  Color textColor = const Color(0xFF32567A);
+  int _secondsRemaining = 5; // 10 minutes in seconds
+  late Timer _timer;
+  void startTimer() {
+    const oneSecond = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSecond,
+      (Timer timer) {
+        if (_secondsRemaining == 0) {
+          timer.cancel();
+          Get.to(() => const HomePage1());
+        } else {
+          setState(() {
+            _secondsRemaining--;
+          });
+        }
+      },
+    );
+  }
+
+  String _formatTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel(); // Cancel the timer when the widget is disposed
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              height: 170,
+              padding: EdgeInsets.all(35),
+              decoration: BoxDecoration(
+                  color: themeColor,
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      image: AssetImage(
+                          "assets/images/WingBank-Logo_Square.png"))),
+            ),
+            SizedBox(height: screenHeight * 0.1),
+            Text(
+              "Thank You!",
+              style: TextStyle(
+                color: themeColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 36,
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            Text(
+              "Payment done Successfully",
+              style: TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.w400,
+                fontSize: 17,
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.05),
+            Text(
+              "You will be redirected to the home page shortly\nor click here to return to home page\n\n${_formatTime(_secondsRemaining)}",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black54,
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.06),
+            Flexible(
+              child: GFButton(
+                size: GFSize.LARGE,
+                shape: GFButtonShape.standard,
+                type: GFButtonType.outline2x,
+                onPressed: () {
+                  Get.to(() => const HomePage1());
+                  dispose();
+                },
+                text: "Home",
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
