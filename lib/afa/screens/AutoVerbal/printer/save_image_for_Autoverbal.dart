@@ -40,7 +40,9 @@ class _save_image_after_add_verbalState
         Land_building();
         image_m =
             'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_log"]},${list[0]["latlong_la"]}&zoom=18&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_log"]},${list[0]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI';
-        image_i = list[0]["verbal_image"];
+        if (list[0]["verbal_image"] != "No") {
+          image_i = list[0]["verbal_image"];
+        }
       });
     }
   }

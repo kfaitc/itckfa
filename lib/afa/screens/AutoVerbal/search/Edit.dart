@@ -184,7 +184,8 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                   children: [
                     Column(
                       children: [
-                        (list[0]["verbal_image"] == "null")
+                        (list[0]["verbal_image"] == "null" ||
+                                list[0]["verbal_image"] == "No")
                             ? Container(
                                 height: 200,
                                 margin: EdgeInsets.all(2),
@@ -333,7 +334,10 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                             Icons.location_on_rounded,
                             color: kImageColor,
                           ),
-                          value: list[0]["khan"] ?? "",
+                          value: list[0]["verbal_address"].toString() +
+                                  ' / ' +
+                                  list[0]["verbal_khan"] ??
+                              "",
                         ),
                         SizedBox(
                           width: 450,
@@ -610,6 +614,22 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                 }
               },
             );
+          } else {
+            AwesomeDialog(
+              context: context,
+              dialogType: DialogType.info,
+              animType: AnimType.rightSlide,
+              headerAnimationLoop: false,
+              title: 'Error',
+              desc: "You need VPoint to Process\nNow You have $number VPoint",
+              btnOkOnPress: () {
+                setState(() {
+                  (!bnt1) ? (bnt1 = true) : (bnt1 = false);
+                });
+              },
+              btnOkIcon: Icons.info_outline,
+              btnOkColor: Colors.blueAccent,
+            ).show();
           }
         },
         child: Container(

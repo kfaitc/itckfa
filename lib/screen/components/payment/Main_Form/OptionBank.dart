@@ -23,6 +23,7 @@ class OptionPayment extends StatefulWidget {
     this.set_email,
     this.option,
     this.set_id_user,
+    this.id_verbal,
   });
   final String? set_phone;
   final String? up_point;
@@ -31,7 +32,7 @@ class OptionPayment extends StatefulWidget {
   var set_email;
   var option;
   var set_id_user;
-
+  final String? id_verbal;
   @override
   State<OptionPayment> createState() => _OptionPaymentState();
 }
@@ -336,6 +337,9 @@ class _OptionPaymentState extends State<OptionPayment> {
                     if (index == 0) {
                       var tran_id_ref = RandomString(10);
                       if (tran_id_ref != null) {
+                        setState(() {
+                          print("\n\n kokoko  ${widget.id_verbal ?? ''}");
+                        });
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -346,6 +350,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                                 tran_id: tran_id_ref,
                                 set_email: widget.set_email,
                                 set_phone: widget.set_phone.toString(),
+                                id_verbal: widget.id_verbal ?? '',
                               ),
                             ));
                       }

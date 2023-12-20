@@ -9,6 +9,7 @@ import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/size/gf_size.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
+import 'package:itckfa/afa/screens/AutoVerbal/search/Edit.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
@@ -149,33 +150,49 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  var li;
+  String? user_id_control;
+  String? verbal_id;
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: (RouteSettings settings) {
         final args = settings.name;
-        // correct screen.
+
         if (args != null) {
-          if (args.contains('wing')) {
-            Get.to(() => const ThankYouPage(
-                  title: 'Wing',
-                ));
-          }
-          if (args.contains('app')) {
-            Get.to(() => const HomePage1(pf: true));
+          List<String> pathSegments = extractPathSegments(args);
+
+          // Extract values
+          user_id_control = pathSegments.length > 1 ? pathSegments[1] : '';
+          verbal_id = pathSegments.length > 2 ? pathSegments[2] : '';
+          print("\n ===========>${user_id_control} ${verbal_id}<===========\n");
+          if (user_id_control != null && verbal_id != null) {
+            return MaterialPageRoute(
+              builder: (context) {
+                return Edit(
+                    user_id_controller: user_id_control!,
+                    verbal_id: verbal_id!);
+              },
+            );
           }
         }
       },
       initialRoute: '/',
+      // home: Login(),
       routes: {
         '/': (context) => Login(),
-        '/app': (context) => const HomePage1(pf: true),
-        '/wing': (context) => const ThankYouPage(
-              title: 'Wing',
-            )
+        '/Edit': (context) =>
+            Edit(user_id_controller: user_id_control!, verbal_id: verbal_id!),
       },
     );
+  }
+
+  List<String> extractPathSegments(String path) {
+    List<String> pathSegments = path.split('/');
+    // Filter out empty segments
+    pathSegments = pathSegments.where((segment) => segment.isNotEmpty).toList();
+    return pathSegments;
   }
 }
 

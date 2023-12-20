@@ -77,7 +77,8 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                             children: [
                               Expanded(
                                 flex: 1,
-                                child: (stuone["verbal_image"] != 'null')
+                                child: (stuone["verbal_image"] != 'null' ||
+                                        stuone["verbal_image"] != 'No')
                                     ? Column(
                                         children: [
                                           Expanded(
