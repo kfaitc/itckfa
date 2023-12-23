@@ -81,22 +81,22 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                         stuone["verbal_image"] != 'No')
                                     ? Column(
                                         children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: Container(
-                                              margin: EdgeInsets.all(2),
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: MemoryImage(
-                                                      base64.decode(stuone[
-                                                          "verbal_image"])),
-                                                  // NetworkImage(
-                                                  //     'https://maps.googleapis.com/maps/api/staticmap?center=${stuone["latlong_la"]},${stuone["latlong_log"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${stuone["latlong_la"]},${stuone["latlong_log"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                          // Expanded(
+                                          //   flex: 1,
+                                          //   child: Container(
+                                          //     margin: EdgeInsets.all(2),
+                                          //     decoration: BoxDecoration(
+                                          //       image: DecorationImage(
+                                          //         image: MemoryImage(
+                                          //             base64.decode(stuone[
+                                          //                 "verbal_image"])),
+                                          //         // NetworkImage(
+                                          //         //     'https://maps.googleapis.com/maps/api/staticmap?center=${stuone["latlong_la"]},${stuone["latlong_log"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${stuone["latlong_la"]},${stuone["latlong_log"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                                          //         fit: BoxFit.cover,
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                          // ),
                                           Expanded(
                                             flex: 1,
                                             child: Container(
@@ -238,7 +238,8 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                                           verbal_id: stuone[
                                                               "verbal_id"],
                                                           user_id_controller:
-                                                              '',
+                                                              stuone[
+                                                                  "verbal_user"],
                                                           // address: stuone[
                                                           //             "verbal_khan"]
                                                           //         .toString() +

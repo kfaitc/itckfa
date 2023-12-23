@@ -271,7 +271,7 @@ class _TopUpState extends State<TopUp> {
                                             price: '1.00',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? '',
+                                            id_verbal: widget.id_verbal ?? null,
                                           ),
                                         ));
                                   },
@@ -345,7 +345,7 @@ class _TopUpState extends State<TopUp> {
                                             price: '2.50',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? '',
+                                            id_verbal: widget.id_verbal ?? null,
                                           ),
                                         ));
                                   },
@@ -419,7 +419,7 @@ class _TopUpState extends State<TopUp> {
                                             price: '3.00',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? '',
+                                            id_verbal: widget.id_verbal ?? null,
                                           ),
                                         ));
                                   },
@@ -499,7 +499,7 @@ class _TopUpState extends State<TopUp> {
                                             price: '5.00',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? '',
+                                            id_verbal: widget.id_verbal ?? null,
                                           ),
                                         ));
                                   },
@@ -573,7 +573,7 @@ class _TopUpState extends State<TopUp> {
                                             price: '6.50',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? '',
+                                            id_verbal: widget.id_verbal ?? null,
                                           ),
                                         ));
                                   },
@@ -647,7 +647,7 @@ class _TopUpState extends State<TopUp> {
                                             price: '8.00',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? '',
+                                            id_verbal: widget.id_verbal ?? null,
                                           ),
                                         ));
                                   },
@@ -782,7 +782,7 @@ class _TopUpState extends State<TopUp> {
                                         price: '10.00',
                                         up_point: widget.up_point,
                                         set_id_user: widget.set_id_user,
-                                        id_verbal: widget.id_verbal ?? '',
+                                        id_verbal: widget.id_verbal ?? null,
                                       ),
                                     ));
                               },
@@ -845,7 +845,7 @@ class _TopUpState extends State<TopUp> {
                                         price: '30.00',
                                         up_point: widget.up_point,
                                         set_id_user: widget.set_id_user,
-                                        id_verbal: widget.id_verbal ?? '',
+                                        id_verbal: widget.id_verbal ?? null,
                                       ),
                                     ));
                               },

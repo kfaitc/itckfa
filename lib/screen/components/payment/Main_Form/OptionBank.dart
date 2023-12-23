@@ -183,8 +183,53 @@ class _OptionPaymentState extends State<OptionPayment> {
 
       // await deeplink_hask(token);
       if (token != null) {
-        await deeplinkHask(accessToken, token, price, option, context);
+        deeplinkHask(accessToken, token, price, option, context);
+        return true;
+      }
+    } else {
+      print('T: Request failed with status: ${response.statusCode}');
+      print('T: Response: ${response.body}');
+      return false;
+    }
+    return false;
+  }
 
+// has verbal_id
+  Future<bool> createOrder_Wing_verbal_id(price, option, context) async {
+    // Navigator.pop(context);
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var url = await Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token');
+    var body = {
+      // 'username': 'online.mangogame',
+      // 'username': 'online.kfausd',
+      // 'password': '914bade01fd32493a0f2efc583e1a5f6',
+      // 'grant_type': 'password',
+      // 'client_id': 'third_party',
+      // 'client_secret': '16681c9ff419d8ecc7cfe479eb02a7a',
+    };
+
+    // Encode the body as a form-urlencoded string
+    // var requestBody = Uri(queryParameters: body).query;
+
+    var response = await http.post(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      // Parse the JSON response
+      var jsonResponse = jsonDecode(response.body);
+      accessToken = jsonResponse['access_token'];
+
+      var parts = accessToken.split('-');
+      token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
+
+      print('accessToken: ${accessToken}');
+      print('token: ${token}');
+      print('Price : $price');
+
+      // await deeplink_hask(token);
+      if (token != null) {
+        print(" \n\n\n\n\n\n\n\nvirak \n\n\n\n\n\n\n\n");
+        deeplinkHask_verbal_id(accessToken, token, price, option, context);
         return true;
       }
     } else {
@@ -196,6 +241,30 @@ class _OptionPaymentState extends State<OptionPayment> {
   }
 
   var deeplink_hask;
+  // Has verbal_id
+  Future<void> deeplinkHask_verbal_id(
+      accessToken, token, price, option, context) async {
+    final url = await Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
+    final request = http.MultipartRequest('POST', url);
+
+    request.fields.addAll({
+      'str':
+          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com/wing/${widget.set_id_user}/${widget.id_verbal}',
+      'key': '$token',
+    });
+    final response = await request.send();
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(await response.stream.bytesToString());
+      deeplink_hask = jsonResponse['Deeplink_Hask'];
+      if (deeplink_hask != null) {
+        await call_back_wing_verbal_id(context, price);
+      }
+    } else {
+      print('D: Request failed with status: ${response.reasonPhrase}');
+    }
+  }
+
   Future<void> deeplinkHask(accessToken, token, price, option, context) async {
     final url = await Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
@@ -203,7 +272,7 @@ class _OptionPaymentState extends State<OptionPayment> {
 
     request.fields.addAll({
       'str':
-          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com/app',
+          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com/wing',
       'key': '$token',
     });
     final response = await request.send();
@@ -230,7 +299,7 @@ class _OptionPaymentState extends State<OptionPayment> {
       "order_reference_no": "$order_reference_no",
       "amount": "$price",
       "txn_hash": "$deeplink_hask",
-      "accessToken": "$accessToken"
+      "accessToken": "$accessToken",
     });
     request.headers.addAll(headers);
 
@@ -240,6 +309,36 @@ class _OptionPaymentState extends State<OptionPayment> {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       redirect_url = jsonResponse['redirect_url'];
       print("\n$redirect_url\n");
+      // await launchUrl(Uri.parse(redirect_url));
+      await openDeepLink("$redirect_url");
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+// Has verbal_id
+  Future call_back_wing_verbal_id(BuildContext context, price) async {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing'));
+    request.body = json.encode({
+      "order_reference_no": "$order_reference_no",
+      "amount": "$price",
+      "txn_hash": "$deeplink_hask",
+      "accessToken": "$accessToken",
+      "schema_url":
+          "https://oneclickonedollar.com/wing/${widget.set_id_user}/${widget.id_verbal}"
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(await response.stream.bytesToString());
+      redirect_url = jsonResponse['redirect_url'];
+      print("\n${response.stream}\n");
       // await launchUrl(Uri.parse(redirect_url));
       await openDeepLink("$redirect_url");
     } else {
@@ -306,6 +405,7 @@ class _OptionPaymentState extends State<OptionPayment> {
 
   @override
   Widget build(BuildContext context) {
+    widget.id_verbal;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 247, 246, 246),
       appBar: AppBar(
@@ -337,22 +437,34 @@ class _OptionPaymentState extends State<OptionPayment> {
                     if (index == 0) {
                       var tran_id_ref = RandomString(10);
                       if (tran_id_ref != null) {
-                        setState(() {
-                          print("\n\n kokoko  ${widget.id_verbal ?? ''}");
-                        });
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ABA(
-                                id_set_use: widget.set_id_user,
-                                option: widget.option,
-                                price: widget.price,
-                                tran_id: tran_id_ref,
-                                set_email: widget.set_email,
-                                set_phone: widget.set_phone.toString(),
-                                id_verbal: widget.id_verbal ?? '',
-                              ),
-                            ));
+                        if (widget.id_verbal == null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ABA(
+                                  id_set_use: widget.set_id_user,
+                                  option: widget.option,
+                                  price: widget.price,
+                                  tran_id: tran_id_ref,
+                                  set_email: widget.set_email,
+                                  set_phone: widget.set_phone.toString(),
+                                ),
+                              ));
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ABA(
+                                  id_set_use: widget.set_id_user,
+                                  option: widget.option,
+                                  price: widget.price,
+                                  tran_id: tran_id_ref,
+                                  set_email: widget.set_email,
+                                  set_phone: widget.set_phone.toString(),
+                                  id_verbal: widget.id_verbal ?? '',
+                                ),
+                              ));
+                        }
                       }
                     } else {
                       alertDialog(context, widget.price, widget.set_email ?? "",
@@ -559,7 +671,9 @@ class _OptionPaymentState extends State<OptionPayment> {
                     // order_reference_no = SignUtil().RandomString(10).toString();
                     // order_reference_no =
                     //     "${widget.set_id_user}24K${RandomString(2)}F${Random().nextInt(10) + 10}A";
-
+                    setState(() {
+                      widget.id_verbal;
+                    });
                     if (index == 1) {
                       await upay.createOrder(
                           price, widget.option, widget.set_id_user, context);
@@ -573,7 +687,15 @@ class _OptionPaymentState extends State<OptionPayment> {
                           });
                         }
                       });
-                      await createOrder_Wing(price, option, context);
+                      if (widget.id_verbal != null) {
+                        print(
+                            "\n\n\n\n\n\n\n=======> Call by ${widget.id_verbal}\n\n\n\n");
+                        await createOrder_Wing_verbal_id(
+                            price, option, context);
+                        print(" \n\n\n\n\n\n\n\nvirak \n\n\n\n\n\n\n\n");
+                      } else {
+                        await createOrder_Wing(price, option, context);
+                      }
                     }
                   },
                   child: Card(

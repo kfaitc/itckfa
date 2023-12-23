@@ -2998,9 +2998,6 @@ class _Add_with_propertyState extends State<Add_with_property>
                               onDismissCallback: (type) async {
                                 await get_control_user(widget.id);
                                 // debugPrint('Dialog Dissmiss from callback $type');
-                                setState(() {
-                                  print("object: ${verbal_id.toString()}\n");
-                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

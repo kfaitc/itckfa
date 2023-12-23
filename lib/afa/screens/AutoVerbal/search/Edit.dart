@@ -52,13 +52,16 @@ class Edit extends StatefulWidget {
 class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
   MyDb mydb_lb = new MyDb();
   MyDb mydb_vb = new MyDb();
+  MyDb mydb_user = new MyDb();
   List<Map> DataAutoVerbal = [];
   List<Map> DataLandAutoVerbal = [];
   List list = [];
   List land = [];
+  List user = [];
   Future find() async {
     await mydb_vb.open_verbal();
     await mydb_lb.open_land_verbal();
+    await mydb_user.open_user();
     double x = 0, n = 0;
     land = await mydb_lb.db.rawQuery(
         "SELECT * FROM comverbal_land_models WHERE verbal_landid = ? ",
@@ -67,10 +70,14 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
     list = await mydb_vb.db.rawQuery(
         "SELECT * FROM verbal_models  WHERE verbal_id = ?",
         [widget.verbal_id.toString()]);
+    user = await mydb_user.db.rawQuery(
+        'SELECT * FROM user  WHERE username = ? ',
+        [widget.user_id_controller.toString()]);
     setState(() {
-      print("object\n $land \n");
+      print("object\n $user \n");
       land;
       list;
+      user;
     });
     get_property();
     get_bank();
@@ -193,7 +200,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                                   image: DecorationImage(
                                     image: NetworkImage(
                                         'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_la"]},${list[0]["latlong_log"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_la"]},${list[0]["latlong_log"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                               )
@@ -208,7 +215,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                                         image: DecorationImage(
                                           image: NetworkImage(
                                               'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_log"]},${list[0]["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_log"]},${list[0]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
-                                          fit: BoxFit.fill,
+                                          fit: BoxFit.contain,
                                         ),
                                       ),
                                     ),
@@ -224,7 +231,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                                               .decode(list[0]["verbal_image"])),
                                           //  NetworkImage(
                                           //     'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_la"]},${list[0]["latlong_log"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_la"]},${list[0]["latlong_log"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
-                                          fit: BoxFit.fill,
+                                          fit: BoxFit.contain,
                                         ),
                                       ),
                                     ),
@@ -339,165 +346,165 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                                   list[0]["verbal_khan"] ??
                               "",
                         ),
-                        SizedBox(
-                          width: 450,
-                          height: 270,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                for (int i = 0; i < land.length; i++)
-                                  Container(
-                                    width: 270,
-                                    // height: 200,
-                                    padding: const EdgeInsets.all(7),
-                                    margin: const EdgeInsets.all(11),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            blurRadius: 2,
-                                            color: Colors.black45)
-                                      ],
-                                      border: Border.all(
-                                          width: 1, color: kPrimaryColor),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(15)),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 7, right: 10),
-                                          child: Text.rich(
-                                            TextSpan(
-                                              children: <InlineSpan>[
-                                                WidgetSpan(
-                                                    child: Icon(
-                                                  Icons.location_on_sharp,
-                                                  color: kPrimaryColor,
-                                                  size: 14,
-                                                )),
-                                                TextSpan(
-                                                    text:
-                                                        "${land[i]['address']} "),
-                                              ],
-                                            ),
-                                            textAlign: TextAlign.left,
-                                            style: const TextStyle(
-                                                fontSize: 10,
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 3.0,
-                                        ),
-                                        const Divider(
-                                          height: 1,
-                                          thickness: 1,
-                                          color: kPrimaryColor,
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            land[i]['verbal_land_type'],
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            const SizedBox(width: 10),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Depreciation",
-                                                  style: Label(),
-                                                ),
-                                                const SizedBox(height: 3),
-                                                Text(
-                                                  "Area",
-                                                  style: Label(),
-                                                ),
-                                                SizedBox(height: 3),
-                                                Text(
-                                                  'Min Value/Sqm',
-                                                  style: Label(),
-                                                ),
-                                                const SizedBox(height: 3),
-                                                Text(
-                                                  'Max Value/Sqm',
-                                                  style: Label(),
-                                                ),
-                                                const SizedBox(height: 3),
-                                                Text(
-                                                  'Min Value',
-                                                  style: Label(),
-                                                ),
-                                                SizedBox(height: 3),
-                                                Text(
-                                                  'Min Value',
-                                                  style: Label(),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(width: 15),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  ':   ' +
-                                                      land[i]['verbal_land_dp'],
-                                                  style: Name(),
-                                                ),
-                                                SizedBox(height: 2),
-                                                Text(
-                                                  ':   ${formatter.format(double.parse(land[i]['verbal_land_area'].toString()))} m\u00B2',
-                                                  style: Name(),
-                                                ),
-                                                SizedBox(height: 2),
-                                                Text(
-                                                  ':   ${formatter.format(double.parse(land[i]['verbal_land_minsqm'].toString()))} \$',
-                                                  style: Name(),
-                                                ),
-                                                SizedBox(height: 2),
-                                                Text(
-                                                  ':   ${formatter.format(double.parse(land[i]['verbal_land_maxsqm'].toString()))} \$',
-                                                  style: Name(),
-                                                ),
-                                                SizedBox(height: 2),
-                                                Text(
-                                                  ':   ${formatter.format(double.parse(land[i]['verbal_land_minvalue'].toString()))} \$',
-                                                  style: Name(),
-                                                ),
-                                                SizedBox(height: 2),
-                                                Text(
-                                                  ':   ${formatter.format(double.parse(land[i]['verbal_land_maxvalue'].toString()))} \$',
-                                                  style: Name(),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        //     SizedBox(
+                        //       width: 450,
+                        //       height: 270,
+                        //       child: SingleChildScrollView(
+                        //         scrollDirection: Axis.horizontal,
+                        //         child: Row(
+                        //           children: [
+                        //             for (int i = 0; i < land.length; i++)
+                        //               Container(
+                        //                 width: 270,
+                        //                 // height: 200,
+                        //                 padding: const EdgeInsets.all(7),
+                        //                 margin: const EdgeInsets.all(11),
+                        //                 decoration: BoxDecoration(
+                        //                   color: Colors.white,
+                        //                   boxShadow: const [
+                        //                     BoxShadow(
+                        //                         blurRadius: 2,
+                        //                         color: Colors.black45)
+                        //                   ],
+                        //                   border: Border.all(
+                        //                       width: 1, color: kPrimaryColor),
+                        //                   borderRadius:
+                        //                       BorderRadius.all(Radius.circular(15)),
+                        //                 ),
+                        //                 child: Column(
+                        //                   children: [
+                        //                     Padding(
+                        //                       padding: const EdgeInsets.only(
+                        //                           left: 7, right: 10),
+                        //                       child: Text.rich(
+                        //                         TextSpan(
+                        //                           children: <InlineSpan>[
+                        //                             WidgetSpan(
+                        //                                 child: Icon(
+                        //                               Icons.location_on_sharp,
+                        //                               color: kPrimaryColor,
+                        //                               size: 14,
+                        //                             )),
+                        //                             TextSpan(
+                        //                                 text:
+                        //                                     "${land[i]['address']} "),
+                        //                           ],
+                        //                         ),
+                        //                         textAlign: TextAlign.left,
+                        //                         style: const TextStyle(
+                        //                             fontSize: 10,
+                        //                             overflow:
+                        //                                 TextOverflow.ellipsis),
+                        //                       ),
+                        //                     ),
+                        //                     const SizedBox(
+                        //                       height: 3.0,
+                        //                     ),
+                        //                     const Divider(
+                        //                       height: 1,
+                        //                       thickness: 1,
+                        //                       color: kPrimaryColor,
+                        //                     ),
+                        //                     const SizedBox(
+                        //                       height: 5,
+                        //                     ),
+                        //                     Container(
+                        //                       padding:
+                        //                           const EdgeInsets.only(left: 10),
+                        //                       alignment: Alignment.centerLeft,
+                        //                       child: Text(
+                        //                         land[i]['verbal_land_type'],
+                        //                       ),
+                        //                     ),
+                        //                     Row(
+                        //                       children: [
+                        //                         const SizedBox(width: 10),
+                        //                         Column(
+                        //                           mainAxisAlignment:
+                        //                               MainAxisAlignment.start,
+                        //                           crossAxisAlignment:
+                        //                               CrossAxisAlignment.start,
+                        //                           children: [
+                        //                             Text(
+                        //                               "Depreciation",
+                        //                               style: Label(),
+                        //                             ),
+                        //                             const SizedBox(height: 3),
+                        //                             Text(
+                        //                               "Area",
+                        //                               style: Label(),
+                        //                             ),
+                        //                             SizedBox(height: 3),
+                        //                             Text(
+                        //                               'Min Value/Sqm',
+                        //                               style: Label(),
+                        //                             ),
+                        //                             const SizedBox(height: 3),
+                        //                             Text(
+                        //                               'Max Value/Sqm',
+                        //                               style: Label(),
+                        //                             ),
+                        //                             const SizedBox(height: 3),
+                        //                             Text(
+                        //                               'Min Value',
+                        //                               style: Label(),
+                        //                             ),
+                        //                             SizedBox(height: 3),
+                        //                             Text(
+                        //                               'Min Value',
+                        //                               style: Label(),
+                        //                             ),
+                        //                           ],
+                        //                         ),
+                        //                         SizedBox(width: 15),
+                        //                         Column(
+                        //                           mainAxisAlignment:
+                        //                               MainAxisAlignment.start,
+                        //                           crossAxisAlignment:
+                        //                               CrossAxisAlignment.start,
+                        //                           children: [
+                        //                             SizedBox(height: 4),
+                        //                             Text(
+                        //                               ':   ' +
+                        //                                   land[i]['verbal_land_dp'],
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_area'].toString()))} m\u00B2',
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_minsqm'].toString()))} \$',
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_maxsqm'].toString()))} \$',
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_minvalue'].toString()))} \$',
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_maxvalue'].toString()))} \$',
+                        //                               style: Name(),
+                        //                             ),
+                        //                           ],
+                        //                         ),
+                        //                       ],
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
                       ],
                     ),
                     SizedBox(
@@ -560,12 +567,13 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                   ).show();
                 } else {
                   if (value.message == "Save Successfully") {
-                    //  await mydb_vb.db.rawDelete(
-                    //                               "DELETE FROM verbal_models WHERE verbal_id = ?",
-                    //                               [stuone["verbal_id"]]);
-                    //                           await mydb_lb.db.rawDelete(
-                    //                               "DELETE FROM comverbal_land_models WHERE verbal_landid = ?",
-                    //                               [stuone["verbal_id"]]);
+                    await mydb_vb.db.rawDelete(
+                        "DELETE FROM verbal_models WHERE verbal_id = ?",
+                        [list[0]["verbal_id"]]);
+                    await mydb_lb.db.rawDelete(
+                        "DELETE FROM comverbal_land_models WHERE verbal_landid = ?",
+                        [list[0]["verbal_id"]]);
+
                     await payment_done(context);
                     // ignore: use_build_context_synchronously
                     AwesomeDialog(
@@ -586,8 +594,13 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                                   )));
                         },
                         btnCancelOnPress: () {
-                          Navigator.pop(context);
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => save_image_after_add_verbal(
+                                    set_data_verbal: list[0]["verbal_id"],
+                                  )));
                         },
+                        btnOkIcon: Icons.info_outline,
+                        btnOkColor: Colors.blueAccent,
                         onDismissCallback: (type) {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -619,16 +632,34 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
               context: context,
               dialogType: DialogType.info,
               animType: AnimType.rightSlide,
-              headerAnimationLoop: false,
+              headerAnimationLoop: true,
               title: 'Error',
               desc: "You need VPoint to Process\nNow You have $number VPoint",
+              autoHide: Duration(seconds: 4),
               btnOkOnPress: () {
                 setState(() {
                   (!bnt1) ? (bnt1 = true) : (bnt1 = false);
                 });
               },
-              btnOkIcon: Icons.info_outline,
-              btnOkColor: Colors.blueAccent,
+              onDismissCallback: (type) {
+                setState(() {
+                  int i = user.length;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TopUp(
+                        set_phone: user[i - 1]['tel_num'].toString(),
+                        set_id_user: user[i - 1]['username'].toString(),
+                        set_email: user[i - 1]['email'].toString(),
+                        id_user: user[i - 1]['id'].toString(),
+                        id_verbal: list[0]["verbal_id"],
+                      ),
+                    ),
+                  );
+                });
+              },
+              // btnOkIcon: Icons.info_outline,
+              // btnOkColor: Colors.blueAccent,
             ).show();
           }
         },
@@ -699,7 +730,13 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
 
   TextStyle Name() {
     return TextStyle(
-        color: kImageColor, fontSize: 13, fontWeight: FontWeight.bold);
+      color: Colors.black12,
+      fontSize: 13,
+      // decoration: TextDecoration.lineThrough,
+      // decorationColor: Colors.redAccent,
+      fontWeight: FontWeight.bold,
+      // shadows: [Shadow(blurRadius: 50)],
+    );
   }
 
   TextStyle NameProperty() {

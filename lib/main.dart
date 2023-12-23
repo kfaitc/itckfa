@@ -30,8 +30,8 @@ void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   // // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  // SystemChrome.setPreferredOrientations(
-  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   // final ImagePickerPlatform imagePickerImplementation =
   //     ImagePickerPlatform.instance;
   // if (imagePickerImplementation is ImagePickerAndroid) {
@@ -96,6 +96,9 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+String? user_id_control;
+String? verbal_id;
+
 class _MyAppState extends State<MyApp> {
   Future _getInstallPermission() async {
     if (await Permission.requestInstallPackages.request().isGranted) {
@@ -151,8 +154,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   var li;
-  String? user_id_control;
-  String? verbal_id;
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -161,34 +163,71 @@ class _MyAppState extends State<MyApp> {
         final args = settings.name;
 
         if (args != null) {
-          List<String> pathSegments = extractPathSegments(args);
+          if (args.contains("/aba")) {
+            List<String> pathSegments = extractPathSegments(args);
 
-          // Extract values
-          user_id_control = pathSegments.length > 1 ? pathSegments[1] : '';
-          verbal_id = pathSegments.length > 2 ? pathSegments[2] : '';
-          print("\n ===========>${user_id_control} ${verbal_id}<===========\n");
-          if (user_id_control != null && verbal_id != null) {
-            return MaterialPageRoute(
-              builder: (context) {
-                return Edit(
-                    user_id_controller: user_id_control!,
-                    verbal_id: verbal_id!);
-              },
-            );
+            if (pathSegments.length > 2) {
+              user_id_control = pathSegments.length > 1 ? pathSegments[1] : '';
+              verbal_id = pathSegments.length > 2 ? pathSegments[2] : '';
+
+              if (user_id_control != null && verbal_id != null) {
+                return MaterialPageRoute(
+                  builder: (context) {
+                    return const ThankYouPage(title: "varbal");
+                  },
+                );
+              }
+            } else {
+              return MaterialPageRoute(
+                builder: (context) {
+                  return const ThankYouPage(title: "aba");
+                },
+              );
+            }
+          } else if (args.contains("/wing")) {
+            Uri uri = Uri.parse(args);
+
+            List<String> pathSegments = uri.pathSegments;
+            if (pathSegments.length > 1) {
+              user_id_control =
+                  pathSegments.length > 1 ? pathSegments[1] : null;
+              verbal_id = pathSegments.length > 2 ? pathSegments[2] : null;
+              if (user_id_control != null && verbal_id != null) {
+                return MaterialPageRoute(
+                  builder: (context) {
+                    return const ThankYouPage(title: "varbal");
+                  },
+                );
+              }
+            } else {
+              return MaterialPageRoute(
+                builder: (context) {
+                  return const ThankYouPage(title: "wing");
+                },
+              );
+            }
           }
         }
       },
       initialRoute: '/',
-      // home: Login(),
+      // home: ThankYouPage(title: "aba"),
       routes: {
-        '/': (context) => Login(),
-        '/Edit': (context) =>
-            Edit(user_id_controller: user_id_control!, verbal_id: verbal_id!),
+        '/': (context) => const Login(),
+        "/aba": (context) => const ThankYouPage(title: "aba"),
+        "/wing": (context) => const ThankYouPage(title: "wing"),
+        '/Edit': (context) => const ThankYouPage(title: "varbal"),
       },
     );
   }
 
   List<String> extractPathSegments(String path) {
+    List<String> pathSegments = path.split('/');
+    // Filter out empty segments
+    pathSegments = pathSegments.where((segment) => segment.isNotEmpty).toList();
+    return pathSegments;
+  }
+
+  List<String> extractPathSegments_wing(String path) {
     List<String> pathSegments = path.split('/');
     // Filter out empty segments
     pathSegments = pathSegments.where((segment) => segment.isNotEmpty).toList();
@@ -208,10 +247,31 @@ class ThankYouPage extends StatefulWidget {
 Color themeColor = const Color(0xFF43D19E);
 
 class _ThankYouPageState extends State<ThankYouPage> {
+  var image;
+  void check_bank_after_pay() {
+    if (widget.title.toString() == "aba") {
+      setState(() {
+        image = "assets/images/check-mark.png";
+      });
+    } else if (widget.title.toString() == "wing") {
+      setState(() {
+        image = "assets/images/WingBank-Logo_Square.png";
+      });
+    } else if (widget.title.toString() == "upay") {
+      setState(() {
+        image = "assets/images/check-mark.png";
+      });
+    } else {
+      setState(() {
+        image = "assets/images/check-mark.png";
+      });
+    }
+  }
+
   double screenWidth = 600;
   double screenHeight = 400;
   Color textColor = const Color(0xFF32567A);
-  int _secondsRemaining = 5; // 10 minutes in seconds
+  int _secondsRemaining = 9; // 10 minutes in seconds
   late Timer _timer;
   void startTimer() {
     const oneSecond = Duration(seconds: 1);
@@ -220,7 +280,12 @@ class _ThankYouPageState extends State<ThankYouPage> {
       (Timer timer) {
         if (_secondsRemaining == 0) {
           timer.cancel();
-          Get.to(() => const HomePage1());
+          if (widget.title.toString() == "varbal") {
+            Get.to(() => Edit(
+                user_id_controller: user_id_control!, verbal_id: verbal_id!));
+          } else {
+            Get.to(() => const HomePage1());
+          }
         } else {
           setState(() {
             _secondsRemaining--;
@@ -244,6 +309,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
 
   @override
   void initState() {
+    check_bank_after_pay();
     super.initState();
     startTimer();
   }
@@ -265,9 +331,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
               decoration: BoxDecoration(
                   color: themeColor,
                   shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: AssetImage(
-                          "assets/images/WingBank-Logo_Square.png"))),
+                  image: DecorationImage(image: AssetImage(image))),
             ),
             SizedBox(height: screenHeight * 0.1),
             Text(
@@ -304,7 +368,13 @@ class _ThankYouPageState extends State<ThankYouPage> {
                 shape: GFButtonShape.standard,
                 type: GFButtonType.outline2x,
                 onPressed: () {
-                  Get.to(() => const HomePage1());
+                  if (widget.title.toString() == "varbal") {
+                    Get.to(() => Edit(
+                        user_id_controller: user_id_control!,
+                        verbal_id: verbal_id!));
+                  } else {
+                    Get.to(() => const HomePage1());
+                  }
                   dispose();
                 },
                 text: "Home",

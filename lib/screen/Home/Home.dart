@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage1> {
       setState(() {
         check = true;
       });
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(Duration(seconds: 4), () {
         setState(() {
           check = false;
         });
@@ -207,7 +207,7 @@ class _HomePageState extends State<HomePage1> {
       Center(child: Abouts()),
       Center(child: Feed_back()),
     ];
-    if (slist.length > 0) {
+    if (slist.length > 0 && check == false) {
       return Scaffold(
         body: tabs[_currentIndex],
         drawer: Drawer(
@@ -219,23 +219,25 @@ class _HomePageState extends State<HomePage1> {
                 icon: Icons.people,
                 title: 'Account',
                 Press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return Account(
-                        username: user ?? '',
-                        email: email ?? '',
-                        first_name: first_name ?? '',
-                        last_name: last_name ?? '',
-                        gender: gender ?? '',
-                        from: from ?? '',
-                        tel: tel ?? '',
-                        id: id.toString(),
-                        password: password ?? "",
-                        control_user: control_user ?? "",
-                      );
-                    }),
-                  );
+                  setState(() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return Account(
+                          username: user ?? '',
+                          email: email ?? '',
+                          first_name: first_name ?? '',
+                          last_name: last_name ?? '',
+                          gender: gender ?? '',
+                          from: from ?? '',
+                          tel: tel ?? '',
+                          id: id.toString(),
+                          password: password ?? "",
+                          control_user: control_user ?? "",
+                        );
+                      }),
+                    );
+                  });
                 },
               ),
               MyDrawerList(
