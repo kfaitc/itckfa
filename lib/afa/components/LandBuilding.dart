@@ -53,7 +53,7 @@ class LandBuilding extends StatefulWidget {
 
 class _LandBuildingState extends State<LandBuilding> {
   List list = [];
-  var formatter = NumberFormat("##,###,###,##0.00", "en_US");
+  var formatter = NumberFormat("##,###,###,###.00", "en_US");
   int? min;
   int? max;
   String? des;
@@ -65,7 +65,7 @@ class _LandBuildingState extends State<LandBuilding> {
   double h = 0, l = 0;
   bool isApiCallProcess = false;
   var dropdown;
-  List<L_B> lb = [L_B('', '', '', '', 0, 0, 0, 0, 0, 0)];
+  List<L_B> lb = [L_B('', '', '', '', '', 0, 0, 0, 0, 0)];
   String? options;
   var _selectedValue;
   List<String> option = [
@@ -93,17 +93,8 @@ class _LandBuildingState extends State<LandBuilding> {
         "verbal_landid": widget.landId
       });
       lb.add(
-        L_B(
-            autoverbalType,
-            des ?? '',
-            dep,
-            widget.address,
-            int.parse(widget.landId),
-            area,
-            minSqm!,
-            maxSqm!,
-            totalMin!,
-            totalMax ?? 0),
+        L_B(autoverbalType, des ?? '', dep, widget.address, widget.landId, area,
+            minSqm!, maxSqm!, totalMin!, totalMax ?? 0),
       );
     });
     //  print(id);

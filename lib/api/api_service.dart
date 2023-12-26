@@ -82,11 +82,13 @@ class APIservice {
     } else if (response.statusCode == 201 || response.statusCode == 401) {
       return AutoVerbalReponseModel.fromJson(json.decode(response.body));
     } else {
+      print(response.body.toString());
       throw Exception('Failed to load Data');
     }
   }
 
   //Test
+
   Future<AutoVerbalReponseModel> Test(
       AutoVerbalRequestModel requestModel) async {
     final response = await http.post(
