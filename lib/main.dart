@@ -30,18 +30,17 @@ void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   // // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   // final ImagePickerPlatform imagePickerImplementation =
   //     ImagePickerPlatform.instance;
   // if (imagePickerImplementation is ImagePickerAndroid) {
   //   imagePickerImplementation.useAndroidPhotoPicker = true;
   // }
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   // Check if you received the link via `getInitialLink` first
   // final PendingDynamicLinkData? initialLink =

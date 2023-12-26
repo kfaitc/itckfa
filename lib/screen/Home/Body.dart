@@ -62,7 +62,7 @@ class Body extends StatefulWidget {
   State<Body> createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> {
+class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
   late AutoVerbalRequestModel requestModelAuto;
 
   Uint8List? get_bytes;
@@ -322,6 +322,8 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     var w = MediaQuery.of(context).size.width;
     if (w < 600) {
       wth = w * 0.6;
@@ -1291,4 +1293,7 @@ class _BodyState extends State<Body> {
       });
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
