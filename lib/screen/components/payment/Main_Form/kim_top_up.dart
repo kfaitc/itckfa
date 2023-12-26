@@ -30,16 +30,16 @@ const _kProductIds = [
 class TopUp extends StatefulWidget {
   const TopUp({
     super.key,
-    this.set_phone,
-    this.up_point,
     this.id_user,
-    this.set_id_user,
+    this.set_phone,
+    this.initialPoint,
+    required this.set_id_user,
     this.set_email,
   });
   final String? set_phone;
-  final String? up_point;
+  final String? initialPoint;
   final String? id_user;
-  final String? set_id_user;
+  final String set_id_user;
   final String? set_email;
 
   @override
@@ -50,8 +50,8 @@ class _TopUpState extends State<TopUp> {
   final _iap = InAppPurchase.instance;
   late StreamSubscription<List<PurchaseDetails>> _subscription;
 
+  late int _point;
   bool _isAvailable = false;
-  int _point = 0;
   bool _productLoading = false;
   bool _purchasePending = false;
   String? _error;
@@ -59,15 +59,20 @@ class _TopUpState extends State<TopUp> {
 
   @override
   void initState() {
+    log('Opened top up page with user id: ${widget.set_id_user}');
+
     super.initState();
-    _initializePoint();
+    _point = int.tryParse(widget.initialPoint ?? "") ?? 0;
+
+    _fetchPoint();
     _initializeStore();
     _subscription = _iap.purchaseStream.listen(_purchaseUpdateHandler);
   }
 
-  void _initializePoint() async {
+  Future<void> _fetchPoint() async {
     final uri = Uri.parse(
-        "$_baseUrl/check_dateVpoint?id_user_control=${widget.set_id_user}");
+      "$_baseUrl/check_dateVpoint?id_user_control=${widget.set_id_user}",
+    );
     final res = await http.get(
       uri,
       headers: {'Content-Type': 'application/json'},
@@ -135,11 +140,10 @@ class _TopUpState extends State<TopUp> {
         setState(() => _purchasePending = false);
       }
 
-      if (purchase.pendingCompletePurchase) {
-        setState(() => _purchasePending = false);
-        await InAppPurchase.instance.completePurchase(purchase);
-        log('Purchase pendingCompletePurchase');
-      }
+      // if (purchase.pendingCompletePurchase) {
+      //   await InAppPurchase.instance.completePurchase(purchase);
+      //   log('Purchase pendingCompletePurchase');
+      // }
 
       if (purchase.status == PurchaseStatus.purchased) {
         log('Purchased in app');
@@ -147,16 +151,20 @@ class _TopUpState extends State<TopUp> {
             _products.firstWhereOrNull((e) => e.id == purchase.productID);
         if (product == null) return;
 
-        final amount = product.price.replaceAll("\$", "").replaceAll(" ", "");
+        final amount = product.rawPrice.toString();
 
         final isPurchaseValid = await _verifyPurchased(
-          userId: widget.id_user ?? "",
+          userId: widget.set_id_user,
           productId: purchase.productID,
           amount: amount,
           verificationData: purchase.verificationData.serverVerificationData,
         );
 
-        if (isPurchaseValid && context.mounted) {
+        if (isPurchaseValid) {
+          await _iap.completePurchase(purchase);
+          await _fetchPoint();
+          if (!context.mounted) return;
+
           showDialog(
             context: context,
             builder: (context) {
@@ -167,6 +175,8 @@ class _TopUpState extends State<TopUp> {
             },
           );
         }
+
+        setState(() => _purchasePending = false);
       }
     }
   }
@@ -245,8 +255,19 @@ class _TopUpState extends State<TopUp> {
             opacity: 0.3,
             child: ModalBarrier(dismissible: false, color: Colors.grey),
           ),
-          const Center(
-            child: CircularProgressIndicator(),
+          Center(
+            child: Container(
+              width: 100,
+              height: 100,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.black.withOpacity(0.5),
+              ),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
           ),
         ],
       ],
@@ -354,10 +375,22 @@ class _TopUpState extends State<TopUp> {
       );
     }
 
-    final productList = _products.map(
+    final orderedProductList = _products.toList()
+      ..sort((a, b) {
+        final amountA = a.rawPrice;
+        final amountB = b.rawPrice;
+        return amountA.compareTo(amountB);
+      });
+
+    final productList = orderedProductList.map(
       (product) {
         return ListTile(
           onTap: () async {
+            if (widget.set_id_user.isBlank == true) {
+              log('Cannot purchase item due to absent of set_id_user');
+              return;
+            }
+
             setState(() => _purchasePending = true);
 
             try {

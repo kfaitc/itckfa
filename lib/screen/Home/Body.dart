@@ -6,7 +6,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/afa/components/contants.dart';
@@ -23,8 +22,6 @@ import 'package:itckfa/screen/Promotion/promotion.dart';
 import 'package:itckfa/screen/Home/Customs/titleBar.dart';
 import 'package:itckfa/screen/Property/Home_Screen_property.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/kim_top_up.dart';
-import 'package:itckfa/screen/components/payment/Main_Form/mengtop_up.dart';
-import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
 
@@ -75,7 +72,8 @@ class _BodyState extends State<Body> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services'),
+            'Location services are disabled. Please enable the services',
+          ),
         ),
       );
       return false;
@@ -85,14 +83,19 @@ class _BodyState extends State<Body> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
+          const SnackBar(content: Text('Location permissions are denied')),
+        );
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
+            'Location permissions are permanently denied, we cannot request permissions.',
+          ),
+        ),
+      );
       return false;
     }
     // _getCurrentPosition();
@@ -101,7 +104,8 @@ class _BodyState extends State<Body> {
 
   Future<void> _getCurrentPosition() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     setState(() {
       lat = position.latitude;
@@ -114,8 +118,11 @@ class _BodyState extends State<Body> {
   var maxSqm2, minSqm2;
   var formatter = NumberFormat("##,###,###,###.00", "en_US");
   Future<void> Find_by_piont(double la, double lo) async {
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${la},${lo}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
@@ -147,8 +154,11 @@ class _BodyState extends State<Body> {
           }
         }
       }
-      final response_rc = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}'));
+      final response_rc = await http.get(
+        Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
+        ),
+      );
       var jsonResponse_rc = json.decode(response_rc.body);
       setState(() {
         maxSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
@@ -170,8 +180,11 @@ class _BodyState extends State<Body> {
   double? R_avg;
   double? C_avg;
   Future<void> change_price() async {
-    final response_rc = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}'));
+    final response_rc = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
+      ),
+    );
     var jsonResponse_rc = json.decode(response_rc.body);
     setState(() {
       maxSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
@@ -218,7 +231,8 @@ class _BodyState extends State<Body> {
     });
     final response = await http.get(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user'),
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user',
+      ),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -288,9 +302,7 @@ class _BodyState extends State<Body> {
       // data: requestModelVerbal,
     );
     Future.delayed(const Duration(seconds: 3), () {
-      if (user != null) {
-        check_v_point();
-      }
+      check_v_point();
     });
   }
 
@@ -340,21 +352,25 @@ class _BodyState extends State<Body> {
                     padding: const EdgeInsets.all(1),
                     onPressed: () {
                       setState(() {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return Account(
-                            username: user,
-                            email: email,
-                            first_name: first_name,
-                            last_name: last_name,
-                            gender: gender,
-                            from: from,
-                            tel: tel,
-                            id: id.toString(),
-                            password: password,
-                            control_user: control_user,
-                          );
-                        }));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Account(
+                                username: user,
+                                email: email,
+                                first_name: first_name,
+                                last_name: last_name,
+                                gender: gender,
+                                from: from,
+                                tel: tel,
+                                id: id.toString(),
+                                password: password,
+                                control_user: control_user,
+                              );
+                            },
+                          ),
+                        );
                       });
                     },
                     icon: Icon(
@@ -438,6 +454,8 @@ class _BodyState extends State<Body> {
                                                     id_user: id.toString(),
                                                     set_id_user: control_user,
                                                     set_email: email,
+                                                    initialPoint:
+                                                        number_of_vpoint,
                                                   ),
                                                 ),
                                               );
@@ -450,12 +468,13 @@ class _BodyState extends State<Body> {
                                                   height: 50,
                                                   width: 50,
                                                   child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: Image.asset(
-                                                        'assets/images/topup.png',
-                                                        fit: BoxFit.fill,
-                                                      )),
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Image.asset(
+                                                      'assets/images/topup.png',
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ),
                                                 ),
                                                 Text(
                                                   "Top Up",
@@ -466,7 +485,7 @@ class _BodyState extends State<Body> {
                                             ),
                                           ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                   SCard(
@@ -475,9 +494,11 @@ class _BodyState extends State<Body> {
                                     press: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) {
-                                          return Walletscreen();
-                                        }),
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return Walletscreen();
+                                          },
+                                        ),
                                       );
                                     },
                                   ),
@@ -521,11 +542,14 @@ class _BodyState extends State<Body> {
                                     svgPic: 'assets/icons/property.svg',
                                     title: 'Property',
                                     press: () {
-                                      Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) {
-                                          return Home_Screen_property();
-                                        },
-                                      ));
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return Home_Screen_property();
+                                          },
+                                        ),
+                                      );
                                     },
                                   ),
                                   SCard(
@@ -958,12 +982,13 @@ class _BodyState extends State<Body> {
                                 onTap: () {
                                   setState(() {
                                     Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                Add_with_property(
-                                                  id: id,
-                                                  id_control_user: control_user,
-                                                )));
+                                      MaterialPageRoute(
+                                        builder: (context) => Add_with_property(
+                                          id: id,
+                                          id_control_user: control_user,
+                                        ),
+                                      ),
+                                    );
                                   });
                                 },
                                 child: Container(
@@ -980,8 +1005,9 @@ class _BodyState extends State<Body> {
                                     //   )
                                     // ],
                                     image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage('assets/earth.gif')),
+                                      fit: BoxFit.cover,
+                                      image: AssetImage('assets/earth.gif'),
+                                    ),
                                     borderRadius: BorderRadius.circular(90),
                                   ),
                                   child: DefaultTextStyle(
@@ -996,7 +1022,11 @@ class _BodyState extends State<Body> {
                                         Shadow(
                                           blurRadius: 15.0,
                                           color: Color.fromARGB(
-                                              255, 248, 195, 195),
+                                            255,
+                                            248,
+                                            195,
+                                            195,
+                                          ),
                                           offset: Offset(0, 0),
                                         ),
                                       ],
@@ -1010,15 +1040,17 @@ class _BodyState extends State<Body> {
                                       onTap: () {
                                         setState(() {
                                           print(
-                                              "id $id \n control_user $control_user");
+                                            "id $id \n control_user $control_user",
+                                          );
                                           Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Add_with_property(
-                                                        id: id,
-                                                        id_control_user:
-                                                            control_user,
-                                                      )));
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Add_with_property(
+                                                id: id,
+                                                id_control_user: control_user,
+                                              ),
+                                            ),
+                                          );
                                         });
                                       },
                                       pause: const Duration(milliseconds: 300),
@@ -1043,7 +1075,7 @@ class _BodyState extends State<Body> {
                                         blurStyle: BlurStyle.solid,
                                         spreadRadius: 0.0,
                                         offset: Offset(0.2, 0.1),
-                                      )
+                                      ),
                                     ],
                                   ),
                                   child: Container(
@@ -1052,7 +1084,9 @@ class _BodyState extends State<Body> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
                                       border: Border.all(
-                                          color: Colors.white, width: 2),
+                                        color: Colors.white,
+                                        width: 2,
+                                      ),
                                     ),
                                     child: Column(
                                       mainAxisAlignment:
@@ -1079,7 +1113,9 @@ class _BodyState extends State<Body> {
                                             Expanded(
                                               flex: 1,
                                               child: Text(
-                                                "${(number_of_vpoint != null) ? number_of_vpoint.toString() + " V Point" : "0 V Point"}",
+                                                (number_of_vpoint != null)
+                                                    ? "$number_of_vpoint V Point"
+                                                    : "0 V Point",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
@@ -1212,8 +1248,11 @@ class _BodyState extends State<Body> {
   List<dynamic> list_sangkat = [];
   void Load_sangkat(String id) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=${id}'));
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=$id',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -1230,8 +1269,11 @@ class _BodyState extends State<Body> {
   int id_khan = 0;
   void Load_khan(String district) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=${district}'));
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=$district',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {

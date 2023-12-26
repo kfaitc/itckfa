@@ -19,11 +19,16 @@ class WING extends GetxController {
   var accessToken;
 
   Future<bool> createOrder_Wing(
-      price, option, context, order_reference_no) async {
+    price,
+    option,
+    context,
+    order_reference_no,
+  ) async {
     // Navigator.pop(context);
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var url = await Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token');
+    var url = Uri.parse(
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token',
+    );
     var body = {
       // 'username': 'online.mangogame',
       // 'username': 'online.kfausd',
@@ -53,7 +58,13 @@ class WING extends GetxController {
       // await deeplink_hask(token);
       if (token != null) {
         await deeplinkHask(
-            accessToken, token, price, option, context, order_reference_no);
+          accessToken,
+          token,
+          price,
+          option,
+          context,
+          order_reference_no,
+        );
         return true;
       }
     } else {
@@ -67,9 +78,16 @@ class WING extends GetxController {
   //Deeplink hask
   var deeplink_hask;
   Future<void> deeplinkHask(
-      accessToken, token, price, option, context, order_reference_no) async {
-    final url = await Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
+    accessToken,
+    token,
+    price,
+    option,
+    context,
+    order_reference_no,
+  ) async {
+    final url = Uri.parse(
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask',
+    );
     final request = http.MultipartRequest('POST', url);
 
     request.fields.addAll({
@@ -94,14 +112,16 @@ class WING extends GetxController {
   Future call_back_wing(BuildContext context, price, order_reference_no) async {
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing'));
+      'POST',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing',
+      ),
+    );
     request.body = json.encode({
       "order_reference_no": "$order_reference_no",
       "amount": "$price",
       "txn_hash": "$deeplink_hask",
-      "accessToken": "$accessToken"
+      "accessToken": "$accessToken",
     });
     request.headers.addAll(headers);
 
@@ -130,7 +150,7 @@ class WING extends GetxController {
         bool check_link = await launchUrl(Uri.parse(qrString));
         print("check_link ${check_link}");
         if (check_link == false) {
-          final playStoreUrl = 'https://onelink.to/dagdt6';
+          const playStoreUrl = 'https://onelink.to/dagdt6';
           // ignore: deprecated_member_use
           if (await canLaunch(playStoreUrl)) {
             // ignore: deprecated_member_use
@@ -145,7 +165,7 @@ class WING extends GetxController {
         // ignore: deprecated_member_use
         bool check_link = await launch(qrString);
         if (check_link == false) {
-          final playStoreUrl = 'https://onelink.to/dagdt6';
+          const playStoreUrl = 'https://onelink.to/dagdt6';
           // ignore: deprecated_member_use
           if (await canLaunch(playStoreUrl)) {
             // ignore: deprecated_member_use
@@ -156,7 +176,7 @@ class WING extends GetxController {
         }
       } catch (e) {
         if (Platform.isAndroid) {
-          final playStoreUrl = 'https://onelink.to/dagdt6';
+          const playStoreUrl = 'https://onelink.to/dagdt6';
           // ignore: deprecated_member_use
           if (await canLaunch(playStoreUrl)) {
             // ignore: deprecated_member_use

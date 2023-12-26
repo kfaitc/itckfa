@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/firebase_options.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/kim_top_up.dart';
-import 'package:itckfa/screen/components/payment/Main_Form/mengtop_up.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uni_links/uni_links.dart';
+
+import 'afa/screens/Auth/login.dart';
 
 // @pragma('vm:entry-point')
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -149,12 +148,13 @@ class _MyAppState extends State<MyApp> {
             Get.to(() => const HomePage1(pf: true));
           }
         }
+        return null;
       },
       initialRoute: '/',
       routes: {
-        //'/': (context) => Login(),
-        '/': (context) => TopUp(),
-        '/app': (context) => const HomePage1(pf: true)
+        '/': (context) => const Login(),
+        // '/topup': (context) =>  TopUp(),
+        '/app': (context) => const HomePage1(pf: true),
       },
     );
   }

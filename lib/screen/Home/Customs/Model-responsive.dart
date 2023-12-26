@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/List.dart';
@@ -28,18 +29,21 @@ class Menu extends StatefulWidget {
   final String gender;
   final String from;
   final String tel;
-  final id;
-  const Menu(
-      {Key? key,
-      required this.user,
-      required this.first_name,
-      required this.last_name,
-      required this.email,
-      required this.gender,
-      required this.from,
-      required this.tel,
-      required this.id})
-      : super(key: key);
+  final String id;
+  final String set_id_user;
+
+  const Menu({
+    Key? key,
+    required this.user,
+    required this.first_name,
+    required this.last_name,
+    required this.email,
+    required this.gender,
+    required this.from,
+    required this.tel,
+    required this.id,
+    required this.set_id_user,
+  }) : super(key: key);
 
   @override
   State<Menu> createState() => _MenuState();
@@ -90,6 +94,7 @@ class _MenuState extends State<Menu> {
             from: widget.from,
             tel: widget.tel,
             id: widget.id,
+            set_id_user: widget.set_id_user,
           ),
         ),
         desktop: Mcard(
@@ -116,6 +121,8 @@ class Scard extends StatefulWidget {
   final String from;
   final String tel;
   final String id;
+  final String set_id_user;
+
   const Scard({
     Key? key,
     required this.id,
@@ -126,6 +133,7 @@ class Scard extends StatefulWidget {
     required this.gender,
     required this.from,
     required this.tel,
+    required this.set_id_user,
   }) : super(key: key);
 
   @override
@@ -170,6 +178,7 @@ class _ScardState extends State<Scard> {
                           builder: (context) => TopUp(
                             set_phone: widget.tel,
                             id_user: widget.id,
+                            set_id_user: widget.set_id_user,
                           ),
                         ),
                       );
@@ -181,11 +190,12 @@ class _ScardState extends State<Scard> {
                           height: 50,
                           width: 50,
                           child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Image.asset(
-                                'assets/images/topup.png',
-                                fit: BoxFit.fill,
-                              )),
+                            padding: EdgeInsets.all(8.0),
+                            child: Image.asset(
+                              'assets/images/topup.png',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                         ),
                         Text(
                           "Top Up",
@@ -195,7 +205,7 @@ class _ScardState extends State<Scard> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
           SCard(
@@ -241,11 +251,14 @@ class _ScardState extends State<Scard> {
             svgPic: 'assets/icons/property.svg',
             title: 'Property',
             press: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return Home_Screen_property();
-                },
-              ));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return Home_Screen_property();
+                  },
+                ),
+              );
             },
           ),
           SCard(
@@ -317,7 +330,7 @@ class SCard extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

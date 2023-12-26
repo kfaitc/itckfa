@@ -28,18 +28,20 @@ class Menu extends StatefulWidget {
   final String gender;
   final String from;
   final String tel;
-  final id;
-  const Menu(
-      {Key? key,
-      required this.user,
-      required this.first_name,
-      required this.last_name,
-      required this.email,
-      required this.gender,
-      required this.from,
-      required this.tel,
-      required this.id})
-      : super(key: key);
+  final String set_id_user;
+  final String id;
+  const Menu({
+    Key? key,
+    required this.user,
+    required this.first_name,
+    required this.last_name,
+    required this.email,
+    required this.gender,
+    required this.from,
+    required this.tel,
+    required this.id,
+    required this.set_id_user,
+  }) : super(key: key);
 
   @override
   State<Menu> createState() => _MenuState();
@@ -90,6 +92,7 @@ class _MenuState extends State<Menu> {
             from: widget.from,
             tel: widget.tel,
             id: widget.id,
+            set_id_user: widget.set_id_user,
           ),
         ),
         desktop: Mcard(
@@ -145,20 +148,25 @@ class _McardState extends State<Mcard> {
             svgPic: 'assets/icons/profile2.svg',
             title: 'Profile',
             press: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return Account(
-                  username: widget.username,
-                  email: widget.email,
-                  first_name: widget.first_name,
-                  last_name: widget.last_name,
-                  gender: widget.gender,
-                  from: widget.from,
-                  tel: widget.tel,
-                  id: widget.id,
-                  password: '',
-                  control_user: '',
-                );
-              }));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return Account(
+                      username: widget.username,
+                      email: widget.email,
+                      first_name: widget.first_name,
+                      last_name: widget.last_name,
+                      gender: widget.gender,
+                      from: widget.from,
+                      tel: widget.tel,
+                      id: widget.id,
+                      password: '',
+                      control_user: '',
+                    );
+                  },
+                ),
+              );
             },
           ),
           Card(
@@ -271,7 +279,7 @@ class Card extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

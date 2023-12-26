@@ -568,6 +568,7 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                           builder: (context) => TopUp(
                             set_phone: "",
                             id_user: widget.id,
+                            set_id_user: widget.id_control_user,
                           ),
                         ),
                       );
