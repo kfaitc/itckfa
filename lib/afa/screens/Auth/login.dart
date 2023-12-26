@@ -1,14 +1,18 @@
 // ignore_for_file: unused_import, non_constant_identifier_names, prefer_const_constructors, avoid_print, prefer_is_empty, use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/services.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/screens/Auth/register.dart';
+import 'package:itckfa/afa/screens/AutoVerbal/search/protect.dart';
 import 'package:itckfa/api/api_service.dart';
 import 'package:itckfa/models/login_model.dart';
 import 'package:itckfa/models/register_model.dart';
@@ -16,7 +20,7 @@ import 'package:itckfa/screen/Customs/ProgressHUD.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
+import 'dart:developer' as developer;
 import '../../../screen/Customs/responsive.dart';
 import '../../components/contants.dart';
 
@@ -96,7 +100,7 @@ class _LoginState extends State<Login> {
 
   getdata() {
     Future.delayed(Duration(milliseconds: 500), () async {
-      await mydb.open();
+      await mydb.open_user();
       slist = await mydb.db.rawQuery('SELECT * FROM user');
       setState(() {
         if (slist.length > 0) {
@@ -104,6 +108,7 @@ class _LoginState extends State<Login> {
           // print("\n\n\n\nkokoko" + slist.toString() + "\n\n\n\nkokoko");
           status = true;
           id = slist[i]['id'];
+          control_user = slist[i]['username'];
           print("objects: " + id.toString());
           Email = TextEditingController(text: slist[i]['email']);
           Password = TextEditingController(text: slist[i]['password']);
@@ -133,19 +138,98 @@ class _LoginState extends State<Login> {
     password_confirmation: '',
     control_user: '',
   );
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+      if ((_connectionStatus == ConnectivityResult.mobile) ||
+          (_connectionStatus == ConnectivityResult.wifi)) {
+      } else if (_connectionStatus == ConnectivityResult.none) {
+        final snackBar = SnackBar(
+          backgroundColor: Color.fromARGB(255, 245, 245, 245),
+          padding: EdgeInsets.all(0),
+          content: GFCard(
+            padding: EdgeInsets.all(0),
+            boxFit: BoxFit.cover,
+            title: GFListTile(
+              avatar: Icon(
+                Icons.download_for_offline_outlined,
+                color: Colors.blue,
+                size: 50,
+                shadows: const [
+                  Shadow(
+                      color: Colors.black,
+                      blurRadius: 5,
+                      offset: Offset(1, 0.5))
+                ],
+              ),
+              title: Text('You\'re offline'),
+              subTitle: Text('Watch saved data in your Library'),
+            ),
+            content: Text("All data had save!"),
+            buttonBar: GFButtonBar(
+              children: <Widget>[
+                GFButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProtectDataCrossCheck(
+                              id_user: control_user,
+                            )));
+                  },
+                  color: GFColors.SUCCESS,
+                  text: 'Go to watch',
+                ),
+                GFButton(
+                  onPressed: () {},
+                  color: GFColors.DANGER,
+                  text: '\tCancel\t',
+                ),
+              ],
+            ),
+          ),
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    });
+  }
+
   @override
   void initState() {
     getdata();
     _pageController = PageController(initialPage: 0);
     initialPage = _pageController.initialPage;
-    // selectPeople();
-    status;
+    initConnectivity();
+
     super.initState();
     requestModel = LoginRequestModel(email: "", password: "");
   }
 
   @override
   void dispose() {
+    _connectivitySubscription.cancel();
     super.dispose();
   }
 
@@ -153,23 +237,13 @@ class _LoginState extends State<Login> {
   bool check_elcome = false;
   @override
   Widget build(BuildContext context) {
-    // Future.delayed(const Duration(seconds: 20), () async {
-    //   setState(() {
-    //     welcome = true;
-    //   });
-    // });
-    // Future.delayed(const Duration(seconds: 1), () async {
-    //   setState(() {
-    //     check_elcome = true;
-    //   });
-    // });
-    // if (check_elcome) {
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
     return ProgressHUD(
         color: kPrimaryColor,
         inAsyncCall: isApiCallProcess,
         opacity: 0.5,
-        // child: (status || welcome)
-        //     ?
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: kwhite_new,
@@ -189,191 +263,53 @@ class _LoginState extends State<Login> {
             decoration: BoxDecoration(
               color: kwhite,
               borderRadius: BorderRadius.only(
-                // topRight: Radius.circular(30.0),
                 topLeft: Radius.circular(100.0),
-                // bottomLeft: Radius.circular(30.0),
                 bottomRight: Radius.circular(100.0),
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Responsive(
-                  mobile: login(context),
-                  tablet: Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 500,
-                              child: login(context),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Responsive(
+                    mobile: login(context),
+                    tablet: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 500,
+                                child: login(context),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    desktop: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 500,
+                                child: login(context),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    phone: login(context),
                   ),
-                  desktop: Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 500,
-                              child: login(context),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  phone: login(context),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        )
-        // : Scaffold(
-        //     backgroundColor: Color.fromARGB(255, 142, 41, 155),
-        //     body: Column(
-        //       mainAxisAlignment: MainAxisAlignment.start,
-        //       children: [
-        //         Container(
-        //           width: MediaQuery.of(context).size.width,
-        //           height: MediaQuery.of(context).size.height * 0.8,
-        //           decoration: BoxDecoration(
-        //             borderRadius: BorderRadius.only(
-        //                 topLeft: Radius.circular(20),
-        //                 topRight: Radius.circular(20)),
-        //             image: DecorationImage(
-        //                 image: AssetImage('assets/images/first.gif'),
-        //                 fit: BoxFit.fill),
-        //           ),
-        //         ),
-        //         InkWell(
-        //           onTap: () {
-        //             setState(() {
-        //               welcome = true;
-        //             });
-        //           },
-        //           child: Container(
-        //             height: 45,
-        //             decoration: BoxDecoration(
-        //               color: Color.fromARGB(255, 41, 72, 163),
-        //               boxShadow: const [
-        //                 BoxShadow(
-        //                     blurRadius: 10,
-        //                     offset: Offset(0.0, -0.9),
-        //                     color: Colors.white)
-        //               ],
-        //             ),
-        //             child: Row(
-        //               mainAxisAlignment: MainAxisAlignment.center,
-        //               children: [
-        //                 GFAnimation(
-        //                     turnsAnimation: animation,
-        //                     controller: controller,
-        //                     type: GFAnimationType.rotateTransition,
-        //                     alignment: Alignment.center,
-        //                     child: Row(
-        //                       children: const [
-        //                         Icon(
-        //                           Icons.shape_line_outlined,
-        //                           color: Colors.white,
-        //                           shadows: [
-        //                             Shadow(
-        //                                 blurRadius: 10,
-        //                                 offset: Offset(0.0, -0.9),
-        //                                 color: Colors.white)
-        //                           ],
-        //                         )
-        //                       ],
-        //                     )),
-        //                 SizedBox(width: 10),
-        //                 GFAnimation(
-        //                     turnsAnimation: animation,
-        //                     controller: controller,
-        //                     type: GFAnimationType.rotateTransition,
-        //                     alignment: Alignment.center,
-        //                     child: Row(
-        //                       children: const [
-        //                         Icon(
-        //                           Icons.shape_line_outlined,
-        //                           color: Colors.white,
-        //                           shadows: [
-        //                             Shadow(
-        //                                 blurRadius: 10,
-        //                                 offset: Offset(0.0, -0.9),
-        //                                 color: Colors.white)
-        //                           ],
-        //                         )
-        //                       ],
-        //                     )),
-        //                 SizedBox(width: 10),
-        //                 Text(
-        //                   "Continue...",
-        //                   style: TextStyle(
-        //                       color: Colors.white,
-        //                       fontWeight: FontWeight.w600),
-        //                 ),
-        //                 SizedBox(width: 10),
-        //                 GFAnimation(
-        //                     turnsAnimation: animation,
-        //                     controller: controller,
-        //                     type: GFAnimationType.rotateTransition,
-        //                     alignment: Alignment.center,
-        //                     child: Row(
-        //                       children: const [
-        //                         Icon(
-        //                           Icons.shape_line_outlined,
-        //                           color: Colors.white,
-        //                           shadows: [
-        //                             Shadow(
-        //                                 blurRadius: 10,
-        //                                 offset: Offset(0.0, -0.9),
-        //                                 color: Colors.white)
-        //                           ],
-        //                         )
-        //                       ],
-        //                     )),
-        //                 SizedBox(width: 10),
-        //                 GFAnimation(
-        //                     turnsAnimation: animation,
-        //                     controller: controller,
-        //                     type: GFAnimationType.rotateTransition,
-        //                     alignment: Alignment.center,
-        //                     child: Row(
-        //                       children: const [
-        //                         Icon(
-        //                           Icons.shape_line_outlined,
-        //                           color: Colors.white,
-        //                           shadows: [
-        //                             Shadow(
-        //                                 blurRadius: 10,
-        //                                 offset: Offset(0.0, -0.9),
-        //                                 color: Colors.white)
-        //                           ],
-        //                         )
-        //                       ],
-        //                     )),
-        //               ],
-        //             ),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        // ),
-        );
-    // } else {
-    //   return SafeArea(
-    //       child: Container(
-    //     height: MediaQuery.of(context).size.height,
-    //     color: Colors.white,
-    //   ));
-    // }
+        ));
   }
 
   Widget login(BuildContext context) {
@@ -384,29 +320,6 @@ class _LoginState extends State<Login> {
           const SizedBox(
             height: 25.0,
           ),
-          // const Text.rich(
-          //   TextSpan(
-          //     // ignore: prefer_const_literals_to_create_immutables
-          //     children: [
-          //       TextSpan(
-          //         text: "ONE CLICK ",
-          //         style: TextStyle(
-          //           fontSize: 22.0,
-          //           fontWeight: FontWeight.bold,
-          //           color: kImageColor,
-          //         ),
-          //       ),
-          //       TextSpan(
-          //         text: "1\$",
-          //         style: TextStyle(
-          //           fontSize: 40.0,
-          //           fontWeight: FontWeight.bold,
-          //           color: kerror,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
 
           ((status == false) ? input(context) : Output(context)),
 
@@ -433,13 +346,6 @@ class _LoginState extends State<Login> {
                       isApiCallProcess = false;
                     });
                     if (value.message == "Login Successfully!") {
-                      // PeopleController().deletePeople(0);
-                      // var people = PeopleModel(
-                      //   id: 0,
-                      //   name: requestModel.email,
-                      //   password: requestModel.password,
-                      // );
-                      // PeopleController().insertPeople(people);
                       if (slist.length == 0) {
                         await mydb.db.rawInsert(
                             "INSERT INTO user (id ,first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
@@ -488,7 +394,7 @@ class _LoginState extends State<Login> {
                         autoHide: Duration(seconds: 3),
                         onDismissCallback: (type) {
                           // debugPrint('Dialog Dissmiss from callback $type');
-
+                          dispose();
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -618,28 +524,6 @@ class _LoginState extends State<Login> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              // enabledBorder: OutlineInputBorder(
-              //     // borderSide: BorderSide(
-              //     //   width: 1,
-              //     //   color: Color.fromARGB(255, 255, 255, 255),
-              //     // ),
-              //     borderRadius: BorderRadius.only(
-              //         topLeft: Radius.circular(40),
-              //         bottomRight: Radius.circular(40))),
-              // errorBorder: OutlineInputBorder(
-              //   borderSide: BorderSide(
-              //     width: 1,
-              //     color: Color.fromARGB(255, 249, 0, 0),
-              //   ),
-              //   borderRadius: BorderRadius.circular(10.0),
-              // ),
-              // focusedErrorBorder: OutlineInputBorder(
-              //   borderSide: BorderSide(
-              //     width: 1,
-              //     color: Color.fromARGB(255, 249, 0, 0),
-              //   ),
-              //   //  borderRadius: BorderRadius.circular(10.0),
-              // ),
             ),
             validator: (input) {
               if (input == null || input.isEmpty) {
@@ -686,29 +570,6 @@ class _LoginState extends State<Login> {
                 // borderSide: const BorderSide(color: kPrimaryColor, width: 1.0),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              // errorBorder: OutlineInputBorder(
-              //   borderSide: BorderSide(
-              //     width: 1,
-              //     color: kerror,
-              //   ),
-              //   borderRadius: BorderRadius.circular(10.0),
-              // ),
-              // focusedErrorBorder: OutlineInputBorder(
-              //   borderSide: BorderSide(
-              //     width: 2,
-              //     color: kerror,
-              //   ),
-              //   borderRadius: BorderRadius.circular(10.0),
-              // ),
-              // enabledBorder: OutlineInputBorder(
-              //   borderSide: BorderSide(
-              //     width: 1,
-              //     color: kPrimaryColor,
-              //   ),
-              //   borderRadius: BorderRadius.only(
-              //       bottomLeft: Radius.circular(40),
-              //       topRight: Radius.circular(40)),
-              // ),
             ),
             validator: (input) {
               if (input == null || input.isEmpty) {

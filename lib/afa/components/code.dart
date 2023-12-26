@@ -27,12 +27,12 @@ class _CodeState extends State<Code> {
   late int codedisplay;
   @override
   void initState() {
-    if (widget.check_property == 1) {
-      Load1();
-    }
-    if (widget.check_property == 2) {
-      Load2();
-    }
+    // if (widget.check_property == 1) {
+    //   Load1();
+    // }
+    // if (widget.check_property == 2) {
+    //   Load2();
+    // }
     code = [];
     codedisplay = 0;
     super.initState();
@@ -97,7 +97,7 @@ class _CodeState extends State<Code> {
                     ? Text(
                         codedisplay.toString(),
                         style: TextStyle(
-                            fontSize: 19,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: kPrimaryColor),
                       )
