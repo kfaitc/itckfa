@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage1> {
       setState(() {
         check = true;
       });
-      Future.delayed(Duration(seconds: 4), () {
+      Future.delayed(Duration(seconds: 3), () {
         setState(() {
           check = false;
         });
@@ -123,9 +123,6 @@ class _HomePageState extends State<HomePage1> {
               slist[i]['username'].toString(),
             );
           }
-        });
-        setState(() {
-          check = false;
         });
       });
     }
@@ -369,56 +366,32 @@ class _HomePageState extends State<HomePage1> {
                 label: "Home",
                 backgroundColor: kwhite_new,
               ),
-              MyDrawerList(
-                icon: Icons.question_answer,
-                title: 'FAQ',
-                Press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return FapsSidebar();
-                    }),
-                  );
-                },
+              BottomNavigationBarItem(
+                icon: Icon(Icons.question_answer),
+                label: "FAQ",
+                backgroundColor: kwhite_new,
               ),
-              MyDrawerList(
-                icon: Icons.contact_phone,
-                title: 'Contact Us',
-                Press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return ContactsSidebar();
-                    }),
-                  );
-                },
+              BottomNavigationBarItem(
+                icon: Icon(Icons.contact_phone),
+                label: "Contact",
+                backgroundColor: kwhite_new,
               ),
-              MyDrawerList(
-                icon: Icons.people,
-                title: 'About Us',
-                Press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return AboutSidebar();
-                    }),
-                  );
-                },
+              BottomNavigationBarItem(
+                icon: Icon(Icons.people),
+                label: "About",
+                backgroundColor: kwhite_new,
               ),
-              SizedBox(
-                height: 40,
-              ),
-              Divider(
-                color: Colors.blueAccent,
-              ),
-              MyDrawerList(
-                icon: Icons.lock,
-                title: 'Log Out',
-                Press: () {
-                  logOut();
-                },
+              BottomNavigationBarItem(
+                icon: Icon(Icons.contact_phone),
+                label: "FeedBack",
+                backgroundColor: kwhite_new,
               ),
             ],
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
           ),
         );
       } else {
@@ -530,37 +503,10 @@ class _HomePageState extends State<HomePage1> {
                   ],
                 ),
               ),
-              label: "Home",
-              backgroundColor: kwhite_new,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.question_answer),
-              label: "FAQ",
-              backgroundColor: kwhite_new,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.contact_phone),
-              label: "Contact",
-              backgroundColor: kwhite_new,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: "About",
-              backgroundColor: kwhite_new,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.contact_phone),
-              label: "FeedBack",
-              backgroundColor: kwhite_new,
-            ),
-          ],
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-        ),
-      );
+          ),
+        );
+      }
     } else {
       return Scaffold(
         body: SafeArea(

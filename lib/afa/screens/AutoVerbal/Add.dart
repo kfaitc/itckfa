@@ -3011,7 +3011,6 @@ class _Add_with_propertyState extends State<Add_with_property>
                                           list_user['control_user'].toString(),
                                       set_email: list_user['email'].toString(),
                                       id_user: widget.id,
-                                      id_verbal: verbal_id.toString(),
                                     ),
                                   ),
                                 );

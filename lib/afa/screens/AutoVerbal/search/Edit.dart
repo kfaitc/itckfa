@@ -27,6 +27,7 @@ import '../../../../models/autoVerbal.dart';
 import '../../../../screen/Customs/formTwinN.dart';
 import '../../../../screen/Customs/responsive.dart';
 import '../../../../screen/Profile/components/Drop.dart';
+import '../../../../screen/components/payment/Main_Form/kim_top_up.dart';
 import '../../../components/ApprovebyAndVerifyby.dart';
 import '../../../components/code.dart';
 import '../../../components/comment.dart';
@@ -652,7 +653,6 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                         set_id_user: user[i - 1]['username'].toString(),
                         set_email: user[i - 1]['email'].toString(),
                         id_user: user[i - 1]['id'].toString(),
-                        id_verbal: list[0]["verbal_id"],
                       ),
                     ),
                   );
