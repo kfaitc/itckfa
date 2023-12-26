@@ -530,7 +530,7 @@ class _AccountState extends State<Account> {
                 child: Text('Delete Account'),
                 onPressed: () async {
                   MyDb mydb = new MyDb();
-                  await mydb.open();
+                  await mydb.open_user();
                   AwesomeDialog(
                     context: context,
                     dialogType: DialogType.info,

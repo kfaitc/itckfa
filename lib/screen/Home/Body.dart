@@ -8,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
+import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/List.dart';
+import 'package:itckfa/afa/screens/AutoVerbal/search/protect.dart';
 import 'package:itckfa/afa/screens/walletscreen.dart';
 import 'package:itckfa/screen/Home/Customs/Model-responsive.dart';
 import 'package:itckfa/screen/Promotion/membership_real.dart';
@@ -213,9 +215,11 @@ class _BodyState extends State<Body> {
   String? number_of_vpoint;
   String? their_plans;
   String? expiry;
-
+  List<Map> DataAutoVerbal = [];
   String? v_point;
   Future<void> check_v_point() async {
+    await mydb_vb.open_verbal();
+
     setState(() {
       user = '${widget.first_name} ${widget.last_name}';
       first_name = widget.first_name.toString();
@@ -229,6 +233,9 @@ class _BodyState extends State<Body> {
       password = widget.password.toString();
       // print(id);
     });
+    DataAutoVerbal = await mydb_vb.db.rawQuery(
+        "SELECT * FROM verbal_models WHERE verbal_user = ? ",
+        [control_user.toString()]);
     final response = await http.get(
       Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user',
@@ -311,6 +318,8 @@ class _BodyState extends State<Body> {
   var district;
   double? wth;
   double? wth2;
+  MyDb mydb_vb = new MyDb();
+
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
@@ -343,10 +352,10 @@ class _BodyState extends State<Body> {
               title: TitleBar(),
               actions: [
                 GFIconBadge(
-                  position: GFBadgePosition.topEnd(top: 15),
+                  position: GFBadgePosition.topEnd(top: 5, end: -3),
                   counterChild: GFBadge(
                     shape: GFBadgeShape.circle,
-                    child: Text('0'),
+                    child: Text("${DataAutoVerbal.length}"),
                   ),
                   child: GFIconButton(
                     padding: const EdgeInsets.all(1),
@@ -374,13 +383,13 @@ class _BodyState extends State<Body> {
                       });
                     },
                     icon: Icon(
-                      Icons.account_circle,
+                      Icons.shopping_cart_outlined,
                       color: Colors.white,
-                      size: 30,
+                      size: 20,
                     ),
                     color: Colors.white,
                     type: GFButtonType.outline2x,
-                    size: 40,
+                    size: 35,
                     disabledColor: Colors.white,
                     shape: GFIconButtonShape.circle,
                   ),

@@ -2,7 +2,7 @@
 
 class L_B {
   String verbal_land_type, verbal_land_des, verbal_land_dp, address;
-  int verbal_landid;
+  String verbal_landid;
   double verbal_land_area,
       verbal_land_minsqm,
       verbal_land_maxsqm,

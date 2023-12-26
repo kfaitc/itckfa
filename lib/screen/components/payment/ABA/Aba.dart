@@ -25,13 +25,15 @@ class ABA extends StatefulWidget {
       required this.id_set_use,
       required this.tran_id,
       required this.set_email,
-      required this.set_phone});
+      required this.set_phone,
+      this.id_verbal});
   final String price;
   final String option;
   final String id_set_use;
   final String tran_id;
   final String set_email;
   final String set_phone;
+  final String? id_verbal;
   @override
   State<ABA> createState() => _ABAState();
 }
@@ -116,6 +118,57 @@ class _ABAState extends State<ABA> {
       "tran_id": widget.tran_id,
       // "firstname": "${widget.id_set_use.toString()}",
       // "lastname": "$thier_plan",
+      "email": "${widget.set_email}",
+      "phone": "${widget.set_phone}",
+      "amount": widget.price,
+      "payment_option": "abapay_khqr_deeplink",
+      "return_url":
+          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/${thier_plan}?amount=${widget.price}&orderId=${widget.tran_id}"
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(await response.stream.bytesToString());
+      setState(() {
+        url_qr = jsonResponse['checkout_qr_url'];
+      });
+      if (url_qr != null) {
+        await openDeepLink(jsonResponse['abapay_deeplink']);
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+// For AutoVerbal
+  Future traslation_aba_AutoVerbal() async {
+    DateTime currentDateTime = DateTime.now();
+    reqTime = DateFormat('yyyyMMddHHmmss').format(currentDateTime);
+    var count_number = widget.option.split(' ');
+    var thier_plan;
+    if (count_number[4] == "Day") {
+      thier_plan = 1;
+    } else if (count_number[4] == "Week") {
+      thier_plan = 7;
+    } else if (count_number[4] == "Mount") {
+      thier_plan = 30;
+    }
+    var headers = {'Content-Type': 'application/json'};
+    setState(() {
+      print(
+          " \n\n\n\n koko ${widget.id_verbal} \nkakak ${widget.id_set_use}\n");
+    });
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/transaction/aba'));
+    request.body = json.encode({
+      "req_time": reqTime,
+      "tran_id": widget.tran_id,
+      "user_id_control": "${widget.id_set_use.toString()}",
+      "verbal_id": "${widget.id_verbal.toString()}",
       "email": "${widget.set_email}",
       "phone": "${widget.set_phone}",
       "amount": widget.price,
@@ -284,7 +337,16 @@ class _ABAState extends State<ABA> {
   @override
   void initState() {
     super.initState();
-    traslation_aba();
+    if (widget.id_verbal != null) {
+      traslation_aba_AutoVerbal();
+      setState(() {
+        print(
+            " \n\n\n\n koko455465 ${widget.id_verbal} \nkakak ${widget.id_set_use}\n");
+      });
+    } else {
+      traslation_aba();
+    }
+
     _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       check_traslation_aba();
     });

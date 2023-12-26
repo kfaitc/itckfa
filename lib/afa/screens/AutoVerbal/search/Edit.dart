@@ -3,16 +3,24 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/afa/components/LandBuilding.dart';
 import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/afa/customs/readonly.dart';
+import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
+import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
 import 'package:itckfa/models/model_bl_new.dart';
 import 'package:itckfa/screen/components/map_all/map_in_edit_verbal.dart';
+import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 
 import '../../../../api/api_service.dart';
 import '../../../../models/autoVerbal.dart';
@@ -25,1032 +33,716 @@ import '../../../components/comment.dart';
 import '../../../components/forceSale.dart';
 import '../../../components/property.dart';
 import '../../../customs/uplandBuilding.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class Edit extends StatefulWidget {
-  const Edit(
-      {super.key,
-      required this.image,
-      required this.user,
-      required this.property_type_id,
-      required this.verbal_id,
-      required this.bank_id,
-      required this.bank_branch_id,
-      required this.bank_contact,
-      required this.owner,
-      required this.contact,
-      required this.bank_officer,
-      required this.address,
-      required this.approve_id,
-      required this.agent,
-      required this.comment,
-      required this.lat,
-      required this.lng,
-      required this.verbal_con,
-      required this.verbal_com,
-      required this.option,
-      required this.verbal,
-      required this.n_pro,
-      required this.n_bank,
-      required this.n_appro,
-      required this.n_agent,
-      this.image_map,
-      this.image_photo,
-      this.cell_land,
-      this.land_list});
-  final int verbal_id;
-  final String property_type_id;
-  final String bank_id;
-  final String bank_branch_id;
-  final String bank_contact;
-  final String owner;
-  final String contact;
-  final String bank_officer;
-  final String address;
-  final String approve_id;
-  final String agent;
-  final String comment;
-  final String lat;
-  final String lng;
-  final String image;
-  final String verbal_con;
-  final String verbal_com;
-  final String user;
-  final String option;
-  final List verbal;
-  final List? land_list;
-  final List<L_B>? cell_land;
-  final String? image_map;
-  final String? image_photo;
-  final String n_pro;
-  final String n_bank;
-  final String n_appro;
-  final String n_agent;
+  const Edit({
+    super.key,
+    required this.verbal_id,
+    required this.user_id_controller,
+  });
+  final String verbal_id;
+  final String user_id_controller;
   @override
   State<Edit> createState() => _EditState();
 }
 
 class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
-  String fromValue = 'Bank';
-  String genderValue = 'Female';
-  int opt = 0;
-  double asking_price = 1;
-  String address = '';
-  String propertyType = '', propertyTypeValue = '';
-  var code = 0;
-  TextEditingController dateinput = TextEditingController();
-  late AutoVerbalRequestModel_update requestModelAuto;
-  var from = [
-    'Bank',
-    'Private',
-    'Other',
-  ];
-  var gender = [
-    'Female',
-    'Male',
-    'Other',
-  ];
-  List data_of_land = [];
-
-  bool isApiCallProcess = false;
-  var opt_type_id = '0';
+  MyDb mydb_lb = new MyDb();
+  MyDb mydb_vb = new MyDb();
+  MyDb mydb_user = new MyDb();
+  List<Map> DataAutoVerbal = [];
+  List<Map> DataLandAutoVerbal = [];
   List list = [];
-  List<L_B> lb = [L_B('', '', '', '', 0, 0, 0, 0, 0, 0)];
-  late List<dynamic> list_Khan;
-  var id_khan;
-  var district;
-  var commune;
-  //get khan
-  void Load_khan(String district) async {
-    setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=${district}'));
-    if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
-      setState(() {
-        list_Khan = jsonData;
-        id_khan = int.parse(list_Khan[0]['Khan_ID'].toString());
-      });
-    }
-  }
+  List land = [];
+  List user = [];
+  Future find() async {
+    await mydb_vb.open_verbal();
+    await mydb_lb.open_land_verbal();
+    await mydb_user.open_user();
+    double x = 0, n = 0;
+    land = await mydb_lb.db.rawQuery(
+        "SELECT * FROM comverbal_land_models WHERE verbal_landid = ? ",
+        [widget.verbal_id.toString()]);
 
-  var id_Sangkat;
-  List<dynamic> list_sangkat = [];
-  void Load_sangkat(String id) async {
-    setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=${id}'));
-    if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
-      setState(() {
-        list_sangkat = jsonData;
-        id_Sangkat = int.parse(list_sangkat[0]['Sangkat_ID'].toString());
-      });
-    }
-  }
-
-  Future<void> Find_by_piont(double la, double lo) async {
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${la},${lo}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
-
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-      var location = jsonResponse['results'][0]['geometry']['location'];
-
-      List ls = jsonResponse['results'];
-      List ac;
-      for (int j = 0; j < ls.length; j++) {
-        ac = jsonResponse['results'][j]['address_components'];
-        for (int i = 0; i < ac.length; i++) {
-          if (jsonResponse['results'][j]['address_components'][i]['types'][0] ==
-              "administrative_area_level_3") {
-            setState(() {
-              commune = jsonResponse['results'][j]['address_components'][i]
-                  ['short_name'];
-            });
-          }
-          if (jsonResponse['results'][j]['address_components'][i]['types'][0] ==
-              "administrative_area_level_2") {
-            setState(() {
-              district = jsonResponse['results'][j]['address_components'][i]
-                  ['short_name'];
-            });
-          }
-        }
-      }
-      Load_sangkat(commune);
-      Load_khan(district);
-    } else {
-      // Error or invalid response
-      // print(response.statusCode);
-    }
-  }
-
-  void deleteItemToList(int Id) {
+    list = await mydb_vb.db.rawQuery(
+        "SELECT * FROM verbal_models  WHERE verbal_id = ?",
+        [widget.verbal_id.toString()]);
+    user = await mydb_user.db.rawQuery(
+        'SELECT * FROM user  WHERE username = ? ',
+        [widget.user_id_controller.toString()]);
     setState(() {
-      list.removeAt(Id);
-      lb.removeAt(Id);
+      print("object\n $user \n");
+      land;
+      list;
+      user;
     });
+    get_property();
+    get_bank();
+    get_bankbranch();
+    get_count();
+
+    // get_bankbranch();
   }
 
-  var image_photo;
-  var image_map;
-  bool ch = false, map = false, img = false;
-  var a;
-  var dropdown;
-  String? options;
+  var property_name = "";
+  Future get_property() async {
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property?property_type_id=${list[0]['verbal_property_id']}'));
+    if (rs.statusCode == 200) {
+      var jsonData = jsonDecode(rs.body);
 
-  late AnimationController controller;
-  late Animation<double> animation;
-  late Animation<Offset> offsetAnimation;
+      setState(() {
+        print("\nsdfsdf");
+        property_name = jsonData['property'][0]["property_type_name"];
+      });
+    }
+  }
+
+  var bank = "";
+  Future get_bank() async {
+    setState(() {});
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank?bank_id=${list[0]['verbal_bank_id']}'));
+    if (rs.statusCode == 200) {
+      var jsonData = jsonDecode(rs.body);
+      // print(jsonData);
+      // print(jsonData);
+
+      setState(() {
+        bank = jsonData['banks'][0]['bank_acronym'];
+      });
+    }
+  }
+
+  var _branch = "";
+  void get_bankbranch() async {
+    setState(() {});
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bankbranch?bank_branch_id=${list[0]['verbal_bank_branch_id']}'));
+    if (rs.statusCode == 200) {
+      var jsonData = jsonDecode(rs.body.toString());
+      // print(jsonData);
+      setState(() {
+        print(jsonData);
+
+        if (jsonData.toString() != '[]') {
+          _branch = jsonData[0]['bank_branch_name'];
+        } else {
+          _branch = "Null";
+        }
+      });
+    }
+  }
+
+  int? number;
+  Future<void> get_count() async {
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${list[0]["verbal_user"]}'));
+    if (rs.statusCode == 200) {
+      var jsonData = jsonDecode(rs.body);
+      setState(() {
+        number = jsonData;
+        print("object: $number \n\n");
+      });
+    }
+  }
+
   @override
   void initState() {
-    Find_by_piont(double.parse(widget.lng), double.parse(widget.lat));
-    controller = AnimationController(
-        duration: const Duration(milliseconds: 645), vsync: this);
-    animation = new CurvedAnimation(parent: controller, curve: Curves.linear);
-    controller.repeat();
-    offsetAnimation = Tween<Offset>(
-      begin: Offset(0, 0),
-      end: const Offset(0, -0.3),
-    ).animate(CurvedAnimation(
-      parent: controller,
-      curve: Curves.easeIn,
-    ));
-    image_photo = widget.image_photo;
-    image_map = widget.image_map;
-    lb = widget.cell_land!;
-    list = widget.land_list!;
-    Load2(widget.option);
-    requestModelAuto = AutoVerbalRequestModel_update(
-      property_type_id: int.parse(widget.property_type_id.toString()),
-      lat: double.parse(widget.lng),
-      lng: double.parse(widget.lat),
-      address: widget.address,
-      approve_id: int.parse(widget.approve_id),
-      agent: int.parse(widget.agent),
-      bank_branch_id: int.parse(widget.bank_branch_id),
-      bank_contact: widget.bank_contact,
-      bank_id: int.parse(widget.bank_id),
-      bank_officer: widget.bank_officer,
-      comment: widget.comment,
-      contact: widget.contact,
-      image: widget.image,
-      option: int.parse(widget.option),
-      owner: widget.owner,
-      user: int.parse(widget.user),
-      verbal_com: widget.verbal_com,
-      verbal_con: widget.verbal_con,
-      verbal: widget.verbal,
-      verbal_id: widget.verbal_id,
-      verbal_khan: '',
-    );
+    find();
+
+    if (list.length > 0) {}
+    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var wth = MediaQuery.of(context).size.width * 9;
+    setState(() {
+      bank;
+      property_name;
+      _branch;
+      print("object $bank \n $property_name \n $_branch");
+    });
+    if (number != null) {
+      setState(() {
+        number;
+      });
+    }
     return Scaffold(
+      backgroundColor: Colors.blue[50],
       appBar: AppBar(
         backgroundColor: kwhite_new,
-        elevation: 0,
         centerTitle: true,
-        actions: <Widget>[
-          InkWell(
-            onTap: () {
-              setState(() {
-                if (_file != null) {
-                  uploadt_image(_file!);
-                }
-                APIservice apIservice = APIservice();
-                apIservice
-                    .saveAutoVerbal_Update(requestModelAuto, widget.verbal_id)
-                    .then(
-                  (value) async {
-                    // print(json.encode(requestModelAuto.toJson()));
-                    if (requestModelAuto.verbal.isEmpty) {
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.error,
-                        animType: AnimType.rightSlide,
-                        headerAnimationLoop: false,
-                        title: 'Error',
-                        desc: "Please add Land/Building at least 1!",
-                        btnOkOnPress: () {},
-                        btnOkIcon: Icons.cancel,
-                        btnOkColor: Colors.red,
-                      ).show();
-                    } else {
-                      if (value.message == "Save Successfully") {
-                        AwesomeDialog(
-                            context: context,
-                            animType: AnimType.leftSlide,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.success,
-                            showCloseIcon: false,
-                            title: value.message,
-                            autoHide: Duration(seconds: 3),
-                            onDismissCallback: (type) {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            }).show();
-                      } else {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.error,
-                          animType: AnimType.rightSlide,
-                          headerAnimationLoop: false,
-                          title: 'Error',
-                          desc: value.message,
-                          btnOkOnPress: () {},
-                          btnOkIcon: Icons.cancel,
-                          btnOkColor: Colors.red,
-                        ).show();
-                        // print(value.message);
-                      }
-                    }
-                  },
-                );
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 5, top: 15, bottom: 15, right: 4),
-              decoration: BoxDecoration(
-                color: Colors.lightGreen[700],
-                boxShadow: [BoxShadow(color: Colors.green, blurRadius: 5)],
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(80),
-                  bottomLeft: Radius.circular(80),
-                ),
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text("Submit"),
-                  Icon(Icons.save_alt_outlined),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Container(
-                    width: 10,
-                    height: 20,
-                    alignment: Alignment.topRight,
-                    color: Colors.red[700],
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-        title: Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: "ADD ONE CLICK ",
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                  color: kwhite,
-                ),
-              ),
-              TextSpan(
-                text: "1\$",
-                style: TextStyle(
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.bold,
-                  color: kerror,
-                ),
-              ),
-            ],
-          ),
-        ),
-        toolbarHeight: 80,
+        title: Text("Check Out"),
       ),
-      backgroundColor: kPrimaryColor,
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: SingleChildScrollView(
-            child: Responsive(
-              mobile: addVerbal(context),
-              tablet: Row(
-                children: [
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+      body: (list.length > 0 &&
+              bank != '' &&
+              property_name != '' &&
+              _branch != '')
+          ? SafeArea(
+              child: RefreshIndicator(
+                onRefresh: () => find(),
+                child: ListView(
+                  children: [
+                    Column(
                       children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: addVerbal(context),
+                        (list[0]["verbal_image"] == "null" ||
+                                list[0]["verbal_image"] == "No")
+                            ? Container(
+                                height: 200,
+                                margin: EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_la"]},${list[0]["latlong_log"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_la"]},${list[0]["latlong_log"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              )
+                            : Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      height: 150,
+                                      margin: EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_log"]},${list[0]["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_log"]},${list[0]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      height: 150,
+                                      margin: EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: MemoryImage(base64
+                                              .decode(list[0]["verbal_image"])),
+                                          //  NetworkImage(
+                                          //     'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_la"]},${list[0]["latlong_log"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_la"]},${list[0]["latlong_log"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                        Box(
+                          label: "ID Auto Verbal",
+                          iconname: const Icon(
+                            Icons.code,
+                            color: kImageColor,
+                          ),
+                          value: list[0]["verbal_id"] ?? "",
                         ),
+                        Box(
+                          label: "Property",
+                          iconname: const Icon(
+                            Icons.business_outlined,
+                            color: kImageColor,
+                          ),
+                          value: property_name ?? "",
+                        ),
+                        Box(
+                          label: "Bank",
+                          iconname: const Icon(
+                            Icons.home_work,
+                            color: kImageColor,
+                          ),
+                          value: bank ?? "",
+                        ),
+                        Box(
+                          label: "Branch",
+                          iconname: const Icon(
+                            Icons.account_tree_rounded,
+                            color: kImageColor,
+                          ),
+                          value: _branch ?? "",
+                        ),
+                        Box(
+                          label: "Owner",
+                          iconname: const Icon(
+                            Icons.person,
+                            color: kImageColor,
+                          ),
+                          value: list[0]["verbal_owner"] ?? "",
+                        ),
+                        Box(
+                          label: "Contact",
+                          iconname: const Icon(
+                            Icons.phone,
+                            color: kImageColor,
+                          ),
+                          value: list[0]["verbal_contact"] ?? "",
+                        ),
+                        // Box(
+                        //   label: "Date",
+                        //   iconname: const Icon(
+                        //     Icons.calendar_today,
+                        //     color: kImageColor,
+                        //   ),
+                        //   value: list[0]["verbal_created_date"].split(" ")[0] ??
+                        //       "N/A",
+                        // ),
+                        Box(
+                          label: "Bank Officer",
+                          iconname: const Icon(
+                            Icons.work,
+                            color: kImageColor,
+                          ),
+                          value: list[0]["verbal_bank_officer"] ?? "",
+                        ),
+                        Box(
+                          label: "Contact",
+                          iconname: const Icon(
+                            Icons.phone,
+                            color: kImageColor,
+                          ),
+                          value: list[0]["verbal_bank_contact"] ?? "",
+                        ),
+                        // Box(
+                        //   label: "Comment",
+                        //   iconname: const Icon(
+                        //     Icons.comment_sharp,
+                        //     color: kImageColor,
+                        //   ),
+                        //   value: list[0]["verbal_comment"] ?? "",
+                        // ),
+                        // Box(
+                        //   label: "Verify by",
+                        //   iconname: const Icon(
+                        //     Icons.person_sharp,
+                        //     color: kImageColor,
+                        //   ),
+                        //   value: list[0]["agenttype_name"] ?? "",
+                        // ),
+                        // Box(
+                        //   label: "Approve by",
+                        //   iconname: const Icon(
+                        //     Icons.person_outlined,
+                        //     color: kImageColor,
+                        //   ),
+                        //   value: list[0]["approve_name"] ?? "",
+                        // ),
+                        Box(
+                          label: "Address",
+                          iconname: const Icon(
+                            Icons.location_on_rounded,
+                            color: kImageColor,
+                          ),
+                          value: list[0]["verbal_address"].toString() +
+                                  ' / ' +
+                                  list[0]["verbal_khan"] ??
+                              "",
+                        ),
+                        //     SizedBox(
+                        //       width: 450,
+                        //       height: 270,
+                        //       child: SingleChildScrollView(
+                        //         scrollDirection: Axis.horizontal,
+                        //         child: Row(
+                        //           children: [
+                        //             for (int i = 0; i < land.length; i++)
+                        //               Container(
+                        //                 width: 270,
+                        //                 // height: 200,
+                        //                 padding: const EdgeInsets.all(7),
+                        //                 margin: const EdgeInsets.all(11),
+                        //                 decoration: BoxDecoration(
+                        //                   color: Colors.white,
+                        //                   boxShadow: const [
+                        //                     BoxShadow(
+                        //                         blurRadius: 2,
+                        //                         color: Colors.black45)
+                        //                   ],
+                        //                   border: Border.all(
+                        //                       width: 1, color: kPrimaryColor),
+                        //                   borderRadius:
+                        //                       BorderRadius.all(Radius.circular(15)),
+                        //                 ),
+                        //                 child: Column(
+                        //                   children: [
+                        //                     Padding(
+                        //                       padding: const EdgeInsets.only(
+                        //                           left: 7, right: 10),
+                        //                       child: Text.rich(
+                        //                         TextSpan(
+                        //                           children: <InlineSpan>[
+                        //                             WidgetSpan(
+                        //                                 child: Icon(
+                        //                               Icons.location_on_sharp,
+                        //                               color: kPrimaryColor,
+                        //                               size: 14,
+                        //                             )),
+                        //                             TextSpan(
+                        //                                 text:
+                        //                                     "${land[i]['address']} "),
+                        //                           ],
+                        //                         ),
+                        //                         textAlign: TextAlign.left,
+                        //                         style: const TextStyle(
+                        //                             fontSize: 10,
+                        //                             overflow:
+                        //                                 TextOverflow.ellipsis),
+                        //                       ),
+                        //                     ),
+                        //                     const SizedBox(
+                        //                       height: 3.0,
+                        //                     ),
+                        //                     const Divider(
+                        //                       height: 1,
+                        //                       thickness: 1,
+                        //                       color: kPrimaryColor,
+                        //                     ),
+                        //                     const SizedBox(
+                        //                       height: 5,
+                        //                     ),
+                        //                     Container(
+                        //                       padding:
+                        //                           const EdgeInsets.only(left: 10),
+                        //                       alignment: Alignment.centerLeft,
+                        //                       child: Text(
+                        //                         land[i]['verbal_land_type'],
+                        //                       ),
+                        //                     ),
+                        //                     Row(
+                        //                       children: [
+                        //                         const SizedBox(width: 10),
+                        //                         Column(
+                        //                           mainAxisAlignment:
+                        //                               MainAxisAlignment.start,
+                        //                           crossAxisAlignment:
+                        //                               CrossAxisAlignment.start,
+                        //                           children: [
+                        //                             Text(
+                        //                               "Depreciation",
+                        //                               style: Label(),
+                        //                             ),
+                        //                             const SizedBox(height: 3),
+                        //                             Text(
+                        //                               "Area",
+                        //                               style: Label(),
+                        //                             ),
+                        //                             SizedBox(height: 3),
+                        //                             Text(
+                        //                               'Min Value/Sqm',
+                        //                               style: Label(),
+                        //                             ),
+                        //                             const SizedBox(height: 3),
+                        //                             Text(
+                        //                               'Max Value/Sqm',
+                        //                               style: Label(),
+                        //                             ),
+                        //                             const SizedBox(height: 3),
+                        //                             Text(
+                        //                               'Min Value',
+                        //                               style: Label(),
+                        //                             ),
+                        //                             SizedBox(height: 3),
+                        //                             Text(
+                        //                               'Min Value',
+                        //                               style: Label(),
+                        //                             ),
+                        //                           ],
+                        //                         ),
+                        //                         SizedBox(width: 15),
+                        //                         Column(
+                        //                           mainAxisAlignment:
+                        //                               MainAxisAlignment.start,
+                        //                           crossAxisAlignment:
+                        //                               CrossAxisAlignment.start,
+                        //                           children: [
+                        //                             SizedBox(height: 4),
+                        //                             Text(
+                        //                               ':   ' +
+                        //                                   land[i]['verbal_land_dp'],
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_area'].toString()))} m\u00B2',
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_minsqm'].toString()))} \$',
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_maxsqm'].toString()))} \$',
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_minvalue'].toString()))} \$',
+                        //                               style: Name(),
+                        //                             ),
+                        //                             SizedBox(height: 2),
+                        //                             Text(
+                        //                               ':   ${formatter.format(double.parse(land[i]['verbal_land_maxvalue'].toString()))} \$',
+                        //                               style: Name(),
+                        //                             ),
+                        //                           ],
+                        //                         ),
+                        //                       ],
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //               ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
                       ],
                     ),
-                  )
-                ],
-              ),
-              desktop: Row(
-                children: [
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: addVerbal(context),
-                        ),
-                      ],
+                    SizedBox(
+                      height: 30,
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-              phone: addVerbal(context),
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
             ),
-          ),
-        ),
-      ),
-    );
-  }
+      floatingActionButton: InkWell(
+        onTap: () {
+          setState(() {
+            (bnt1) ? (bnt1 = false) : (bnt1 = true);
+            // List<L_B> lb;
+            // .
+            requestModelAuto = AutoVerbalRequestModel(
+              property_type_id: list[0]["verbal_property_id"],
+              lat: list[0]["latlong_log"],
+              lng: list[0]["latlong_la"],
+              address: list[0]["verbal_address"],
+              approve_id: list[0]["verbal_approve_id"],
+              agent: list[0]["VerifyAgent"],
+              bank_branch_id: list[0]["verbal_bank_branch_id"],
+              bank_contact: list[0]["verbal_bank_contact"],
+              bank_id: list[0]["verbal_bank_id"],
+              bank_officer: list[0]["verbal_bank_officer"],
+              code: list[0]["verbal_property_code"],
+              comment: list[0]["verbal_comment"],
+              contact: list[0]["verbal_contact"],
+              date: list[0]["verbal_date"],
+              image: list[0]["verbal_image"],
+              option: list[0]["verbal_option"],
+              owner: list[0]["verbal_owner"],
+              user: list[0]["verbal_user"],
+              verbal_com: list[0]["verbal_com"],
+              verbal_con: list[0]["verbal_con"],
+              verbal: land,
+              verbal_id: list[0]["verbal_id"],
+              verbal_khan: list[0]["verbal_khan"],
+            );
+          });
+          if (number! >= 1) {
+            APIservice apIservice = APIservice();
+            apIservice.saveAutoVerbal(requestModelAuto!).then(
+              (value) async {
+                if (requestModelAuto!.verbal.isEmpty) {
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.error,
+                    animType: AnimType.rightSlide,
+                    headerAnimationLoop: false,
+                    title: 'Error',
+                    desc: "Please add Land/Building at least 1!",
+                    btnOkOnPress: () {},
+                    btnOkIcon: Icons.cancel,
+                    btnOkColor: Colors.red,
+                  ).show();
+                } else {
+                  if (value.message == "Save Successfully") {
+                    await mydb_vb.db.rawDelete(
+                        "DELETE FROM verbal_models WHERE verbal_id = ?",
+                        [list[0]["verbal_id"]]);
+                    await mydb_lb.db.rawDelete(
+                        "DELETE FROM comverbal_land_models WHERE verbal_landid = ?",
+                        [list[0]["verbal_id"]]);
 
-  Widget addVerbal(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-          child: Column(
-            children: [
-              Code(
-                cd: widget.verbal_id.toString(),
-                code: (value) {
-                  setState(() {
-                    // code = value;
-                  });
-                },
-                check_property: 1,
-              ),
-              PropertyDropdown(
-                pro: widget.n_pro,
-                name: (value) {
-                  propertyType = value;
-                },
-                id: (value) {
-                  setState(() {
-                    requestModelAuto.property_type_id = int.parse(value);
-                  });
-                },
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              BankDropdown(
-                brn: widget.bank_branch_id,
-                bn: widget.n_bank,
-                bank: (value) {
-                  setState(() {
-                    requestModelAuto.bank_id = int.parse(value);
-                  });
-                },
-                bankbranch: (value) {
-                  setState(() {
-                    requestModelAuto.bank_branch_id = int.parse(value);
-                  });
-                },
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              FormTwinN(
-                Label1: 'Owner',
-                Label2: 'Contact',
-                Label1_e: widget.owner,
-                Label2_e: widget.contact,
-                onSaved1: (input) {
-                  setState(() {
-                    requestModelAuto.owner = input.toString();
-                  });
-                },
-                onSaved2: (input) {
-                  setState(() {
-                    requestModelAuto.contact = input.toString();
-                  });
-                },
-                icon1: Icon(
-                  Icons.person,
-                  color: kImageColor,
-                ),
-                icon2: Icon(
-                  Icons.phone,
-                  color: kImageColor,
-                ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              FormTwinN(
-                Label1: 'Bank Officer',
-                Label2: 'Contact',
-                Label1_e: widget.bank_officer,
-                Label2_e: widget.bank_contact,
-                onSaved1: (input) {
-                  setState(() {
-                    requestModelAuto.bank_officer = input.toString();
-                  });
-                },
-                onSaved2: (input) {
-                  setState(() {
-                    requestModelAuto.bank_contact = input.toString();
-                  });
-                },
-                icon1: Icon(
-                  Icons.work,
-                  color: kImageColor,
-                ),
-                icon2: Icon(
-                  Icons.phone,
-                  color: kImageColor,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ForceSaleAndValuation(
-                fsl: widget.verbal_con,
-                value: (value) {
-                  requestModelAuto.verbal_con = value.toString();
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CommentAndOption(
-                option: option,
-                value: (value) {
-                  opt = int.parse(value);
-                },
-                id: (value) {
-                  setState(() {
-                    requestModelAuto.option = int.parse(value);
-                  });
-                },
-                comment: (String? newValue) {
-                  setState(() {
-                    requestModelAuto.comment = newValue!.toString();
-                  });
-                },
-                opt_type_id: (value) {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ApprovebyAndVerifyby(
-                appro: widget.n_appro,
-                vfy: widget.n_agent,
-                approve: (value) {
-                  requestModelAuto.approve_id = int.parse(value);
-                },
-                verify: (value) {
-                  requestModelAuto.agent = int.parse(value);
-                },
-              ),
-              (map == false)
-                  ? Container(
-                      margin: EdgeInsets.all(10),
-                      width: 300,
-                      height: 300,
-                      child: Image.network(
-                        image_map!,
-                        fit: BoxFit.fill,
-                      ))
-                  : SizedBox(),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    map = true;
-                    SlideUp(context);
-                  });
-                },
-                child: FractionallySizedBox(
-                  widthFactor: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 22, right: 22),
-                    child: Container(
-                      height: 60,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1,
-                          color: kPrimaryColor,
+                    await payment_done(context);
+                    // ignore: use_build_context_synchronously
+                    AwesomeDialog(
+                        context: context,
+                        animType: AnimType.leftSlide,
+                        headerAnimationLoop: false,
+                        dialogType: DialogType.success,
+                        showCloseIcon: false,
+                        // title: value.message,
+                        autoHide: Duration(seconds: 10),
+                        body: Center(
+                          child: Text("Do you want to save photo"),
                         ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              SizedBox(width: 10),
-                              Icon(
-                                Icons.map_sharp,
-                                color: kImageColor,
-                              ),
-                              SizedBox(width: 10),
-                              Text((map == true)
-                                  ? 'Location Changed'
-                                  : 'Change Location'),
-                            ],
-                          )),
-                    ),
-                  ),
-                ),
-              ),
-              if (_file == null)
-                Container(
-                  height: 200,
-                  width: 400,
-                  child: Image.network(image_photo),
-                ),
-              Column(
-                children: [
-                  if (_file != null)
-                    Container(
-                      height: 200,
-                      width: 400,
-                      // child: Image.file(File(_file!.path)),
-                      child: Image.memory(imagebytes!),
-                    ),
-                  if (_file == null)
-                    TextButton(
-                      onPressed: () async {
-                        await openImage();
-                        setState(() {
-                          _file;
-                        });
-                      },
-                      child: FractionallySizedBox(
-                        widthFactor: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 22, right: 22),
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 1,
-                                color: kPrimaryColor,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
+                        btnOkOnPress: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => save_image_after_add_verbal(
+                                    set_data_verbal: list[0]["verbal_id"],
+                                  )));
+                        },
+                        btnCancelOnPress: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => save_image_after_add_verbal(
+                                    set_data_verbal: list[0]["verbal_id"],
+                                  )));
+                        },
+                        btnOkIcon: Icons.info_outline,
+                        btnOkColor: Colors.blueAccent,
+                        onDismissCallback: (type) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => List_Auto(
+                                verbal_id: list[0]["verbal_id"],
+                                id_control_user: list[0]["verbal_user"],
                               ),
                             ),
-                            // padding: EdgeInsets.only(left: 30, right: 30),
-                            child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  children: [
-                                    SizedBox(width: 10),
-                                    Icon(
-                                      Icons.map_sharp,
-                                      color: kImageColor,
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text((imagepath == "")
-                                        ? 'Choose Photo'
-                                        : 'choosed Photo'),
-                                  ],
-                                )),
-                          ),
-                        ),
+                          );
+                        }).show();
+                  } else {
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.error,
+                      animType: AnimType.rightSlide,
+                      headerAnimationLoop: false,
+                      title: 'Error',
+                      desc: value.message,
+                      btnOkOnPress: () {},
+                      btnOkIcon: Icons.cancel,
+                      btnOkColor: Colors.red,
+                    ).show();
+                  }
+                }
+              },
+            );
+          } else {
+            AwesomeDialog(
+              context: context,
+              dialogType: DialogType.info,
+              animType: AnimType.rightSlide,
+              headerAnimationLoop: true,
+              title: 'Error',
+              desc: "You need VPoint to Process\nNow You have $number VPoint",
+              autoHide: Duration(seconds: 4),
+              btnOkOnPress: () {
+                setState(() {
+                  (!bnt1) ? (bnt1 = true) : (bnt1 = false);
+                });
+              },
+              onDismissCallback: (type) {
+                setState(() {
+                  int i = user.length;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TopUp(
+                        set_phone: user[i - 1]['tel_num'].toString(),
+                        set_id_user: user[i - 1]['username'].toString(),
+                        set_email: user[i - 1]['email'].toString(),
+                        id_user: user[i - 1]['id'].toString(),
+                        id_verbal: list[0]["verbal_id"],
                       ),
                     ),
-                ],
-              ),
-              // SingleChildScrollView(
-              //   child: Column(children: [
-              //     imagepath != ""
-              //         ? Container(
-              //             margin: EdgeInsets.all(10),
-              //             width: 300,
-              //             height: 300,
-              //             child: Image.file(
-              //               File(imagepath),
-              //               fit: BoxFit.fitWidth,
-              //             ))
-              //         : SizedBox(),
-              //     imagepath == ""
-              //         ? TextButton(
-              //             onPressed: () {
-              //               setState(() {
-              //                 openImage();
-              //                 img = true;
-              //               });
-              //             },
-              //             child: FractionallySizedBox(
-              //               widthFactor: 1,
-              //               child: Padding(
-              //                 padding:
-              //                     const EdgeInsets.only(left: 22, right: 22),
-              //                 child: Container(
-              //                   height: 60,
-              //                   decoration: BoxDecoration(
-              //                     border: Border.all(
-              //                       width: 1,
-              //                       color: kPrimaryColor,
-              //                     ),
-              //                     borderRadius: BorderRadius.all(
-              //                       Radius.circular(10),
-              //                     ),
-              //                   ),
-              //                   // padding: EdgeInsets.only(left: 30, right: 30),
-              //                   child: Align(
-              //                       alignment: Alignment.centerLeft,
-              //                       child: Row(
-              //                         // ignore: prefer_const_literals_to_create_immutables
-              //                         children: [
-              //                           SizedBox(width: 10),
-              //                           Icon(
-              //                             Icons.photo_album_outlined,
-              //                             color: kImageColor,
-              //                           ),
-              //                           SizedBox(width: 10),
-              //                           // ignore: unnecessary_null_comparison
-              //                           Text('Change Image'),
-              //                         ],
-              //                       )),
-              //                 ),
-              //               ),
-              //             ),
-              //           )
-              //         : SizedBox(),
-              //   ]),
-              // ),
-              SizedBox(
-                height: 390,
-                child: up_LandBuilding(
-                  land_list: widget.land_list,
-                  ID_khan: id_khan.toString(),
-                  opt: opt,
-                  address: '${commune} / ${district}',
-                  list: (value) {
-                    setState(() {
-                      requestModelAuto.verbal = value;
-                    });
-                  },
-                  landId: widget.verbal_id.toString(),
-                  Avt: (value) {
-                    a = value;
-                    setState(() {});
-                  },
-                  opt_type_id: opt_type_id,
-                  check_property: 1,
-                  list_lb: (value) {
-                    setState(() {
-                      lb.addAll(value!);
-                    });
-                  },
-                  ID_sangkat: id_Sangkat.toString(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  double? lat1;
-  double? log1;
-  double? lat;
-  double? log;
-
-  Future<void> SlideUp(BuildContext context) async {
-    //=============================================================
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => Map_verbal_edit(
-              get_commune: (value) {
-                setState(() {
-                  commune = value;
-                  Load_sangkat(value);
+                  );
                 });
               },
-              get_district: (value) {
-                setState(() {
-                  district = value;
-                  Load_khan(district);
-                });
-              },
-              get_lat: (value) {
-                requestModelAuto.lat = value;
-              },
-              get_log: (value) {
-                requestModelAuto.lng = value;
-              },
-              get_province: (value) {},
-            )));
-    // final result = await Navigator.of(context).push(MaterialPageRoute(
-    //     builder: (context) => HomePage(
-    //           c_id: code.toString(),
-    //           district: (value) {
-    //             setState(() {
-    //               district = value;
-    //               Load_khan(district);
-    //             });
-    //           },
-    //           commune: (value) {
-    //             setState(() {
-    //               commune = value;
-    //               Load_sangkat(value);
-    //             });
-    //           },
-    //           lat: (value) {
-    //             setState(() {
-    //               lat1 = double.parse(value);
-
-    //               requestModelAuto.lat = value;
-    //             });
-    //           },
-    //           log: (value) {
-    //             setState(() {
-    //               log2 = double.parse(value);
-    //               requestModelAuto.lng = value;
-    //             });
-    //           },
-    //           province: (value) {},
-    //         )));
-//=============================================================
-    // final result = await Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => Google_map_verbal(
-    //       lat: (value) {
-    //        lat1 = value ;
-    //       },
-    //       log: (value) {
-    //         log2 = value;
-    //       },
-    //       latitude: lat!,
-    //       longitude: log!,
-    //     ),
-
-    // builder: (context) => HomePage(
-    //   c_id: code.toString(),
-    //   district: (value) {
-    //     setState(() {
-    //       district = value;
-    //       Load_khan(district);
-    //     });
-    //   },
-    //   commune: (value) {
-    //     setState(() {
-    //       commune = value;
-    //       Load_sangkat(value);
-    //     });
-    //   },
-    //   lat: (value) {
-    //     setState(() {
-    //       print("Value of lat = ${value}");
-    //       requestModelAuto.lat = value;
-    //     });
-    //   },
-    //   log: (value) {
-    //     setState(() {
-    //       requestModelAuto.lng = value;
-    //     });
-    //   },
-    //   province: (value) {},
-    // ),
-    //   ),
-    // );
-    setState(() {
-      requestModelAuto.image = code.toString();
-    });
-    if (!mounted) return;
-    // asking_price = result[0]['adding_price'];
-    // address = result[0]['address'];
-    // requestModelAuto.lat = result[0]['lat'];
-    // requestModelAuto.lng = result[0]['lng'];
-  }
-
-  late File _image;
-  final picker = ImagePicker();
-  late String base64string;
-  // File? _file;
-  final ImagePicker imgpicker = ImagePicker();
-  String imagepath = "";
-  // openImage() async {
-  //   try {
-  //     var pickedFile = await imgpicker.pickImage(source: ImageSource.gallery);
-  //     if (pickedFile != null) {
-  //       imagepath = pickedFile.path;
-  //       print(imagepath);
-  //       File imagefile = File(imagepath);
-  //       Uint8List imagebytes = await imagefile.readAsBytes();
-  //       String base64string = base64.encode(imagebytes);
-  //       Uint8List decodedbytes = base64.decode(base64string);
-  //       setState(() {
-  //         _file = imagefile;
-  //       });
-  //     } else {
-  //       print("No image is selected.");
-  //     }
-  //   } catch (e) {
-  //     print("error while picking file.");
-  //   }
-  // }
-  XFile? _file;
-  Uint8List? imagebytes;
-  dynamic openImage() async {
-    try {
-      XFile? pickedFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      //you can use ImageCourse.camera for Camera capture
-      if (pickedFile != null) {
-        imagepath = pickedFile.path;
-        CroppedFile? cropFile = await ImageCropper()
-            .cropImage(sourcePath: pickedFile.path, aspectRatioPresets: [
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio16x9,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio5x3,
-          CropAspectRatioPreset.ratio5x4,
-          CropAspectRatioPreset.ratio7x5,
-          CropAspectRatioPreset.square,
-        ], uiSettings: [
-          AndroidUiSettings(
-              lockAspectRatio: false,
-              backgroundColor: Colors.blue,
-              initAspectRatio: CropAspectRatioPreset.original)
-        ]);
-        _file = XFile(cropFile!.path);
-        // imagebytes = _file.path;
-        // imagepath = pickedFile.path;
-        File? imagefile = File(cropFile.path); //convert Path to File
-        imagebytes = await imagefile.readAsBytes(); //convert to bytes
-        String base64string =
-            base64.encode(imagebytes!); //convert bytes to base64 string
-        Uint8List decodedbytes = base64.decode(base64string);
-        //decode base64 stirng to bytes
-        setState(() {
-          _file = imagefile as XFile;
-        });
-      } else {
-        // print("No image is selected.");
-      }
-    } catch (e) {
-      // print("error while picking file.");
-    }
-  }
-
-  Future<dynamic> uploadt_image(XFile _image) async {
-    var request = await http.MultipartRequest(
-        "POST",
-        Uri.parse(
-            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_image"));
-    Map<String, String> headers = {
-      "content-type": "application/json",
-      "Connection": "keep-alive",
-      "Accept-Encoding": " gzip"
-    };
-    request.headers.addAll(headers);
-    // request.files.add(picture);
-    request.fields['cid'] = widget.verbal_id.toString();
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        "image",
-        _image.path,
+              // btnOkIcon: Icons.info_outline,
+              // btnOkColor: Colors.blueAccent,
+            ).show();
+          }
+        },
+        child: Container(
+            height: 40,
+            width: MediaQuery.of(context).size.width * 0.5,
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(bottom: 5),
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                  blurRadius: 5,
+                  color: Colors.black87,
+                  offset: (bnt1 == false) ? Offset(1, 0.5) : Offset(0, 0),
+                  blurStyle: BlurStyle.outer)
+            ], color: kwhite_new, borderRadius: BorderRadius.circular(10)),
+            child: Text(
+              "Payment",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w100),
+            )),
       ),
     );
-    var response = await request.send();
-    var responseData = await response.stream.toBytes();
-    var result = String.fromCharCodes(responseData);
-    // print(result);
   }
 
-  int i = 0;
-  Future _asyncInputDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      useSafeArea: false,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          scrollable: true,
-          insetPadding:
-              EdgeInsets.only(top: 30, left: 10, right: 1, bottom: 20),
-          content: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 1,
-              child: LandBuilding(
-                ID_khan: id_khan.toString(),
-                // asking_price: asking_price,
-                opt: opt,
-                address: '${commune} / ${district}',
-                list: (value) {
-                  setState(() {
-                    // print(value);
-                    list = value;
-                    // requestModelAuto.verbal = value;
-                  });
-                },
-                landId: code.toString(),
-                Avt: (value) {
-                  a = value;
-                },
-                opt_type_id: opt_type_id,
-                check_property: 1,
-                list_lb: (value) {
-                  setState(() {
-                    lb.addAll(value!);
-                  });
-                },
-                ID_sangkat: id_Sangkat.toString(),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  AutoVerbalRequestModel? requestModelAuto;
+  bool bnt1 = false;
+  List<Map<String, dynamic>> convertList(
+      List<Map<dynamic, dynamic>> originalList) {
+    List<Map<String, dynamic>> convertedList = [];
 
-  String? option;
-  late List<dynamic> _list2;
-  void Load2(id) async {
-    setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/options?opt_id=${id}'));
-    if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
+    for (var originalMap in originalList) {
+      Map<String, dynamic> convertedMap = {};
 
-      setState(() {
-        _list2 = jsonData;
-        option = _list2[0]['opt_des'];
-        // print(_list);
+      // Convert keys to String
+      originalMap.forEach((key, value) {
+        convertedMap[key.toString()] = value;
       });
+
+      convertedList.add(convertedMap);
+    }
+
+    return convertedList;
+  }
+
+  Future<void> payment_done(BuildContext context) async {
+    final Data = {
+      "id_user_control": list[0]["verbal_user"],
+      "count_autoverbal": "-1",
+    };
+    final response = await http.post(
+      Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(Data),
+    );
+    if (response.statusCode == 200) {
+      // ignore: use_build_context_synchronously
     }
   }
 
   TextStyle Label() {
-    return TextStyle(color: kPrimaryColor, fontSize: 13);
+    return TextStyle(color: kPrimaryColor, fontSize: 12);
   }
 
   TextStyle Name() {
     return TextStyle(
-        color: kImageColor, fontSize: 14, fontWeight: FontWeight.bold);
+      color: Colors.black12,
+      fontSize: 13,
+      // decoration: TextDecoration.lineThrough,
+      // decorationColor: Colors.redAccent,
+      fontWeight: FontWeight.bold,
+      // shadows: [Shadow(blurRadius: 50)],
+    );
   }
 
   TextStyle NameProperty() {
     return TextStyle(
         color: kImageColor, fontSize: 11, fontWeight: FontWeight.bold);
   }
+
+  var formatter = NumberFormat("##,###,###,###", "en_US");
 }
