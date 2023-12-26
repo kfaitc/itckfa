@@ -4,8 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +19,6 @@ import 'package:itckfa/afa/customs/formVLD.dart';
 import 'package:itckfa/api/api_service.dart';
 import 'package:itckfa/models/register_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
-import 'package:itckfa/verify.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../screen/Customs/responsive.dart';
@@ -59,7 +56,7 @@ class _RegisterState extends State<Register> {
     'Male',
     'Other',
   ];
-  MyDb mydb = new MyDb();
+  MyDb mydb = MyDb();
   Uint8List? imagebytes;
   final ImagePicker imgpicker = ImagePicker();
   String imagepath = "";
@@ -79,22 +76,26 @@ class _RegisterState extends State<Register> {
 
   Future cut_again() async {
     imagepath = imagefile!.path;
-    CroppedFile? cropFile = await ImageCropper()
-        .cropImage(sourcePath: imagefile!.path, aspectRatioPresets: [
-      CropAspectRatioPreset.original,
-      CropAspectRatioPreset.ratio16x9,
-      CropAspectRatioPreset.ratio3x2,
-      CropAspectRatioPreset.ratio4x3,
-      CropAspectRatioPreset.ratio5x3,
-      CropAspectRatioPreset.ratio5x4,
-      CropAspectRatioPreset.ratio7x5,
-      CropAspectRatioPreset.square,
-    ], uiSettings: [
-      AndroidUiSettings(
+    CroppedFile? cropFile = await ImageCropper().cropImage(
+      sourcePath: imagefile!.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio16x9,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio5x3,
+        CropAspectRatioPreset.ratio5x4,
+        CropAspectRatioPreset.ratio7x5,
+        CropAspectRatioPreset.square,
+      ],
+      uiSettings: [
+        AndroidUiSettings(
           lockAspectRatio: false,
           backgroundColor: Colors.black,
-          initAspectRatio: CropAspectRatioPreset.original)
-    ]);
+          initAspectRatio: CropAspectRatioPreset.original,
+        ),
+      ],
+    );
 
     get_bytes = await imagefile!.readAsBytes(); //convert to bytes
     setState(() {
@@ -109,15 +110,18 @@ class _RegisterState extends State<Register> {
   String? smsCode;
   String? set_id_user;
   int? user_last_id;
-  Random random = new Random();
+  Random random = Random();
 
   Uint8List? get_bytes;
   Uint8List? _byesData;
   void get_user_last_id() async {
     setState(() {});
     // await Firebase.initializeApp();
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_last_user'));
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_last_user',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
 
@@ -146,13 +150,19 @@ class _RegisterState extends State<Register> {
   Future<void> uploadImage() async {
     if (get_bytes != null) {
       var request = http.MultipartRequest(
-          'POST',
-          Uri.parse(
-              'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_profile_user'));
+        'POST',
+        Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_profile_user',
+        ),
+      );
       request.fields['id_user'] = set_id_user ?? '';
-      request.files.add(await http.MultipartFile.fromBytes('image', get_bytes!,
-          filename:
-              'User ID :${set_id_user} photo ${random.nextInt(999)}.jpg'));
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'image',
+          get_bytes!,
+          filename: 'User ID :$set_id_user photo ${random.nextInt(999)}.jpg',
+        ),
+      );
       var res = await request.send();
     }
   }
@@ -201,14 +211,15 @@ class _RegisterState extends State<Register> {
         ),
         toolbarHeight: 100,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.chevron_left_outlined,
-              color: Colors.white,
-              size: 40,
-            )),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.chevron_left_outlined,
+            color: Colors.white,
+            size: 40,
+          ),
+        ),
       ),
       backgroundColor: kwhite_new,
       body: Container(
@@ -234,7 +245,7 @@ class _RegisterState extends State<Register> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
             desktop: Row(
@@ -249,7 +260,7 @@ class _RegisterState extends State<Register> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
             phone: register(context),
@@ -319,50 +330,54 @@ class _RegisterState extends State<Register> {
                   });
                 },
                 child: Center(
-                    child: (get_bytes == null)
-                        ? Stack(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              GFAvatar(
-                                size: 100,
-                                backgroundImage:
-                                    AssetImage('assets/images/user-avatar.png'),
+                  child: (get_bytes == null)
+                      ? Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            GFAvatar(
+                              size: 100,
+                              backgroundImage:
+                                  AssetImage('assets/images/user-avatar.png'),
+                            ),
+                            Container(
+                              height: 20,
+                              width: 30,
+                              alignment: Alignment.bottomCenter,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(96, 102, 102, 102),
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                              Container(
-                                height: 20,
-                                width: 30,
-                                alignment: Alignment.bottomCenter,
-                                decoration: BoxDecoration(
-                                    color: Color.fromARGB(96, 102, 102, 102),
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Icon(
-                                  Icons.camera_alt_outlined,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          )
-                        : Stack(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            children: [
-                              GFAvatar(
-                                  size: 100,
-                                  backgroundImage: MemoryImage(get_bytes!)),
-                              Container(
-                                height: 20,
-                                width: 30,
-                                alignment: Alignment.bottomCenter,
-                                decoration: BoxDecoration(
-                                    color: Color.fromARGB(96, 102, 102, 102),
-                                    borderRadius: BorderRadius.circular(5)),
-                                child: Icon(
-                                  Icons.crop,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          )),
+                              child: Icon(
+                                Icons.camera_alt_outlined,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            GFAvatar(
+                              size: 100,
+                              backgroundImage: MemoryImage(get_bytes!),
+                            ),
+                            Container(
+                              height: 20,
+                              width: 30,
+                              alignment: Alignment.bottomCenter,
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(96, 102, 102, 102),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Icon(
+                                Icons.crop,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
               ),
               SizedBox(
                 height: 20.0,
@@ -403,7 +418,7 @@ class _RegisterState extends State<Register> {
                         // ),
                       ),
                       Text(
-                        '${set_id_user}',
+                        '$set_id_user',
                         //initialValue: '${set_id_user}',
                         style: TextStyle(
                           fontSize: 20.0,
@@ -438,26 +453,27 @@ class _RegisterState extends State<Register> {
               //   height: 10.0,
               // ),
               FormTwin(
-                  Label1: 'First Name',
-                  Label2: 'Last Name',
-                  onSaved1: (input) {
-                    setState(() {
-                      requestModel.first_name = input!;
-                    });
-                  },
-                  onSaved2: (input) {
-                    setState(() {
-                      requestModel.last_name = input!;
-                    });
-                  },
-                  icon1: Icon(
-                    Icons.person,
-                    color: kImageColor,
-                  ),
-                  icon2: Icon(
-                    Icons.person,
-                    color: kImageColor,
-                  )),
+                Label1: 'First Name',
+                Label2: 'Last Name',
+                onSaved1: (input) {
+                  setState(() {
+                    requestModel.first_name = input!;
+                  });
+                },
+                onSaved2: (input) {
+                  setState(() {
+                    requestModel.last_name = input!;
+                  });
+                },
+                icon1: Icon(
+                  Icons.person,
+                  color: kImageColor,
+                ),
+                icon2: Icon(
+                  Icons.person,
+                  color: kImageColor,
+                ),
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -788,7 +804,7 @@ class _RegisterState extends State<Register> {
                                 requestModel.tel_num,
                                 requestModel.known_from,
                                 requestModel.email,
-                                requestModel.password
+                                requestModel.password,
                               ]);
                           // ignore: use_build_context_synchronously
                           AwesomeDialog(
@@ -801,7 +817,8 @@ class _RegisterState extends State<Register> {
                             autoHide: Duration(seconds: 3),
                             onDismissCallback: (type) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("New User Added")));
+                                SnackBar(content: Text("New User Added")),
+                              );
                               Get.to(() => Login());
                             },
                           ).show();
@@ -955,10 +972,12 @@ class _RegisterState extends State<Register> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      LoginPage(lat: 0, log: 0, thi: 0)));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  LoginPage(lat: 0, log: 0, thi: 0),
+                            ),
+                          );
                         },
                       style: TextStyle(
                         fontSize: 16.0,

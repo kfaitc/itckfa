@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/nounrithy/in app purchase key/One Click One Dollar.storekit">
+   </FileRef>
+   <FileRef
+      location = "group:../../../in app purchase key/localtest.storekit">
+   </FileRef>
+   <FileRef
       location = "group:Runner.xcodeproj">
    </FileRef>
    <FileRef
