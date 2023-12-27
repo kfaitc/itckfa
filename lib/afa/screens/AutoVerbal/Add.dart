@@ -25,7 +25,6 @@ import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.
 import 'package:itckfa/afa/screens/AutoVerbal/search/protect.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
-import 'package:itckfa/screen/components/payment/Main_Form/mengtop_up.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -36,7 +35,7 @@ import '../../../models/model_bl_new.dart';
 import '../../../screen/Customs/form.dart';
 import '../../../screen/Customs/formTwinN.dart';
 import '../../../screen/Profile/components/Drop.dart';
-import '../../../screen/components/payment/Main_Form/kim_top_up.dart';
+import '../../../screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import '../../components/code.dart';
 import '../../components/comment.dart';
 import '../../../screen/components/map_all/map_in_list_search.dart';

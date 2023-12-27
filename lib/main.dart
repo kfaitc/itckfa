@@ -11,7 +11,7 @@ import 'package:getwidget/types/gf_button_type.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/search/Edit.dart';
 import 'package:itckfa/screen/Home/Home.dart';
-import 'package:itckfa/screen/components/payment/Main_Form/kim_top_up.dart';
+import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';

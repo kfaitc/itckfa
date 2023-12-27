@@ -136,14 +136,14 @@ class _TopUpState extends State<TopUp> {
         });
       }
 
-      if (purchase.status == PurchaseStatus.canceled) {
+      if ([PurchaseStatus.canceled, PurchaseStatus.error]
+          .contains(purchase.status)) {
         setState(() => _purchasePending = false);
       }
 
-      // if (purchase.pendingCompletePurchase) {
-      //   await InAppPurchase.instance.completePurchase(purchase);
-      //   log('Purchase pendingCompletePurchase');
-      // }
+      if (purchase.pendingCompletePurchase) {
+        await _iap.completePurchase(purchase);
+      }
 
       if (purchase.status == PurchaseStatus.purchased) {
         log('Purchased in app');
@@ -161,7 +161,6 @@ class _TopUpState extends State<TopUp> {
         );
 
         if (isPurchaseValid) {
-          await _iap.completePurchase(purchase);
           await _fetchPoint();
           if (!context.mounted) return;
 
@@ -218,7 +217,7 @@ class _TopUpState extends State<TopUp> {
         return message == "success";
       }
 
-      throw res.body;
+      return false;
     } catch (e, str) {
       log(e.toString(), stackTrace: str);
       return false;
@@ -243,7 +242,7 @@ class _TopUpState extends State<TopUp> {
         if (_error == null)
           ListView(
             children: [
-              _buildConnectionCheckTile(),
+              //_buildConnectionCheckTile(),
               _buildProductList(),
               //handleSuccessful(purchaseDetail!),
             ],
@@ -311,23 +310,23 @@ class _TopUpState extends State<TopUp> {
           ),
         ),
         elevation: 0.0,
-        actions: [
-          GFIconButton(
-            padding: const EdgeInsets.all(1),
-            onPressed: () {},
-            icon: const Icon(
-              Icons.question_mark,
-              color: Colors.white,
-              size: 20,
-            ),
-            color: Colors.white,
-            type: GFButtonType.outline2x,
-            size: 10,
-            iconSize: 30.0,
-            disabledColor: Colors.white,
-            shape: GFIconButtonShape.circle,
-          ),
-        ],
+        // actions: [
+        //   GFIconButton(
+        //     padding: const EdgeInsets.all(1),
+        //     onPressed: () {},
+        //     icon: const Icon(
+        //       Icons.question_mark,
+        //       color: Colors.white,
+        //       size: 20,
+        //     ),
+        //     color: Colors.white,
+        //     type: GFButtonType.outline2x,
+        //     size: 10,
+        //     iconSize: 30.0,
+        //     disabledColor: Colors.white,
+        //     shape: GFIconButtonShape.circle,
+        //   ),
+        // ],
       ),
       body: stack,
     );

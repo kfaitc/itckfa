@@ -12,12 +12,11 @@ import 'package:itckfa/screen/Customs/responsive.dart';
 import 'package:itckfa/screen/Home/Customs/MenuCard.dart';
 
 import 'package:itckfa/screen/Profile/profile.dart';
-import 'package:itckfa/screen/components/payment/Main_Form/mengtop_up.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 import 'package:itckfa/screen/Property/Home_Screen_property.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../components/payment/Main_Form/kim_top_up.dart';
+import '../../components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'MenuCard_dektop.dart';
 import 'New_season.dart/page_add.dart';
 

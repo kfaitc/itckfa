@@ -60,7 +60,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <StoreKitConfigurationFileReference
-         identifier = "../../../../in app purchase key/localtest.storekit">
+         identifier = "../../../../in app purchase key/One Click One Dollar.storekit">
       </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction

@@ -23,7 +23,7 @@ import 'package:itckfa/screen/Promotion/Title_promo.dart';
 import 'package:itckfa/screen/Promotion/promotion.dart';
 import 'package:itckfa/screen/Home/Customs/titleBar.dart';
 import 'package:itckfa/screen/Property/Home_Screen_property.dart';
-import 'package:itckfa/screen/components/payment/Main_Form/kim_top_up.dart';
+import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
 
