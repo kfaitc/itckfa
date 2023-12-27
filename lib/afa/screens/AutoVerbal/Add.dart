@@ -2972,7 +2972,7 @@ class _Add_with_propertyState extends State<Add_with_property>
                                 requestModelAuto.comment,
                                 requestModelAuto.lat,
                                 requestModelAuto.lng,
-                                "No",
+                                "No ",
                                 requestModelAuto.verbal_com,
                                 requestModelAuto.verbal_con,
                                 "No",
@@ -3711,12 +3711,14 @@ class _Add_with_propertyState extends State<Add_with_property>
           get_commune: (value) {
             setState(() {
               commune = value;
+              print("commune : $commune\n\n");
               Load_sangkat(value);
             });
           },
           get_district: (value) {
             setState(() {
               district = value;
+              print("commune : $district \n\n");
               Load_khan(district);
             });
           },

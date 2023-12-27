@@ -174,7 +174,7 @@ class _ScardState extends State<Scard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TopUp(
+                          builder: (context) => TopUp_ios(
                             set_phone: widget.tel,
                             id_user: widget.id,
                             set_id_user: widget.set_id_user,

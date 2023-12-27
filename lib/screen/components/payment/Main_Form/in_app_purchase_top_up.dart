@@ -27,8 +27,8 @@ const _kProductIds = [
   'kfa_1c1d_30om2',
 ];
 
-class TopUp extends StatefulWidget {
-  const TopUp({
+class TopUp_ios extends StatefulWidget {
+  const TopUp_ios({
     super.key,
     this.id_user,
     this.set_phone,
@@ -43,10 +43,10 @@ class TopUp extends StatefulWidget {
   final String? set_email;
 
   @override
-  State<TopUp> createState() => _TopUpState();
+  State<TopUp_ios> createState() => _TopUpState();
 }
 
-class _TopUpState extends State<TopUp> {
+class _TopUpState extends State<TopUp_ios> {
   final _iap = InAppPurchase.instance;
   late StreamSubscription<List<PurchaseDetails>> _subscription;
 

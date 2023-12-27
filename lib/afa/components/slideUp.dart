@@ -1454,6 +1454,8 @@ class _HomePageState extends State<map_cross_verbal> {
         }
       }
       Dialog(context);
+      await Find_by_piont(
+          double.parse(requestModel.lat), double.parse(requestModel.lng));
     } else {
       await Find_by_piont(
           double.parse(requestModel.lat), double.parse(requestModel.lng));
