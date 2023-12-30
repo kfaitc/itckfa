@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:get/get.dart';
-import 'package:itckfa/firebase_options.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/size/gf_size.dart';
@@ -11,47 +11,48 @@ import 'package:getwidget/types/gf_button_type.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/search/Edit.dart';
 import 'package:itckfa/screen/Home/Home.dart';
-import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uni_links/uni_links.dart';
-
-import 'afa/screens/Auth/login.dart';
 
 // @pragma('vm:entry-point')
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 //   // If you're going to use other Firebase services in the background, such as Firestore,
 //   // make sure you call `initializeApp` before using other Firebase services.
 //   await Firebase.initializeApp();
+
 //   print("Handling a background message: ${message.messageId}");
 // }
+
 void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
   // // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   // final ImagePickerPlatform imagePickerImplementation =
   //     ImagePickerPlatform.instance;
   // if (imagePickerImplementation is ImagePickerAndroid) {
   //   imagePickerImplementation.useAndroidPhotoPicker = true;
   // }
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   // await Firebase.initializeApp();
+
   // Check if you received the link via `getInitialLink` first
   // final PendingDynamicLinkData? initialLink =
   //     await FirebaseDynamicLinks.instance.getInitialLink();
+
   // if (initialLink != null) {
   //   final Uri deepLink = initialLink.link;
   //   // Example of using the dynamic link to push the user to a different screen
   // }
+
   //======|One signal |======
   //Remove this method to stop OneSignal Debugging
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+
   OneSignal.initialize("d3025f03-32f5-444a-8100-7f7637a7f631");
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
   OneSignal.Notifications.requestPermission(true);
@@ -72,6 +73,7 @@ void main() async {
 //       HomePage1();
 //     }
 //   }
+
 //   // Listen for incoming links
 //   // ignore: deprecated_member_use
 //   getLinksStream().listen((String? link) {
@@ -86,8 +88,10 @@ void main() async {
 //     }
 //   });
 // }
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -117,9 +121,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   // String link = 'https://kfaapp.page.link/service';
+
   // final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
   // This widget is the root of your application.
+
   late StreamSubscription streamSubscription;
+
   @override
   void initState() {
     // incomingLinkHandler();
@@ -135,6 +142,7 @@ class _MyAppState extends State<MyApp> {
         Get.to(() => const HomePage1(pf: true));
       }
     }
+
     // ignore: deprecated_member_use
     getLinksStream().listen((String? link) {
       if (link != null) {
@@ -200,14 +208,11 @@ class _MyAppState extends State<MyApp> {
             }
           }
         }
-        return null;
       },
       initialRoute: '/',
       // home: ThankYouPage(title: "aba"),
       routes: {
         '/': (context) => const Login(),
-        // '/topup': (context) =>  TopUp(),
-        '/app': (context) => const HomePage1(pf: true),
         "/aba": (context) => const ThankYouPage(title: "aba"),
         "/wing": (context) => const ThankYouPage(title: "wing"),
         '/Edit': (context) => const ThankYouPage(title: "varbal"),

@@ -2,11 +2,11 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/Memory_local/database.dart';
@@ -24,7 +24,6 @@ import 'package:itckfa/screen/Promotion/Title_promo.dart';
 import 'package:itckfa/screen/Promotion/promotion.dart';
 import 'package:itckfa/screen/Home/Customs/titleBar.dart';
 import 'package:itckfa/screen/Property/Home_Screen_property.dart';
-import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
@@ -64,7 +63,7 @@ class Body extends StatefulWidget {
   State<Body> createState() => _BodyState();
 }
 
-class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
+class _BodyState extends State<Body> {
   late AutoVerbalRequestModel requestModelAuto;
 
   Uint8List? get_bytes;
@@ -76,8 +75,7 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Location services are disabled. Please enable the services',
-          ),
+              'Location services are disabled. Please enable the services'),
         ),
       );
       return false;
@@ -87,19 +85,14 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location permissions are denied')),
-        );
+            const SnackBar(content: Text('Location permissions are denied')));
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
-            'Location permissions are permanently denied, we cannot request permissions.',
-          ),
-        ),
-      );
+              'Location permissions are permanently denied, we cannot request permissions.')));
       return false;
     }
     // _getCurrentPosition();
@@ -108,8 +101,7 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
 
   Future<void> _getCurrentPosition() async {
     Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+        desiredAccuracy: LocationAccuracy.high);
 
     setState(() {
       lat = position.latitude;
@@ -122,11 +114,8 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
   var maxSqm2, minSqm2;
   var formatter = NumberFormat("##,###,###,###.00", "en_US");
   Future<void> Find_by_piont(double la, double lo) async {
-    final response = await http.get(
-      Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
-      ),
-    );
+    final response = await http.get(Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${la},${lo}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
@@ -158,11 +147,8 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
           }
         }
       }
-      final response_rc = await http.get(
-        Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
-        ),
-      );
+      final response_rc = await http.get(Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}'));
       var jsonResponse_rc = json.decode(response_rc.body);
       setState(() {
         maxSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
@@ -184,11 +170,8 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
   double? R_avg;
   double? C_avg;
   Future<void> change_price() async {
-    final response_rc = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
-      ),
-    );
+    final response_rc = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}'));
     var jsonResponse_rc = json.decode(response_rc.body);
     setState(() {
       maxSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
@@ -240,8 +223,7 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
         [control_user.toString()]);
     final response = await http.get(
       Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user',
-      ),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -310,8 +292,10 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
       // autoVerbal: [requestModelVerbal],
       // data: requestModelVerbal,
     );
-    Future.delayed(const Duration(seconds: 3), () {
-      check_v_point();
+    Future.delayed(const Duration(seconds: 1), () {
+      if (user != null) {
+        check_v_point();
+      }
     });
   }
 
@@ -324,8 +308,6 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     var w = MediaQuery.of(context).size.width;
     if (w < 600) {
       wth = w * 0.6;
@@ -365,25 +347,12 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                     padding: const EdgeInsets.all(1),
                     onPressed: () {
                       setState(() {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return Account(
-                                username: user,
-                                email: email,
-                                first_name: first_name,
-                                last_name: last_name,
-                                gender: gender,
-                                from: from,
-                                tel: tel,
-                                id: id.toString(),
-                                password: password,
-                                control_user: control_user,
-                              );
-                            },
-                          ),
-                        );
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return ProtectDataCrossCheck(
+                            id_user: control_user,
+                          );
+                        }));
                       });
                     },
                     icon: Icon(
@@ -459,34 +428,17 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             onTap: () {
-                                              if (Platform.isIOS) {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TopUp_ios(
-                                                      set_phone: tel,
-                                                      id_user: id.toString(),
-                                                      set_id_user: control_user,
-                                                      set_email: email,
-                                                      initialPoint:
-                                                          number_of_vpoint,
-                                                    ),
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => TopUp(
+                                                    set_phone: tel,
+                                                    id_user: id.toString(),
+                                                    set_id_user: control_user,
+                                                    set_email: email,
                                                   ),
-                                                );
-                                              } else if (Platform.isAndroid) {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) => TopUp(
-                                                      set_phone: tel,
-                                                      id_user: id.toString(),
-                                                      set_id_user: control_user,
-                                                      set_email: email,
-                                                    ),
-                                                  ),
-                                                );
-                                              }
+                                                ),
+                                              );
                                             },
                                             child: Column(
                                               mainAxisAlignment:
@@ -496,13 +448,12 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                                   height: 50,
                                                   width: 50,
                                                   child: Padding(
-                                                    padding:
-                                                        EdgeInsets.all(8.0),
-                                                    child: Image.asset(
-                                                      'assets/images/topup.png',
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                  ),
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      child: Image.asset(
+                                                        'assets/images/topup.png',
+                                                        fit: BoxFit.fill,
+                                                      )),
                                                 ),
                                                 Text(
                                                   "Top Up",
@@ -513,7 +464,7 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      )
                                     ],
                                   ),
                                   SCard(
@@ -522,11 +473,9 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                     press: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return Walletscreen();
-                                          },
-                                        ),
+                                        MaterialPageRoute(builder: (context) {
+                                          return Walletscreen();
+                                        }),
                                       );
                                     },
                                   ),
@@ -570,14 +519,11 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                     svgPic: 'assets/icons/property.svg',
                                     title: 'Property',
                                     press: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return Home_Screen_property();
-                                          },
-                                        ),
-                                      );
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return Home_Screen_property();
+                                        },
+                                      ));
                                     },
                                   ),
                                   SCard(
@@ -1010,13 +956,12 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                 onTap: () {
                                   setState(() {
                                     Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => Add_with_property(
-                                          id: id,
-                                          id_control_user: control_user,
-                                        ),
-                                      ),
-                                    );
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Add_with_property(
+                                                  id: id,
+                                                  id_control_user: control_user,
+                                                )));
                                   });
                                 },
                                 child: Container(
@@ -1033,9 +978,8 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                     //   )
                                     // ],
                                     image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: AssetImage('assets/earth.gif'),
-                                    ),
+                                        fit: BoxFit.cover,
+                                        image: AssetImage('assets/earth.gif')),
                                     borderRadius: BorderRadius.circular(90),
                                   ),
                                   child: DefaultTextStyle(
@@ -1050,11 +994,7 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                         Shadow(
                                           blurRadius: 15.0,
                                           color: Color.fromARGB(
-                                            255,
-                                            248,
-                                            195,
-                                            195,
-                                          ),
+                                              255, 248, 195, 195),
                                           offset: Offset(0, 0),
                                         ),
                                       ],
@@ -1068,17 +1008,15 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                       onTap: () {
                                         setState(() {
                                           print(
-                                            "id $id \n control_user $control_user",
-                                          );
+                                              "id $id \n control_user $control_user");
                                           Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Add_with_property(
-                                                id: id,
-                                                id_control_user: control_user,
-                                              ),
-                                            ),
-                                          );
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Add_with_property(
+                                                        id: id,
+                                                        id_control_user:
+                                                            control_user,
+                                                      )));
                                         });
                                       },
                                       pause: const Duration(milliseconds: 300),
@@ -1103,7 +1041,7 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                         blurStyle: BlurStyle.solid,
                                         spreadRadius: 0.0,
                                         offset: Offset(0.2, 0.1),
-                                      ),
+                                      )
                                     ],
                                   ),
                                   child: Container(
@@ -1112,9 +1050,7 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
                                       border: Border.all(
-                                        color: Colors.white,
-                                        width: 2,
-                                      ),
+                                          color: Colors.white, width: 2),
                                     ),
                                     child: Column(
                                       mainAxisAlignment:
@@ -1141,9 +1077,7 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
                                             Expanded(
                                               flex: 1,
                                               child: Text(
-                                                (number_of_vpoint != null)
-                                                    ? "$number_of_vpoint V Point"
-                                                    : "0 V Point",
+                                                "${(number_of_vpoint != null) ? number_of_vpoint.toString() + " V Point" : "0 V Point"}",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
@@ -1276,11 +1210,8 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
   List<dynamic> list_sangkat = [];
   void Load_sangkat(String id) async {
     setState(() {});
-    var rs = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=$id',
-      ),
-    );
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=${id}'));
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -1297,11 +1228,8 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
   int id_khan = 0;
   void Load_khan(String district) async {
     setState(() {});
-    var rs = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=$district',
-      ),
-    );
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=${district}'));
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -1310,7 +1238,4 @@ class _BodyState extends State<Body> with AutomaticKeepAliveClientMixin {
       });
     }
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
