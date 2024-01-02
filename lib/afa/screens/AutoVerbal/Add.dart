@@ -2809,7 +2809,6 @@ class _Add_with_propertyState extends State<Add_with_property>
               actions: <Widget>[
                 InkWell(
                   onTap: () async {
-                    await get_count();
                     MyDb mydb = new MyDb();
 
                     List<Map<String, dynamic>> jsonList =
@@ -2819,17 +2818,23 @@ class _Add_with_propertyState extends State<Add_with_property>
                       requestModelAuto.verbal_id = verbal_id;
                       requestModelAuto.verbal_khan = '${commune}.${district}';
                       requestModelAuto.verbal = jsonList;
+                      _image;
                     });
+                    await get_count();
                     if (number! >= 1) {
-                      Uint8List? imagebytes =
-                          await FlutterImageCompress.compressWithFile(
-                        _image!.absolute.path,
-                        minHeight: 1280,
-                        minWidth: 720,
-                        quality: 80,
-                      );
-                      String base64string = base64.encode(imagebytes!);
-                      requestModelAuto.image = base64string;
+                      if (_image != null) {
+                        Uint8List? imagebytes =
+                            await FlutterImageCompress.compressWithFile(
+                          _image!.absolute.path,
+                          minHeight: 1280,
+                          minWidth: 720,
+                          quality: 80,
+                        );
+                        String base64string = base64.encode(imagebytes!);
+                        requestModelAuto.image = base64string;
+                      } else {
+                        requestModelAuto.image = "No";
+                      }
 
                       if (asking_price != null) {
                         APIservice apIservice = APIservice();
@@ -2972,7 +2977,7 @@ class _Add_with_propertyState extends State<Add_with_property>
                                 requestModelAuto.comment,
                                 requestModelAuto.lat,
                                 requestModelAuto.lng,
-                                "No ",
+                                "No",
                                 requestModelAuto.verbal_com,
                                 requestModelAuto.verbal_con,
                                 "No",
@@ -2996,26 +3001,42 @@ class _Add_with_propertyState extends State<Add_with_property>
                               headerAnimationLoop: false,
                               title: 'Success',
                               desc: "Data is saving for waiting your payment",
-                              autoHide: Duration(seconds: 5),
+                              autoHide: Duration(seconds: 3),
                               onDismissCallback: (type) async {
                                 await get_control_user(widget.id);
                                 // debugPrint('Dialog Dissmiss from callback $type');
                                 setState(() {
                                   print("object: ${verbal_id.toString()}\n");
                                 });
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TopUp(
-                                      set_phone:
-                                          list_user['tel_num'].toString(),
-                                      set_id_user:
-                                          list_user['control_user'].toString(),
-                                      set_email: list_user['email'].toString(),
-                                      id_user: widget.id,
+                                if (Platform.isAndroid) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TopUp(
+                                        set_phone:
+                                            list_user['tel_num'].toString(),
+                                        set_id_user: list_user['control_user']
+                                            .toString(),
+                                        set_email:
+                                            list_user['email'].toString(),
+                                        id_user: widget.id,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else if (Platform.isIOS) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TopUp_ios(
+                                        set_phone:
+                                            list_user['tel_num'].toString(),
+                                        id_user: widget.id,
+                                        set_id_user: control_user,
+                                      ),
+                                    ),
+                                  );
+                                }
+
                                 // Navigator.pushReplacement(
                                 //     context,
                                 //     MaterialPageRoute(

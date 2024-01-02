@@ -20,6 +20,7 @@ import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
 import 'package:itckfa/models/model_bl_new.dart';
 import 'package:itckfa/screen/components/map_all/map_in_edit_verbal.dart';
+import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 
 import '../../../../api/api_service.dart';
@@ -644,18 +645,32 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
               onDismissCallback: (type) {
                 setState(() {
                   int i = user.length;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TopUp(
-                        set_phone: user[i - 1]['tel_num'].toString(),
-                        set_id_user: user[i - 1]['username'].toString(),
-                        set_email: user[i - 1]['email'].toString(),
-                        id_user: user[i - 1]['id'].toString(),
-                        id_verbal: list[0]["verbal_id"],
+
+                  if (Platform.isIOS) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TopUp_ios(
+                          set_phone: user[i - 1]['tel_num'].toString(),
+                          id_user: user[i - 1]['id'].toString(),
+                          set_id_user: user[i - 1]['username'].toString(),
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else if (Platform.isAndroid) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TopUp(
+                          set_phone: user[i - 1]['tel_num'].toString(),
+                          set_id_user: user[i - 1]['username'].toString(),
+                          set_email: user[i - 1]['email'].toString(),
+                          id_user: user[i - 1]['id'].toString(),
+                          id_verbal: list[0]["verbal_id"],
+                        ),
+                      ),
+                    );
+                  }
                 });
               },
               // btnOkIcon: Icons.info_outline,

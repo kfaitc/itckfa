@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ import 'package:itckfa/screen/Promotion/Title_promo.dart';
 import 'package:itckfa/screen/Promotion/promotion.dart';
 import 'package:itckfa/screen/Home/Customs/titleBar.dart';
 import 'package:itckfa/screen/Property/Home_Screen_property.dart';
+import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
@@ -428,17 +430,31 @@ class _BodyState extends State<Body> {
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => TopUp(
-                                                    set_phone: tel,
-                                                    id_user: id.toString(),
-                                                    set_id_user: control_user,
-                                                    set_email: email,
+                                              if (Platform.isAndroid) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => TopUp(
+                                                      set_phone: tel,
+                                                      id_user: id.toString(),
+                                                      set_id_user: control_user,
+                                                      set_email: email,
+                                                    ),
                                                   ),
-                                                ),
-                                              );
+                                                );
+                                              } else if (Platform.isIOS) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TopUp_ios(
+                                                      set_phone: tel,
+                                                      id_user: id.toString(),
+                                                      set_id_user: control_user,
+                                                    ),
+                                                  ),
+                                                );
+                                              }
                                             },
                                             child: Column(
                                               mainAxisAlignment:

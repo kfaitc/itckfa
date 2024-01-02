@@ -16,6 +16,8 @@ import 'package:itckfa/screen/Home/Home.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 
+import '../../../components/contants.dart';
+
 class save_image_after_add_verbal extends StatefulWidget {
   const save_image_after_add_verbal({super.key, required this.set_data_verbal});
   final String set_data_verbal;
@@ -41,7 +43,7 @@ class _save_image_after_add_verbalState
         image_m =
             'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_log"]},${list[0]["latlong_la"]}&zoom=18&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_log"]},${list[0]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI';
         if (list[0]["verbal_image"] != "No") {
-          image_i = list[0]["verbal_image"];
+          image_i = list[0]["verbal_image"].toString();
         }
       });
     }
@@ -127,6 +129,7 @@ class _save_image_after_add_verbalState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: kwhite_new,
         leading: IconButton(
             onPressed: () {
               Navigator.pushReplacement(context,
@@ -135,7 +138,7 @@ class _save_image_after_add_verbalState
             icon: const Icon(Icons.arrow_back_ios_new_sharp)),
         title: const Text("Get Photo like this"),
       ),
-      body: (list.isNotEmpty && land.length >= 1)
+      body: (list.isNotEmpty)
           ? Screenshot(
               controller: screenshotController,
               child: Container(
@@ -1077,6 +1080,7 @@ class _save_image_after_add_verbalState
               child: CircularProgressIndicator(),
             ),
       floatingActionButton: FloatingActionButton.small(
+        backgroundColor: kwhite_new,
         onPressed: () async {
           await screenshotController
               .capture(delay: const Duration(milliseconds: 10))

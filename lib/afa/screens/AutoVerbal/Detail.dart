@@ -9,11 +9,12 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:itckfa/afa/customs/readonly.dart';
-import 'package:itckfa/contants.dart';
 import 'package:itckfa/models/autoVerbal.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+
+import '../../components/contants.dart';
 
 class detail_verbal extends StatefulWidget {
   const detail_verbal({super.key, required this.set_data_verbal});
@@ -35,23 +36,23 @@ class _detail_searchingState extends State<detail_verbal> {
         Land_building();
         image_m =
             'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_log"]},${list[0]["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_log"]},${list[0]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI';
-        getimage();
+        image_i = list[0]['verbal_image'].toString();
       });
     }
   }
 
   var image_i, get_image = [];
-  Future<void> getimage() async {
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_image/${widget.set_data_verbal.toString()}'));
-    if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
-      setState(() {
-        get_image = jsonData;
-        image_i = get_image[0]['url'];
-      });
-    }
-  }
+  // Future<void> getimage() async {
+  //   var rs = await http.get(Uri.parse(
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_image/${widget.set_data_verbal.toString()}'));
+  //   if (rs.statusCode == 200) {
+  //     var jsonData = jsonDecode(rs.body);
+  //     setState(() {
+  //       get_image = jsonData;
+  //       image_i = get_image[0]['url'];
+  //     });
+  //   }
+  // }
 
   var image_m;
 
@@ -142,7 +143,7 @@ class _detail_searchingState extends State<detail_verbal> {
                     height: 70,
                     alignment: Alignment.centerLeft,
                     decoration: const BoxDecoration(
-                      color: Colors.blueAccent,
+                      color: kwhite_new,
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(11),
                           bottomRight: Radius.circular(20)),
@@ -177,7 +178,7 @@ class _detail_searchingState extends State<detail_verbal> {
                     ),
                     child: Column(
                       children: [
-                        if (image_i != null)
+                        if (image_i != null || image_i != "No")
                           Container(
                             padding: const EdgeInsets.all(10),
                             child: Row(
@@ -203,8 +204,7 @@ class _detail_searchingState extends State<detail_verbal> {
                                       MediaQuery.of(context).size.width * 0.4,
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image:
-                                          NetworkImage('${image_i.toString()}'),
+                                      image: MemoryImage(base64Decode(image_i)),
                                       fit: BoxFit.cover,
                                     ),
                                     borderRadius: BorderRadius.circular(11),
@@ -299,37 +299,38 @@ class _detail_searchingState extends State<detail_verbal> {
                           ),
                           value: list[0]["verbal_bank_contact"] ?? "",
                         ),
-                        Box(
-                          label: "Comment",
-                          iconname: const Icon(
-                            Icons.comment_sharp,
-                            color: kImageColor,
-                          ),
-                          value: list[0]["verbal_comment"] ?? "",
-                        ),
-                        Box(
-                          label: "Verify by",
-                          iconname: const Icon(
-                            Icons.person_sharp,
-                            color: kImageColor,
-                          ),
-                          value: list[0]["agenttype_name"] ?? "",
-                        ),
-                        Box(
-                          label: "Approve by",
-                          iconname: const Icon(
-                            Icons.person_outlined,
-                            color: kImageColor,
-                          ),
-                          value: list[0]["approve_name"] ?? "",
-                        ),
+                        // Box(
+                        //   label: "Comment",
+                        //   iconname: const Icon(
+                        //     Icons.comment_sharp,
+                        //     color: kImageColor,
+                        //   ),
+                        //   value: list[0]["verbal_comment"] ?? "",
+                        // ),
+                        // Box(
+                        //   label: "Verify by",
+                        //   iconname: const Icon(
+                        //     Icons.person_sharp,
+                        //     color: kImageColor,
+                        //   ),
+                        //   value: list[0]["agenttype_name"] ?? "",
+                        // ),
+                        // Box(
+                        //   label: "Approve by",
+                        //   iconname: const Icon(
+                        //     Icons.person_outlined,
+                        //     color: kImageColor,
+                        //   ),
+                        //   value: list[0]["approve_name"] ?? "",
+                        // ),
                         Box(
                           label: "Address",
                           iconname: const Icon(
                             Icons.location_on_rounded,
                             color: kImageColor,
                           ),
-                          value: list[0]["verbal_address"] ?? "",
+                          value:
+                              "${list[0]["verbal_address"] ?? ""} ${list[0]["verbal_khan"]}",
                         ),
                         SizedBox(
                           width: 450,
@@ -550,11 +551,11 @@ class _detail_searchingState extends State<detail_verbal> {
             .buffer
             .asUint8List();
     Uint8List? bytes2;
-    if (image_i != null) {
-      bytes2 =
-          (await NetworkAssetBundle(Uri.parse('$image_i')).load('$image_i'))
-              .buffer
-              .asUint8List();
+    if (image_i != null || image_i != "No") {
+      bytes2 = base64Decode(image_i);
+      // (await NetworkAssetBundle(Uri.parse('$image_i')).load('$image_i'))
+      //     .buffer
+      //     .asUint8List();
     }
 
     final pageTheme = await _myPageTheme(format);
@@ -907,7 +908,7 @@ class _detail_searchingState extends State<detail_verbal> {
                       textAlign: pw.TextAlign.center,
                       style: pw.TextStyle(fontSize: 11, font: font1)),
                   pw.SizedBox(height: 5),
-                  if (image_i != null)
+                  if (image_i != null || image_i != "No")
                     pw.Container(
                       height: 110,
                       child: pw.Row(
@@ -928,12 +929,12 @@ class _detail_searchingState extends State<detail_verbal> {
                                 pw.MemoryImage(
                                   bytes2!,
                                 ),
-                                fit: pw.BoxFit.fitWidth),
+                                fit: pw.BoxFit.fill),
                           ),
                         ],
                       ),
                     ),
-                  if (image_i == null)
+                  if (image_i == null || image_i == "No")
                     pw.Container(
                       width: 240,
                       height: 110,
