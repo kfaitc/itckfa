@@ -387,7 +387,8 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
-        number = jsonData;
+        number = jsonData['number_count'];
+        // list_user = jsonData['user'];
       });
     }
   }
@@ -2647,18 +2648,18 @@ class _Add_with_propertyState extends State<Add_with_property>
   var list_user;
   MyDb mydb_lb = new MyDb();
   MyDb mydb_vb = new MyDb();
-  Future get_control_user(String id) async {
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
-    if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
+  // Future get_control_user(String id) async {
+  //   var rs = await http.get(Uri.parse(
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}'));
+  //   if (rs.statusCode == 200) {
+  //     var jsonData = jsonDecode(rs.body);
 
-      setState(() {
-        // print(jsonData[0]['control_user'].toString() + "\n");
-        list_user = jsonData[0];
-      });
-    }
-  }
+  //     setState(() {
+  //       // print(jsonData[0]['control_user'].toString() + "\n");
+  //       list_user = jsonData[0];
+  //     });
+  //   }
+  // }
 
   Future<void> get_count() async {
     setState(() {
@@ -2669,7 +2670,8 @@ class _Add_with_propertyState extends State<Add_with_property>
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
-        number = jsonData;
+        number = jsonData['number_count'];
+        list_user = jsonData['user'];
       });
     }
   }
@@ -3003,7 +3005,7 @@ class _Add_with_propertyState extends State<Add_with_property>
                               desc: "Data is saving for waiting your payment",
                               autoHide: Duration(seconds: 3),
                               onDismissCallback: (type) async {
-                                await get_control_user(widget.id);
+                                // await get_control_user(widget.id);
                                 // debugPrint('Dialog Dissmiss from callback $type');
                                 setState(() {
                                   print("object: ${verbal_id.toString()}\n");
@@ -3020,6 +3022,7 @@ class _Add_with_propertyState extends State<Add_with_property>
                                         set_email:
                                             list_user['email'].toString(),
                                         id_user: widget.id,
+                                        id_verbal: verbal_id.toString(),
                                       ),
                                     ),
                                   );

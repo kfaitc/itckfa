@@ -145,7 +145,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
-        number = jsonData;
+        number = jsonData['number_count'];
         print("object: $number \n\n");
       });
     }
