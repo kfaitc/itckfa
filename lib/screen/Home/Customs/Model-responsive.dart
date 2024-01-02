@@ -174,13 +174,23 @@ class _ScardState extends State<Scard> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TopUp_ios(
+                          builder: (context) => TopUp(
                             set_phone: widget.tel,
                             id_user: widget.id,
                             set_id_user: widget.set_id_user,
                           ),
                         ),
                       );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => TopUp_ios(
+                      //       set_phone: widget.tel,
+                      //       id_user: widget.id,
+                      //       set_id_user: widget.set_id_user,
+                      //     ),
+                      //   ),
+                      // );
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

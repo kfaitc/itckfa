@@ -645,32 +645,43 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
               onDismissCallback: (type) {
                 setState(() {
                   int i = user.length;
-
-                  if (Platform.isIOS) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TopUp_ios(
-                          set_phone: user[i - 1]['tel_num'].toString(),
-                          id_user: user[i - 1]['id'].toString(),
-                          set_id_user: user[i - 1]['username'].toString(),
-                        ),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TopUp(
+                        set_phone: user[i - 1]['tel_num'].toString(),
+                        set_id_user: user[i - 1]['username'].toString(),
+                        set_email: user[i - 1]['email'].toString(),
+                        id_user: user[i - 1]['id'].toString(),
+                        id_verbal: list[0]["verbal_id"],
                       ),
-                    );
-                  } else if (Platform.isAndroid) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TopUp(
-                          set_phone: user[i - 1]['tel_num'].toString(),
-                          set_id_user: user[i - 1]['username'].toString(),
-                          set_email: user[i - 1]['email'].toString(),
-                          id_user: user[i - 1]['id'].toString(),
-                          id_verbal: list[0]["verbal_id"],
-                        ),
-                      ),
-                    );
-                  }
+                    ),
+                  );
+                  // if (Platform.isIOS) {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => TopUp_ios(
+                  //         set_phone: user[i - 1]['tel_num'].toString(),
+                  //         id_user: user[i - 1]['id'].toString(),
+                  //         set_id_user: user[i - 1]['username'].toString(),
+                  //       ),
+                  //     ),
+                  //   );
+                  // } else if (Platform.isAndroid) {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => TopUp(
+                  //         set_phone: user[i - 1]['tel_num'].toString(),
+                  //         set_id_user: user[i - 1]['username'].toString(),
+                  //         set_email: user[i - 1]['email'].toString(),
+                  //         id_user: user[i - 1]['id'].toString(),
+                  //         id_verbal: list[0]["verbal_id"],
+                  //       ),
+                  //     ),
+                  //   );
+                  // }
                 });
               },
               // btnOkIcon: Icons.info_outline,

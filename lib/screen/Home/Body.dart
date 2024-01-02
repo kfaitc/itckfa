@@ -430,31 +430,31 @@ class _BodyState extends State<Body> {
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             onTap: () {
-                                              if (Platform.isAndroid) {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) => TopUp(
-                                                      set_phone: tel,
-                                                      id_user: id.toString(),
-                                                      set_id_user: control_user,
-                                                      set_email: email,
-                                                    ),
+                                              // if (Platform.isAndroid) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => TopUp(
+                                                    set_phone: tel,
+                                                    id_user: id.toString(),
+                                                    set_id_user: control_user,
+                                                    set_email: email,
                                                   ),
-                                                );
-                                              } else if (Platform.isIOS) {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TopUp_ios(
-                                                      set_phone: tel,
-                                                      id_user: id.toString(),
-                                                      set_id_user: control_user,
-                                                    ),
-                                                  ),
-                                                );
-                                              }
+                                                ),
+                                              );
+                                              // } else if (Platform.isIOS) {
+                                              //   Navigator.push(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //       builder: (context) =>
+                                              //           TopUp_ios(
+                                              //         set_phone: tel,
+                                              //         id_user: id.toString(),
+                                              //         set_id_user: control_user,
+                                              //       ),
+                                              //     ),
+                                              //   );
+                                              // }
                                             },
                                             child: Column(
                                               mainAxisAlignment:

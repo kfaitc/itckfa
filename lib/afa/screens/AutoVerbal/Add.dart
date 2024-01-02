@@ -3010,35 +3010,35 @@ class _Add_with_propertyState extends State<Add_with_property>
                                 setState(() {
                                   print("object: ${verbal_id.toString()}\n");
                                 });
-                                if (Platform.isAndroid) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TopUp(
-                                        set_phone:
-                                            list_user['tel_num'].toString(),
-                                        set_id_user: list_user['control_user']
-                                            .toString(),
-                                        set_email:
-                                            list_user['email'].toString(),
-                                        id_user: widget.id,
-                                        id_verbal: verbal_id.toString(),
-                                      ),
+
+                                // if (Platform.isAndroid) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TopUp(
+                                      set_phone:
+                                          list_user['tel_num'].toString(),
+                                      set_id_user:
+                                          list_user['control_user'].toString(),
+                                      set_email: list_user['email'].toString(),
+                                      id_user: widget.id,
+                                      id_verbal: verbal_id.toString(),
                                     ),
-                                  );
-                                } else if (Platform.isIOS) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TopUp_ios(
-                                        set_phone:
-                                            list_user['tel_num'].toString(),
-                                        id_user: widget.id,
-                                        set_id_user: control_user,
-                                      ),
-                                    ),
-                                  );
-                                }
+                                  ),
+                                );
+                                // } else if (Platform.isIOS) {
+                                //   Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //       builder: (context) => TopUp_ios(
+                                //         set_phone:
+                                //             list_user['tel_num'].toString(),
+                                //         id_user: widget.id,
+                                //         set_id_user: control_user,
+                                //       ),
+                                //     ),
+                                //   );
+                                // }
 
                                 // Navigator.pushReplacement(
                                 //     context,
