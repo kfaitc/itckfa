@@ -11,6 +11,7 @@ import 'package:getwidget/size/gf_size.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/search/Edit.dart';
+import 'package:itckfa/firebase_options.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
@@ -29,7 +30,9 @@ import 'package:uni_links/uni_links.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
