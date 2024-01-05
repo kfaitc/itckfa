@@ -128,12 +128,12 @@ class _HomePageState extends State<map_cross_verbal> {
       });
     });
     await Show(requestModel);
-    mapController!.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        target: LatLng(position.latitude, position.longitude),
-        zoom: 16.0,
-      ),
-    ));
+    // mapController!.animateCamera(CameraUpdate.newCameraPosition(
+    //   CameraPosition(
+    //     target: LatLng(position.latitude, position.longitude),
+    //     zoom: 16.0,
+    //   ),
+    // ));
   }
 
   @override

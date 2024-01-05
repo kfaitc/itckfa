@@ -67,7 +67,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   late AutoVerbalRequestModel requestModelAuto;
-
+  int check_ios_pay = 0;
   Uint8List? get_bytes;
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -230,11 +230,14 @@ class _BodyState extends State<Body> {
         'Content-Type': 'application/json',
       },
     );
-
+    var rs_ios = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option'));
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
+      var jsonData_ios = jsonDecode(rs_ios.body);
       setState(() {
         number_of_vpoint = jsonData['vpoint'].toString();
+        check_ios_pay = jsonData_ios;
         // their_plans = jsonData['their_plans'].toString();
         if (jsonData['their_plans'].toString() == "1 day") {
           their_plans = "1 Day";
@@ -430,31 +433,33 @@ class _BodyState extends State<Body> {
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                             onTap: () {
-                                              // if (Platform.isAndroid) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => TopUp(
-                                                    set_phone: tel,
-                                                    id_user: id.toString(),
-                                                    set_id_user: control_user,
-                                                    set_email: email,
+                                              if (Platform.isAndroid ||
+                                                  check_ios_pay == 1) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => TopUp(
+                                                      set_phone: tel,
+                                                      id_user: id.toString(),
+                                                      set_id_user: control_user,
+                                                      set_email: email,
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                              // } else if (Platform.isIOS) {
-                                              //   Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //       builder: (context) =>
-                                              //           TopUp_ios(
-                                              //         set_phone: tel,
-                                              //         id_user: id.toString(),
-                                              //         set_id_user: control_user,
-                                              //       ),
-                                              //     ),
-                                              //   );
-                                              // }
+                                                );
+                                              } else if (Platform.isIOS &&
+                                                  check_ios_pay == 0) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TopUp_ios(
+                                                      set_phone: tel,
+                                                      id_user: id.toString(),
+                                                      set_id_user: control_user,
+                                                    ),
+                                                  ),
+                                                );
+                                              }
                                             },
                                             child: Column(
                                               mainAxisAlignment:

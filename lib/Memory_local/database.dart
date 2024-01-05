@@ -26,54 +26,7 @@ class MyDb {
                         email varchar(255)  not null,
                         password varchar(255)  not null
                       );
-
-                       CREATE TABLE IF NOT EXISTS verbal_models(
-                          id_v primary key,
-                          verbal_id varchar(255)  not null,
-                          verbal_khan varchar(255)  not null,
-                          verbal_property_id varchar(100) not null,
-                          verbal_bank_id varchar(255)  not null,
-                          verbal_bank_branch_id varchar(255)  not null
-                          verbal_bank_contact varchar(200) DEFAULT NULL,
-                          verbal_owner varchar(255)  not null,
-                          verbal_contact varchar(255)  not null,
-                          verbal_date text DEFAULT NULL,
-                          verbal_bank_officer varchar(255)  not null,
-                          verbal_address varchar(255)  not null,
-                          verbal_approve_id varchar(255)  not null,
-                          VerifyAgent varchar(255)  not null,
-                          verbal_comment varchar(255)  not null,
-                          latlong_log varchar(255)  not null,
-                          latlong_la varchar(255)  not null,
-                          verbal_image varchar(255)  not null,
-                          verbal_com varchar(255)  not null,
-                          verbal_con varchar(255)  not null,
-                          verbal_property_code varchar(255)  not null,
-                          verbal_user varchar(255)  not null,
-                          verbal_option varchar(255)  not null
-                      );
-
-                     
-
                   ''');
-      await db.execute('''
- CREATE TABLE IF NOT EXISTS comverbal_land_models(
-                          id_lb primary key,
-                          verbal_landid varchar(255)  not null,
-                          verbal_land_dp varchar(255)  not null,
-                          verbal_land_type varchar(255)  not null,
-                          verbal_land_des varchar(255)  not null,
-                          verbal_land_area varchar(255)  not null,
-                          verbal_land_minsqm varchar(255)  not null,
-                          verbal_land_maxsqm varchar(255)  not null,
-                          verbal_land_minvalue varchar(255)  not null,
-                          verbal_land_maxvalue varchar(255)  not null,
-                          address varchar(255)  not null
-                      );
-                  ''');
-      // await db.execute('''
-
-      //             ''');
     });
   }
 
@@ -94,7 +47,8 @@ class MyDb {
                                     verbal_land_maxsqm double  not null,
                                     verbal_land_minvalue double  not null,
                                     verbal_land_maxvalue double  not null,
-                                    address varchar(255)  not null
+                                    address varchar(255)  not null,
+                                    local_offline default 0
                                 );
                   ''');
     });
@@ -129,18 +83,25 @@ class MyDb {
                           verbal_con varchar(255)  not null,
                           verbal_property_code varchar(255)  not null,
                           verbal_user varchar(255)  not null,
-                          verbal_option varchar(255)  not null
+                          verbal_option varchar(255)  not null,
+                          local_offline default 0
                       );
                   ''');
     });
   }
-  // Future<Map<dynamic, dynamic>?> getStudent(int rollno) async {
-  //   List<Map> maps =
-  //       await db.query('students', where: 'roll_no = ?', whereArgs: [rollno]);
-  //   //getting student data with roll no.
-  //   if (maps.length > 0) {
-  //     return maps.first;
-  //   }
-  //   return null;
-  // }
+
+  Future open_offline() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'demo3.db');
+    db = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute('''
+          CREATE TABLE IF NOT EXISTS verbal_models_offline(
+                          id_v primary key,
+                          verbal_id varchar(255)  DEFAULT null,
+                          verbal_image BLOB  DEFAULT null
+                      );
+                  ''');
+    });
+  }
 }

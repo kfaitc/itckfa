@@ -139,14 +139,18 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
   }
 
   int? number;
+  int check_ios_pay = 0;
   Future<void> get_count() async {
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${list[0]["verbal_user"]}'));
+    var rs_ios = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option'));
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
+      var jsonData_ios = jsonDecode(rs_ios.body);
       setState(() {
         number = jsonData['number_count'];
-        print("object: $number \n\n");
+        check_ios_pay = jsonData_ios;
       });
     }
   }
@@ -645,43 +649,43 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
               onDismissCallback: (type) {
                 setState(() {
                   int i = user.length;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TopUp(
-                        set_phone: user[i - 1]['tel_num'].toString(),
-                        set_id_user: user[i - 1]['username'].toString(),
-                        set_email: user[i - 1]['email'].toString(),
-                        id_user: user[i - 1]['id'].toString(),
-                        id_verbal: list[0]["verbal_id"],
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => TopUp(
+                  //       set_phone: user[i - 1]['tel_num'].toString(),
+                  //       set_id_user: user[i - 1]['username'].toString(),
+                  //       set_email: user[i - 1]['email'].toString(),
+                  //       id_user: user[i - 1]['id'].toString(),
+                  //       id_verbal: list[0]["verbal_id"],
+                  //     ),
+                  //   ),
+                  // );
+                  if (Platform.isIOS && check_ios_pay == 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TopUp_ios(
+                          set_phone: user[i - 1]['tel_num'].toString(),
+                          id_user: user[i - 1]['id'].toString(),
+                          set_id_user: user[i - 1]['username'].toString(),
+                        ),
                       ),
-                    ),
-                  );
-                  // if (Platform.isIOS) {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => TopUp_ios(
-                  //         set_phone: user[i - 1]['tel_num'].toString(),
-                  //         id_user: user[i - 1]['id'].toString(),
-                  //         set_id_user: user[i - 1]['username'].toString(),
-                  //       ),
-                  //     ),
-                  //   );
-                  // } else if (Platform.isAndroid) {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => TopUp(
-                  //         set_phone: user[i - 1]['tel_num'].toString(),
-                  //         set_id_user: user[i - 1]['username'].toString(),
-                  //         set_email: user[i - 1]['email'].toString(),
-                  //         id_user: user[i - 1]['id'].toString(),
-                  //         id_verbal: list[0]["verbal_id"],
-                  //       ),
-                  //     ),
-                  //   );
-                  // }
+                    );
+                  } else if (Platform.isAndroid || check_ios_pay == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TopUp(
+                          set_phone: user[i - 1]['tel_num'].toString(),
+                          set_id_user: user[i - 1]['username'].toString(),
+                          set_email: user[i - 1]['email'].toString(),
+                          id_user: user[i - 1]['id'].toString(),
+                          id_verbal: list[0]["verbal_id"],
+                        ),
+                      ),
+                    );
+                  }
                 });
               },
               // btnOkIcon: Icons.info_outline,

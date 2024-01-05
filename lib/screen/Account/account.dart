@@ -20,7 +20,6 @@ import 'package:itckfa/afa/screens/Auth/login.dart';
 import 'package:itckfa/api/api_service.dart';
 import 'package:itckfa/contants.dart';
 import 'package:itckfa/models/register_model.dart';
-import 'package:itckfa/screen/Profile/components/Drop.dart';
 import 'package:itckfa/screen/Profile/components/Drop_down.dart';
 import 'package:itckfa/screen/Profile/components/FieldBox.dart';
 import 'package:itckfa/screen/Profile/components/TwinBox.dart';

@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:itckfa/Memory_local/database.dart';
+import 'package:itckfa/Memory_local/show_data_saved_offline.dart';
 import 'package:itckfa/afa/screens/Auth/register.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/search/protect.dart';
 import 'package:itckfa/api/api_service.dart';
@@ -119,7 +120,7 @@ class _LoginState extends State<Login> {
     });
   }
 
-  Map? datatest;
+  // Map? datatest;
   List<Map> slist = [];
   MyDb mydb = new MyDb();
   late AnimationController controller;
@@ -161,29 +162,40 @@ class _LoginState extends State<Login> {
     return _updateConnectionStatus(result);
   }
 
+  bool offline = false;
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     setState(() {
       _connectionStatus = result;
       if ((_connectionStatus == ConnectivityResult.mobile) ||
           (_connectionStatus == ConnectivityResult.wifi)) {
+        setState(() {
+          offline = true;
+          _connectivitySubscription.cancel();
+          print("result = ${offline}\n");
+        });
       } else if (_connectionStatus == ConnectivityResult.none) {
+        setState(() {
+          offline = false;
+          print("result = ${offline}\n");
+        });
         final snackBar = SnackBar(
           backgroundColor: Color.fromARGB(255, 245, 245, 245),
           padding: EdgeInsets.all(0),
+          // showCloseIcon: true,
+          // onVisible: () {
+          //   Navigator.of(context).push(
+          //       MaterialPageRoute(builder: (context) => data_verbal_saved()));
+          // },
           content: GFCard(
             padding: EdgeInsets.all(0),
             boxFit: BoxFit.cover,
+            color: Colors.white,
             title: GFListTile(
+              color: Colors.white,
               avatar: Icon(
                 Icons.download_for_offline_outlined,
                 color: Colors.blue,
                 size: 50,
-                shadows: const [
-                  Shadow(
-                      color: Colors.black,
-                      blurRadius: 5,
-                      offset: Offset(1, 0.5))
-                ],
               ),
               title: Text('You\'re offline'),
               subTitle: Text('Watch saved data in your Library'),
@@ -193,25 +205,23 @@ class _LoginState extends State<Login> {
               children: <Widget>[
                 GFButton(
                   onPressed: () {
+                    setState(() {
+                      offline = true;
+                    });
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ProtectDataCrossCheck(
-                              id_user: control_user,
-                            )));
+                        builder: (context) => data_verbal_saved()));
                   },
                   color: GFColors.SUCCESS,
                   text: 'Go to watch',
-                ),
-                GFButton(
-                  onPressed: () {},
-                  color: GFColors.DANGER,
-                  text: '\tCancel\t',
                 ),
               ],
             ),
           ),
         );
-
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        if (!offline) {
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          _connectivitySubscription.cancel();
+        }
       }
     });
   }
@@ -221,6 +231,8 @@ class _LoginState extends State<Login> {
     getdata();
     _pageController = PageController(initialPage: 0);
     initialPage = _pageController.initialPage;
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     initConnectivity();
 
     super.initState();
@@ -237,9 +249,6 @@ class _LoginState extends State<Login> {
   bool check_elcome = false;
   @override
   Widget build(BuildContext context) {
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-
     return ProgressHUD(
         color: kPrimaryColor,
         inAsyncCall: isApiCallProcess,
@@ -332,44 +341,28 @@ class _LoginState extends State<Login> {
             child: AnimatedButton(
               text: 'Login',
               color: kwhite_new,
-              pressEvent: () {
-                if (validateAndSave()) {
-                  setState(() {
-                    // final player = AudioPlayer();
-                    // player.play(AssetSource('nor.mp3'));
-                    isApiCallProcess = true;
-                  });
-                  APIservice apIservice = APIservice();
-                  apIservice.login(requestModel).then((value) async {
-                    Load(value.token);
+              pressEvent: () async {
+                await initConnectivity();
+                if (!offline) {
+                } else {
+                  if (validateAndSave()) {
                     setState(() {
-                      isApiCallProcess = false;
+                      // final player = AudioPlayer();
+                      // player.play(AssetSource('nor.mp3'));
+                      isApiCallProcess = true;
                     });
-                    if (value.message == "Login Successfully!") {
-                      if (slist.length == 0) {
-                        await mydb.db.rawInsert(
-                            "INSERT INTO user (id ,first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                            [
-                              value.user['id'],
-                              value.user['first_name'],
-                              value.user['last_name'],
-                              value.user['control_user'],
-                              value.user['gender'],
-                              value.user['tel_num'],
-                              value.user['known_from'],
-                              requestModel.email,
-                              requestModel.password
-                            ]);
-                        // print("jksfdjhsdfjhsdhjfghsagddfasdf");
-                      } else {
-                        var check_Sql = await mydb.db.rawQuery(
-                            'SELECT * FROM user  WHERE  email=? AND password=?',
-                            [requestModel.email, requestModel.password]);
-                        if (check_Sql.length == 0) {
-                          mydb.db.rawInsert(
-                              "UPDATE user SET id=? ,first_name=?, last_name=?, username=?, gender=?, tel_num=?, known_from=?, email=?, password=? WHERE 1",
+                    APIservice apIservice = APIservice();
+                    apIservice.login(requestModel).then((value) async {
+                      Load(value.token);
+                      setState(() {
+                        isApiCallProcess = false;
+                      });
+                      if (value.message == "Login Successfully!") {
+                        if (slist.length == 0) {
+                          await mydb.db.rawInsert(
+                              "INSERT INTO user (id ,first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
                               [
-                                value.user!['id'],
+                                value.user['id'],
                                 value.user['first_name'],
                                 value.user['last_name'],
                                 value.user['control_user'],
@@ -379,59 +372,79 @@ class _LoginState extends State<Login> {
                                 requestModel.email,
                                 requestModel.password
                               ]);
+                          // print("jksfdjhsdfjhsdhjfghsagddfasdf");
+                        } else {
+                          var check_Sql = await mydb.db.rawQuery(
+                              'SELECT * FROM user  WHERE  email=? AND password=?',
+                              [requestModel.email, requestModel.password]);
+                          if (check_Sql.length == 0) {
+                            mydb.db.rawInsert(
+                                "UPDATE user SET id=? ,first_name=?, last_name=?, username=?, gender=?, tel_num=?, known_from=?, email=?, password=? WHERE 1",
+                                [
+                                  value.user!['id'],
+                                  value.user['first_name'],
+                                  value.user['last_name'],
+                                  value.user['control_user'],
+                                  value.user['gender'],
+                                  value.user['tel_num'],
+                                  value.user['known_from'],
+                                  requestModel.email,
+                                  requestModel.password
+                                ]);
+                          }
                         }
-                      }
-                      // OneSignal.User.addEmail('${requestModel.email}');
+                        // OneSignal.User.addEmail('${requestModel.email}');
 
-                      AwesomeDialog(
-                        btnOkOnPress: () {},
-                        context: context,
-                        animType: AnimType.leftSlide,
-                        headerAnimationLoop: false,
-                        dialogType: DialogType.success,
-                        showCloseIcon: false,
-                        title: value.message,
-                        autoHide: Duration(seconds: 3),
-                        onDismissCallback: (type) {
-                          // debugPrint('Dialog Dissmiss from callback $type');
-                          dispose();
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePage1(),
-                              ));
-                        },
-                      ).show();
-                    } else if (value.message == "Login unSuccessfully!") {
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.error,
-                        animType: AnimType.rightSlide,
-                        headerAnimationLoop: false,
-                        title: 'Error',
-                        body: Text("Incorrect Email or Password"),
-                        btnOkOnPress: () {},
-                        btnOkIcon: Icons.cancel,
-                        btnOkColor: Colors.red,
-                      ).show();
-                      // print(value.message);
-                    } else {
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.error,
-                        animType: AnimType.rightSlide,
-                        headerAnimationLoop: false,
-                        title: 'Error',
-                        body: Text("Incorrect Email or Password"),
-                        desc: value.message,
-                        btnOkOnPress: () {},
-                        btnOkIcon: Icons.cancel,
-                        btnOkColor: Colors.red,
-                      ).show();
-                      // print(value.message);
-                    }
-                  });
-                  // print(requestModel.toJson());
+                        AwesomeDialog(
+                          btnOkOnPress: () {},
+                          context: context,
+                          animType: AnimType.leftSlide,
+                          headerAnimationLoop: false,
+                          dialogType: DialogType.success,
+                          showCloseIcon: false,
+                          title: value.message,
+                          autoHide: Duration(seconds: 3),
+                          onDismissCallback: (type) {
+                            // debugPrint('Dialog Dissmiss from callback $type');
+                            dispose();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage1(),
+                                ));
+                          },
+                        ).show();
+                      } else if (value.message == "Login unSuccessfully!") {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.error,
+                          animType: AnimType.rightSlide,
+                          headerAnimationLoop: false,
+                          title: 'Error',
+                          body: Text("Incorrect Email or Password"),
+                          btnOkOnPress: () {},
+                          btnOkIcon: Icons.cancel,
+                          btnOkColor: Colors.red,
+                        ).show();
+                        // print(value.message);
+                      } else {
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.error,
+                          animType: AnimType.rightSlide,
+                          headerAnimationLoop: false,
+                          title: 'Error',
+                          body: Text("Incorrect Email or Password"),
+                          desc: value.message,
+                          btnOkOnPress: () {},
+                          btnOkIcon: Icons.cancel,
+                          btnOkColor: Colors.red,
+                        ).show();
+                        // print(value.message);
+                      }
+                    });
+                    // print(requestModel.toJson());
+                  }
                 }
               },
             ),

@@ -329,6 +329,8 @@ class _LandBuildingState extends State<LandBuilding> {
                               decoration: InputDecoration(
                                 fillColor: Colors.white,
                                 filled: true,
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 8),
                                 labelText: 'Option',
                                 hintText: 'Select',
                                 prefixIcon: Icon(

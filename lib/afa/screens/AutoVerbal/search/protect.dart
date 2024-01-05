@@ -26,8 +26,11 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
     });
 
     DataAutoVerbal = await mydb_vb.db.rawQuery(
-        "SELECT * FROM verbal_models  WHERE verbal_user = ?",
-        [widget.id_user.toString()]);
+        "SELECT * FROM verbal_models  WHERE verbal_user = ? AND local_offline = ?",
+        [widget.id_user.toString(), 0]);
+    setState(() {
+      print("local_offline: ${DataAutoVerbal![0]['local_offline']}\n");
+    });
   }
 
   @override
@@ -145,7 +148,8 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                                   color: kwhite_new,
                                                   fontSize: 10)),
                                           TextSpan(
-                                              text: "${stuone["verbal_id"]}",
+                                              text:
+                                                  "${stuone["verbal_id"].toString()}",
                                               style: const TextStyle(
                                                   color: kwhite_new,
                                                   fontSize: 10))

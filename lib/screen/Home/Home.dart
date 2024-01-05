@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage1> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) {
-                      return Add(
+                      return Menu_Add_verbal(
                         id: id.toString(),
                         id_control_user: control_user ?? "",
                       );
@@ -394,41 +394,4 @@ class _HomePageState extends State<HomePage1> {
       );
     }
   }
-
-  // Future<Map<String, dynamic>> fetchDataFromAPI(String userId) async {
-  //   final apiUrl =
-  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$userId';
-
-  //   var data;
-  //   final response = await http.get(Uri.parse(apiUrl));
-
-  //   if (response.statusCode == 200) {
-  //     setState(() {
-  //       data = json.decode(response.body);
-  //       print('$data');
-  //       expiry = data['expiry'];
-  //       print('Expiry: $expiry');
-  //       DateTime expiryDate = DateTime.parse(expiry!);
-  //       DateTime nowDate = DateTime.parse(now_day!);
-  //       Duration difference = expiryDate.difference(nowDate);
-  //       print(difference.inDays.toString());
-  //       if (difference.inDays == 1) {
-  //         final player = AudioPlayer();
-  //         player.play(AssetSource('nor.mp3'));
-  //         Get.snackbar('Message', 'Your V-Point Expiry 1 Days',
-  //             colorText: const Color.fromARGB(255, 5, 4, 4),
-  //             icon: CircleAvatar(
-  //               backgroundImage: AssetImage('assets/images/KFA_CRM.png'),
-  //               backgroundColor: Colors.white,
-  //             ),
-  //             snackPosition: SnackPosition.TOP,
-  //             snackbarStatus: (status) => SnackbarStatus.OPENING,
-  //             snackStyle: SnackStyle.GROUNDED);
-  //       } else {
-  //         print('No Expiry');
-  //       }
-  //     });
-  //   }
-  //   return data;
-  // }
 }
