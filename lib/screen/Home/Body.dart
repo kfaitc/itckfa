@@ -399,14 +399,6 @@ class _BodyState extends State<Body> {
                       newPosY <= maxY) {
                     setState(() {
                       position = Offset(newPosX, newPosY);
-                      // if (position.dx <
-                      //     MediaQuery.of(context).size.width * 0.75) {
-                      //   Future.delayed(const Duration(seconds: 7), () {
-                      //     position = Offset(
-                      //         MediaQuery.of(context).size.width * 0.85,
-                      //         position.dy);
-                      //   });
-                      // }
                     });
                   }
                 },
@@ -430,7 +422,7 @@ class _BodyState extends State<Body> {
                                 color: kwhite_new),
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 70),
-                              margin: EdgeInsets.only(top: 140),
+                              margin: EdgeInsets.symmetric(vertical: 150),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
