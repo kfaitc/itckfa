@@ -232,7 +232,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue[600],
+        backgroundColor: kwhite_new,
         centerTitle: true,
         title: const Text("Property Location"),
         leading: IconButton(
@@ -384,7 +384,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
                 child: IconButton(
                   icon: const Icon(
                     Icons.mp_sharp,
-                    color: Color.fromRGBO(0, 184, 212, 1),
+                    color: kImageColor,
                     size: 25,
                   ),
                   onPressed: () {

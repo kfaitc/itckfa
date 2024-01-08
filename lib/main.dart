@@ -394,3 +394,106 @@ class _ThankYouPageState extends State<ThankYouPage> {
     );
   }
 }
+
+class kokok extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DashBubbleIcon(),
+    );
+  }
+}
+
+class DashBubbleIcon extends StatefulWidget {
+  @override
+  State<DashBubbleIcon> createState() => _DashBubbleIconState();
+}
+
+class _DashBubbleIconState extends State<DashBubbleIcon> {
+  Offset position = Offset(0.0, 0.0);
+  double minX = 0.0;
+  double minY = 0.0;
+  double maxX = 200.0; // Set your desired maximum X-coordinate
+  double maxY = 200.0; // Set your desired maximum Y-coordinate
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Move Icons with Pan Gesture'),
+      ),
+      body: Column(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 0.8,
+            color: Colors.red,
+            child: Center(
+              child: GestureDetector(
+                onPanUpdate: (details) {
+                  double newPosX = position.dx + details.delta.dx;
+                  double newPosY = position.dy + details.delta.dy;
+
+                  // Check if the new position is within the specified boundary
+                  if (newPosX >= minX &&
+                      newPosX <= maxX &&
+                      newPosY >= minY &&
+                      newPosY <= maxY) {
+                    setState(() {
+                      position = Offset(newPosX, newPosY);
+                    });
+                  }
+                },
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: position.dx,
+                      top: position.dy,
+                      child: Icon(
+                        Icons.star,
+                        size: 50.0,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DashBubblePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = Colors.blue
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    Path path = Path()
+      ..moveTo(size.width / 2, 0)
+      ..lineTo(size.width, size.height / 2)
+      ..lineTo(size.width / 2, size.height)
+      ..lineTo(0, size.height / 2)
+      ..close();
+
+    double dashWidth = 5.0;
+    double dashSpace = 3.0;
+    double distance = 0.0;
+    while (distance < size.width) {
+      canvas.drawPath(
+        path.shift(Offset(distance, 0)),
+        paint,
+      );
+      distance += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
