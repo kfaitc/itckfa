@@ -278,8 +278,8 @@ class _TopUpState extends State<TopUp_ios> {
         title: Row(
           children: [
             Container(
-              margin: const EdgeInsets.only(left: 15),
-              padding: const EdgeInsets.all(5),
+              margin: const EdgeInsets.only(left: 1),
+              padding: const EdgeInsets.all(2),
               height: 30,
               width: 30,
               decoration: const BoxDecoration(
@@ -291,9 +291,9 @@ class _TopUpState extends State<TopUp_ios> {
             ),
             const SizedBox(width: 10),
             Text(
-              '$_point',
+              'is available $_point',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 25,
                 color: Colors.amber[800],
               ),
             ),
