@@ -1389,7 +1389,7 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
           ),
         ),
         SizedBox(
-          height: 3.0,
+          height: 30.0,
         ),
       ],
     );

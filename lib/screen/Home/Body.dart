@@ -422,7 +422,7 @@ class _BodyState extends State<Body> {
                                 color: kwhite_new),
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 70),
-                              margin: EdgeInsets.symmetric(vertical: 150),
+                              margin: EdgeInsets.only(top: 160),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(

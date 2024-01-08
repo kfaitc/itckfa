@@ -31,73 +31,173 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
     });
   }
 
+  bool btn_aba = true, btn_wing = false, btn_upay = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 243, 242, 242),
-      appBar: AppBar(
-        elevation: 5,
-        centerTitle: true,
-        backgroundColor: kwhite_new,
-        title: Text(
-          'History payment',
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
-      body: _await
-          ? Center(
-              child: _await_value(),
-            )
-          : _body(context),
-    );
-  }
-
-  Widget _body(BuildContext context) {
-    return ListView(
-      children: [
-        Container(
-            height: 55,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextButton(
-                    child: const Text('pay by UPay'),
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(
-                        const Color.fromRGBO(40, 53, 147, 1),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            title: Text(
+              "Transaction history",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: kwhite_new,
+            floating: true,
+            flexibleSpace: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      autofocus: true,
+                      onTap: () {
+                        setState(() {
+                          (!btn_aba) ? btn_aba = true : btn_aba = false;
+                          if (btn_aba) {
+                            btn_upay = false;
+                            btn_wing = false;
+                          }
+                        });
+                      },
+                      child: Text(
+                        "By ABA",
+                        style: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid,
+                            decoration:
+                                (btn_aba) ? TextDecoration.underline : null,
+                            decorationThickness: 3,
+                            decorationColor: Color.fromARGB(153, 23, 255, 73),
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                            fontSize:
+                                MediaQuery.of(context).textScaleFactor * 14,
+                            shadows: [
+                              Shadow(
+                                  blurRadius: 2,
+                                  color: Colors.grey,
+                                  offset: Offset(-2, 1))
+                            ],
+                            fontWeight: FontWeight.bold),
                       ),
-                    )),
-                TextButton(child: const Text('pay by Wing'), onPressed: () {}),
-                TextButton(child: const Text('pay by ABA'), onPressed: () {}),
-              ],
-            )),
-        if (aba_upay.isNotEmpty)
-          for (int i = 0; i < aba_upay[0].length; i++)
-            Container(
-              margin: EdgeInsets.all(10),
-              height: 50,
-              color: Colors.indigo[800],
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          (!btn_upay) ? btn_upay = true : btn_upay = false;
+                          if (btn_upay) {
+                            btn_aba = false;
+                            btn_wing = false;
+                          }
+                        });
+                      },
+                      child: Text(
+                        "By UPAY",
+                        style: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid,
+                            decoration:
+                                (btn_upay) ? TextDecoration.underline : null,
+                            decorationThickness: 3,
+                            decorationColor: Color.fromARGB(153, 23, 255, 73),
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                            fontSize:
+                                MediaQuery.of(context).textScaleFactor * 14,
+                            shadows: [
+                              Shadow(
+                                  blurRadius: 2,
+                                  color: Colors.grey,
+                                  offset: Offset(-2, 1))
+                            ],
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          (!btn_wing) ? btn_wing = true : btn_wing = false;
+                          print(btn_wing);
+                          if (btn_wing) {
+                            btn_aba = false;
+                            btn_upay = false;
+                          }
+                        });
+                      },
+                      child: Text(
+                        "By WING",
+                        style: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid,
+                            decoration:
+                                (btn_wing) ? TextDecoration.underline : null,
+                            decorationThickness: 3,
+                            decorationColor: Color.fromARGB(153, 23, 255, 73),
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                            fontSize:
+                                MediaQuery.of(context).textScaleFactor * 14,
+                            shadows: [
+                              Shadow(
+                                  blurRadius: 2,
+                                  color: Colors.grey,
+                                  offset: Offset(-2, 1))
+                            ],
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-        if (wing_khqr.isNotEmpty)
-          for (int i = 0; i < aba_upay[0].length; i++)
-            Container(
-              margin: EdgeInsets.all(20),
-              height: 80,
-              color: Colors.red,
+            expandedHeight: 150,
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return (btn_aba)
+                    ? Card(
+                        child: ListTile(
+                        title: Text('orderId: ${aba[index]['orderId']}'),
+                        subtitle:
+                            Text("Date Order: ${aba[index]['createTime']}"),
+                        trailing: Text("${aba[index]['money']}\$"),
+                      ))
+                    : (btn_upay)
+                        ? Card(
+                            child: ListTile(
+                            title: Text('orderId: ${upay[index]['orderId']}'),
+                            subtitle: Text(
+                                "Date Order: ${upay[index]['createTime']}"),
+                            trailing: Text("${upay[index]['money']}\$"),
+                          ))
+                        : Card(
+                            child: ListTile(
+                            title: Text(
+                                'orderId: ${wing[index]['order_reference_no']}'),
+                            subtitle: Text(
+                                "Date Order: ${wing[index]['transaction_date']}"),
+                            trailing: Text("${wing[index]['amount']}\$"),
+                          ));
+              },
+              childCount: (btn_aba)
+                  ? aba.length
+                  : (btn_upay)
+                      ? upay.length
+                      : wing.length,
             ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
   var url;
 
-  List wing_khqr = [];
-  List wing_deeplink = [];
-  List aba_upay = [];
+  List wing = [];
+  List upay = [];
+  List aba = [];
   Future<void> Check_Transtoin(id) async {
     var request = http.Request(
         'GET',
@@ -108,84 +208,13 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(await response.stream.bytesToString());
-      wing_khqr.add(data['wing_khqr']);
-      wing_deeplink.add(data['wing_deeplink']);
-      aba_upay.add(data['aba_upay']);
+      setState(() {
+        wing = data['wing'];
+        upay = data['upay'];
+        aba = data["aba"];
+      });
     } else {
       print(response.reasonPhrase);
     }
-  }
-
-  Widget _await_value() {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30))),
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.9,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.1,
-        child: Shimmer.fromColors(
-            baseColor: Color.fromARGB(255, 151, 150, 150),
-            highlightColor: Color.fromARGB(255, 221, 221, 219),
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Padding(
-                    padding:
-                        const EdgeInsets.only(right: 20, left: 20, top: 10),
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 1),
-                              borderRadius: BorderRadius.circular(5)),
-                          width: MediaQuery.of(context).size.width * 0.9,
-                          height: MediaQuery.of(context).size.height * 0.08,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 20, left: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                        radius: 15,
-                                        backgroundColor: Colors.grey),
-                                    SizedBox(width: 5),
-                                    _container(0.02, 0.18),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    _container(0.02, 0.3),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ));
-              },
-            )),
-      ),
-    );
-  }
-
-  Widget _container(double h, double w) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * h,
-        width: MediaQuery.of(context).size.width * w,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: Color.fromARGB(255, 190, 14, 14),
-        ),
-      ),
-    );
   }
 }
