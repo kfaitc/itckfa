@@ -37,7 +37,7 @@ class map_cross_verbal extends StatefulWidget {
       required this.get_commune,
       required this.get_log,
       required this.get_lat,
-      required this.asking_price});
+      required this.asking_price,});
   final OnChangeCallback get_province;
   final OnChangeCallback get_district;
   final OnChangeCallback get_commune;
@@ -54,7 +54,7 @@ class _HomePageState extends State<map_cross_verbal> {
   String googleApikey = "AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI";
   GoogleMapController? mapController; //contrller for Google map
   CameraPosition? cameraPosition;
-  final Set<Marker> listMarkerIds = new Set();
+  final Set<Marker> listMarkerIds = {};
   double latitude = 11.5489; //latitude
   double longitude = 104.9214;
   LatLng latLng = const LatLng(11.5489, 104.9214);
@@ -86,7 +86,7 @@ class _HomePageState extends State<map_cross_verbal> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services'),
+              'Location services are disabled. Please enable the services',),
         ),
       );
       return false;
@@ -96,14 +96,14 @@ class _HomePageState extends State<map_cross_verbal> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
+            const SnackBar(content: Text('Location permissions are denied')),);
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
+              'Location permissions are permanently denied, we cannot request permissions.',),),);
       return false;
     }
     return true;
@@ -111,7 +111,7 @@ class _HomePageState extends State<map_cross_verbal> {
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high,);
 
     setState(() {
       latLng = LatLng(position.latitude, position.longitude);
@@ -205,7 +205,7 @@ class _HomePageState extends State<map_cross_verbal> {
                   for_market_price();
                 }
               },
-              icon: Icon(Icons.line_style_rounded, color: Colors.white))
+              icon: Icon(Icons.line_style_rounded, color: Colors.white),)
         ],
       ),
       body: Material(
@@ -235,7 +235,7 @@ class _HomePageState extends State<map_cross_verbal> {
               panelBuilder: (ScrollController sc) => _panel(sc),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(18.0),
-                  topRight: Radius.circular(18.0)),
+                  topRight: Radius.circular(18.0),),
               onPanelSlide: (double pos) => setState(() {}),
             ),
           ],
@@ -387,12 +387,12 @@ class _HomePageState extends State<map_cross_verbal> {
             NumDisplay(
                 onSaved: (newValue) => setState(() {
                       requestModel.num = newValue!;
-                    })),
+                    }),),
           SizedBox(height: 10.0),
           if (groupValue == 0)
             Row(
               children: [
-                Container(
+                SizedBox(
                   width: (isChecked == true)
                       ? MediaQuery.of(context).size.width * 0.65
                       : MediaQuery.of(context).size.width * 1,
@@ -494,7 +494,7 @@ class _HomePageState extends State<map_cross_verbal> {
               markerId: MarkerId('mark'),
               position: argument,
               icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueRed),
+                  BitmapDescriptor.hueRed,),
             );
             setState(() {
               adding_price = 0;
@@ -553,7 +553,7 @@ class _HomePageState extends State<map_cross_verbal> {
       setState(() {
         isApiCallProcess = true;
       });
-      final Jsondata;
+      final Map<String, dynamic> Jsondata;
       if (pty != null) {
         Jsondata = {
           "property_type_id": pty,
@@ -570,9 +570,9 @@ class _HomePageState extends State<map_cross_verbal> {
       }
       final rs = await http.post(
           Uri.parse(
-              'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/map_action'),
+              'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/map_action',),
           headers: {'Content-Type': 'application/json'},
-          body: json.encode(Jsondata));
+          body: json.encode(Jsondata),);
       if (rs.statusCode == 200) {
         var jsonData = jsonDecode(rs.body);
         setState(() {
@@ -625,7 +625,7 @@ class _HomePageState extends State<map_cross_verbal> {
                 // print(map[i]['comparable_adding_price']);
               } else if (map[i]['comparable_adding_price'].contains(',')) {
                 adding_price += double.parse(
-                        map[i]['comparable_adding_price'].replaceAll(",", "")) /
+                        map[i]['comparable_adding_price'].replaceAll(",", ""),) /
                     map.length;
                 // print(map[i]['comparable_adding_price']);
                 //print(map[i]['comparable_adding_price'].split(",")[0]);
@@ -655,7 +655,7 @@ class _HomePageState extends State<map_cross_verbal> {
                     // print(map[i]['comparable_adding_price'].replaceAll(",", ""));
                     adding_price += double.parse(map[i]
                                 ['comparable_adding_price']
-                            .replaceAll(",", "")) /
+                            .replaceAll(",", ""),) /
                         int.parse(requestModel.num);
                   } else {
                     adding_price +=
@@ -683,7 +683,7 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/l.png'),
+                ImageConfiguration(size: Size(50, 50)), 'assets/icons/l.png',),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -695,7 +695,7 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold),
+                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -706,21 +706,21 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 'Price',
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
                               Text('Land-Width',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Length',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Total',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                             ],
                           ),
                           Column(
@@ -731,7 +731,7 @@ class _HomePageState extends State<map_cross_verbal> {
                                   '  :   ' +
                                       data_adding_correct[i]['comparable_id']
                                           .toString(),
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
@@ -740,30 +740,30 @@ class _HomePageState extends State<map_cross_verbal> {
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       formatter.format(double.parse(
                                           data_adding_correct[i]
                                                   ['comparable_land_total']
                                               .replaceAll(",", "")
-                                              .toString())),
-                                  style: TextStyle(fontSize: 12)),
+                                              .toString(),),),
+                                  style: TextStyle(fontSize: 12),),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -794,7 +794,7 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/f.png'),
+                ImageConfiguration(size: Size(50, 50)), 'assets/icons/f.png',),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -806,7 +806,7 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold),
+                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -817,21 +817,21 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 'Price',
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
                               Text('Land-Width',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Length',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Total',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                             ],
                           ),
                           Column(
@@ -842,7 +842,7 @@ class _HomePageState extends State<map_cross_verbal> {
                                   '  :   ' +
                                       data_adding_correct[i]['comparable_id']
                                           .toString(),
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
@@ -851,30 +851,30 @@ class _HomePageState extends State<map_cross_verbal> {
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       formatter.format(double.parse(
                                           data_adding_correct[i]
                                                   ['comparable_land_total']
                                               .replaceAll(",", "")
-                                              .toString())),
-                                  style: TextStyle(fontSize: 12)),
+                                              .toString(),),),
+                                  style: TextStyle(fontSize: 12),),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -905,7 +905,7 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/v.png'),
+                ImageConfiguration(size: Size(50, 50)), 'assets/icons/v.png',),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -917,7 +917,7 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold),
+                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -928,21 +928,21 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 'Price',
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
                               Text('Land-Width',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Length',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Total',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                             ],
                           ),
                           Column(
@@ -953,7 +953,7 @@ class _HomePageState extends State<map_cross_verbal> {
                                   '  :   ' +
                                       data_adding_correct[i]['comparable_id']
                                           .toString(),
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
@@ -962,30 +962,30 @@ class _HomePageState extends State<map_cross_verbal> {
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       formatter.format(double.parse(
                                           data_adding_correct[i]
                                                   ['comparable_land_total']
                                               .replaceAll(",", "")
-                                              .toString())),
-                                  style: TextStyle(fontSize: 12)),
+                                              .toString(),),),
+                                  style: TextStyle(fontSize: 12),),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1016,7 +1016,7 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/h.png'),
+                ImageConfiguration(size: Size(50, 50)), 'assets/icons/h.png',),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -1028,7 +1028,7 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold),
+                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -1039,21 +1039,21 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 'Price',
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
                               Text('Land-Width',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Length',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Total',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                             ],
                           ),
                           Column(
@@ -1064,7 +1064,7 @@ class _HomePageState extends State<map_cross_verbal> {
                                   '  :   ' +
                                       data_adding_correct[i]['comparable_id']
                                           .toString(),
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
@@ -1073,30 +1073,30 @@ class _HomePageState extends State<map_cross_verbal> {
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       formatter.format(double.parse(
                                           data_adding_correct[i]
                                                   ['comparable_land_total']
                                               .replaceAll(",", "")
-                                              .toString())),
-                                  style: TextStyle(fontSize: 12)),
+                                              .toString(),),),
+                                  style: TextStyle(fontSize: 12),),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1127,7 +1127,7 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/b.png'),
+                ImageConfiguration(size: Size(50, 50)), 'assets/icons/b.png',),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -1139,7 +1139,7 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold),
+                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -1150,21 +1150,21 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 'Price',
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
                               Text('Land-Width',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Length',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Total',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                             ],
                           ),
                           Column(
@@ -1175,7 +1175,7 @@ class _HomePageState extends State<map_cross_verbal> {
                                   '  :   ' +
                                       data_adding_correct[i]['comparable_id']
                                           .toString(),
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
@@ -1184,30 +1184,30 @@ class _HomePageState extends State<map_cross_verbal> {
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       formatter.format(double.parse(
                                           data_adding_correct[i]
                                                   ['comparable_land_total']
                                               .replaceAll(",", "")
-                                              .toString())),
-                                  style: TextStyle(fontSize: 12)),
+                                              .toString(),),),
+                                  style: TextStyle(fontSize: 12),),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1238,7 +1238,7 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/v.png'),
+                ImageConfiguration(size: Size(50, 50)), 'assets/icons/v.png',),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -1250,7 +1250,7 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold),
+                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -1261,21 +1261,21 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 'Price',
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
                               Text('Land-Width',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Length',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Total',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                             ],
                           ),
                           Column(
@@ -1286,7 +1286,7 @@ class _HomePageState extends State<map_cross_verbal> {
                                   '  :   ' +
                                       data_adding_correct[i]['comparable_id']
                                           .toString(),
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
@@ -1295,30 +1295,30 @@ class _HomePageState extends State<map_cross_verbal> {
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       formatter.format(double.parse(
                                           data_adding_correct[i]
                                                   ['comparable_land_total']
                                               .replaceAll(",", "")
-                                              .toString())),
-                                  style: TextStyle(fontSize: 12)),
+                                              .toString(),),),
+                                  style: TextStyle(fontSize: 12),),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1349,7 +1349,7 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/a.png'),
+                ImageConfiguration(size: Size(50, 50)), 'assets/icons/a.png',),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -1361,7 +1361,7 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property: ${i + 1} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold),
+                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -1372,21 +1372,21 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 'Price',
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
                               Text('Land-Width',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Length',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text('Land-Total',
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                             ],
                           ),
                           Column(
@@ -1397,7 +1397,7 @@ class _HomePageState extends State<map_cross_verbal> {
                                   '  :   ' +
                                       data_adding_correct[i]['comparable_id']
                                           .toString(),
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
@@ -1406,30 +1406,30 @@ class _HomePageState extends State<map_cross_verbal> {
                                 style: TextStyle(
                                     color: kImageColor,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       data_adding_correct[i]
                                           ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12)),
+                                  style: TextStyle(fontSize: 12),),
                               Text(
                                   '  :   ' +
                                       formatter.format(double.parse(
                                           data_adding_correct[i]
                                                   ['comparable_land_total']
                                               .replaceAll(",", "")
-                                              .toString())),
-                                  style: TextStyle(fontSize: 12)),
+                                              .toString(),),),
+                                  style: TextStyle(fontSize: 12),),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1455,10 +1455,10 @@ class _HomePageState extends State<map_cross_verbal> {
       }
       Dialog(context);
       await Find_by_piont(
-          double.parse(requestModel.lat), double.parse(requestModel.lng));
+          double.parse(requestModel.lat), double.parse(requestModel.lng),);
     } else {
       await Find_by_piont(
-          double.parse(requestModel.lat), double.parse(requestModel.lng));
+          double.parse(requestModel.lat), double.parse(requestModel.lng),);
       for_market_price();
     }
   }
@@ -1478,7 +1478,7 @@ class _HomePageState extends State<map_cross_verbal> {
             },
           )
         ],
-        content: Container(
+        content: SizedBox(
           height: MediaQuery.of(context).size.height * 0.55,
           child: SingleChildScrollView(
             child: Column(
@@ -1491,7 +1491,7 @@ class _HomePageState extends State<map_cross_verbal> {
                           "comparable id : " +
                               data_adding_correct[i]['comparable_id']
                                   .toString(),
-                          style: TextStyle(fontSize: 12)),
+                          style: TextStyle(fontSize: 12),),
                       subtitle: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1500,27 +1500,27 @@ class _HomePageState extends State<map_cross_verbal> {
                               "property : " +
                                   data_adding_correct[i]['property_type_name']
                                       .toString(),
-                              style: TextStyle(fontSize: 10)),
+                              style: TextStyle(fontSize: 10),),
                           Text(
                               "Owner : " +
                                   data_adding_correct[i]['agenttype_name']
                                       .toString(),
-                              style: TextStyle(fontSize: 10)),
+                              style: TextStyle(fontSize: 10),),
                           Text(
                               "adding price : " +
                                   formatter.format(double.parse(
                                       data_adding_correct[i]
                                               ['comparable_adding_price']
                                           .replaceAll(",", "")
-                                          .toString())) +
+                                          .toString(),),) +
                                   "\$",
-                              style: TextStyle(fontSize: 10)),
+                              style: TextStyle(fontSize: 10),),
                           Text(
                               "Date : " +
                                   data_adding_correct[i]
                                           ['comparable_survey_date']
                                       .toString(),
-                              style: TextStyle(fontSize: 10)),
+                              style: TextStyle(fontSize: 10),),
                         ],
                       ),
                     ),
@@ -1536,13 +1536,13 @@ class _HomePageState extends State<map_cross_verbal> {
                           fontSize: 11,
                           decorationStyle: TextDecorationStyle.dashed,
                           decoration: TextDecoration.underline,
-                        )),
+                        ),),
                     Text("maximum : ${formatter.format(max)}\$",
                         style: TextStyle(
                           fontSize: 11,
                           decorationStyle: TextDecorationStyle.dashed,
                           decoration: TextDecoration.underline,
-                        )),
+                        ),),
                   ],
                 ),
                 Text(
@@ -1554,7 +1554,7 @@ class _HomePageState extends State<map_cross_verbal> {
                       fontSize: 12,
                       decorationStyle: TextDecorationStyle.dashed,
                       decoration: TextDecoration.underline,
-                    )),
+                    ),),
               ],
             ),
           ),
@@ -1602,10 +1602,10 @@ class _HomePageState extends State<map_cross_verbal> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Avg = ",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: TextStyle(fontWeight: FontWeight.bold),),
                     Text("${formatter.format(R_avg)}\$",
                         style: const TextStyle(
-                            color: Color.fromARGB(255, 242, 11, 134)))
+                            color: Color.fromARGB(255, 242, 11, 134),),)
                   ],
                 ),
                 Row(
@@ -1614,19 +1614,19 @@ class _HomePageState extends State<map_cross_verbal> {
                     Row(
                       children: [
                         const Text("Min = ",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold),),
                         Text("${formatter.format(double.parse(minSqm1))}\$",
                             style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134)))
+                                color: Color.fromARGB(255, 242, 11, 134),),)
                       ],
                     ),
                     Row(
                       children: [
                         const Text("Max = ",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold),),
                         Text("${formatter.format(double.parse(maxSqm1))}\$",
                             style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134)))
+                                color: Color.fromARGB(255, 242, 11, 134),),)
                       ],
                     ),
                   ],
@@ -1654,10 +1654,10 @@ class _HomePageState extends State<map_cross_verbal> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Avg = ",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: TextStyle(fontWeight: FontWeight.bold),),
                     Text("${formatter.format(C_avg)}\$",
                         style: const TextStyle(
-                            color: Color.fromARGB(255, 242, 11, 134)))
+                            color: Color.fromARGB(255, 242, 11, 134),),)
                   ],
                 ),
                 Row(
@@ -1666,19 +1666,19 @@ class _HomePageState extends State<map_cross_verbal> {
                     Row(
                       children: [
                         const Text("Min = ",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold),),
                         Text("${formatter.format(double.parse(minSqm2))}\$",
                             style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134)))
+                                color: Color.fromARGB(255, 242, 11, 134),),)
                       ],
                     ),
                     Row(
                       children: [
                         const Text("Max = ",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold),),
                         Text("${formatter.format(double.parse(maxSqm2))}\$",
                             style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134)))
+                                color: Color.fromARGB(255, 242, 11, 134),),)
                       ],
                     ),
                   ],
@@ -1719,7 +1719,7 @@ class _HomePageState extends State<map_cross_verbal> {
       latitude = address.first.coordinates.latitude!;
       longitude = address.first.coordinates.longitude!;
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: LatLng(latitude, longitude), zoom: 15)));
+          CameraPosition(target: LatLng(latitude, longitude), zoom: 15),),);
       // ScaffoldMessenger.of(context).showSnackBar(
       //   SnackBar(
       //     content: Text(message),
@@ -1741,7 +1741,7 @@ class _HomePageState extends State<map_cross_verbal> {
   dynamic R_avg, C_avg;
   Future<void> Find_by_piont(double la, double lo) async {
     final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${la},${lo}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
@@ -1767,7 +1767,7 @@ class _HomePageState extends State<map_cross_verbal> {
                 // Load_khan(district);
 
                 widget.get_district(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name']);
+                    ['address_components'][i]['short_name'],);
               });
             }
             if (jsonResponse['results'][j]['address_components'][i]['types']
@@ -1779,14 +1779,14 @@ class _HomePageState extends State<map_cross_verbal> {
                     ['short_name']);
                 // Load_sangkat(commune);
                 widget.get_commune(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name']);
+                    ['address_components'][i]['short_name'],);
               });
             }
           }
         }
       }
       final response_rc = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',),);
       var jsonResponse_rc = json.decode(response_rc.body);
       setState(() {
         maxSqm1 = jsonResponse_rc['residential'][0]['Max_Value'].toString();

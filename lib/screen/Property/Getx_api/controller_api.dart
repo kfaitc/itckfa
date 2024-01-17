@@ -16,7 +16,7 @@ class controller_api extends GetxController {
   Future<void> value_all_list(property_type_id_province) async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_Sale_b/$property_type_id_province'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_Sale_b/$property_type_id_province',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_all.value = jsonBody;

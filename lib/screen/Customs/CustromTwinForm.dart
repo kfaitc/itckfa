@@ -40,7 +40,7 @@ class CustomTwinForm extends StatelessWidget {
                   prefixIcon: icon1,
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
-                        color: Color.fromRGBO(0, 126, 250, 1), width: 2.0),
+                        color: Color.fromRGBO(0, 126, 250, 1), width: 2.0,),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -69,7 +69,7 @@ class CustomTwinForm extends StatelessWidget {
                   prefixIcon: icon2,
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
-                        color: Color.fromRGBO(0, 126, 250, 1), width: 2.0),
+                        color: Color.fromRGBO(0, 126, 250, 1), width: 2.0,),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   enabledBorder: OutlineInputBorder(

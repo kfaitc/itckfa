@@ -14,7 +14,7 @@ class BankDropdown extends StatefulWidget {
       required this.bank,
       required this.bankbranch,
       this.bn,
-      this.brn})
+      this.brn,})
       : super(key: key);
   final OnChangeCallback bank;
   final OnChangeCallback bankbranch;
@@ -77,7 +77,7 @@ class _BankDropdownState extends State<BankDropdown> {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontSize: MediaQuery.textScaleFactorOf(context) * 13,
-                          height: 1),
+                          height: 1,),
                     ),
                   ),
                 )
@@ -130,7 +130,7 @@ class _BankDropdownState extends State<BankDropdown> {
             ),
           ),
         ),
-        if (_branch.length != 0)
+        if (_branch.isNotEmpty)
           Container(
             height: 57,
             padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
@@ -198,7 +198,7 @@ class _BankDropdownState extends State<BankDropdown> {
   void Load() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       // print(jsonData);
@@ -214,7 +214,7 @@ class _BankDropdownState extends State<BankDropdown> {
     setState(() {});
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bankbranch?bank_branch_details_id=' +
-            value));
+            value,),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body.toString());
       // print(jsonData);

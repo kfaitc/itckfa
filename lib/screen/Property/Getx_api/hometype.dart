@@ -23,7 +23,7 @@ class Controller_hometype extends GetxController {
   Future<void> verbal_Hometype() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_homeytpe'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_homeytpe',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body)['data'];
         list_hometype.value = jsonBody;

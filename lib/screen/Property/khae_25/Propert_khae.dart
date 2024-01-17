@@ -9,7 +9,7 @@ typedef OnChangeCallback = void Function(dynamic value);
 
 class Property_25 extends StatefulWidget {
   Property_25(
-      {super.key, required this.property_type_id, this.get_index_province});
+      {super.key, required this.property_type_id, this.get_index_province,});
   String? property_type_id;
   final OnChangeCallback? get_index_province;
   @override
@@ -94,10 +94,10 @@ class _Screen_sliderState extends State<Property_25> {
                     });
                   },
                   // reverse: true,
-                )),
+                ),),
             // buildIndicator(),
           ],
-        ));
+        ),);
   }
 
   // Widget buildImage(String imageList1, int index) => Container(
@@ -198,7 +198,7 @@ class PartnersCard2 extends StatelessWidget {
             BoxShadow(
                 color: Color.fromARGB(212, 248, 243, 243),
                 blurRadius: 1,
-                offset: Offset(0, 5))
+                offset: Offset(0, 5),)
           ],
           border: Border.all(
             // color: Color.fromARGB(255, 56, 52, 247),
@@ -362,7 +362,7 @@ class PartnersCard2 extends StatelessWidget {
                     style: TextStyle(fontSize: 10),
                   ),
               ],
-            )),
+            ),),
       ),
     );
   }
@@ -423,7 +423,7 @@ class PartnersCard_khae extends StatelessWidget {
             BoxShadow(
                 color: Color.fromARGB(212, 248, 243, 243),
                 blurRadius: 2,
-                offset: Offset(0, 5))
+                offset: Offset(0, 5),)
           ],
           border: Border.all(
             // color: Color.fromARGB(255, 56, 52, 247),
@@ -581,7 +581,7 @@ class PartnersCard_khae extends StatelessWidget {
                     style: TextStyle(fontSize: 10),
                   ),
               ],
-            )),
+            ),),
       ),
     );
   }

@@ -24,7 +24,7 @@ class Controller_verbal extends GetxController {
   Future<void> bank_dropdown() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body)['data'];
         bank.value = jsonBody;
@@ -39,7 +39,7 @@ class Controller_verbal extends GetxController {
   Future<void> verbal_Hometype() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_homeytpe'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_homeytpe',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body)['data'];
         list_hometype.value = jsonBody;
@@ -54,7 +54,7 @@ class Controller_verbal extends GetxController {
   Future<void> verbal_Commune_25_all() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Commune_25_all'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Commune_25_all',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body)['data'];
         list_cummone.value = jsonBody;
@@ -69,7 +69,7 @@ class Controller_verbal extends GetxController {
   Future<void> verbal_last_ID() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/id_sale_last?property=0'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/id_sale_last?property=0',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_last_verbalID.value = jsonBody;

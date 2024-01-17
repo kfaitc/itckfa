@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:itckfa/Memory_local/database.dart';
@@ -14,8 +13,8 @@ class ProtectDataCrossCheck extends StatefulWidget {
 }
 
 class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
-  MyDb mydb_lb = new MyDb();
-  MyDb mydb_vb = new MyDb();
+  MyDb mydb_lb = MyDb();
+  MyDb mydb_vb = MyDb();
   List<Map>? DataAutoVerbal;
   Future find() async {
     await mydb_vb.open_verbal();
@@ -27,7 +26,7 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
 
     DataAutoVerbal = await mydb_vb.db.rawQuery(
         "SELECT * FROM verbal_models  WHERE verbal_user = ? AND local_offline = ?",
-        [widget.id_user.toString(), 0]);
+        [widget.id_user.toString(), 0],);
     setState(() {
       print("local_offline: ${DataAutoVerbal![0]['local_offline']}\n");
     });
@@ -70,12 +69,12 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                       children: DataAutoVerbal!.map((stuone) {
                         return Container(
                           margin: const EdgeInsets.all(5),
-                          padding: EdgeInsets.all(0),
+                          padding: const EdgeInsets.all(0),
                           height: MediaQuery.of(context).size.height * 0.15,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               gradient: const LinearGradient(
-                                  colors: [Colors.white30, Colors.black12])),
+                                  colors: [Colors.white30, Colors.black12],),),
                           child: Row(
                             children: [
                               Expanded(
@@ -103,11 +102,11 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                           Expanded(
                                             flex: 1,
                                             child: Container(
-                                              margin: EdgeInsets.all(2),
+                                              margin: const EdgeInsets.all(2),
                                               decoration: BoxDecoration(
                                                 image: DecorationImage(
                                                   image: NetworkImage(
-                                                      'https://maps.googleapis.com/maps/api/staticmap?center=${stuone["latlong_log"]},${stuone["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${stuone["latlong_log"]},${stuone["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                                                      'https://maps.googleapis.com/maps/api/staticmap?center=${stuone["latlong_log"]},${stuone["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${stuone["latlong_log"]},${stuone["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -116,11 +115,11 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                         ],
                                       )
                                     : Container(
-                                        margin: EdgeInsets.all(2),
+                                        margin: const EdgeInsets.all(2),
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             image: NetworkImage(
-                                                'https://maps.googleapis.com/maps/api/staticmap?center=${stuone["latlong_log"]},${stuone["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${stuone["latlong_log"]},${stuone["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                                                'https://maps.googleapis.com/maps/api/staticmap?center=${stuone["latlong_log"]},${stuone["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${stuone["latlong_log"]},${stuone["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -146,14 +145,14 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                               text: "ID : ",
                                               style: TextStyle(
                                                   color: kwhite_new,
-                                                  fontSize: 10)),
+                                                  fontSize: 10,),),
                                           TextSpan(
                                               text:
-                                                  "${stuone["verbal_id"].toString()}",
+                                                  stuone["verbal_id"].toString(),
                                               style: const TextStyle(
                                                   color: kwhite_new,
-                                                  fontSize: 10))
-                                        ])),
+                                                  fontSize: 10,),)
+                                        ],),),
                                         const Divider(
                                           color: Colors.black,
                                         ),
@@ -161,7 +160,7 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                             "${stuone["verbal_khan"]} ${(stuone["verbal_address"] != "no") ? stuone["verbal_address"] : ""}",
                                             style: const TextStyle(
                                                 color: kwhite_new,
-                                                fontSize: 10)),
+                                                fontSize: 10,),),
                                         const Divider(
                                           color: Colors.black,
                                         ),
@@ -170,7 +169,7 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                               text: "Bank Officer : ",
                                               style: TextStyle(
                                                   color: kwhite_new,
-                                                  fontSize: 10)),
+                                                  fontSize: 10,),),
                                           if (stuone["verbal_bank_officer"] !=
                                               "no")
                                             TextSpan(
@@ -178,11 +177,11 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                                     "${stuone["verbal_bank_officer"]}",
                                                 style: const TextStyle(
                                                     color: kwhite_new,
-                                                    fontSize: 10))
-                                        ])),
+                                                    fontSize: 10,),)
+                                        ],),),
                                       ],
                                     ),
-                                  )),
+                                  ),),
                               Expanded(
                                   flex: 1,
                                   child: Container(
@@ -194,13 +193,13 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                           onTap: () async {
                                             await mydb_vb.db.rawDelete(
                                                 "DELETE FROM verbal_models WHERE verbal_id = ?",
-                                                [stuone["verbal_id"]]);
+                                                [stuone["verbal_id"]],);
                                             await mydb_lb.db.rawDelete(
                                                 "DELETE FROM comverbal_land_models WHERE verbal_landid = ?",
-                                                [stuone["verbal_id"]]);
+                                                [stuone["verbal_id"]],);
                                             setState(() {
                                               print(
-                                                  "object: ${stuone["verbal_id"]}");
+                                                  "object: ${stuone["verbal_id"]}",);
                                               find();
                                             });
                                           },
@@ -215,21 +214,21 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                               borderRadius: BorderRadius.only(
                                                   topRight: Radius.circular(10),
                                                   bottomLeft:
-                                                      Radius.circular(10)),
+                                                      Radius.circular(10),),
                                               color: Color.fromARGB(
-                                                  255, 234, 15, 15),
+                                                  255, 234, 15, 15,),
                                               boxShadow: [
                                                 BoxShadow(
                                                     blurRadius: 3,
                                                     offset: Offset(1, 1),
                                                     color: Color.fromARGB(
-                                                        255, 112, 111, 153))
+                                                        255, 112, 111, 153,),)
                                               ],
                                             ),
                                             child: const Text(
                                               "Delete",
                                               style: TextStyle(
-                                                  color: Colors.white),
+                                                  color: Colors.white,),
                                             ),
                                           ),
                                         ),
@@ -281,7 +280,7 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                                           // verbal: [],
                                                           // verbal_com: '',
                                                           // verbal_con: '',
-                                                        )));
+                                                        ),),);
                                           },
                                           child: Container(
                                             width: double.infinity,
@@ -297,28 +296,28 @@ class _ProtectDataCrossCheckState extends State<ProtectDataCrossCheck> {
                                                     blurRadius: 3,
                                                     offset: Offset(-1, -1),
                                                     color: Color.fromARGB(
-                                                        255, 112, 111, 153))
+                                                        255, 112, 111, 153,),)
                                               ],
                                               borderRadius: BorderRadius.only(
                                                   topLeft: Radius.circular(10),
                                                   bottomRight:
-                                                      Radius.circular(10)),
+                                                      Radius.circular(10),),
                                             ),
                                             child: const Text(
                                               "Check Out",
                                               style: TextStyle(
-                                                  color: Colors.white),
+                                                  color: Colors.white,),
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  )),
+                                  ),),
                             ],
                           ),
                         );
                       }).toList(),
-                    )),
+                    ),),
         ),
       ),
     );

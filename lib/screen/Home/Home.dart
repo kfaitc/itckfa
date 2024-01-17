@@ -61,8 +61,8 @@ class _HomePageState extends State<HomePage1> {
         await mydb.open_user();
         slist = await mydb.db.rawQuery('SELECT * FROM user');
         setState(() {
-          var i;
-          if (slist.length > 0) {
+          int i;
+          if (slist.isNotEmpty) {
             i = slist.length - 1;
             user = '${slist[i]['first_name']} ${slist[0]['last_name']}';
             first_name = slist[i]['first_name'];
@@ -74,11 +74,11 @@ class _HomePageState extends State<HomePage1> {
             id = slist[i]['id'];
             control_user = slist[i]['username'];
             password = slist[i]['password'];
-            OneSignal.login(slist[i]['username'].toString());
-            OneSignal.User.addAlias(
-                "fb_id$id", slist[i]['username'].toString());
-            OneSignal.User.addTagWithKey(
-                "fb_id$id", slist[i]['username'].toString());
+            // OneSignal.login(slist[i]['username'].toString());
+            // OneSignal.User.addAlias(
+            //     "fb_id$id", slist[i]['username'].toString(),);
+            // OneSignal.User.addTagWithKey(
+            //     "fb_id$id", slist[i]['username'].toString(),);
           }
         });
       });
@@ -95,8 +95,8 @@ class _HomePageState extends State<HomePage1> {
         await mydb.open_user();
         slist = await mydb.db.rawQuery('SELECT * FROM user');
         setState(() {
-          var i;
-          if (slist.length > 0) {
+          int i;
+          if (slist.isNotEmpty) {
             i = slist.length - 1;
             user = '${slist[i]['first_name']} ${slist[0]['last_name']}';
             first_name = slist[i]['first_name'];
@@ -108,11 +108,14 @@ class _HomePageState extends State<HomePage1> {
             id = slist[i]['id'];
             control_user = slist[i]['username'];
             password = slist[i]['password'];
-            OneSignal.login(slist[i]['username'].toString());
-            OneSignal.User.addAlias(
-                "fb_id$id", slist[i]['username'].toString());
-            OneSignal.User.addTagWithKey(
-                "fb_id$id", slist[i]['username'].toString());
+
+            // OneSignal.login(slist[i]['username'].toString());
+            // OneSignal.User.addAlias(
+            //     "fb_id$id", slist[i]['username'].toString(),);
+            // OneSignal.User.addTagWithKey(
+            //     "fb_id$id", slist[i]['username'].toString(),);
+            // OneSignal.User.addTags({'fb_id$id': '${slist[i]['username']}'});
+            print("pushSubscription ");
           }
         });
         setState(() {
@@ -124,7 +127,7 @@ class _HomePageState extends State<HomePage1> {
 
   Map? datatest;
   List<Map> slist = [];
-  MyDb mydb = new MyDb();
+  MyDb mydb = MyDb();
   Future logOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove('email');
@@ -136,10 +139,11 @@ class _HomePageState extends State<HomePage1> {
       fontSize: 20,
     );
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Login(),
-        ));
+      context,
+      MaterialPageRoute(
+        builder: (context) => Login(),
+      ),
+    );
   }
 
   String? expiry;
@@ -153,7 +157,9 @@ class _HomePageState extends State<HomePage1> {
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 60),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Row(
           children: [
             const CircleAvatar(
@@ -207,7 +213,7 @@ class _HomePageState extends State<HomePage1> {
       Center(child: Abouts()),
       Center(child: Feed_back()),
     ];
-    if (slist.length > 0 && check == false) {
+    if (slist.isNotEmpty && check == false) {
       return Scaffold(
         body: tabs[_currentIndex],
         drawer: Drawer(
@@ -222,20 +228,22 @@ class _HomePageState extends State<HomePage1> {
                   setState(() {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) {
-                        return Account(
-                          username: user ?? '',
-                          email: email ?? '',
-                          first_name: first_name ?? '',
-                          last_name: last_name ?? '',
-                          gender: gender ?? '',
-                          from: from ?? '',
-                          tel: tel ?? '',
-                          id: id.toString(),
-                          password: password ?? "",
-                          control_user: control_user ?? "",
-                        );
-                      }),
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return Account(
+                            username: user ?? '',
+                            email: email ?? '',
+                            first_name: first_name ?? '',
+                            last_name: last_name ?? '',
+                            gender: gender ?? '',
+                            from: from ?? '',
+                            tel: tel ?? '',
+                            id: id.toString(),
+                            password: password ?? "",
+                            control_user: control_user ?? "",
+                          );
+                        },
+                      ),
                     );
                   });
                 },
@@ -246,12 +254,14 @@ class _HomePageState extends State<HomePage1> {
                 Press: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) {
-                      return Menu_Add_verbal(
-                        id: id.toString(),
-                        id_control_user: control_user ?? "",
-                      );
-                    }),
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Menu_Add_verbal(
+                          id: id.toString(),
+                          id_control_user: control_user ?? "",
+                        );
+                      },
+                    ),
                   );
                 },
               ),
@@ -259,11 +269,14 @@ class _HomePageState extends State<HomePage1> {
                 icon: Icons.villa,
                 title: 'Property',
                 Press: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return Home_Screen_property();
-                    },
-                  ));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Home_Screen_property();
+                      },
+                    ),
+                  );
                 },
               ),
               MyDrawerList(
@@ -272,9 +285,11 @@ class _HomePageState extends State<HomePage1> {
                 Press: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) {
-                      return Walletscreen();
-                    }),
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return Walletscreen();
+                      },
+                    ),
                   );
                 },
               ),
@@ -284,9 +299,11 @@ class _HomePageState extends State<HomePage1> {
                 Press: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) {
-                      return FapsSidebar();
-                    }),
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return FapsSidebar();
+                      },
+                    ),
                   );
                 },
               ),
@@ -296,9 +313,11 @@ class _HomePageState extends State<HomePage1> {
                 Press: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) {
-                      return ContactsSidebar();
-                    }),
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return ContactsSidebar();
+                      },
+                    ),
                   );
                 },
               ),
@@ -308,9 +327,11 @@ class _HomePageState extends State<HomePage1> {
                 Press: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) {
-                      return AboutSidebar();
-                    }),
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AboutSidebar();
+                      },
+                    ),
                   );
                 },
               ),
@@ -375,21 +396,28 @@ class _HomePageState extends State<HomePage1> {
       return Scaffold(
         body: SafeArea(
           child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      opacity: 0.4,
-                      filterQuality: FilterQuality.medium,
-                      image: AssetImage('assets/images/first.gif')),
-                  gradient: LinearGradient(colors: [
-                    Color.fromARGB(226, 76, 83, 175),
-                    Color.fromARGB(211, 101, 59, 255)
-                  ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
-              child: Center(
-                child: CircularProgressIndicator(),
-              )),
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.fill,
+                opacity: 0.4,
+                filterQuality: FilterQuality.medium,
+                image: AssetImage('assets/images/first.gif'),
+              ),
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(226, 76, 83, 175),
+                  Color.fromARGB(211, 101, 59, 255)
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
         ),
       );
     }

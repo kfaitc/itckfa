@@ -43,13 +43,13 @@ class _Print_propertyState extends State<Print_property> {
     return IconButton(
         onPressed: () async {
           await Printing.layoutPdf(
-              onLayout: (format) => _generatePdf(format, myElement));
+              onLayout: (format) => _generatePdf(format, myElement),);
         },
         icon: Icon(
           Icons.print_outlined,
           size: MediaQuery.of(context).size.height * 0.045,
-          color: Color.fromARGB(255, 10, 16, 171),
-        ));
+          color: const Color.fromARGB(255, 10, 16, 171),
+        ),);
   }
 
   Future<Uint8List> _generatePdf(PdfPageFormat format, items) async {
@@ -73,80 +73,80 @@ class _Print_propertyState extends State<Print_property> {
     //     .buffer
     //     .asUint8List();
     ///////////Image //////////////////////////
-    final ByteData aircon_type_b =
+    final ByteData airconTypeB =
         await rootBundle.load('assets/icons/ice.png');
-    final Uint8List aircon_type = aircon_type_b.buffer.asUint8List();
-    final ByteData Size_b = await rootBundle.load('assets/icons/Size.png');
-    final Uint8List Size = Size_b.buffer.asUint8List();
-    final ByteData livingroom_b =
+    final Uint8List airconType = airconTypeB.buffer.asUint8List();
+    final ByteData sizeB = await rootBundle.load('assets/icons/Size.png');
+    final Uint8List Size = sizeB.buffer.asUint8List();
+    final ByteData livingroomB =
         await rootBundle.load('assets/icons/living_room.png');
-    final Uint8List livingroom = livingroom_b.buffer.asUint8List();
+    final Uint8List livingroom = livingroomB.buffer.asUint8List();
     ///////////////////////
-    final ByteData house_type_b =
+    final ByteData houseTypeB =
         await rootBundle.load('assets/icons/house.png');
-    final Uint8List house_type = house_type_b.buffer.asUint8List();
-    final ByteData area_b = await rootBundle.load('assets/icons/area.png');
-    final Uint8List area = area_b.buffer.asUint8List();
-    final ByteData total_area_b =
+    final Uint8List houseType = houseTypeB.buffer.asUint8List();
+    final ByteData areaB = await rootBundle.load('assets/icons/area.png');
+    final Uint8List area = areaB.buffer.asUint8List();
+    final ByteData totalAreaB =
         await rootBundle.load('assets/icons/total_area.png');
-    final Uint8List total_area = total_area_b.buffer.asUint8List();
-    final ByteData Size_house_b =
+    final Uint8List totalArea = totalAreaB.buffer.asUint8List();
+    final ByteData sizeHouseB =
         await rootBundle.load('assets/icons/size_house.png');
-    final Uint8List Size_house = Size_house_b.buffer.asUint8List();
+    final Uint8List sizeHouse = sizeHouseB.buffer.asUint8List();
     // final ByteData livingroom_b =
     //     await rootBundle.load('assets/icons/house.png');
     // final Uint8List livingroom = livingroom_b.buffer.asUint8List();
-    final ByteData floor_b = await rootBundle.load('assets/icons/floor.png');
-    final Uint8List floor = floor_b.buffer.asUint8List();
-    final ByteData parking_b =
+    final ByteData floorB = await rootBundle.load('assets/icons/floor.png');
+    final Uint8List floor = floorB.buffer.asUint8List();
+    final ByteData parkingB =
         await rootBundle.load('assets/icons/parking.png');
-    final Uint8List parking = parking_b.buffer.asUint8List();
-    final ByteData lot_b = await rootBundle.load('assets/icons/lot.png');
-    final Uint8List lot = lot_b.buffer.asUint8List();
-    final ByteData price_sqm_b = await rootBundle.load('assets/icons/Size.png');
-    final Uint8List price_sqm = price_sqm_b.buffer.asUint8List();
-    final ByteData bath_b = await rootBundle.load('assets/icons/bath.png');
-    final Uint8List bath = bath_b.buffer.asUint8List();
-    final ByteData bed_b = await rootBundle.load('assets/icons/bed.png');
-    final Uint8List bed = bed_b.buffer.asUint8List();
+    final Uint8List parking = parkingB.buffer.asUint8List();
+    final ByteData lotB = await rootBundle.load('assets/icons/lot.png');
+    final Uint8List lot = lotB.buffer.asUint8List();
+    final ByteData priceSqmB = await rootBundle.load('assets/icons/Size.png');
+    final Uint8List priceSqm = priceSqmB.buffer.asUint8List();
+    final ByteData bathB = await rootBundle.load('assets/icons/bath.png');
+    final Uint8List bath = bathB.buffer.asUint8List();
+    final ByteData bedB = await rootBundle.load('assets/icons/bed.png');
+    final Uint8List bed = bedB.buffer.asUint8List();
     // Uint8List bytes2 =
     //     (await NetworkAssetBundle(Uri.parse('$image_i')).load('$image_i'))
     //         .buffer
     //         .asUint8List();
-    final ByteData web_b = await rootBundle.load('assets/icons/web_icons.png');
-    final Uint8List web = web_b.buffer.asUint8List();
-    final ByteData gmail_b =
+    final ByteData webB = await rootBundle.load('assets/icons/web_icons.png');
+    final Uint8List web = webB.buffer.asUint8List();
+    final ByteData gmailB =
         await rootBundle.load('assets/icons/gmail_icon.png');
-    final Uint8List gmail = gmail_b.buffer.asUint8List();
-    final ByteData arrow_b =
+    final Uint8List gmail = gmailB.buffer.asUint8List();
+    final ByteData arrowB =
         await rootBundle.load('assets/icons/arrow_icons.png');
-    final Uint8List arrow = arrow_b.buffer.asUint8List();
-    final ByteData phone_b =
+    final Uint8List arrow = arrowB.buffer.asUint8List();
+    final ByteData phoneB =
         await rootBundle.load('assets/icons/phone_icon.png');
-    final Uint8List phone = phone_b.buffer.asUint8List();
-    var styp_text = pw.TextStyle(
+    final Uint8List phone = phoneB.buffer.asUint8List();
+    var stypText = pw.TextStyle(
         fontSize: MediaQuery.of(context).size.height * 0.008,
-        color: PdfColors.grey600);
+        color: PdfColors.grey600,);
     var styp_text_ = pw.TextStyle(
         fontSize: MediaQuery.of(context).size.height * 0.012,
-        color: PdfColors.grey900);
-    var styp_address = pw.TextStyle(
+        color: PdfColors.grey900,);
+    var stypAddress = pw.TextStyle(
         fontSize: MediaQuery.of(context).size.height * 0.007,
-        color: PdfColors.grey900);
-    var color_text = pw.TextStyle(
+        color: PdfColors.grey900,);
+    var colorText = pw.TextStyle(
         color: PdfColors.grey800,
-        fontSize: MediaQuery.of(context).size.height * 0.01);
-    var Sizebox_2 = pw.SizedBox(height: 2);
-    var Sizebox_2w = pw.SizedBox(width: 2);
-    var Sizebox_10w = pw.SizedBox(width: 10);
-    var Sizebox_5 = pw.SizedBox(height: 5);
-    var Sizebox_10 = pw.SizedBox(height: 7);
-    var font_ds = pw.TextStyle(
+        fontSize: MediaQuery.of(context).size.height * 0.01,);
+    var sizebox2 = pw.SizedBox(height: 2);
+    var sizebox2w = pw.SizedBox(width: 2);
+    var sizebox10w = pw.SizedBox(width: 10);
+    var sizebox5 = pw.SizedBox(height: 5);
+    var sizebox10 = pw.SizedBox(height: 7);
+    var fontDs = pw.TextStyle(
         color: PdfColors.grey800,
-        fontSize: MediaQuery.of(context).size.height * 0.010);
+        fontSize: MediaQuery.of(context).size.height * 0.010,);
     pw.Widget _text(text) {
       return pw.Text('$text',
-          style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold));
+          style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),);
     }
 
     pw.Widget icon_ds(icon, value) {
@@ -159,11 +159,11 @@ class _Print_propertyState extends State<Print_property> {
                 // ${items![index]['price'].toString()}
                 icon,
               ),
-              fit: pw.BoxFit.cover),
+              fit: pw.BoxFit.cover,),
         ),
-        Sizebox_2w,
-        pw.Text('$value', style: font_ds),
-      ]);
+        sizebox2w,
+        pw.Text('$value', style: fontDs),
+      ],);
     }
 
     pw.Widget _type() {
@@ -175,33 +175,33 @@ class _Print_propertyState extends State<Print_property> {
               border: pw.Border.all(
                 width: 0.03,
                 color: PdfColors.grey400,
-              )),
+              ),),
           child:
               pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start, children: [
             pw.SizedBox(width: 1),
             pw.Container(height: 15, color: PdfColors.blue300, width: 4),
             pw.SizedBox(width: 3),
             pw.Text('${items['type'] ?? ""} > ',
-                style: pw.TextStyle(color: PdfColors.blue, fontSize: 8)),
+                style: const pw.TextStyle(color: PdfColors.blue, fontSize: 8),),
             pw.Text('\$${items['price'] ?? ""}',
-                style: pw.TextStyle(color: PdfColors.red, fontSize: 8)),
-          ]));
+                style: const pw.TextStyle(color: PdfColors.red, fontSize: 8),),
+          ],),);
     }
 
     pw.Widget Reach_US() {
       return pw.Padding(
-          padding: pw.EdgeInsets.only(left: 10),
+          padding: const pw.EdgeInsets.only(left: 10),
           child: pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
                 '(Reach Us) : #36A, St.04 Borey Peng Hourt The Star Natural. Sangkat Chakangre Leu, Khan Meanchey, Phnom Penh.',
                 style: pw.TextStyle(
-                    fontSize: MediaQuery.of(context).size.height * 0.012),
+                    fontSize: MediaQuery.of(context).size.height * 0.012,),
                 maxLines: 4,
               ),
             ],
-          ));
+          ),);
     }
 
     pw.Widget icon_text(icon, text, value) {
@@ -216,9 +216,9 @@ class _Print_propertyState extends State<Print_property> {
                     // ${items![index]['price'].toString()}
                     icon,
                   ),
-                  fit: pw.BoxFit.cover),
+                  fit: pw.BoxFit.cover,),
             ),
-            Sizebox_2w,
+            sizebox2w,
             pw.Container(
               alignment: pw.Alignment.center,
               width: 27,
@@ -229,13 +229,13 @@ class _Print_propertyState extends State<Print_property> {
                   pw.Text('$text',
                       style: pw.TextStyle(
                           fontSize: MediaQuery.of(context).size.height * 0.008,
-                          color: PdfColors.grey600)),
-                  Sizebox_2,
+                          color: PdfColors.grey600,),),
+                  sizebox2,
                   pw.Text('$value',
                       style: pw.TextStyle(
                           fontWeight: pw.FontWeight.bold,
                           fontSize: MediaQuery.of(context).size.height * 0.008,
-                          color: PdfColors.grey800)),
+                          color: PdfColors.grey800,),),
                 ],
               ),
             )
@@ -250,7 +250,7 @@ class _Print_propertyState extends State<Print_property> {
         style: pw.TextStyle(
             fontSize: 9,
             color: PdfColors.grey700,
-            fontWeight: pw.FontWeight.bold),
+            fontWeight: pw.FontWeight.bold,),
       );
     }
 
@@ -259,13 +259,13 @@ class _Print_propertyState extends State<Print_property> {
       build: (context) {
         return [
           pw.Padding(
-            padding: pw.EdgeInsets.only(top: 0, bottom: 10),
+            padding: const pw.EdgeInsets.only(top: 0, bottom: 10),
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Container(
                   height: 65,
-                  margin: pw.EdgeInsets.only(bottom: 5),
+                  margin: const pw.EdgeInsets.only(bottom: 5),
                   child: pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
@@ -281,18 +281,18 @@ class _Print_propertyState extends State<Print_property> {
                                     byteList,
                                     // bytes1,
                                   ),
-                                  fit: pw.BoxFit.fill),
+                                  fit: pw.BoxFit.fill,),
                             ),
-                            Sizebox_5,
+                            sizebox5,
                             pw.Text('KHMER FOUNDATION APPRAISALS',
                                 style: pw.TextStyle(
                                     fontWeight: pw.FontWeight.bold,
                                     fontSize: 8,
-                                    color: PdfColors.grey800))
-                          ]),
+                                    color: PdfColors.grey800,),)
+                          ],),
                       pw.Text("Property Check",
                           style: pw.TextStyle(
-                              fontWeight: pw.FontWeight.bold, fontSize: 15)),
+                              fontWeight: pw.FontWeight.bold, fontSize: 15,),),
                       pw.Column(children: [
                         pw.Container(
                           height: 50,
@@ -301,11 +301,11 @@ class _Print_propertyState extends State<Print_property> {
                           child: pw.BarcodeWidget(
                               barcode: pw.Barcode.qrCode(),
                               data:
-                                  "https://www.latlong.net/c/?lat=${items['latlong_log']}&long=${items['latlong_la']}"),
+                                  "https://www.latlong.net/c/?lat=${items['latlong_log']}&long=${items['latlong_la']}",),
                         ),
                         pw.SizedBox(height: 8),
                         _text_dc('verbal ID = ${items['id_ptys']}')
-                      ])
+                      ],)
                     ],
                   ),
                 ),
@@ -320,9 +320,9 @@ class _Print_propertyState extends State<Print_property> {
                               // width: 300,
                               // color: PdfColors.amber,
                               child: pw.Image(pw.MemoryImage(bytes1),
-                                  fit: pw.BoxFit.fill),
+                                  fit: pw.BoxFit.fill,),
                             )
-                          : pw.SizedBox()),
+                          : pw.SizedBox(),),
                   pw.SizedBox(width: 10),
                   // (items['url_1'] != null || items['url_2'])
                   //     ? pw.Expanded(
@@ -369,22 +369,22 @@ class _Print_propertyState extends State<Print_property> {
                   //         ),
                   //       )
                   //     : pw.SizedBox()
-                ]),
-                Sizebox_10,
+                ],),
+                sizebox10,
                 _text('${items['Title'] ?? ""}'),
-                Sizebox_5,
+                sizebox5,
                 _text('${items['address'] ?? ""} Cambodia'),
-                Sizebox_5,
+                sizebox5,
                 _text_dc('FACE AND FEATURES'),
-                Sizebox_5,
+                sizebox5,
                 pw.Container(
                     decoration: pw.BoxDecoration(
                         border: pw.Border.all(
-                            width: 0.7, color: PdfColors.grey400)),
+                            width: 0.7, color: PdfColors.grey400,),),
                     height: 320,
                     width: double.infinity,
                     child: pw.Padding(
-                        padding: pw.EdgeInsets.only(top: 20),
+                        padding: const pw.EdgeInsets.only(top: 20),
                         child: pw.Column(
                             crossAxisAlignment: pw.CrossAxisAlignment.start,
                             children: [
@@ -392,91 +392,87 @@ class _Print_propertyState extends State<Print_property> {
                                   mainAxisAlignment:
                                       pw.MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    icon_text(house_type, 'hometype',
-                                        '${items['type'] ?? ""}'),
-                                    Sizebox_2w,
+                                    icon_text(houseType, 'hometype',
+                                        '${items['type'] ?? ""}',),
+                                    sizebox2w,
                                     icon_text(
-                                        bed, 'Bed', '${items['Bed'] ?? ""}'),
-                                    Sizebox_2w,
+                                        bed, 'Bed', '${items['Bed'] ?? ""}',),
+                                    sizebox2w,
                                     icon_text(
-                                        bath, 'Bath', '${items['type'] ?? ""}'),
-                                    Sizebox_2w,
+                                        bath, 'Bath', '${items['type'] ?? ""}',),
+                                    sizebox2w,
                                     icon_text(lot, 'Lot(sqm)',
-                                        '${items['land'] ?? ""}'),
-                                    Sizebox_2w,
+                                        '${items['land'] ?? ""}',),
+                                    sizebox2w,
                                     icon_text(Size, 'Size(sqm)',
-                                        '${items['size_house'] ?? ""}'),
-                                    Sizebox_2w,
+                                        '${items['size_house'] ?? ""}',),
+                                    sizebox2w,
                                     icon_text(
                                         area,
-                                        'Private_Area(${' m' + '\u00B2'})',
-                                        '${items['Private_Area'] ?? ""}'),
-                                  ]),
-                              Sizebox_5,
+                                        'Private_Area(${' m' '\u00B2'})',
+                                        '${items['Private_Area'] ?? ""}',),
+                                  ],),
+                              sizebox5,
                               pw.Divider(height: 0.7, color: PdfColors.grey200),
-                              Sizebox_5,
+                              sizebox5,
                               pw.Row(
                                   mainAxisAlignment:
                                       pw.MainAxisAlignment.spaceEvenly,
                                   children: [
                                     icon_text(parking, 'Parking',
-                                        '${items['Parking'] ?? ""}'),
-                                    Sizebox_2w,
+                                        '${items['Parking'] ?? ""}',),
+                                    sizebox2w,
                                     icon_text(floor, 'Floor',
-                                        '${items['floor'] ?? ""}'),
-                                    Sizebox_2w,
+                                        '${items['floor'] ?? ""}',),
+                                    sizebox2w,
                                     icon_text(livingroom, 'Livingroom',
-                                        '${items['Livingroom'] ?? ""}'),
-                                    Sizebox_2w,
-                                    icon_text(price_sqm, 'price(sqm)',
-                                        '${items['price_sqm'] ?? ""}'),
-                                    Sizebox_2w,
-                                    icon_text(aircon_type, 'Aircon',
-                                        '${items['	aircon'] ?? ""}'),
-                                    Sizebox_2w,
+                                        '${items['Livingroom'] ?? ""}',),
+                                    sizebox2w,
+                                    icon_text(priceSqm, 'price(sqm)',
+                                        '${items['price_sqm'] ?? ""}',),
+                                    sizebox2w,
+                                    icon_text(airconType, 'Aircon',
+                                        '${items['	aircon'] ?? ""}',),
+                                    sizebox2w,
                                     icon_text(
-                                        total_area,
-                                        'TotalArea(${' m' + '\u00B2'})',
-                                        '${items['total_area'] ?? ""}'),
-                                  ]),
-                              Sizebox_10,
+                                        totalArea,
+                                        'TotalArea(${' m' '\u00B2'})',
+                                        '${items['total_area'] ?? ""}',),
+                                  ],),
+                              sizebox10,
                               _type(),
-                              Sizebox_10,
+                              sizebox10,
                               pw.Padding(
-                                  padding: pw.EdgeInsets.only(left: 10),
+                                  padding: const pw.EdgeInsets.only(left: 10),
                                   child: pw.Column(children: [
                                     pw.Row(children: [
                                       _text_dc('PROPERTY DESCRIPTION'),
-                                      Sizebox_10,
-                                    ]),
+                                      sizebox10,
+                                    ],),
                                     icon_ds(arrow,
-                                        ' Price : \$${items['price'] ?? ""} (Negotiate)'),
-                                    Sizebox_2w,
+                                        ' Price : \$${items['price'] ?? ""} (Negotiate)',),
+                                    sizebox2w,
                                     icon_ds(
-                                        arrow, ' Bed : ${items['bed'] ?? ""}'),
-                                    Sizebox_2w,
+                                        arrow, ' Bed : ${items['bed'] ?? ""}',),
+                                    sizebox2w,
                                     icon_ds(arrow,
-                                        ' Bath : ${items['bath'] ?? ""}'),
-                                    Sizebox_5,
+                                        ' Bath : ${items['bath'] ?? ""}',),
+                                    sizebox5,
                                     icon_ds(
                                       arrow,
-                                      'Size House : ${items['Size_l'] ?? ""} x ${items['size_w'] ?? ""} = ${items['size_house'] ?? ""}' +
-                                          ' m' +
-                                          '\u00B2',
+                                      'Size House : ${items['Size_l'] ?? ""} x ${items['size_w'] ?? ""} = ${items['size_house'] ?? ""} m\u00B2',
                                     ),
-                                    Sizebox_5,
+                                    sizebox5,
                                     icon_ds(
                                       arrow,
-                                      'Size Land : ${items['land_l'] ?? ""} x ${items['land_w'] ?? ""} = ${items['land'] ?? ""}' +
-                                          ' m' +
-                                          '\u00B2',
+                                      'Size Land : ${items['land_l'] ?? ""} x ${items['land_w'] ?? ""} = ${items['land'] ?? ""} m\u00B2',
                                     ),
-                                    Sizebox_5,
+                                    sizebox5,
                                     icon_ds(
                                       arrow,
                                       'Issuance of transfer service (hard copy)',
                                     ),
-                                    Sizebox_5,
+                                    sizebox5,
                                     pw.Row(children: [
                                       icon_ds(
                                         phone,
@@ -487,40 +483,40 @@ class _Print_propertyState extends State<Print_property> {
                                         phone,
                                         '(Officer) : 023 999 855 | 023 988 911',
                                       ),
-                                    ]),
-                                    Sizebox_5,
+                                    ],),
+                                    sizebox5,
                                     pw.Row(children: [
                                       icon_ds(
                                         web,
                                         'https://kfa.com.kh/contacts',
                                       ),
-                                      Sizebox_2w,
+                                      sizebox2w,
                                       icon_ds(
                                         gmail,
                                         'info@kfa.com.kh',
                                       ),
-                                    ]),
-                                    Sizebox_5,
+                                    ],),
+                                    sizebox5,
                                     pw.Text(
                                         "Text * Note: It is only first price which you took from this verbal check data. The accurate value of property when we have the actual site property inspection.We are not responsible for this case when you provided the wrong land and building size or any fraud.Note: It is only first price which you took from this verbal check data. The accurate value of property when we have the actual site property inspection.We are not responsible for this case when you provided the wrong land and building size or any fraud.",
                                         style: styp_text_,
-                                        maxLines: 5),
-                                  ])),
-                              Sizebox_5,
+                                        maxLines: 5,),
+                                  ],),),
+                              sizebox5,
                               Reach_US(),
-                            ]))),
+                            ],),),),
 
-                Sizebox_5,
+                sizebox5,
               ],
             ),
           )
         ];
       },
-    ));
-    final Color_Test = Color.fromARGB(255, 131, 18, 10);
+    ),);
+    const colorTest = Color.fromARGB(255, 131, 18, 10);
     final pdfBytes = pdf.save();
     await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => pdfBytes);
+        onLayout: (PdfPageFormat format) async => pdfBytes,);
     return pdf.save();
   }
 }

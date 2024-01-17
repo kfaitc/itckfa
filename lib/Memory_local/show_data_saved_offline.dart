@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:itckfa/Memory_local/database.dart';
@@ -26,7 +24,7 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
   }
 
   List<Map> slist = [];
-  MyDb mydb = new MyDb();
+  MyDb mydb = MyDb();
   @override
   void initState() {
     OpenDataBase();
@@ -52,14 +50,14 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
             icon: const Icon(
               Icons.chevron_left_outlined,
               size: 40,
-            )),
+            ),),
       ),
       body: SingleChildScrollView(
         // stuone["roll_no"]
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: slist!.map((stuone) {
+            children: slist.map((stuone) {
               return InkWell(
                 onTap: () {
                   showDialog(
@@ -68,9 +66,9 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
                         return Container(
                           height: MediaQuery.of(context).size.height * 0.5,
                           alignment: Alignment.center,
-                          margin: EdgeInsets.only(
-                              left: 40, right: 40, bottom: 100, top: 90),
-                          decoration: BoxDecoration(
+                          margin: const EdgeInsets.only(
+                              left: 40, right: 40, bottom: 100, top: 90,),
+                          decoration: const BoxDecoration(
                             color: Colors.white,
                           ),
                           child: Scaffold(
@@ -106,40 +104,40 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
                                                     await mydb.open_offline();
                                                     int b = await mydb.db.rawDelete(
                                                         "DELETE FROM verbal_models_offline WHERE verbal_id = ?",
-                                                        [stuone["verbal_id"]]);
+                                                        [stuone["verbal_id"]],);
                                                     if (b == 1) {
                                                       const snackBar = SnackBar(
                                                         content: Text(
-                                                            'Data Deleted!...'),
+                                                            'Data Deleted!...',),
                                                         duration: Duration(
-                                                            seconds: 2),
+                                                            seconds: 2,),
                                                       );
 
                                                       ScaffoldMessenger.of(
-                                                              context)
+                                                              context,)
                                                           .showSnackBar(
-                                                              snackBar);
+                                                              snackBar,);
 
                                                       Navigator.pop(context);
                                                     } else {
                                                       const snackBar = SnackBar(
                                                         content: Text(
-                                                            'Data Deleted felse!...'),
+                                                            'Data Deleted felse!...',),
                                                         duration: Duration(
-                                                            seconds: 2),
+                                                            seconds: 2,),
                                                       );
 
                                                       ScaffoldMessenger.of(
-                                                              context)
+                                                              context,)
                                                           .showSnackBar(
-                                                              snackBar);
+                                                              snackBar,);
 
                                                       Navigator.pop(context);
                                                     }
                                                   },
                                                   text: "Delete\t\t",
                                                   type: GFButtonType.outline2x,
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                     Icons
                                                         .delete_outline_rounded,
                                                   ),
@@ -150,7 +148,7 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
                                                         await ImageGallerySaver
                                                             .saveImage(base64Decode(
                                                                 stuone[
-                                                                    "verbal_image"]));
+                                                                    "verbal_image"],),);
                                                     const snackBar = SnackBar(
                                                       content:
                                                           Text('Data Saved!'),
@@ -160,19 +158,19 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
 
                                                     // ignore: use_build_context_synchronously
                                                     ScaffoldMessenger.of(
-                                                            context)
+                                                            context,)
                                                         .showSnackBar(snackBar);
                                                     // ignore: use_build_context_synchronously
                                                     Navigator.pop(context);
                                                   },
                                                   text: "download",
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                     Icons.download,
                                                   ),
                                                   type: GFButtonType.outline2x,
                                                 ),
                                               ],
-                                            )),
+                                            ),),
                                       ],
                                     ),
                                   ),
@@ -182,7 +180,7 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
                                     },
                                     child: CircleAvatar(
                                       backgroundColor: Colors.redAccent[400],
-                                      child: Icon(Icons.close),
+                                      child: const Icon(Icons.close),
                                     ),
                                   ),
                                 ],
@@ -190,15 +188,15 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
                             ),
                           ),
                         );
-                      });
+                      },);
                 },
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.6,
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [BoxShadow(blurRadius: 5, color: Colors.grey)],
+                    boxShadow: const [BoxShadow(blurRadius: 5, color: Colors.grey)],
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -206,7 +204,7 @@ class _data_verbal_savedState extends State<data_verbal_saved> {
                       Expanded(
                           flex: 1,
                           child: Image.memory(
-                              base64Decode(stuone["verbal_image"])))
+                              base64Decode(stuone["verbal_image"]),),)
                     ],
                   ),
                 ),

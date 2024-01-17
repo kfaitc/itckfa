@@ -13,12 +13,12 @@ class APIservice {
   Future<LoginReponseModel> login(LoginRequestModel requestModel) async {
     final response = await http.post(
         Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/login'),
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/login',),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: requestModel.toJson());
+        body: requestModel.toJson(),);
 
     if (response.statusCode == 200 || response.statusCode == 422) {
       return LoginReponseModel.fromJson(json.decode(response.body));
@@ -30,15 +30,15 @@ class APIservice {
   }
 
   Future<RegisterReponseModel> register(
-      RegisterRequestModel requestModel) async {
+      RegisterRequestModel requestModel,) async {
     final response = await http.post(
         Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/register'),
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/register',),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: requestModel.toJson());
+        body: requestModel.toJson(),);
 
     if (response.statusCode == 200 || response.statusCode == 422) {
       return RegisterReponseModel.fromJson(json.decode(response.body));
@@ -50,24 +50,24 @@ class APIservice {
   }
 
   Future<RegisterReponseModel_update> update_user(
-      RegisterRequestModel_update requestModel, int id_user) async {
+      RegisterRequestModel_update requestModel, int id_user,) async {
     final response = await http.put(
         Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/edit/${id_user.toString()}'),
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/edit/${id_user.toString()}',),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: requestModel.toJson());
+        body: requestModel.toJson(),);
 
     return RegisterReponseModel_update.fromJson(json.decode(response.body));
   }
 
   Future<AutoVerbalReponseModel> saveAutoVerbal(
-      AutoVerbalRequestModel requestModel) async {
+      AutoVerbalRequestModel requestModel,) async {
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/save'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/save',),
       headers: {
         "Accept": "application/json;charset=UTF-8",
         "Content-Type": "application/json"
@@ -90,10 +90,10 @@ class APIservice {
   //Test
 
   Future<AutoVerbalReponseModel> Test(
-      AutoVerbalRequestModel requestModel) async {
+      AutoVerbalRequestModel requestModel,) async {
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/save'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/save',),
       headers: {
         "Accept": "application/json;charset=UTF-8",
         "Content-Type": "application/json"
@@ -113,10 +113,10 @@ class APIservice {
   }
 
   Future<AutoVerbalReponseModel> saveAutoVerbal_Update(
-      AutoVerbalRequestModel_update requestModel, int id) async {
+      AutoVerbalRequestModel_update requestModel, int id,) async {
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/save_new/${id}'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/save_new/$id',),
       headers: {
         "Accept": "application/json;charset=UTF-8",
         "Content-Type": "application/json"
@@ -136,10 +136,10 @@ class APIservice {
   }
 
   Future<AutoVerbalReponseModel> saveVerbal(
-      AutoVerbalRequestModel requestModel) async {
+      AutoVerbalRequestModel requestModel,) async {
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verbals/save'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verbals/save',),
       headers: {
         "Accept": "application/json;charset=UTF-8",
         "Content-Type": "application/json"
@@ -161,7 +161,7 @@ class APIservice {
   Future<M_CommuneReponeModel> SaveCommune(M_Commune requestModel) async {
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/new_commune'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/new_commune',),
       headers: {
         "Accept": "application/json;charset=UTF-8",
         "Content-Type": "application/json"
@@ -181,10 +181,10 @@ class APIservice {
   }
 
   Future<roadAndcommune_ReponeModel> RoadAndCommune(
-      roadAndcommune requestModel) async {
+      roadAndcommune requestModel,) async {
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/new_rc'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/new_rc',),
       headers: {
         "Accept": "application/json;charset=UTF-8",
         "Content-Type": "application/json"

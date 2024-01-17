@@ -31,7 +31,7 @@ class TitleBar extends StatelessWidget {
                 animatedTexts: [
                   WavyAnimatedText('ONE CLICK  ',
                       textAlign: TextAlign.center,
-                      textStyle: TextStyle(color: Colors.white)),
+                      textStyle: TextStyle(color: Colors.white),),
                 ],
                 pause: const Duration(milliseconds: 300),
                 isRepeatingAnimation: true,

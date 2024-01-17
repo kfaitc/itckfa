@@ -156,7 +156,7 @@ class _FeedbackState extends State<Feed_back> {
                       style: TextStyle(
                           fontSize: MediaQuery.of(context).textScaleFactor * 12,
                           color: Color.fromARGB(255, 0, 0, 0),
-                          overflow: TextOverflow.fade),
+                          overflow: TextOverflow.fade,),
                     ),
                   ),
                 ],
@@ -169,7 +169,7 @@ class _FeedbackState extends State<Feed_back> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color.fromARGB(255, 236, 234, 221)),
+                    color: Color.fromARGB(255, 236, 234, 221),),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(

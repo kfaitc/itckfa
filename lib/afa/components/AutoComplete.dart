@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
         body: GoogleMap(
           mapType: MapType.normal,
           initialCameraPosition: const CameraPosition(
-              target: LatLng(23.7985053, 90.3842538), zoom: 13),
+              target: LatLng(23.7985053, 90.3842538), zoom: 13,),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
           },

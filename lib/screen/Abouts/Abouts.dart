@@ -3,12 +3,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:itckfa/screen/Promotion/Detail.dart';
 
 // import 'package:kfa_project/screen/Abouts/Data.dart';
 // import 'package:kfa_project/screen/Abouts/HomeListView.dart';
 import 'package:readmore/readmore.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../afa/components/contants.dart';
 
@@ -174,10 +172,10 @@ class _AboutsState extends State<Abouts> {
                         return Builder(builder: (BuildContext context) {
                           return Container(
                             margin: EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 0),
+                                horizontal: 0, vertical: 0,),
                             child: Image.asset(item),
                           );
-                        });
+                        },);
                       }).toList(),
                     ),
                     SizedBox(
@@ -235,7 +233,7 @@ class _AboutsState extends State<Abouts> {
                 Image(
                     fit: BoxFit.fitWidth,
                     alignment: Alignment.center,
-                    image: AssetImage('assets/images/message-banner3.jpg')),
+                    image: AssetImage('assets/images/message-banner3.jpg'),),
 
                 ReadMore(text: message),
                 SizedBox(
@@ -308,13 +306,13 @@ class _AboutsState extends State<Abouts> {
                   children: const [
                     Image(
                         image: AssetImage(
-                            'assets/images/Company-Profile-Cover2020_1.png')),
+                            'assets/images/Company-Profile-Cover2020_1.png',),),
                     SizedBox(
                       width: 15,
                     ),
                     Image(
                         image: AssetImage(
-                            'assets/images/Bank-Panel-for-web-icon.png')),
+                            'assets/images/Bank-Panel-for-web-icon.png',),),
                   ],
                 ),
               ],

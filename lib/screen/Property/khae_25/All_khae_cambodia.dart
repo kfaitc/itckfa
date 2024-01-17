@@ -25,7 +25,7 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 221, 220, 220), body: body());
+        backgroundColor: Color.fromARGB(255, 221, 220, 220), body: body(),);
   }
 
   Widget body() {
@@ -40,7 +40,7 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30))),
+                      bottomRight: Radius.circular(30),),),
             ),
             Positioned(
               child: Container(
@@ -50,7 +50,7 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
                     color: Color.fromARGB(255, 20, 13, 113),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30))),
+                        bottomRight: Radius.circular(30),),),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: ListTile(
@@ -61,14 +61,14 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
                         icon: Icon(
                           Icons.arrow_back_ios_new,
                           color: Colors.white,
-                        )),
+                        ),),
                     title: Center(
                       child: Text(
                         'Province',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize:
-                                MediaQuery.of(context).size.height * 0.02),
+                                MediaQuery.of(context).size.height * 0.02,),
                       ),
                     ),
                     trailing: Column(
@@ -82,14 +82,14 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
                           style: TextStyle(
                               color: Colors.white,
                               fontSize:
-                                  MediaQuery.of(context).size.height * 0.01),
+                                  MediaQuery.of(context).size.height * 0.01,),
                         ),
                         Text(
                           '(25)',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize:
-                                  MediaQuery.of(context).size.height * 0.01),
+                                  MediaQuery.of(context).size.height * 0.01,),
                         ),
                       ],
                     ),
@@ -97,7 +97,7 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
                 ),
               ),
             ),
-          ]),
+          ],),
           SizedBox(height: 10),
           girdview()
         ],
@@ -112,7 +112,7 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
         height: MediaQuery.of(context).size.height * 0.3,
         width: double.infinity,
         decoration: BoxDecoration(
-            color: Colors.amber, borderRadius: BorderRadius.circular(8)),
+            color: Colors.amber, borderRadius: BorderRadius.circular(8),),
       ),
     );
   }
@@ -198,7 +198,7 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+              topLeft: Radius.circular(30), topRight: Radius.circular(30),),),
       height: MediaQuery.of(context).size.height * 0.84,
       width: double.infinity,
       child: GridView.builder(
@@ -218,7 +218,7 @@ class _ALl_Khae_cambodiaState extends State<ALl_Khae_cambodia> {
                     type: '${Fruitlist[index].toString()}',
                   );
                 },
-              ));
+              ),);
             },
           );
         },

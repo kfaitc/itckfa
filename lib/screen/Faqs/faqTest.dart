@@ -41,7 +41,7 @@ class _Faqs2State extends State<Faqs2> {
                 });
               },
             ),
-            isExpanded: item.isExpanded);
+            isExpanded: item.isExpanded,);
       }).toList(),
     );
   }
@@ -105,13 +105,13 @@ class Item {
   Item(
       {required this.expandedValue,
       required this.headerValue,
-      this.isExpanded = false});
+      this.isExpanded = false,});
 }
 
 List<Item> generateItems(int numberOfItem) {
   return List.generate(numberOfItem, (index) {
     return Item(
         headerValue: 'Question $index',
-        expandedValue: 'This is question number $index');
+        expandedValue: 'This is question number $index',);
   });
 }

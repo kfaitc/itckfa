@@ -35,7 +35,7 @@ class _Await_valueState extends State<Await_list> {
                 child: Container(
                   decoration: BoxDecoration(
                       border: Border.all(width: 1),
-                      borderRadius: BorderRadius.circular(5)),
+                      borderRadius: BorderRadius.circular(5),),
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.35,
                   child: Column(
@@ -81,7 +81,7 @@ class _Await_valueState extends State<Await_list> {
                 ),
               );
             },
-          )),
+          ),),
     );
   }
 

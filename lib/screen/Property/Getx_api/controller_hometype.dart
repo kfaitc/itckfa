@@ -20,7 +20,7 @@ class controller_for_hometype extends GetxController {
   Future<void> value_all_list_hometype(hometype) async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property_rent_rent_sale/$hometype'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property_rent_rent_sale/$hometype',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_all_hometype.value = jsonBody;
@@ -35,7 +35,7 @@ class controller_for_hometype extends GetxController {
   Future<void> value_all_list_2() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_Sale_all_2'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_Sale_all_2',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_all_2SR.value = jsonBody;

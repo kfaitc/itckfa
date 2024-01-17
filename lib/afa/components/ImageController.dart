@@ -53,14 +53,14 @@ class ImageController extends GetxController {
     http.MultipartRequest request = http.MultipartRequest(
         'POST',
         Uri.parse(
-            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/upload"));
+            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/upload",),);
     // request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
 
     if (GetPlatform.isMobile && data != null) {
       File file = File(data.path);
       request.files.add(http.MultipartFile(
           'image', file.readAsBytes().asStream(), file.lengthSync(),
-          filename: file.path.split('/').last));
+          filename: file.path.split('/').last,),);
     }
     //
     http.StreamedResponse response = await request.send();

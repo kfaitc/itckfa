@@ -132,7 +132,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
   Future<void> proerty_search(query) async {
     var jsonData;
     final response = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/link_all_search_down?search=$query'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/link_all_search_down?search=$query',),);
 
     if (response.statusCode == 200) {
       jsonData = jsonDecode(response.body);
@@ -248,14 +248,14 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                 Navigator.pop(context);
               },
               icon: Icon(Icons.arrow_back_ios),
-              color: Colors.white),
+              color: Colors.white,),
           actions: [
             Row(
               children: [
                 Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(5)),
+                      borderRadius: BorderRadius.circular(5),),
                   height: MediaQuery.of(context).size.height * 0.06,
                   width: MediaQuery.of(context).size.width * 0.6,
                   child: Padding(
@@ -275,7 +275,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                           prefixIcon: Icon(Icons.search),
                           border: OutlineInputBorder(),
                           hintText: 'Search listing here...',
-                        )),
+                        ),),
                   ),
                 ),
                 SizedBox(width: 5),
@@ -295,7 +295,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                           list_bedrooms: list_bedrooms,
                         );
                       },
-                    ));
+                    ),);
                   },
                   text: "Optoin",
                   icon: Icon(Icons.menu_open_outlined),
@@ -318,7 +318,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                         child: Container(
                           decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(10),),
                           height: h,
                           width: double.infinity,
                           child: ListView.builder(
@@ -329,15 +329,15 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                                   detail_property_id_1(
                                       search_list!,
                                       search_list![index]['id_ptys']
-                                          .toString());
+                                          .toString(),);
                                 },
                                 child: Padding(
                                     padding: const EdgeInsets.only(
-                                        right: 20, left: 20, top: 15),
+                                        right: 20, left: 20, top: 15,),
                                     child: Text(
                                       '${search_list![index]['id_ptys'] ?? ""}  ${search_list![index]['address'] ?? ""}  ${search_list![index]['hometype'] ?? ""}  ${search_list![index]['urgent'] ?? ""}   ${search_list![index]['type'] ?? ""}',
                                       style: TextStyle(color: Colors.black),
-                                    )),
+                                    ),),
                               );
                             },
                           ),
@@ -376,15 +376,15 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                               property_type_id: property_type_id,
                             );
                           },
-                        ));
+                        ),);
 
                         // print(property_type_id);
                       },
                       child: Text(
                         'View All',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 12),
-                      )),
+                            fontWeight: FontWeight.bold, fontSize: 12,),
+                      ),),
                 ],
               ),
             ),
@@ -427,7 +427,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                         add: 'No',
                         type: 'Sale',
                         listget: controller_value.list_value_all,
-                      ));
+                      ),);
                     },
                     child: Text(
                       'View All',
@@ -464,7 +464,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                         add: 'No',
                         type: 'Rent',
                         listget: controller_rent.list_value_pid,
-                      ));
+                      ),);
                     },
                     child: Text(
                       'View All',
@@ -485,7 +485,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                     ? GridView_More(list: controller_rent.list_value_pid)
                     : no_data(),
           ],
-        ));
+        ),);
   }
 
   Widget Icons_(text, Widget icon) {
@@ -496,9 +496,9 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-                color: Colors.black54, blurRadius: 10, offset: Offset(-0.2, 5))
+                color: Colors.black54, blurRadius: 10, offset: Offset(-0.2, 5),)
           ],
-          borderRadius: BorderRadius.circular(5)),
+          borderRadius: BorderRadius.circular(5),),
       child: Column(
         children: [
           icon,
@@ -536,10 +536,10 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                       },
                     );
                   },
-                ));
+                ),);
               },
               child: Icons_(
-                  'For Sale', Icon(Icons.real_estate_agent_outlined, size: 30)),
+                  'For Sale', Icon(Icons.real_estate_agent_outlined, size: 30),),
             ),
             InkWell(
                 onTap: () {
@@ -551,12 +551,12 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                                 listget_homescreen: (value) {
                                   list_get_ForRent = value;
                                 },
-                              )),
+                              ),),
                     );
                   });
                 },
                 child: Icons_(
-                    'For Rent', Icon(Icons.night_shelter_outlined, size: 30))),
+                    'For Rent', Icon(Icons.night_shelter_outlined, size: 30),),),
             InkWell(
                 onTap: () {
                   setState(() {
@@ -565,12 +565,12 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                       MaterialPageRoute(
                           builder: (context) => Home_Type_use(
                                 hometype_api: controller_hometype.list_hometype,
-                              )),
+                              ),),
                     );
                   });
                 },
                 child: Icons_(
-                    'Home Type', Icon(Icons.add_home_work_outlined, size: 30))),
+                    'Home Type', Icon(Icons.add_home_work_outlined, size: 30),),),
             InkWell(
                 onTap: () {
                   setState(() {
@@ -589,11 +589,11 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                                     }
                                   });
                                 },
-                              )),
+                              ),),
                     );
                   });
                 },
-                child: Icons_('Add Property', Icon(Icons.post_add, size: 30))),
+                child: Icons_('Add Property', Icon(Icons.post_add, size: 30)),),
           ],
         ),
       ),
@@ -619,7 +619,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                 get_max2: (value) {},
               );
             },
-          ));
+          ),);
         },
         child: Container(
           alignment: Alignment.center,
@@ -627,7 +627,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               color: Color.fromARGB(255, 28, 7, 132),
-              borderRadius: BorderRadius.circular(5)),
+              borderRadius: BorderRadius.circular(5),),
           child: Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Row(
@@ -637,7 +637,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                   'Property Search Google map (Click here)',
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: MediaQuery.of(context).size.height * 0.016),
+                      fontSize: MediaQuery.of(context).size.height * 0.016,),
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.05,
@@ -741,10 +741,6 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GFShimmer(
-            child: const Text(
-              'No Data',
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w700),
-            ),
             showGradient: true,
             gradient: LinearGradient(
               begin: Alignment.bottomRight,
@@ -757,6 +753,10 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
                 Color.fromARGB(255, 21, 13, 178),
                 Color.fromARGB(255, 14, 5, 182),
               ],
+            ),
+            child: const Text(
+              'No Data',
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w700),
             ),
           ),
         ],
@@ -774,14 +774,14 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
             style: TextStyle(
                 fontSize: MediaQuery.of(context).size.height * 0.017,
                 fontWeight: FontWeight.bold,
-                color: Color.fromARGB(172, 143, 10, 10)),
+                color: Color.fromARGB(172, 143, 10, 10),),
           ),
           Text(
             'Price Min and Price Max You need select Min and Max',
             style: TextStyle(
                 fontSize: MediaQuery.of(context).size.height * 0.017,
                 fontWeight: FontWeight.bold,
-                color: Color.fromARGB(173, 158, 158, 158)),
+                color: Color.fromARGB(173, 158, 158, 158),),
           ),
         ],
       ),
@@ -792,7 +792,7 @@ class _Home_Screen_propertyState extends State<Home_Screen_property> {
   Future<void> list2_Sale_khae1() async {
     var jsonData;
     final response = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Commune_25/$property_type_id_province'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Commune_25/$property_type_id_province',),);
 
     if (response.statusCode == 200) {
       jsonData = jsonDecode(response.body);

@@ -39,6 +39,6 @@ class _Field_boxState extends State<Field_box> {
             filled: true,
             labelText: widget.name,
           ),
-        ));
+        ),);
   }
 }

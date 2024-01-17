@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.symmetric(horizontal: 8),
             margin: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(24)),
+                color: Colors.white, borderRadius: BorderRadius.circular(24),),
             child: Row(
               children: [
                 GestureDetector(
@@ -61,7 +61,7 @@ class _HomeState extends State<Home> {
                       // print(value);
                     },
                     decoration: InputDecoration(
-                        border: InputBorder.none, hintText: "Search Health"),
+                        border: InputBorder.none, hintText: "Search Health",),
                   ),
                 )
               ],
@@ -84,20 +84,20 @@ class _HomeState extends State<Home> {
                         margin: EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
                             color: Colors.blueAccent,
-                            borderRadius: BorderRadius.circular(15)),
+                            borderRadius: BorderRadius.circular(15),),
                         child: Center(
                           child: Text(navBarItem[index],
                               style: TextStyle(
                                   fontSize: 19,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
+                                  fontWeight: FontWeight.bold,),),
                         ),
                       ),
                     );
-                  })),
+                  },),),
           CarouselSlider(
             options: CarouselOptions(
-                height: 200, autoPlay: true, enlargeCenterPage: true),
+                height: 200, autoPlay: true, enlargeCenterPage: true,),
             items: items.map((item) {
               return Builder(builder: (BuildContext context) {
                 return InkWell(
@@ -109,7 +109,7 @@ class _HomeState extends State<Home> {
                     child: Image.asset(item),
                   ),
                 );
-              });
+              },);
             }).toList(),
           ),
         ],

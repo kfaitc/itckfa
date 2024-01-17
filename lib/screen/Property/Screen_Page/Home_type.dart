@@ -86,7 +86,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 248, 248, 248), body: body());
+        backgroundColor: Color.fromARGB(255, 248, 248, 248), body: body(),);
   }
 
   var font_icon = Color.fromARGB(255, 114, 114, 113);
@@ -101,7 +101,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             border: Border.all(
-                width: 1, color: Color.fromARGB(255, 150, 151, 150))),
+                width: 1, color: Color.fromARGB(255, 150, 151, 150),),),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -134,7 +134,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
         Container(
             height: MediaQuery.of(context).size.height * 0.04,
             width: MediaQuery.of(context).size.width * 0.06,
-            child: Image.asset('assets/icons/$icon')),
+            child: Image.asset('assets/icons/$icon'),),
         Text(
           value,
           style: font_value,
@@ -155,12 +155,12 @@ class _List_Sale_AllState extends State<Home_Type_use> {
         dropdown_hometype(),
         (hometype_get == "All")
             ? listview(controller_2.list_value_all_2SR, 'Hometype', 'No', 'All',
-                value_2SR)
+                value_2SR,)
             : listview(controller_2.list_value_all_hometype, 'Hometype', 'No',
-                'No', _isLoading_pick),
+                'No', _isLoading_pick,),
         page_next(),
       ],
-    ));
+    ),);
   }
 
   Widget listview(List list, hometype, type, all, bool await) {
@@ -203,7 +203,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.white),
+                      color: Colors.white,),
                   child: Padding(
                     padding: const EdgeInsets.only(right: 00, left: 0),
                     child: Column(
@@ -221,7 +221,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 0, bottom: 4, top: 0, right: 0),
+                                    left: 0, bottom: 4, top: 0, right: 0,),
                                 child: Container(
                                   height:
                                       MediaQuery.of(context).size.height * 0.23,
@@ -229,7 +229,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10)),
+                                        topRight: Radius.circular(10),),
                                     child: CachedNetworkImage(
                                       imageUrl: items[index]['url'].toString(),
                                       fit: BoxFit.cover,
@@ -237,7 +237,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
                                           (context, url, downloadProgress) =>
                                               Center(
                                         child: CircularProgressIndicator(
-                                            value: downloadProgress.progress),
+                                            value: downloadProgress.progress,),
                                       ),
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
@@ -264,7 +264,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
                                     style: font_value_b,
                                   ),
                                   Text('  ${items[index]['type']},',
-                                      style: font_value),
+                                      style: font_value,),
                                   Text(
                                     ' ${(items[index]['urgent'] ?? "")}',
                                     style: font_value,
@@ -293,19 +293,19 @@ class _List_Sale_AllState extends State<Home_Type_use> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _icon('bed.png',
-                                      '   ${items[index]['bed'] ?? ""}', 'Bed'),
+                                      '   ${items[index]['bed'] ?? ""}', 'Bed',),
                                   _icon(
                                       'bath.png',
                                       '   ${items[index]['bath'] ?? ""}',
-                                      'bath'),
+                                      'bath',),
                                   _icon(
                                       'parking.png',
                                       '   ${items[index]['Parking'] ?? ""}',
-                                      'Parking'),
+                                      'Parking',),
                                   _icon(
                                       'lot.png',
                                       '   ${items[index]['land'] ?? ""}',
-                                      'Size Land'),
+                                      'Size Land',),
                                 ],
                               ),
                             ],
@@ -335,7 +335,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
               icon: Icon(
                 Icons.arrow_back_ios,
                 color: Color.fromARGB(255, 107, 105, 105),
-              )),
+              ),),
           Row(
             children: [
               Container(
@@ -368,7 +368,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize:
-                                    MediaQuery.textScaleFactorOf(context) * 11),
+                                    MediaQuery.textScaleFactorOf(context) * 11,),
                           ),
                         ),
                       )
@@ -386,7 +386,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
                         EdgeInsets.symmetric(vertical: 8, horizontal: 0),
                     labelStyle: TextStyle(
                         color: Colors.grey,
-                        fontSize: MediaQuery.textScaleFactorOf(context) * 11),
+                        fontSize: MediaQuery.textScaleFactorOf(context) * 11,),
                     prefixIcon: Icon(
                       Icons.search,
                       color: Color.fromARGB(255, 84, 83, 83),
@@ -429,12 +429,12 @@ class _List_Sale_AllState extends State<Home_Type_use> {
                   Container(
                       height: MediaQuery.of(context).size.height * 0.04,
                       width: MediaQuery.of(context).size.width * 0.06,
-                      child: Image.asset('assets/icons/all.png')),
+                      child: Image.asset('assets/icons/all.png'),),
                   Text(
                     'All List',
                     style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.013,
-                        color: Colors.white),
+                        color: Colors.white,),
                   )
                 ],
               ),
@@ -455,7 +455,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
             onTap: () {
               _pageController.previousPage(
                   duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
+                  curve: Curves.easeInOut,);
             },
             child: Container(
               alignment: Alignment.center,
@@ -468,7 +468,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
             onTap: () {
               _pageController.nextPage(
                   duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
+                  curve: Curves.easeInOut,);
             },
             child: Icon(Icons.arrow_forward_ios),
           ),
@@ -497,7 +497,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
 
   void delete_property(url, id) async {
     final response = await http.delete(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$url/$id'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$url/$id',),);
     if (response.statusCode == 200) {
       dg = 'Success Deleted';
     } else {
@@ -518,7 +518,7 @@ class _List_Sale_AllState extends State<Home_Type_use> {
 
   void delete_property_rent({required String id_ptys}) async {
     final response = await http.delete(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verbal_property_rent/delete/$id_ptys'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verbal_property_rent/delete/$id_ptys',),);
     if (response.statusCode == 200) {
       dg = 'Success Deleted';
     } else {

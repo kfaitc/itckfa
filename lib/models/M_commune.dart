@@ -11,7 +11,7 @@ class M_Commune {
       this.province,
       this.longitude,
       this.latitude,
-      this.option});
+      this.option,});
 
   M_Commune.fromJson(Map<String, dynamic> json) {
     communename = json['commune_name'];
@@ -23,7 +23,7 @@ class M_Commune {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['commune_name'] = communename;
     data['district'] = district;
     data['province'] = province;

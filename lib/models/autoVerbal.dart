@@ -76,76 +76,77 @@ class AutoVerbal_List {
   final String? agenttypeModifyBy;
   final String? agenttypeModifyDate;
 
-  AutoVerbal_List(
-      {this.verbalId,
-      this.verbalPropertyId,
-      this.verbalPropertyCode,
-      this.verbalBankId,
-      this.verbalBankBranchId,
-      this.verbalBankContact,
-      this.verbalOwner,
-      this.verbalContact,
-      this.verbalDate,
-      this.verbalBankOfficer,
-      this.verbalAddress,
-      this.verbalProvinceId,
-      this.verbalDistrictId,
-      this.verbalCommuneId,
-      this.verbalApproveId,
-      this.verbalApprovesId,
-      this.verbalComment,
-      this.verbalImage,
-      this.latlongLog,
-      this.latlongLa,
-      this.verbalCom,
-      this.verbalCon,
-      this.verbalOption,
-      this.verbalStatusId,
-      this.verbalPublished,
-      this.verbalUser,
-      this.verbalComp,
-      this.verifyAgent,
-      this.verbalCreatedBy,
-      this.verbalCreatedDate,
-      this.verbalModifyBy,
-      this.propertyTypeId,
-      this.propertyTypeName,
-      this.propertyTypePublished,
-      this.propertyTypeColor,
-      this.propertyColos,
-      this.propertyTypeCreatedBy,
-      this.propertyTypeCreatedDate,
-      this.propertyTypeModifyBy,
-      this.propertyTypeModifyDate,
-      this.bankId,
-      this.bankAcronym,
-      this.bankName,
-      this.bankofficer,
-      this.bankcontact,
-      this.bankProvinceId,
-      this.bankDistrictId,
-      this.bankCommuneId,
-      this.bankVillage,
-      this.bankPublished,
-      this.bankCreatedBy,
-      this.bankCreatedDate,
-      this.bankModifyBy,
-      this.bankModifyDate,
-      this.approveId,
-      this.approveName,
-      this.approvePublished,
-      this.approveCreatedBy,
-      this.approveCreatedDate,
-      this.approveModifyBy,
-      this.agenttypeId,
-      this.agenttypeName,
-      this.agentTypePhone,
-      this.agentTypeEmail,
-      this.agenttypePublished,
-      this.agenttypeCreatedBy,
-      this.agenttypeCreatedDate,
-      this.agenttypeModifyBy,
-      this.agenttypeModifyDate});
+  AutoVerbal_List({
+    this.verbalId,
+    this.verbalPropertyId,
+    this.verbalPropertyCode,
+    this.verbalBankId,
+    this.verbalBankBranchId,
+    this.verbalBankContact,
+    this.verbalOwner,
+    this.verbalContact,
+    this.verbalDate,
+    this.verbalBankOfficer,
+    this.verbalAddress,
+    this.verbalProvinceId,
+    this.verbalDistrictId,
+    this.verbalCommuneId,
+    this.verbalApproveId,
+    this.verbalApprovesId,
+    this.verbalComment,
+    this.verbalImage,
+    this.latlongLog,
+    this.latlongLa,
+    this.verbalCom,
+    this.verbalCon,
+    this.verbalOption,
+    this.verbalStatusId,
+    this.verbalPublished,
+    this.verbalUser,
+    this.verbalComp,
+    this.verifyAgent,
+    this.verbalCreatedBy,
+    this.verbalCreatedDate,
+    this.verbalModifyBy,
+    this.propertyTypeId,
+    this.propertyTypeName,
+    this.propertyTypePublished,
+    this.propertyTypeColor,
+    this.propertyColos,
+    this.propertyTypeCreatedBy,
+    this.propertyTypeCreatedDate,
+    this.propertyTypeModifyBy,
+    this.propertyTypeModifyDate,
+    this.bankId,
+    this.bankAcronym,
+    this.bankName,
+    this.bankofficer,
+    this.bankcontact,
+    this.bankProvinceId,
+    this.bankDistrictId,
+    this.bankCommuneId,
+    this.bankVillage,
+    this.bankPublished,
+    this.bankCreatedBy,
+    this.bankCreatedDate,
+    this.bankModifyBy,
+    this.bankModifyDate,
+    this.approveId,
+    this.approveName,
+    this.approvePublished,
+    this.approveCreatedBy,
+    this.approveCreatedDate,
+    this.approveModifyBy,
+    this.agenttypeId,
+    this.agenttypeName,
+    this.agentTypePhone,
+    this.agentTypeEmail,
+    this.agenttypePublished,
+    this.agenttypeCreatedBy,
+    this.agenttypeCreatedDate,
+    this.agenttypeModifyBy,
+    this.agenttypeModifyDate,
+  });
 
   factory AutoVerbal_List.fromJson(Map<String, dynamic> json) {
     return AutoVerbal_List(
@@ -335,30 +336,31 @@ class AutoVerbalRequestModel {
   late List verbal;
   //VerbalTypeRequestModel data;
   // List<VerbalTypeRequestModel> autoVerbal;
-  AutoVerbalRequestModel(
-      {required this.property_type_id,
-      required this.lat,
-      required this.lng,
-      required this.address,
-      required this.approve_id,
-      required this.bank_branch_id,
-      required this.bank_contact,
-      required this.bank_id,
-      required this.bank_officer,
-      required this.code,
-      required this.comment,
-      required this.contact,
-      required this.date,
-      required this.image,
-      required this.option,
-      required this.owner,
-      required this.user,
-      required this.verbal_com,
-      required this.verbal_con,
-      required this.agent,
-      required this.verbal_id,
-      required this.verbal_khan,
-      required this.verbal});
+  AutoVerbalRequestModel({
+    required this.property_type_id,
+    required this.lat,
+    required this.lng,
+    required this.address,
+    required this.approve_id,
+    required this.bank_branch_id,
+    required this.bank_contact,
+    required this.bank_id,
+    required this.bank_officer,
+    required this.code,
+    required this.comment,
+    required this.contact,
+    required this.date,
+    required this.image,
+    required this.option,
+    required this.owner,
+    required this.user,
+    required this.verbal_com,
+    required this.verbal_con,
+    required this.agent,
+    required this.verbal_id,
+    required this.verbal_khan,
+    required this.verbal,
+  });
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
       "verbal_id": verbal_id,
@@ -413,28 +415,29 @@ class AutoVerbalRequestModel_update {
   late List verbal;
   //VerbalTypeRequestModel data;
   // List<VerbalTypeRequestModel> autoVerbal;
-  AutoVerbalRequestModel_update(
-      {required this.property_type_id,
-      required this.lat,
-      required this.lng,
-      required this.address,
-      required this.approve_id,
-      required this.bank_branch_id,
-      required this.bank_contact,
-      required this.bank_id,
-      required this.bank_officer,
-      required this.comment,
-      required this.contact,
-      required this.image,
-      required this.option,
-      required this.owner,
-      required this.user,
-      required this.verbal_com,
-      required this.verbal_con,
-      required this.agent,
-      required this.verbal_id,
-      required this.verbal_khan,
-      required this.verbal});
+  AutoVerbalRequestModel_update({
+    required this.property_type_id,
+    required this.lat,
+    required this.lng,
+    required this.address,
+    required this.approve_id,
+    required this.bank_branch_id,
+    required this.bank_contact,
+    required this.bank_id,
+    required this.bank_officer,
+    required this.comment,
+    required this.contact,
+    required this.image,
+    required this.option,
+    required this.owner,
+    required this.user,
+    required this.verbal_com,
+    required this.verbal_con,
+    required this.agent,
+    required this.verbal_id,
+    required this.verbal_khan,
+    required this.verbal,
+  });
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
       "verbal_id": verbal_id,
@@ -466,25 +469,25 @@ class AutoVerbalRequestModel_update {
 class AutoVerbal_list {
   String? verbalId;
   String? verbalPropertyId;
-  Null? verbalPropertyCode;
+  void verbalPropertyCode;
   String? verbalBankId;
-  Null? verbalBankBranchId;
+  void verbalBankBranchId;
   String? verbalBankContact;
   String? verbalOwner;
   String? verbalContact;
   String? verbalDate;
   String? verbalBankOfficer;
   String? verbalAddress;
-  Null? verbalProvinceId;
-  Null? verbalDistrictId;
-  Null? verbalCommuneId;
+  void verbalProvinceId;
+  void verbalDistrictId;
+  void verbalCommuneId;
   String? verbalApproveId;
-  Null? verbalApprovesId;
+  void verbalApprovesId;
   String? verbalComment;
   String? verbalImage;
   String? latlongLog;
   String? latlongLa;
-  Null? verbalCom;
+  void verbalCom;
   String? verbalCon;
   String? verbalOption;
   String? verbalStatusId;
@@ -492,18 +495,18 @@ class AutoVerbal_list {
   String? verbalUser;
   String? verbalComp;
   String? verifyAgent;
-  Null? verbalCreatedBy;
+  void verbalCreatedBy;
   String? verbalCreatedDate;
-  Null? verbalModifyBy;
+  void verbalModifyBy;
   String? propertyTypeId;
   String? propertyTypeName;
   String? propertyTypePublished;
   String? propertyTypeColor;
-  Null? propertyColos;
-  Null? propertyTypeCreatedBy;
+  void propertyColos;
+  void propertyTypeCreatedBy;
   String? propertyTypeCreatedDate;
-  Null? propertyTypeModifyBy;
-  Null? propertyTypeModifyDate;
+  void propertyTypeModifyBy;
+  void propertyTypeModifyDate;
   String? bankId;
   String? bankAcronym;
   String? bankName;
@@ -514,96 +517,98 @@ class AutoVerbal_list {
   String? bankCommuneId;
   String? bankVillage;
   String? bankPublished;
-  Null? bankCreatedBy;
+  void bankCreatedBy;
   String? bankCreatedDate;
-  Null? bankModifyBy;
-  Null? bankModifyDate;
+  void bankModifyBy;
+  void bankModifyDate;
   String? approveId;
   String? approveName;
   String? approvePublished;
-  Null? approveCreatedBy;
+  void approveCreatedBy;
   String? approveCreatedDate;
-  Null? approveModifyBy;
+  void approveModifyBy;
   String? agenttypeId;
   String? agenttypeName;
   String? agentTypePhone;
-  Null? agentTypeEmail;
+  void agentTypeEmail;
   String? agenttypePublished;
-  Null? agenttypeCreatedBy;
+  void agenttypeCreatedBy;
   String? agenttypeCreatedDate;
-  Null? agenttypeModifyBy;
-  Null? agenttypeModifyDate;
+  void agenttypeModifyBy;
+  void agenttypeModifyDate;
 
-  AutoVerbal_list(List<AutoVerbal_List>? data,
-      {this.verbalId,
-      this.verbalPropertyId,
-      this.verbalPropertyCode,
-      this.verbalBankId,
-      this.verbalBankBranchId,
-      this.verbalBankContact,
-      this.verbalOwner,
-      this.verbalContact,
-      this.verbalDate,
-      this.verbalBankOfficer,
-      this.verbalAddress,
-      this.verbalProvinceId,
-      this.verbalDistrictId,
-      this.verbalCommuneId,
-      this.verbalApproveId,
-      this.verbalApprovesId,
-      this.verbalComment,
-      this.verbalImage,
-      this.latlongLog,
-      this.latlongLa,
-      this.verbalCom,
-      this.verbalCon,
-      this.verbalOption,
-      this.verbalStatusId,
-      this.verbalPublished,
-      this.verbalUser,
-      this.verbalComp,
-      this.verifyAgent,
-      this.verbalCreatedBy,
-      this.verbalCreatedDate,
-      this.verbalModifyBy,
-      this.propertyTypeId,
-      this.propertyTypeName,
-      this.propertyTypePublished,
-      this.propertyTypeColor,
-      this.propertyColos,
-      this.propertyTypeCreatedBy,
-      this.propertyTypeCreatedDate,
-      this.propertyTypeModifyBy,
-      this.propertyTypeModifyDate,
-      this.bankId,
-      this.bankAcronym,
-      this.bankName,
-      this.bankofficer,
-      this.bankcontact,
-      this.bankProvinceId,
-      this.bankDistrictId,
-      this.bankCommuneId,
-      this.bankVillage,
-      this.bankPublished,
-      this.bankCreatedBy,
-      this.bankCreatedDate,
-      this.bankModifyBy,
-      this.bankModifyDate,
-      this.approveId,
-      this.approveName,
-      this.approvePublished,
-      this.approveCreatedBy,
-      this.approveCreatedDate,
-      this.approveModifyBy,
-      this.agenttypeId,
-      this.agenttypeName,
-      this.agentTypePhone,
-      this.agentTypeEmail,
-      this.agenttypePublished,
-      this.agenttypeCreatedBy,
-      this.agenttypeCreatedDate,
-      this.agenttypeModifyBy,
-      this.agenttypeModifyDate});
+  AutoVerbal_list(
+    List<AutoVerbal_List>? data, {
+    this.verbalId,
+    this.verbalPropertyId,
+    this.verbalPropertyCode,
+    this.verbalBankId,
+    this.verbalBankBranchId,
+    this.verbalBankContact,
+    this.verbalOwner,
+    this.verbalContact,
+    this.verbalDate,
+    this.verbalBankOfficer,
+    this.verbalAddress,
+    this.verbalProvinceId,
+    this.verbalDistrictId,
+    this.verbalCommuneId,
+    this.verbalApproveId,
+    this.verbalApprovesId,
+    this.verbalComment,
+    this.verbalImage,
+    this.latlongLog,
+    this.latlongLa,
+    this.verbalCom,
+    this.verbalCon,
+    this.verbalOption,
+    this.verbalStatusId,
+    this.verbalPublished,
+    this.verbalUser,
+    this.verbalComp,
+    this.verifyAgent,
+    this.verbalCreatedBy,
+    this.verbalCreatedDate,
+    this.verbalModifyBy,
+    this.propertyTypeId,
+    this.propertyTypeName,
+    this.propertyTypePublished,
+    this.propertyTypeColor,
+    this.propertyColos,
+    this.propertyTypeCreatedBy,
+    this.propertyTypeCreatedDate,
+    this.propertyTypeModifyBy,
+    this.propertyTypeModifyDate,
+    this.bankId,
+    this.bankAcronym,
+    this.bankName,
+    this.bankofficer,
+    this.bankcontact,
+    this.bankProvinceId,
+    this.bankDistrictId,
+    this.bankCommuneId,
+    this.bankVillage,
+    this.bankPublished,
+    this.bankCreatedBy,
+    this.bankCreatedDate,
+    this.bankModifyBy,
+    this.bankModifyDate,
+    this.approveId,
+    this.approveName,
+    this.approvePublished,
+    this.approveCreatedBy,
+    this.approveCreatedDate,
+    this.approveModifyBy,
+    this.agenttypeId,
+    this.agenttypeName,
+    this.agentTypePhone,
+    this.agentTypeEmail,
+    this.agenttypePublished,
+    this.agenttypeCreatedBy,
+    this.agenttypeCreatedDate,
+    this.agenttypeModifyBy,
+    this.agenttypeModifyDate,
+  });
 
   AutoVerbal_list.fromJson(Map<String, dynamic> json) {
     verbalId = json['verbal_id'];
@@ -675,79 +680,5 @@ class AutoVerbal_list {
     agenttypeCreatedDate = json['agenttype_created_date'];
     agenttypeModifyBy = json['agenttype_modify_by'];
     agenttypeModifyDate = json['agenttype_modify_date'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['verbal_id'] = this.verbalId;
-    data['verbal_property_id'] = this.verbalPropertyId;
-    data['verbal_property_code'] = this.verbalPropertyCode;
-    data['verbal_bank_id'] = this.verbalBankId;
-    data['verbal_bank_branch_id'] = this.verbalBankBranchId;
-    data['verbal_bank_contact'] = this.verbalBankContact;
-    data['verbal_owner'] = this.verbalOwner;
-    data['verbal_contact'] = this.verbalContact;
-    data['verbal_date'] = this.verbalDate;
-    data['verbal_bank_officer'] = this.verbalBankOfficer;
-    data['verbal_address'] = this.verbalAddress;
-    data['verbal_province_id'] = this.verbalProvinceId;
-    data['verbal_district_id'] = this.verbalDistrictId;
-    data['verbal_commune_id'] = this.verbalCommuneId;
-    data['verbal_approve_id'] = this.verbalApproveId;
-    data['verbal_approves_id'] = this.verbalApprovesId;
-    data['verbal_comment'] = this.verbalComment;
-    data['verbal_image'] = this.verbalImage;
-    data['latlong_log'] = this.latlongLog;
-    data['latlong_la'] = this.latlongLa;
-    data['verbal_com'] = this.verbalCom;
-    data['verbal_con'] = this.verbalCon;
-    data['verbal_option'] = this.verbalOption;
-    data['verbal_status_id'] = this.verbalStatusId;
-    data['verbal_published'] = this.verbalPublished;
-    data['verbal_user'] = this.verbalUser;
-    data['verbal_comp'] = this.verbalComp;
-    data['VerifyAgent'] = this.verifyAgent;
-    data['verbal_created_by'] = this.verbalCreatedBy;
-    data['verbal_created_date'] = this.verbalCreatedDate;
-    data['verbal_modify_by'] = this.verbalModifyBy;
-    data['property_type_id'] = this.propertyTypeId;
-    data['property_type_name'] = this.propertyTypeName;
-    data['property_type_published'] = this.propertyTypePublished;
-    data['property_type_color'] = this.propertyTypeColor;
-    data['property_colos'] = this.propertyColos;
-    data['property_type_created_by'] = this.propertyTypeCreatedBy;
-    data['property_type_created_date'] = this.propertyTypeCreatedDate;
-    data['property_type_modify_by'] = this.propertyTypeModifyBy;
-    data['property_type_modify_date'] = this.propertyTypeModifyDate;
-    data['bank_id'] = this.bankId;
-    data['bank_acronym'] = this.bankAcronym;
-    data['bank_name'] = this.bankName;
-    data['bankofficer'] = this.bankofficer;
-    data['bankcontact'] = this.bankcontact;
-    data['bank_province_id'] = this.bankProvinceId;
-    data['bank_district_id'] = this.bankDistrictId;
-    data['bank_commune_id'] = this.bankCommuneId;
-    data['bank_village'] = this.bankVillage;
-    data['bank_published'] = this.bankPublished;
-    data['bank_created_by'] = this.bankCreatedBy;
-    data['bank_created_date'] = this.bankCreatedDate;
-    data['bank_modify_by'] = this.bankModifyBy;
-    data['bank_modify_date'] = this.bankModifyDate;
-    data['approve_id'] = this.approveId;
-    data['approve_name'] = this.approveName;
-    data['approve_published'] = this.approvePublished;
-    data['approve_created_by'] = this.approveCreatedBy;
-    data['approve_created_date'] = this.approveCreatedDate;
-    data['approve_modify_by'] = this.approveModifyBy;
-    data['agenttype_id'] = this.agenttypeId;
-    data['agenttype_name'] = this.agenttypeName;
-    data['agent_type_phone'] = this.agentTypePhone;
-    data['agent_type_email'] = this.agentTypeEmail;
-    data['agenttype_published'] = this.agenttypePublished;
-    data['agenttype_created_by'] = this.agenttypeCreatedBy;
-    data['agenttype_created_date'] = this.agenttypeCreatedDate;
-    data['agenttype_modify_by'] = this.agenttypeModifyBy;
-    data['agenttype_modify_date'] = this.agenttypeModifyDate;
-    return data;
   }
 }

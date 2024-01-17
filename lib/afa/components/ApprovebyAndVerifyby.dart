@@ -13,7 +13,7 @@ class ApprovebyAndVerifyby extends StatefulWidget {
       required this.approve,
       required this.verify,
       this.vfy,
-      this.appro})
+      this.appro,})
       : super(key: key);
   final OnChangeCallback approve;
   final OnChangeCallback verify;
@@ -77,7 +77,7 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
               decoration: InputDecoration(
                 fillColor: kwhite,
                 filled: true,
-                labelStyle: TextStyle(color: kPrimaryColor),
+                labelStyle: const TextStyle(color: kPrimaryColor),
                 labelText: (widget.vfy != null) ? widget.vfy : 'Verify by',
                 hintText: 'Select one',
                 prefixIcon: const Icon(
@@ -134,7 +134,7 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
               decoration: InputDecoration(
                 fillColor: kwhite,
                 filled: true,
-                labelStyle: TextStyle(color: kPrimaryColor),
+                labelStyle: const TextStyle(color: kPrimaryColor),
                 labelText: (widget.appro != null) ? widget.appro : 'Approve by',
                 hintText: 'Select one',
                 prefixIcon: const Icon(
@@ -164,7 +164,7 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
   void LoadApprove() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/approve?approve_published=0'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/approve?approve_published=0',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
 
@@ -192,7 +192,7 @@ class _ApprovebyAndVerifybyState extends State<ApprovebyAndVerifyby> {
   void LoadVerify() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verify_by?agenttype_published=0'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verify_by?agenttype_published=0',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
 

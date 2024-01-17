@@ -62,11 +62,11 @@ class _Screen_sliderState extends State<Membership_real> {
                     });
                   },
                   // reverse: true,
-                )),
+                ),),
 
             // buildIndicator(),
           ],
-        ));
+        ),);
   }
 
   // Widget buildImage(String imageList1, int index) => Container(
@@ -118,7 +118,7 @@ class PartnersCard extends StatelessWidget {
             BoxShadow(
                 color: Color.fromARGB(213, 204, 200, 200),
                 blurRadius: 2,
-                offset: Offset(0, 5))
+                offset: Offset(0, 5),)
           ],
           border: Border.all(
             // color: Color.fromARGB(255, 56, 52, 247),

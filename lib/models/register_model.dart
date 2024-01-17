@@ -5,7 +5,7 @@ class RegisterReponseModel {
   final String access_token;
   final dynamic user;
   RegisterReponseModel(
-      {required this.message, required this.access_token, required this.user});
+      {required this.message, required this.access_token, required this.user,});
   factory RegisterReponseModel.fromJson(Map<String, dynamic> json) {
     return RegisterReponseModel(
       message: json["message"] ?? "",

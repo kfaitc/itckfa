@@ -14,8 +14,9 @@ class GridView_More extends StatefulWidget {
 
 class _gridviewState extends State<GridView_More> {
   @override
-  var color_texts = Color.fromARGB(255, 0, 0, 0);
-  var color_text = Color.fromARGB(255, 83, 83, 83);
+  var color_texts = const Color.fromARGB(255, 0, 0, 0);
+  var color_text = const Color.fromARGB(255, 83, 83, 83);
+  @override
   Widget build(BuildContext context) {
     return gridview(widget.list);
   }
@@ -23,7 +24,7 @@ class _gridviewState extends State<GridView_More> {
   Widget gridview(List list) {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
-      child: Container(
+      child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.235,
           width: double.infinity,
           child: ListView.builder(
@@ -44,16 +45,16 @@ class _gridviewState extends State<GridView_More> {
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(width: 0.3),
-                      color: Color.fromARGB(255, 251, 250, 249),
+                      color: const Color.fromARGB(255, 251, 250, 249),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Stack(
                       children: [
-                        Container(
+                        SizedBox(
                           height: MediaQuery.of(context).size.height * 0.15,
                           width: MediaQuery.of(context).size.width * 0.5,
                           child: ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(10.0),
                                 topRight: Radius.circular(10.0),
                                 // bottomLeft: Radius.circular(20.0),
@@ -65,11 +66,11 @@ class _gridviewState extends State<GridView_More> {
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) => Center(
                                   child: CircularProgressIndicator(
-                                      value: downloadProgress.progress),
+                                      value: downloadProgress.progress,),
                                 ),
                                 errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                              )),
+                                    const Icon(Icons.error),
+                              ),),
                         ),
                         Positioned(
                           top: MediaQuery.of(context).size.height * 0.186,
@@ -86,17 +87,17 @@ class _gridviewState extends State<GridView_More> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: color_text,
-                                                fontSize: 10),
+                                                fontSize: 10,),
                                           )
-                                        : Text('N/A'),
-                                    Text(
+                                        : const Text('N/A'),
+                                    const Text(
                                       '\$',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Color.fromARGB(255, 48, 92, 5),
-                                          fontSize: 10),
+                                          fontSize: 10,),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 5,
                                     ),
                                     (item['land'] != null)
@@ -105,10 +106,10 @@ class _gridviewState extends State<GridView_More> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: color_text,
-                                                fontSize: 10),
+                                                fontSize: 10,),
                                           )
-                                        : Text('N/A'),
-                                    SizedBox(
+                                        : const Text('N/A'),
+                                    const SizedBox(
                                       width: 5,
                                     ),
                                   ],
@@ -116,7 +117,7 @@ class _gridviewState extends State<GridView_More> {
                               ),
                               // Text(obj_controller_value['price']
                               //     .toString()),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
                               Padding(
@@ -129,10 +130,10 @@ class _gridviewState extends State<GridView_More> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: color_text,
-                                                fontSize: 10),
+                                                fontSize: 10,),
                                           )
-                                        : Text('N/A'),
-                                    SizedBox(
+                                        : const Text('N/A'),
+                                    const SizedBox(
                                       width: 5,
                                     ),
                                     (item['bed'] != null)
@@ -141,9 +142,9 @@ class _gridviewState extends State<GridView_More> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: color_text,
-                                                fontSize: 10),
+                                                fontSize: 10,),
                                           )
-                                        : Text('N/A'),
+                                        : const Text('N/A'),
                                   ],
                                 ),
                               )
@@ -169,7 +170,7 @@ class _gridviewState extends State<GridView_More> {
                                           color: color_texts,
                                         ),
                                       )
-                                    : Text(''))),
+                                    : const Text(''),),),
                         Positioned(
                             left: MediaQuery.of(context).size.width * 0.25,
                             top: MediaQuery.of(context).size.height * 0.15,
@@ -190,7 +191,7 @@ class _gridviewState extends State<GridView_More> {
                                           color: color_texts,
                                         ),
                                       )
-                                    : Text(''))),
+                                    : const Text(''),),),
                         Positioned(
                           left: MediaQuery.of(context).size.width * 0.02,
                           top: MediaQuery.of(context).size.height * 0.02,
@@ -199,14 +200,14 @@ class _gridviewState extends State<GridView_More> {
                             height: 20,
                             width: 60,
                             decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 74, 108, 6),
-                                borderRadius: BorderRadius.circular(10)),
+                                color: const Color.fromARGB(255, 74, 108, 6),
+                                borderRadius: BorderRadius.circular(10),),
                             child: Text(
                               '${item['type'] ?? ""}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromARGB(255, 185, 182, 182),
-                                  fontSize: 10),
+                                  fontSize: 10,),
                             ),
                           ),
                         ),
@@ -216,18 +217,18 @@ class _gridviewState extends State<GridView_More> {
                 ),
               );
             },
-          )),
+          ),),
     );
   }
 
   String? verbal_ID;
-  Future<void> detail_property_sale(index, widget_list) async {
+  Future<void> detail_property_sale(index, widgetList) async {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => Detail_property_sale_all(
           verbal_ID: verbal_ID.toString(),
-          list_get_sale: widget_list,
+          list_get_sale: widgetList,
         ),
       ),
     );

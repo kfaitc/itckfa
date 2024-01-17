@@ -103,11 +103,11 @@ class _OptionPaymentState extends State<OptionPayment> {
   var order_reference_no;
   late Timer _timer;
   bool check_wing = false;
-  Future check_traslation_wing(order_reference_no) async {
+  Future check_traslation_wing(orderReferenceNo) async {
     var request = http.Request(
         'GET',
         Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/checkdone/wing?order_reference_no=$order_reference_no'));
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/checkdone/wing?order_reference_no=$orderReferenceNo',),);
 
     http.StreamedResponse response = await request.send();
 
@@ -124,7 +124,7 @@ class _OptionPaymentState extends State<OptionPayment> {
           headerAnimationLoop: false,
           title: 'Payment',
           desc: jsonResponse["message"],
-          autoHide: Duration(seconds: 3),
+          autoHide: const Duration(seconds: 3),
           onDismissCallback: (type) {
             dispose();
             setState(() {
@@ -153,8 +153,8 @@ class _OptionPaymentState extends State<OptionPayment> {
   Future<bool> createOrder_Wing(price, option, context) async {
     // Navigator.pop(context);
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var url = await Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token');
+    var url = Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token',);
     var body = {
       // 'username': 'online.mangogame',
       // 'username': 'online.kfausd',
@@ -177,8 +177,8 @@ class _OptionPaymentState extends State<OptionPayment> {
       var parts = accessToken.split('-');
       token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
 
-      print('accessToken: ${accessToken}');
-      print('token: ${token}');
+      print('accessToken: $accessToken');
+      print('token: $token');
       print('Price : $price');
 
       // await deeplink_hask(token);
@@ -198,8 +198,8 @@ class _OptionPaymentState extends State<OptionPayment> {
   Future<bool> createOrder_Wing_verbal_id(price, option, context) async {
     // Navigator.pop(context);
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var url = await Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token');
+    var url = Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token',);
     var body = {
       // 'username': 'online.mangogame',
       // 'username': 'online.kfausd',
@@ -222,8 +222,8 @@ class _OptionPaymentState extends State<OptionPayment> {
       var parts = accessToken.split('-');
       token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
 
-      print('accessToken: ${accessToken}');
-      print('token: ${token}');
+      print('accessToken: $accessToken');
+      print('token: $token');
       print('Price : $price');
 
       // await deeplink_hask(token);
@@ -243,9 +243,9 @@ class _OptionPaymentState extends State<OptionPayment> {
   var deeplink_hask;
   // Has verbal_id
   Future<void> deeplinkHask_verbal_id(
-      accessToken, token, price, option, context) async {
-    final url = await Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
+      accessToken, token, price, option, context,) async {
+    final url = Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask',);
     final request = http.MultipartRequest('POST', url);
 
     request.fields.addAll({
@@ -266,8 +266,8 @@ class _OptionPaymentState extends State<OptionPayment> {
   }
 
   Future<void> deeplinkHask(accessToken, token, price, option, context) async {
-    final url = await Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask');
+    final url = Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask',);
     final request = http.MultipartRequest('POST', url);
 
     request.fields.addAll({
@@ -294,7 +294,7 @@ class _OptionPaymentState extends State<OptionPayment> {
     var request = http.Request(
         'POST',
         Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing'));
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing',),);
     request.body = json.encode({
       "order_reference_no": "$order_reference_no",
       "amount": "$price",
@@ -322,7 +322,7 @@ class _OptionPaymentState extends State<OptionPayment> {
     var request = http.Request(
         'POST',
         Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing'));
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing',),);
     request.body = json.encode({
       "order_reference_no": "$order_reference_no",
       "amount": "$price",
@@ -350,9 +350,9 @@ class _OptionPaymentState extends State<OptionPayment> {
     if (Platform.isIOS) {
       try {
         // ignore: deprecated_member_use
-        bool check_link = await launchUrl(Uri.parse(qrString));
-        if (check_link == false) {
-          final playStoreUrl = 'https://onelink.to/dagdt6';
+        bool checkLink = await launchUrl(Uri.parse(qrString));
+        if (checkLink == false) {
+          const playStoreUrl = 'https://onelink.to/dagdt6';
           // ignore: deprecated_member_use
           if (await canLaunch(playStoreUrl)) {
             // ignore: deprecated_member_use
@@ -365,10 +365,10 @@ class _OptionPaymentState extends State<OptionPayment> {
     } else if (Platform.isAndroid) {
       try {
         // ignore: deprecated_member_use
-        bool check_link = await launch(qrString);
+        bool checkLink = await launch(qrString);
 
-        if (check_link == false) {
-          final playStoreUrl = 'https://onelink.to/dagdt6';
+        if (checkLink == false) {
+          const playStoreUrl = 'https://onelink.to/dagdt6';
           // ignore: deprecated_member_use
           if (await canLaunch(playStoreUrl)) {
             // ignore: deprecated_member_use
@@ -379,7 +379,7 @@ class _OptionPaymentState extends State<OptionPayment> {
         }
       } catch (e) {
         if (Platform.isAndroid) {
-          final playStoreUrl = 'https://onelink.to/dagdt6';
+          const playStoreUrl = 'https://onelink.to/dagdt6';
           // ignore: deprecated_member_use
           if (await canLaunch(playStoreUrl)) {
             // ignore: deprecated_member_use
@@ -407,13 +407,13 @@ class _OptionPaymentState extends State<OptionPayment> {
   Widget build(BuildContext context) {
     widget.id_verbal;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 247, 246, 246),
+      backgroundColor: const Color.fromARGB(255, 247, 246, 246),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: kwhite_new,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_sharp),
+          icon: const Icon(Icons.arrow_back_sharp),
           onPressed: () {
             Navigator.pop(context);
             dispose();
@@ -435,46 +435,44 @@ class _OptionPaymentState extends State<OptionPayment> {
                         "${widget.set_id_user}24K${RandomString(2)}F${RandomString(3)}A";
 
                     if (index == 0) {
-                      var tran_id_ref = RandomString(10);
-                      if (tran_id_ref != null) {
-                        if (widget.id_verbal == null) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ABA(
-                                  id_set_use: widget.set_id_user,
-                                  option: widget.option,
-                                  price: widget.price,
-                                  tran_id: tran_id_ref,
-                                  set_email: widget.set_email,
-                                  set_phone: widget.set_phone.toString(),
-                                ),
-                              ));
-                        } else {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ABA(
-                                  id_set_use: widget.set_id_user,
-                                  option: widget.option,
-                                  price: widget.price,
-                                  tran_id: tran_id_ref,
-                                  set_email: widget.set_email,
-                                  set_phone: widget.set_phone.toString(),
-                                  id_verbal: widget.id_verbal ?? '',
-                                ),
-                              ));
-                        }
+                      var tranIdRef = RandomString(10);
+                      if (widget.id_verbal == null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ABA(
+                                id_set_use: widget.set_id_user,
+                                option: widget.option,
+                                price: widget.price,
+                                tran_id: tranIdRef,
+                                set_email: widget.set_email,
+                                set_phone: widget.set_phone.toString(),
+                              ),
+                            ),);
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ABA(
+                                id_set_use: widget.set_id_user,
+                                option: widget.option,
+                                price: widget.price,
+                                tran_id: tranIdRef,
+                                set_email: widget.set_email,
+                                set_phone: widget.set_phone.toString(),
+                                id_verbal: widget.id_verbal ?? '',
+                              ),
+                            ),);
                       }
                     } else {
                       alertDialog(context, widget.price, widget.set_email ?? "",
-                          widget.option, index);
+                          widget.option, index,);
                     }
                   });
                 },
                 child: Card(
                   elevation: 7,
-                  child: Container(
+                  child: SizedBox(
                     height: 65,
                     width: double.infinity,
                     child: Padding(
@@ -494,7 +492,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                                       image: AssetImage(
                                         '${Qr_Image[index]['image']}',
                                       ),
-                                    )),
+                                    ),),
                               ),
                               const SizedBox(width: 15),
                               Column(
@@ -505,11 +503,11 @@ class _OptionPaymentState extends State<OptionPayment> {
                                     style: TextStyle(
                                         overflow: TextOverflow.visible,
                                         color: const Color.fromARGB(
-                                            255, 21, 21, 21),
+                                            255, 21, 21, 21,),
                                         fontWeight: FontWeight.w500,
                                         fontSize: MediaQuery.textScaleFactorOf(
-                                                context) *
-                                            14),
+                                                context,) *
+                                            14,),
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
@@ -517,11 +515,11 @@ class _OptionPaymentState extends State<OptionPayment> {
                                     style: TextStyle(
                                         overflow: TextOverflow.visible,
                                         color: const Color.fromRGBO(
-                                            158, 158, 158, 1),
+                                            158, 158, 158, 1,),
                                         fontWeight: FontWeight.w500,
                                         fontSize: MediaQuery.textScaleFactorOf(
-                                                context) *
-                                            12),
+                                                context,) *
+                                            12,),
                                   ),
                                 ],
                               ),
@@ -531,7 +529,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                                 width: 25,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
-                                    color: Color.fromARGB(255, 242, 240, 240)),
+                                    color: const Color.fromARGB(255, 242, 240, 240),),
                                 child: const Icon(
                                   Icons.arrow_forward_ios,
                                   size: 16,
@@ -561,7 +559,7 @@ class _OptionPaymentState extends State<OptionPayment> {
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 60),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(20)),
+            color: Colors.white, borderRadius: BorderRadius.circular(20),),
         child: Row(
           children: [
             const CircleAvatar(
@@ -587,7 +585,7 @@ class _OptionPaymentState extends State<OptionPayment> {
   var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 
   String RandomString(int strlen) {
-    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+    Random rnd = Random(DateTime.now().millisecondsSinceEpoch);
     String result = "";
     for (var i = 0; i < strlen; i++) {
       result += chars[rnd.nextInt(chars.length)];
@@ -596,8 +594,8 @@ class _OptionPaymentState extends State<OptionPayment> {
   }
 
   Future<void> alertDialog(BuildContext context, var price, String account,
-      String option, int index) {
-    List<Image> set_images = [
+      String option, int index,) {
+    List<Image> setImages = [
       Image.asset(
         'assets/images/Partners/KHQR.png',
         fit: BoxFit.scaleDown,
@@ -611,7 +609,7 @@ class _OptionPaymentState extends State<OptionPayment> {
         fit: BoxFit.scaleDown,
       ),
     ];
-    List<Text> set_title = [
+    List<Text> setTitle = [
       const Text(
         'PayWay',
         style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -625,12 +623,12 @@ class _OptionPaymentState extends State<OptionPayment> {
         style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
       ),
     ];
-    List<String> set_Subtitle = [
+    List<String> setSubtitle = [
       'ABA KHQR',
       'U-Pay',
       'Wing',
     ];
-    List Qr_Image = [
+    List qrImage = [
       {
         'image': 'assets/images/Partners/KHQR.png',
       },
@@ -641,7 +639,7 @@ class _OptionPaymentState extends State<OptionPayment> {
         'image': 'assets/images/KHQR.jpg',
       },
     ];
-    List text_bank = [
+    List textBank = [
       {
         'bank': 'ABA',
         'subscrip': 'Scan to pay with any banking app',
@@ -661,7 +659,7 @@ class _OptionPaymentState extends State<OptionPayment> {
         return AlertDialog(
           title: const Text('Please choose option'),
           titleTextStyle: const TextStyle(fontSize: 15, color: Colors.black),
-          content: Container(
+          content: SizedBox(
             height: MediaQuery.of(context).size.height * 0.25,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -676,22 +674,22 @@ class _OptionPaymentState extends State<OptionPayment> {
                     });
                     if (index == 1) {
                       await upay.createOrder(
-                          price, widget.option, widget.set_id_user, context);
+                          price, widget.option, widget.set_id_user, context,);
                     } else if (index == 2) {
                       setState(() {
                         if (check_wing == false) {
                           _await(context);
                           _timer =
-                              Timer.periodic(Duration(seconds: 5), (timer) {
+                              Timer.periodic(const Duration(seconds: 5), (timer) {
                             check_traslation_wing(order_reference_no);
                           });
                         }
                       });
                       if (widget.id_verbal != null) {
                         print(
-                            "\n\n\n\n\n\n\n=======> Call by ${widget.id_verbal}\n\n\n\n");
+                            "\n\n\n\n\n\n\n=======> Call by ${widget.id_verbal}\n\n\n\n",);
                         await createOrder_Wing_verbal_id(
-                            price, option, context);
+                            price, option, context,);
                         print(" \n\n\n\n\n\n\n\nvirak \n\n\n\n\n\n\n\n");
                       } else {
                         await createOrder_Wing(price, option, context);
@@ -708,20 +706,20 @@ class _OptionPaymentState extends State<OptionPayment> {
                               SizedBox(
                                 height: 50,
                                 width: 60,
-                                child: set_images.elementAt(index),
+                                child: setImages.elementAt(index),
                               ),
-                              set_title.elementAt(index),
+                              setTitle.elementAt(index),
                             ],
                           ),
                         ),
                         Text(
-                          "Tap to pay with ${set_Subtitle.elementAt(index)} Bank",
+                          "Tap to pay with ${setSubtitle.elementAt(index)} Bank",
                           style: TextStyle(
                               overflow: TextOverflow.visible,
                               color: const Color.fromRGBO(158, 158, 158, 1),
                               fontWeight: FontWeight.w500,
                               fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 10),
+                                  MediaQuery.textScaleFactorOf(context) * 10,),
                         ),
                       ],
                     ),
@@ -741,7 +739,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                                   option: option,
                                   id: widget.id_user ?? 'set',
                                   control_user: widget.set_id_user,
-                                )),
+                                ),),
                       );
                     } else if (index == 1) {
                       await Navigator.of(context).push(
@@ -753,7 +751,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                                   option: option,
                                   id: widget.set_id_user ?? 'set',
                                   control_user: widget.set_id_user,
-                                )),
+                                ),),
                       );
                     }
 
@@ -774,8 +772,8 @@ class _OptionPaymentState extends State<OptionPayment> {
                                     borderRadius: BorderRadius.circular(5),
                                     image: DecorationImage(
                                       image: AssetImage(
-                                          '${Qr_Image[index]['image']}'),
-                                    )),
+                                          '${qrImage[index]['image']}',),
+                                    ),),
                               ),
                             ),
                             const Text(
@@ -789,25 +787,25 @@ class _OptionPaymentState extends State<OptionPayment> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${text_bank[index]['bank']}",
+                              "${textBank[index]['bank']}",
                               style: TextStyle(
                                   overflow: TextOverflow.visible,
                                   color: const Color.fromARGB(255, 21, 21, 21),
                                   fontWeight: FontWeight.w500,
                                   fontSize:
                                       MediaQuery.textScaleFactorOf(context) *
-                                          14),
+                                          14,),
                             ),
                             const SizedBox(height: 5),
                             Text(
-                              "${text_bank[index]['subscrip']}",
+                              "${textBank[index]['subscrip']}",
                               style: TextStyle(
                                   overflow: TextOverflow.visible,
                                   color: const Color.fromRGBO(158, 158, 158, 1),
                                   fontWeight: FontWeight.w500,
                                   fontSize:
                                       MediaQuery.textScaleFactorOf(context) *
-                                          9),
+                                          9,),
                             ),
                           ],
                         ),

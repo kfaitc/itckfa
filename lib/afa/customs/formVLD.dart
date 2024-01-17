@@ -12,7 +12,7 @@ class FormValidate extends StatelessWidget {
       required this.label,
       required this.iconname,
       required this.onSaved,
-      this.type})
+      this.type,})
       : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class FormValidate extends StatelessWidget {
           prefixIcon: iconname,
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-                color: Color.fromRGBO(0, 126, 250, 1), width: 2.0),
+                color: Color.fromRGBO(0, 126, 250, 1), width: 2.0,),
             borderRadius: BorderRadius.circular(10.0),
           ),
           enabledBorder: OutlineInputBorder(

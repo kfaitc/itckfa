@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
           // child: TextField(
           //   maxLines: 1,
           // ),
-        )),
+        ),),
       ),
     );
   }

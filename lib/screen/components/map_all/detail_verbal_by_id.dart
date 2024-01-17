@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,17 +8,10 @@ import 'package:intl/intl.dart';
 import 'package:itckfa/afa/customs/readonly.dart';
 import 'package:itckfa/contants.dart';
 import 'package:itckfa/models/autoVerbal.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:open_file/open_file.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'dart:async';
-import 'dart:math';
-import 'dart:typed_data';
 
 class detail_verbal_by_id extends StatefulWidget {
   const detail_verbal_by_id({super.key, required this.id_verbal});
@@ -38,7 +30,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
   double? fsvM, fsvN, fx, fn;
   void get_verbal_by_id() async {
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verbals/list?verbal_id=${widget.id_verbal.toString()}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verbals/list?verbal_id=${widget.id_verbal.toString()}',),);
     double x = 0, n = 0;
     if (rs.statusCode == 200) {
       setState(() {
@@ -61,7 +53,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
           fsvN = (total_MIN! * double.parse(list[0]["verbal_con"].toString())) /
               100;
 
-          if (land.length < 1) {
+          if (land.isEmpty) {
             total_MIN = 0;
             total_MAX = 0;
           } else {
@@ -105,7 +97,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
     var wth = MediaQuery.of(context).size.width * 0.9;
     return Scaffold(
       backgroundColor: Colors.blue[50],
-      body: (list.length > 0)
+      body: (list.isNotEmpty)
           ? SafeArea(
               child: ListView(
                 children: [
@@ -117,7 +109,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                       color: Colors.blueAccent,
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(12),
-                          bottomRight: Radius.circular(20)),
+                          bottomRight: Radius.circular(20),),
                     ),
                     child: Row(
                       children: [
@@ -132,7 +124,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                               shadows: [
                                 Shadow(blurRadius: 5, color: Colors.purple)
                               ],
-                            )),
+                            ),),
                         const Text(
                           '\t\tDetail',
                           style: TextStyle(color: Colors.white, fontSize: 20),
@@ -297,18 +289,18 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                       boxShadow: const [
                                         BoxShadow(
                                             blurRadius: 2,
-                                            color: Colors.black45)
+                                            color: Colors.black45,)
                                       ],
                                       border: Border.all(
-                                          width: 1, color: kPrimaryColor),
+                                          width: 1, color: kPrimaryColor,),
                                       borderRadius:
-                                          BorderRadius.all(Radius.circular(15)),
+                                          const BorderRadius.all(Radius.circular(15)),
                                     ),
                                     child: Column(
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                              left: 7, right: 10),
+                                              left: 7, right: 10,),
                                           child: Text.rich(
                                             TextSpan(
                                               children: <InlineSpan>[
@@ -317,17 +309,17 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                                   Icons.location_on_sharp,
                                                   color: kPrimaryColor,
                                                   size: 14,
-                                                )),
+                                                ),),
                                                 TextSpan(
                                                     text:
-                                                        "${list[0]['district_name']} "),
+                                                        "${list[0]['district_name']} ",),
                                               ],
                                             ),
                                             textAlign: TextAlign.left,
                                             style: const TextStyle(
                                                 fontSize: 10,
                                                 overflow:
-                                                    TextOverflow.ellipsis),
+                                                    TextOverflow.ellipsis,),
                                           ),
                                         ),
                                         const SizedBox(
@@ -413,26 +405,22 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                                 const SizedBox(height: 3),
                                                 Text(
                                                   ':   ${formatter.format(land[i]['verbal_land_area'])}'
-                                                          ' m' +
-                                                      '\u00B2',
+                                                          ' m' '\u00B2',
                                                   style: Name(),
                                                 ),
                                                 const SizedBox(height: 3),
                                                 Text(
-                                                  ':   ${formatter.format(land[i]['verbal_land_minsqm'])}' +
-                                                      '\$',
+                                                  ':   ${formatter.format(land[i]['verbal_land_minsqm'])}' '\$',
                                                   style: Name(),
                                                 ),
                                                 const SizedBox(height: 3),
                                                 Text(
-                                                  ':   ${formatter.format(land[i]['verbal_land_maxsqm'])}' +
-                                                      '\$',
+                                                  ':   ${formatter.format(land[i]['verbal_land_maxsqm'])}' '\$',
                                                   style: Name(),
                                                 ),
                                                 const SizedBox(height: 3),
                                                 Text(
-                                                  ':   ${formatter.format(land[i]['verbal_land_minvalue'])}' +
-                                                      '\$',
+                                                  ':   ${formatter.format(land[i]['verbal_land_minvalue'])}' '\$',
                                                   style: Name(),
                                                 ),
                                                 const SizedBox(height: 3),
@@ -457,7 +445,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                   TextLiquidFill(
                     boxHeight: 50,
                     boxWidth: MediaQuery.of(context).size.width * 1,
-                    boxBackgroundColor: Color.fromARGB(0, 0, 0, 0),
+                    boxBackgroundColor: const Color.fromARGB(0, 0, 0, 0),
                     text: widget.id_verbal.toString(),
                     waveColor: Colors.blueAccent,
                     loadDuration: const Duration(seconds: 20),
@@ -484,17 +472,17 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
   }
 
   TextStyle Label() {
-    return TextStyle(color: kPrimaryColor, fontSize: 12);
+    return const TextStyle(color: kPrimaryColor, fontSize: 12);
   }
 
   TextStyle Name() {
-    return TextStyle(
-        color: kImageColor, fontSize: 13, fontWeight: FontWeight.bold);
+    return const TextStyle(
+        color: kImageColor, fontSize: 13, fontWeight: FontWeight.bold,);
   }
 
   TextStyle NameProperty() {
-    return TextStyle(
-        color: kImageColor, fontSize: 11, fontWeight: FontWeight.bold);
+    return const TextStyle(
+        color: kImageColor, fontSize: 11, fontWeight: FontWeight.bold,);
   }
 
   var image_m;
@@ -520,7 +508,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
             children: [
               pw.Container(
                 height: 70,
-                margin: pw.EdgeInsets.only(bottom: 5),
+                margin: const pw.EdgeInsets.only(bottom: 5),
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
@@ -532,18 +520,18 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                             byteList,
                             // bytes1,
                           ),
-                          fit: pw.BoxFit.fill),
+                          fit: pw.BoxFit.fill,),
                     ),
                     pw.Text("VERBAL CHECK",
                         style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.bold, fontSize: 20)),
+                            fontWeight: pw.FontWeight.bold, fontSize: 20,),),
                     pw.Container(
                       height: 50,
                       width: 79,
                       child: pw.BarcodeWidget(
                           barcode: pw.Barcode.qrCode(),
                           data:
-                              "https://www.latlong.net/c/?lat=${list[0]['latlong_log']}&long=${list[0]['latlong_la']}"),
+                              "https://www.latlong.net/c/?lat=${list[0]['latlong_log']}&long=${list[0]['latlong_la']}",),
                     ),
                   ],
                 ),
@@ -556,7 +544,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                       pw.Expanded(
                         flex: 4,
                         child: pw.Container(
-                          padding: pw.EdgeInsets.all(2),
+                          padding: const pw.EdgeInsets.all(2),
                           alignment: pw.Alignment.centerLeft,
                           decoration: pw.BoxDecoration(border: pw.Border.all()),
                           //color: Colors.red,
@@ -564,7 +552,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                               "DATE: ${list[0]['verbal_created_date'].toString()}",
                               style: pw.TextStyle(
                                   fontSize: 12,
-                                  fontWeight: pw.FontWeight.bold)),
+                                  fontWeight: pw.FontWeight.bold,),),
                           height: 25,
                           //color: Colors.white,
                         ),
@@ -572,21 +560,21 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                       pw.Expanded(
                         flex: 4,
                         child: pw.Container(
-                          padding: pw.EdgeInsets.all(2),
+                          padding: const pw.EdgeInsets.all(2),
                           alignment: pw.Alignment.centerLeft,
                           decoration: pw.BoxDecoration(border: pw.Border.all()),
                           child: pw.Text(
                               "CODE: ${list[0]['verbal_id'].toString()}",
                               style: pw.TextStyle(
                                   fontSize: 12,
-                                  fontWeight: pw.FontWeight.bold)),
+                                  fontWeight: pw.FontWeight.bold,),),
                           height: 25,
                           //color: Colors.yellow,
                         ),
                       ),
-                    ]))
-                  ])
-                ]),
+                    ],),)
+                  ],)
+                ],),
               ),
               pw.SizedBox(
                 child: pw.Row(
@@ -594,12 +582,12 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 8,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(
                             "Requested Date :${list[0]['verbal_created_date'].toString()} ",
-                            style: pw.TextStyle(fontSize: 12)),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -608,13 +596,13 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                 ),
               ),
               pw.Container(
-                padding: pw.EdgeInsets.all(2),
+                padding: const pw.EdgeInsets.all(2),
                 alignment: pw.Alignment.centerLeft,
                 decoration: pw.BoxDecoration(border: pw.Border.all()),
                 child: pw.Text(
                     "Referring to your request letter for verbal check by ${list[0]['bank_name'].toString()}, we estimated the value of property as below.",
                     overflow: pw.TextOverflow.clip,
-                    style: pw.TextStyle(fontSize: 10)),
+                    style: const pw.TextStyle(fontSize: 10),),
                 height: 26,
                 //color: Colors.blue,
               ),
@@ -624,11 +612,11 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 2,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text("Property Information ",
-                            style: pw.TextStyle(fontSize: 12)),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -636,12 +624,12 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 6,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(
-                            "${list[0]['property_type_name'].toString()}",
-                            style: pw.TextStyle(fontSize: 12)),
+                            list[0]['property_type_name'].toString(),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -659,7 +647,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text("Address  ",
-                            style: const pw.TextStyle(fontSize: 12)),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -672,7 +660,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(
                             "${list[0]['district_name']} ${(list[0]['verbal_address'] == "") ? "" : ' ${list[0]['verbal_address']}'}",
-                            style: const pw.TextStyle(fontSize: 12)),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -690,7 +678,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text("Owner Name ",
-                            style: const pw.TextStyle(fontSize: 12)),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -703,8 +691,8 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child:
                             // name rest with api
-                            pw.Text("${list[0]['verbal_owner'].toString()}",
-                                style: const pw.TextStyle(fontSize: 12)),
+                            pw.Text(list[0]['verbal_owner'].toString(),
+                                style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -718,7 +706,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         // name rest with api
                         child: pw.Text(
                             "Contact No : ${list[0]['verbal_contact'].toString()}",
-                            style: const pw.TextStyle(fontSize: 12)),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -736,7 +724,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text("Bank Officer ",
-                            style: const pw.TextStyle(fontSize: 12)),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -747,8 +735,8 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
-                        child: pw.Text("${list[0]['bank_name'].toString()}",
-                            style: const pw.TextStyle(fontSize: 9)),
+                        child: pw.Text(list[0]['bank_name'].toString(),
+                            style: const pw.TextStyle(fontSize: 9),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -761,7 +749,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(
                             "Contact No : ${list[0]['bankcontact'].toString()}",
-                            style: const pw.TextStyle(fontSize: 9)),
+                            style: const pw.TextStyle(fontSize: 9),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -780,7 +768,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(
                             "Latitude ${list[0]['latlong_log'].toString()}",
-                            style: const pw.TextStyle(fontSize: 12)),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -788,12 +776,12 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 6,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(
                             "Longtitude ${list[0]['latlong_la'].toString()}",
-                            style: const pw.TextStyle(fontSize: 12)),
+                            style: const pw.TextStyle(fontSize: 12),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -804,7 +792,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
               pw.SizedBox(height: 5),
               pw.Text("ESTIMATED VALUE OF THE VERBAL CHECK PROPERTY",
                   textAlign: pw.TextAlign.center,
-                  style: const pw.TextStyle(fontSize: 12)),
+                  style: const pw.TextStyle(fontSize: 12),),
               pw.Container(
                 height: 130,
                 width: 450,
@@ -812,7 +800,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.MemoryImage(
                       bytes1,
                     ),
-                    fit: pw.BoxFit.fitWidth),
+                    fit: pw.BoxFit.fitWidth,),
               ),
               pw.SizedBox(height: 5),
               pw.Container(
@@ -827,9 +815,9 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text("DESCRIPTION ",
                             style: pw.TextStyle(
-                                fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                                fontSize: 11, fontWeight: pw.FontWeight.bold,),),
                         height: 25,
-                      )),
+                      ),),
                   pw.Expanded(
                     flex: 2,
                     child: pw.Container(
@@ -838,7 +826,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                       decoration: pw.BoxDecoration(border: pw.Border.all()),
                       child: pw.Text("AREA/sqm ",
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                              fontSize: 11, fontWeight: pw.FontWeight.bold,),),
                       height: 25,
                       //color: Colors.blue,
                     ),
@@ -851,7 +839,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                       decoration: pw.BoxDecoration(border: pw.Border.all()),
                       child: pw.Text("MIN/sqm ",
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                              fontSize: 11, fontWeight: pw.FontWeight.bold,),),
                       height: 25,
                       //color: Colors.blue,
                     ),
@@ -864,7 +852,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                       decoration: pw.BoxDecoration(border: pw.Border.all()),
                       child: pw.Text("MAX/sqm ",
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                              fontSize: 11, fontWeight: pw.FontWeight.bold,),),
                       height: 25,
                       //color: Colors.blue,
                     ),
@@ -877,7 +865,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                       decoration: pw.BoxDecoration(border: pw.Border.all()),
                       child: pw.Text("MIN-VALUE ",
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                              fontSize: 11, fontWeight: pw.FontWeight.bold,),),
                       height: 25,
                       //color: Colors.blue,
                     ),
@@ -890,13 +878,13 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                       decoration: pw.BoxDecoration(border: pw.Border.all()),
                       child: pw.Text("MAX-VALUE ",
                           style: pw.TextStyle(
-                              fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                              fontSize: 11, fontWeight: pw.FontWeight.bold,),),
                       height: 25,
                       //color: Colors.blue,
                     ),
                   ),
-                ])),
-                if (land.length >= 1)
+                ],),),
+                if (land.isNotEmpty)
                   pw.ListView.builder(
                     itemCount: land.length,
                     itemBuilder: (Context, index) {
@@ -905,7 +893,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                           pw.Expanded(
                             flex: 3,
                             child: pw.Container(
-                              padding: pw.EdgeInsets.all(2),
+                              padding: const pw.EdgeInsets.all(2),
                               alignment: pw.Alignment.centerLeft,
                               decoration:
                                   pw.BoxDecoration(border: pw.Border.all()),
@@ -913,7 +901,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                   land[index]["verbal_land_type"] ?? "N/A",
                                   style: pw.TextStyle(
                                       fontSize: 10,
-                                      fontWeight: pw.FontWeight.bold)),
+                                      fontWeight: pw.FontWeight.bold,),),
                               height: 25,
                               //color: Colors.blue,
                             ),
@@ -921,7 +909,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                           pw.Expanded(
                             flex: 2,
                             child: pw.Container(
-                              padding: pw.EdgeInsets.all(2),
+                              padding: const pw.EdgeInsets.all(2),
                               alignment: pw.Alignment.centerLeft,
                               decoration:
                                   pw.BoxDecoration(border: pw.Border.all()),
@@ -929,7 +917,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                   " ${formatter.format(land[index]["verbal_land_area"]).toString()}/sqm",
                                   style: pw.TextStyle(
                                       fontSize: 9,
-                                      fontWeight: pw.FontWeight.bold)),
+                                      fontWeight: pw.FontWeight.bold,),),
                               height: 25,
                               //color: Colors.blue,
                             ),
@@ -937,7 +925,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                           pw.Expanded(
                             flex: 2,
                             child: pw.Container(
-                              padding: pw.EdgeInsets.all(2),
+                              padding: const pw.EdgeInsets.all(2),
                               alignment: pw.Alignment.centerLeft,
                               decoration:
                                   pw.BoxDecoration(border: pw.Border.all()),
@@ -945,7 +933,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                   "USD ${formatter.format(land[index]["verbal_land_minsqm"]).toString()}/sqm",
                                   style: pw.TextStyle(
                                       fontSize: 9,
-                                      fontWeight: pw.FontWeight.bold)),
+                                      fontWeight: pw.FontWeight.bold,),),
                               height: 25,
                               //color: Colors.blue,
                             ),
@@ -953,7 +941,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                           pw.Expanded(
                             flex: 2,
                             child: pw.Container(
-                              padding: pw.EdgeInsets.all(2),
+                              padding: const pw.EdgeInsets.all(2),
                               alignment: pw.Alignment.centerLeft,
                               decoration:
                                   pw.BoxDecoration(border: pw.Border.all()),
@@ -961,7 +949,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                   "USD ${formatter.format(land[index]["verbal_land_maxsqm"]).toString()}",
                                   style: pw.TextStyle(
                                       fontSize: 9,
-                                      fontWeight: pw.FontWeight.bold)),
+                                      fontWeight: pw.FontWeight.bold,),),
                               height: 25,
                               //color: Colors.blue,
                             ),
@@ -969,7 +957,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                           pw.Expanded(
                             flex: 2,
                             child: pw.Container(
-                              padding: pw.EdgeInsets.all(2),
+                              padding: const pw.EdgeInsets.all(2),
                               alignment: pw.Alignment.centerLeft,
                               decoration:
                                   pw.BoxDecoration(border: pw.Border.all()),
@@ -977,7 +965,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                   "USD  ${formatter.format(land[index]["verbal_land_minvalue"]).toString()}",
                                   style: pw.TextStyle(
                                       fontSize: 9,
-                                      fontWeight: pw.FontWeight.bold)),
+                                      fontWeight: pw.FontWeight.bold,),),
                               height: 25,
                               //color: Colors.blue,
                             ),
@@ -985,7 +973,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                           pw.Expanded(
                             flex: 2,
                             child: pw.Container(
-                              padding: pw.EdgeInsets.all(2),
+                              padding: const pw.EdgeInsets.all(2),
                               alignment: pw.Alignment.centerLeft,
                               decoration:
                                   pw.BoxDecoration(border: pw.Border.all()),
@@ -993,12 +981,12 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                   "USD ${formatter.format(land[index]["verbal_land_maxvalue"]).toString()}",
                                   style: pw.TextStyle(
                                       fontSize: 9,
-                                      fontWeight: pw.FontWeight.bold)),
+                                      fontWeight: pw.FontWeight.bold,),),
                               height: 25,
                               //color: Colors.blue,
                             ),
                           ),
-                        ]),
+                        ],),
                       );
                     },
                   ),
@@ -1007,13 +995,13 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 9,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text("Property Value(Estimate) ",
-                            style: pw.TextStyle(
+                            style: const pw.TextStyle(
                               fontSize: 11,
-                            )),
+                            ),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -1021,12 +1009,12 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 2,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(
                             "USD ${formatter.format(total_MIN).toString()}",
-                            style: pw.TextStyle(fontSize: 9)),
+                            style: const pw.TextStyle(fontSize: 9),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -1034,24 +1022,24 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 2,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(
                             "USD  ${formatter.format(total_MAX).toString()}",
-                            style: pw.TextStyle(fontSize: 9)),
+                            style: const pw.TextStyle(fontSize: 9),),
                         height: 25,
                         //color: Colors.blue,
                       ),
                     ),
-                  ]),
+                  ],),
                 ),
                 pw.Container(
                   child: pw.Row(children: [
                     pw.Expanded(
                       flex: 9,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         // ទាយយក forceSale from  ForceSaleAndValuation
@@ -1059,7 +1047,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                             "Force Sale Value ${list[0]['verbal_con'].toString()}% ",
                             style: const pw.TextStyle(
                               fontSize: 9,
-                            )),
+                            ),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -1067,11 +1055,11 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 2,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
-                        child: pw.Text("${fsvN.toString()}",
-                            style: pw.TextStyle(fontSize: 11)),
+                        child: pw.Text(fsvN.toString(),
+                            style: const pw.TextStyle(fontSize: 11),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -1079,16 +1067,16 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 2,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(fsvM.toString(),
-                            style: const pw.TextStyle(fontSize: 11)),
+                            style: const pw.TextStyle(fontSize: 11),),
                         height: 25,
                         //color: Colors.blue,
                       ),
                     ),
-                  ]),
+                  ],),
                 ),
                 pw.Container(
                   child: pw.Row(children: [
@@ -1101,7 +1089,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         child: pw.Text("Force Sale Value: ",
                             style: const pw.TextStyle(
                               fontSize: 11,
-                            )),
+                            ),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -1113,7 +1101,7 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text("$fn",
-                            style: const pw.TextStyle(fontSize: 11)),
+                            style: const pw.TextStyle(fontSize: 11),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -1124,8 +1112,8 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                         padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
-                        child: pw.Text("${fx}",
-                            style: const pw.TextStyle(fontSize: 11)),
+                        child: pw.Text("$fx",
+                            style: const pw.TextStyle(fontSize: 11),),
                         height: 25,
                         //color: Colors.blue,
                       ),
@@ -1133,49 +1121,49 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                     pw.Expanded(
                       flex: 4,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         height: 25,
                         //color: Colors.blue,
                       ),
                     ),
-                  ]),
+                  ],),
                 ),
                 pw.Container(
                   child: pw.Row(children: [
                     pw.Expanded(
                       flex: 11,
                       child: pw.Container(
-                        padding: pw.EdgeInsets.all(2),
+                        padding: const pw.EdgeInsets.all(2),
                         alignment: pw.Alignment.centerLeft,
                         decoration: pw.BoxDecoration(border: pw.Border.all()),
                         child: pw.Text(
                             "COMMENT: ${list[0]['verbal_comment'].toString()}",
                             style: pw.TextStyle(
-                                fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                                fontSize: 11, fontWeight: pw.FontWeight.bold,),),
                         height: 25,
                         //color: Colors.blue,
                       ),
                     ),
-                  ]),
+                  ],),
                 ),
                 pw.Container(
-                  padding: pw.EdgeInsets.all(2),
+                  padding: const pw.EdgeInsets.all(2),
                   alignment: pw.Alignment.centerLeft,
                   decoration: pw.BoxDecoration(border: pw.Border.all()),
                   child: pw.Text("Valuation fee :  ",
                       style: pw.TextStyle(
-                          fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                          fontSize: 11, fontWeight: pw.FontWeight.bold,),),
                   height: 25,
                   //color: Colors.blue,
                 )
-              ])),
+              ],),),
               pw.SizedBox(height: 5),
               pw.Text(
                   '*Note: It is only first price which you took from this verbal check data. The accurate value of property when we have the actual site property inspection.We are not responsible for this case when you provided the wrong land and building size or any fraud.',
                   style: pw.TextStyle(
-                      fontWeight: pw.FontWeight.bold, fontSize: 7)),
+                      fontWeight: pw.FontWeight.bold, fontSize: 7,),),
               pw.SizedBox(height: 30),
               pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
@@ -1193,14 +1181,14 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                 fontWeight: pw.FontWeight.bold,
                                 fontSize: 7,
                               ),
-                              textAlign: pw.TextAlign.right),
+                              textAlign: pw.TextAlign.right,),
                           pw.SizedBox(height: 4),
                           pw.Text(' ${list[0]['agent_type_phone'].toString()}',
                               style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
                                 fontSize: 9,
                               ),
-                              textAlign: pw.TextAlign.center),
+                              textAlign: pw.TextAlign.center,),
                         ],
                       ),
                     ],
@@ -1213,8 +1201,8 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                               color: PdfColors.blue,
                               fontWeight: pw.FontWeight.bold,
                               fontSize: 9,
-                            )),
-                      ]),
+                            ),),
+                      ],),
                   pw.SizedBox(height: 5),
                   pw.Row(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1228,28 +1216,28 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                 style: pw.TextStyle(
                                   fontWeight: pw.FontWeight.bold,
                                   fontSize: 7,
-                                )),
+                                ),),
                             pw.Row(children: [
                               pw.Text('H/P : (+855)23 988 855/(+855)23 999 761',
                                   style: pw.TextStyle(
                                     fontWeight: pw.FontWeight.bold,
                                     fontSize: 7,
-                                  )),
-                            ]),
+                                  ),),
+                            ],),
                             pw.Row(children: [
                               pw.Text('Email : info@kfa.com.kh',
                                   style: pw.TextStyle(
                                     fontWeight: pw.FontWeight.bold,
                                     fontSize: 7,
-                                  )),
-                            ]),
+                                  ),),
+                            ],),
                             pw.Row(children: [
                               pw.Text('Website: www.kfa.com.kh',
                                   style: pw.TextStyle(
                                     fontWeight: pw.FontWeight.bold,
                                     fontSize: 7,
-                                  )),
-                            ]),
+                                  ),),
+                            ],),
                           ],
                         ),
                       ),
@@ -1264,18 +1252,18 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
                                 style: pw.TextStyle(
                                   fontWeight: pw.FontWeight.bold,
                                   fontSize: 7,
-                                )),
+                                ),),
                             pw.Text('Natural 371) Sangkat Chak Angrae Leu,',
                                 style: pw.TextStyle(
                                   fontWeight: pw.FontWeight.bold,
                                   fontSize: 7,
-                                )),
+                                ),),
                             pw.Text(
                                 'Khan Mean Chey, Phnom Penh City, Cambodia,',
                                 style: pw.TextStyle(
                                   fontWeight: pw.FontWeight.bold,
                                   fontSize: 7,
-                                )),
+                                ),),
                           ],
                         ),
                       ),
@@ -1287,14 +1275,14 @@ class _detail_searchingState extends State<detail_verbal_by_id> {
           ),
         ];
       },
-    ));
+    ),);
 
     // Get the bytes of the PDF document
     final pdfBytes = pdf.save();
 
     // Print the PDF document to the default printer
     await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => pdfBytes);
+        onLayout: (PdfPageFormat format) async => pdfBytes,);
     return pdf.save();
   }
 }
@@ -1306,7 +1294,7 @@ Future<pw.PageTheme> _myPageTheme(PdfPageFormat format) async {
       left: 2.0 * PdfPageFormat.cm,
       top: 1.0 * PdfPageFormat.cm,
       right: 2.0 * PdfPageFormat.cm,
-      bottom: 1.0 * PdfPageFormat.cm);
+      bottom: 1.0 * PdfPageFormat.cm,);
   return pw.PageTheme(
     pageFormat: format,
     theme: pw.ThemeData.withFont(

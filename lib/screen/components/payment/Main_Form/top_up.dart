@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 import 'dart:math';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -13,8 +12,6 @@ import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/OptionBank.dart';
 import 'package:crypto/crypto.dart';
-import 'package:dio/dio.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'Transtoin_history.dart';
 
@@ -26,7 +23,7 @@ class TopUp extends StatefulWidget {
       this.id_user,
       this.set_id_user,
       this.set_email,
-      this.id_verbal});
+      this.id_verbal,});
   final String? set_phone;
   final String? up_point;
   final String? id_user;
@@ -45,7 +42,7 @@ class _TopUpState extends State<TopUp> {
   Future<void> get_count() async {
     final response = await http.get(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=${widget.set_id_user}'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=${widget.set_id_user}',),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -130,7 +127,7 @@ class _TopUpState extends State<TopUp> {
                     ),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10))),
+                        bottomRight: Radius.circular(10),),),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -146,7 +143,7 @@ class _TopUpState extends State<TopUp> {
                             decoration: const BoxDecoration(
                                 image: DecorationImage(
                                     image: AssetImage("assets/images/v.png"),
-                                    fit: BoxFit.cover)),
+                                    fit: BoxFit.cover,),),
                           ),
                           const SizedBox(width: 10),
                           Text(
@@ -193,12 +190,12 @@ class _TopUpState extends State<TopUp> {
                                       id: widget.set_id_user,
                                     );
                                   },
-                                ));
+                                ),);
                               },
                               text: "Transaction history",
                               textColor: Colors.white,
                               textStyle: const TextStyle(
-                                  fontSize: 10, color: Colors.white),
+                                  fontSize: 10, color: Colors.white,),
                               type: GFButtonType.outline,
                               shape: GFButtonShape.pills,
                             ),
@@ -241,7 +238,7 @@ class _TopUpState extends State<TopUp> {
                                 Text(
                                   "Tariff Plans for ",
                                   style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
+                                      fontSize: 16, color: Colors.white,),
                                 ),
                                 Text(
                                   "ONE DAY",
@@ -250,7 +247,7 @@ class _TopUpState extends State<TopUp> {
                                       color: Colors.blue,
                                       decorationStyle:
                                           TextDecorationStyle.dashed,
-                                      decoration: TextDecoration.underline),
+                                      decoration: TextDecoration.underline,),
                                 )
                               ],
                             ),
@@ -271,9 +268,9 @@ class _TopUpState extends State<TopUp> {
                                             price: '1.00',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? null,
+                                            id_verbal: widget.id_verbal,
                                           ),
-                                        ));
+                                        ),);
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -288,7 +285,7 @@ class _TopUpState extends State<TopUp> {
                                         BoxShadow(
                                             color: Colors.grey,
                                             blurRadius: 7,
-                                            offset: Offset(1.0, 7.0))
+                                            offset: Offset(1.0, 7.0),)
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -307,7 +304,7 @@ class _TopUpState extends State<TopUp> {
                                                 width: 15,
                                                 height: 15,
                                                 child: Image.asset(
-                                                    "assets/images/v.png")),
+                                                    "assets/images/v.png",),),
                                             Text(
                                               "1",
                                               style: TextStyle(
@@ -322,11 +319,11 @@ class _TopUpState extends State<TopUp> {
                                           style: TextStyle(
                                               fontSize: 17,
                                               color: Color.fromARGB(
-                                                  255, 242, 11, 134),
+                                                  255, 242, 11, 134,),
                                               decorationStyle:
                                                   TextDecorationStyle.solid,
                                               decoration:
-                                                  TextDecoration.underline),
+                                                  TextDecoration.underline,),
                                         )
                                       ],
                                     ),
@@ -345,9 +342,9 @@ class _TopUpState extends State<TopUp> {
                                             price: '2.50',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? null,
+                                            id_verbal: widget.id_verbal,
                                           ),
-                                        ));
+                                        ),);
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -362,7 +359,7 @@ class _TopUpState extends State<TopUp> {
                                         BoxShadow(
                                             color: Colors.grey,
                                             blurRadius: 7,
-                                            offset: Offset(1.0, 7.0))
+                                            offset: Offset(1.0, 7.0),)
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -381,7 +378,7 @@ class _TopUpState extends State<TopUp> {
                                                 width: 15,
                                                 height: 15,
                                                 child: Image.asset(
-                                                    "assets/images/v.png")),
+                                                    "assets/images/v.png",),),
                                             Text(
                                               "3",
                                               style: TextStyle(
@@ -396,11 +393,11 @@ class _TopUpState extends State<TopUp> {
                                           style: TextStyle(
                                               fontSize: 17,
                                               color: Color.fromARGB(
-                                                  255, 242, 11, 134),
+                                                  255, 242, 11, 134,),
                                               decorationStyle:
                                                   TextDecorationStyle.solid,
                                               decoration:
-                                                  TextDecoration.underline),
+                                                  TextDecoration.underline,),
                                         )
                                       ],
                                     ),
@@ -419,9 +416,9 @@ class _TopUpState extends State<TopUp> {
                                             price: '3.00',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? null,
+                                            id_verbal: widget.id_verbal,
                                           ),
-                                        ));
+                                        ),);
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -436,7 +433,7 @@ class _TopUpState extends State<TopUp> {
                                         BoxShadow(
                                             color: Colors.grey,
                                             blurRadius: 7,
-                                            offset: Offset(1.0, 7.0))
+                                            offset: Offset(1.0, 7.0),)
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -455,7 +452,7 @@ class _TopUpState extends State<TopUp> {
                                                 width: 15,
                                                 height: 15,
                                                 child: Image.asset(
-                                                    "assets/images/v.png")),
+                                                    "assets/images/v.png",),),
                                             Text(
                                               "5",
                                               style: TextStyle(
@@ -470,11 +467,11 @@ class _TopUpState extends State<TopUp> {
                                           style: TextStyle(
                                               fontSize: 17,
                                               color: Color.fromARGB(
-                                                  255, 242, 11, 134),
+                                                  255, 242, 11, 134,),
                                               decorationStyle:
                                                   TextDecorationStyle.solid,
                                               decoration:
-                                                  TextDecoration.underline),
+                                                  TextDecoration.underline,),
                                         )
                                       ],
                                     ),
@@ -499,9 +496,9 @@ class _TopUpState extends State<TopUp> {
                                             price: '5.00',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? null,
+                                            id_verbal: widget.id_verbal,
                                           ),
-                                        ));
+                                        ),);
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -516,7 +513,7 @@ class _TopUpState extends State<TopUp> {
                                         BoxShadow(
                                             color: Colors.grey,
                                             blurRadius: 7,
-                                            offset: Offset(1.0, 7.0))
+                                            offset: Offset(1.0, 7.0),)
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -535,7 +532,7 @@ class _TopUpState extends State<TopUp> {
                                                 width: 15,
                                                 height: 15,
                                                 child: Image.asset(
-                                                    "assets/images/v.png")),
+                                                    "assets/images/v.png",),),
                                             Text(
                                               "6",
                                               style: TextStyle(
@@ -550,11 +547,11 @@ class _TopUpState extends State<TopUp> {
                                           style: TextStyle(
                                               fontSize: 17,
                                               color: Color.fromARGB(
-                                                  255, 242, 11, 134),
+                                                  255, 242, 11, 134,),
                                               decorationStyle:
                                                   TextDecorationStyle.solid,
                                               decoration:
-                                                  TextDecoration.underline),
+                                                  TextDecoration.underline,),
                                         )
                                       ],
                                     ),
@@ -573,9 +570,9 @@ class _TopUpState extends State<TopUp> {
                                             price: '6.50',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? null,
+                                            id_verbal: widget.id_verbal,
                                           ),
-                                        ));
+                                        ),);
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -590,7 +587,7 @@ class _TopUpState extends State<TopUp> {
                                         BoxShadow(
                                             color: Colors.grey,
                                             blurRadius: 7,
-                                            offset: Offset(1.0, 7.0))
+                                            offset: Offset(1.0, 7.0),)
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -609,7 +606,7 @@ class _TopUpState extends State<TopUp> {
                                                 width: 15,
                                                 height: 15,
                                                 child: Image.asset(
-                                                    "assets/images/v.png")),
+                                                    "assets/images/v.png",),),
                                             Text(
                                               "8",
                                               style: TextStyle(
@@ -624,11 +621,11 @@ class _TopUpState extends State<TopUp> {
                                           style: TextStyle(
                                               fontSize: 17,
                                               color: Color.fromARGB(
-                                                  255, 242, 11, 134),
+                                                  255, 242, 11, 134,),
                                               decorationStyle:
                                                   TextDecorationStyle.solid,
                                               decoration:
-                                                  TextDecoration.underline),
+                                                  TextDecoration.underline,),
                                         )
                                       ],
                                     ),
@@ -647,9 +644,9 @@ class _TopUpState extends State<TopUp> {
                                             price: '8.00',
                                             up_point: widget.up_point,
                                             set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal ?? null,
+                                            id_verbal: widget.id_verbal,
                                           ),
-                                        ));
+                                        ),);
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -664,7 +661,7 @@ class _TopUpState extends State<TopUp> {
                                         BoxShadow(
                                             color: Colors.grey,
                                             blurRadius: 7,
-                                            offset: Offset(1.0, 7.0))
+                                            offset: Offset(1.0, 7.0),)
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -683,7 +680,7 @@ class _TopUpState extends State<TopUp> {
                                                 width: 15,
                                                 height: 15,
                                                 child: Image.asset(
-                                                    "assets/images/v.png")),
+                                                    "assets/images/v.png",),),
                                             Text(
                                               "10",
                                               style: TextStyle(
@@ -698,11 +695,11 @@ class _TopUpState extends State<TopUp> {
                                           style: TextStyle(
                                               fontSize: 17,
                                               color: Color.fromARGB(
-                                                  255, 242, 11, 134),
+                                                  255, 242, 11, 134,),
                                               decorationStyle:
                                                   TextDecorationStyle.solid,
                                               decoration:
-                                                  TextDecoration.underline),
+                                                  TextDecoration.underline,),
                                         )
                                       ],
                                     ),
@@ -750,7 +747,7 @@ class _TopUpState extends State<TopUp> {
                                 Text(
                                   "Tariff Plans for",
                                   style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
+                                      fontSize: 16, color: Colors.white,),
                                 ),
                                 SizedBox(
                                     height: 25,
@@ -763,9 +760,9 @@ class _TopUpState extends State<TopUp> {
                                                 decorationStyle:
                                                     TextDecorationStyle.dashed,
                                                 decoration:
-                                                    TextDecoration.underline)),
+                                                    TextDecoration.underline,),),
                                       ],
-                                    )),
+                                    ),),
                                 SizedBox(width: 0),
                               ],
                             ),
@@ -782,9 +779,9 @@ class _TopUpState extends State<TopUp> {
                                         price: '10.00',
                                         up_point: widget.up_point,
                                         set_id_user: widget.set_id_user,
-                                        id_verbal: widget.id_verbal ?? null,
+                                        id_verbal: widget.id_verbal,
                                       ),
-                                    ));
+                                    ),);
                               },
                               child: const Card(
                                 color: Colors.white,
@@ -797,7 +794,7 @@ class _TopUpState extends State<TopUp> {
                                       Text(
                                         "Use ",
                                         style: TextStyle(
-                                            fontSize: 13, color: Colors.black),
+                                            fontSize: 13, color: Colors.black,),
                                       ),
                                       Text(
                                         "5 VERBAL CKECK",
@@ -808,12 +805,12 @@ class _TopUpState extends State<TopUp> {
                                             decorationStyle:
                                                 TextDecorationStyle.dotted,
                                             decoration:
-                                                TextDecoration.underline),
+                                                TextDecoration.underline,),
                                       ),
                                       Text(
                                         " for ",
                                         style: TextStyle(
-                                            fontSize: 13, color: Colors.black),
+                                            fontSize: 13, color: Colors.black,),
                                       ),
                                       Text(
                                         "1 week",
@@ -824,7 +821,7 @@ class _TopUpState extends State<TopUp> {
                                             decorationStyle:
                                                 TextDecorationStyle.dashed,
                                             decoration:
-                                                TextDecoration.underline),
+                                                TextDecoration.underline,),
                                       ),
                                     ],
                                   ),
@@ -845,9 +842,9 @@ class _TopUpState extends State<TopUp> {
                                         price: '30.00',
                                         up_point: widget.up_point,
                                         set_id_user: widget.set_id_user,
-                                        id_verbal: widget.id_verbal ?? null,
+                                        id_verbal: widget.id_verbal,
                                       ),
-                                    ));
+                                    ),);
                               },
                               child: const Card(
                                 color: Colors.white,
@@ -860,7 +857,7 @@ class _TopUpState extends State<TopUp> {
                                       Text(
                                         "Use ",
                                         style: TextStyle(
-                                            fontSize: 13, color: Colors.black),
+                                            fontSize: 13, color: Colors.black,),
                                       ),
                                       Text(
                                         "40 VERBAL CKECK",
@@ -871,12 +868,12 @@ class _TopUpState extends State<TopUp> {
                                             decorationStyle:
                                                 TextDecorationStyle.dotted,
                                             decoration:
-                                                TextDecoration.underline),
+                                                TextDecoration.underline,),
                                       ),
                                       Text(
                                         " for ",
                                         style: TextStyle(
-                                            fontSize: 13, color: Colors.black),
+                                            fontSize: 13, color: Colors.black,),
                                       ),
                                       Text(
                                         "1 month",
@@ -887,7 +884,7 @@ class _TopUpState extends State<TopUp> {
                                             decorationStyle:
                                                 TextDecorationStyle.dashed,
                                             decoration:
-                                                TextDecoration.underline),
+                                                TextDecoration.underline,),
                                       ),
                                     ],
                                   ),
@@ -959,7 +956,7 @@ class SignUtil {
   var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 
   String RandomString(int strlen) {
-    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+    Random rnd = Random(DateTime.now().millisecondsSinceEpoch);
     String result = "";
     for (var i = 0; i < strlen; i++) {
       result += chars[rnd.nextInt(chars.length)];

@@ -20,7 +20,7 @@ class _MyVerifyState extends State<MyVerify> {
       textStyle: const TextStyle(
           fontSize: 20,
           color: Color.fromRGBO(30, 60, 87, 1),
-          fontWeight: FontWeight.w600),
+          fontWeight: FontWeight.w600,),
       decoration: BoxDecoration(
         border: Border.all(color: const Color.fromRGBO(234, 239, 243, 1)),
         borderRadius: BorderRadius.circular(20),
@@ -104,12 +104,12 @@ class _MyVerifyState extends State<MyVerify> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green.shade600,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
+                            borderRadius: BorderRadius.circular(10),),),
                     onPressed: () {
                       widget.code(code);
                       Navigator.pop(context);
                     },
-                    child: const Text("Verify Phone Number")),
+                    child: const Text("Verify Phone Number"),),
               ),
             ],
           ),

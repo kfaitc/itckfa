@@ -39,7 +39,7 @@ void main() async {
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],);
   // final ImagePickerPlatform imagePickerImplementation =
   //     ImagePickerPlatform.instance;
   // if (imagePickerImplementation is ImagePickerAndroid) {
@@ -139,7 +139,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // incomingLinkHandler();
     super.initState();
-    // _getInstallPermission();
+    _getInstallPermission();
   }
 
   Future incomingLinkHandler() async {
@@ -216,6 +216,7 @@ class _MyAppState extends State<MyApp> {
             }
           }
         }
+        return null;
       },
       initialRoute: '/',
       // home: ThankYouPage(title: "aba"),
@@ -290,7 +291,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
           timer.cancel();
           if (widget.title.toString() == "varbal") {
             Get.to(() => Edit(
-                user_id_controller: user_id_control!, verbal_id: verbal_id!));
+                user_id_controller: user_id_control!, verbal_id: verbal_id!,),);
           } else {
             Get.to(() => const HomePage1());
           }
@@ -335,11 +336,11 @@ class _ThankYouPageState extends State<ThankYouPage> {
           children: <Widget>[
             Container(
               height: 170,
-              padding: EdgeInsets.all(35),
+              padding: const EdgeInsets.all(35),
               decoration: BoxDecoration(
                   color: themeColor,
                   shape: BoxShape.circle,
-                  image: DecorationImage(image: AssetImage(image))),
+                  image: DecorationImage(image: AssetImage(image)),),
             ),
             SizedBox(height: screenHeight * 0.1),
             Text(
@@ -351,7 +352,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
               ),
             ),
             SizedBox(height: screenHeight * 0.01),
-            Text(
+            const Text(
               "Payment done Successfully",
               style: TextStyle(
                 color: Colors.black87,
@@ -363,7 +364,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
             Text(
               "You will be redirected to the home page shortly\nor click here to return to home page\n\n${_formatTime(_secondsRemaining)}",
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
@@ -379,7 +380,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
                   if (widget.title.toString() == "varbal") {
                     Get.to(() => Edit(
                         user_id_controller: user_id_control!,
-                        verbal_id: verbal_id!));
+                        verbal_id: verbal_id!,),);
                   } else {
                     Get.to(() => const HomePage1());
                   }
@@ -396,21 +397,25 @@ class _ThankYouPageState extends State<ThankYouPage> {
 }
 
 class kokok extends StatelessWidget {
+  const kokok({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: DashBubbleIcon(),
     );
   }
 }
 
 class DashBubbleIcon extends StatefulWidget {
+  const DashBubbleIcon({super.key});
+
   @override
   State<DashBubbleIcon> createState() => _DashBubbleIconState();
 }
 
 class _DashBubbleIconState extends State<DashBubbleIcon> {
-  Offset position = Offset(0.0, 0.0);
+  Offset position = const Offset(0.0, 0.0);
   double minX = 0.0;
   double minY = 0.0;
   double maxX = 200.0; // Set your desired maximum X-coordinate
@@ -420,7 +425,7 @@ class _DashBubbleIconState extends State<DashBubbleIcon> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Move Icons with Pan Gesture'),
+        title: const Text('Move Icons with Pan Gesture'),
       ),
       body: Column(
         children: [
@@ -448,7 +453,7 @@ class _DashBubbleIconState extends State<DashBubbleIcon> {
                     Positioned(
                       left: position.dx,
                       top: position.dy,
-                      child: Icon(
+                      child: const Icon(
                         Icons.star,
                         size: 50.0,
                         color: Colors.yellow,

@@ -14,7 +14,7 @@ class roadAndcommune {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['rid'] = rid;
     data['cid'] = cid;
     data['max_value'] = maxvalue;

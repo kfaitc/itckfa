@@ -110,9 +110,19 @@ class _LoginState extends State<Login> {
           status = true;
           id = slist[i]['id'];
           control_user = slist[i]['username'];
-          print("objects: " + id.toString());
+          print("objects: $id");
           Email = TextEditingController(text: slist[i]['email']);
           Password = TextEditingController(text: slist[i]['password']);
+          OneSignal.login(control_user);
+          OneSignal.User.addAlias("fb_id", "1341524");
+
+          // OneSignal.login(slist[i]['username'].toString());
+          // OneSignal.User.addAlias(
+          //   "fb_id$id",
+          //   slist[i]['username'].toString(),
+          // );
+
+          print(OneSignal.Notifications.toString());
         } else {
           // print("\n\n\n\nkakakaka" + slist.toString() + "\n\n\n\nkakakak");
         }
@@ -122,7 +132,7 @@ class _LoginState extends State<Login> {
 
   // Map? datatest;
   List<Map> slist = [];
-  MyDb mydb = new MyDb();
+  MyDb mydb = MyDb();
   late AnimationController controller;
   late Animation<double> animation;
   late PageController _pageController;
@@ -171,12 +181,12 @@ class _LoginState extends State<Login> {
         setState(() {
           offline = true;
           _connectivitySubscription.cancel();
-          print("result = ${offline}\n");
+          print("result = $offline\n");
         });
       } else if (_connectionStatus == ConnectivityResult.none) {
         setState(() {
           offline = false;
-          print("result = ${offline}\n");
+          print("result = $offline\n");
         });
         final snackBar = SnackBar(
           backgroundColor: Color.fromARGB(255, 245, 245, 245),
@@ -208,8 +218,11 @@ class _LoginState extends State<Login> {
                     setState(() {
                       offline = true;
                     });
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => data_verbal_saved()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => data_verbal_saved(),
+                      ),
+                    );
                   },
                   color: GFColors.SUCCESS,
                   text: 'Go to watch',
@@ -250,75 +263,76 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return ProgressHUD(
-        color: kPrimaryColor,
-        inAsyncCall: isApiCallProcess,
-        opacity: 0.5,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: kwhite_new,
-            elevation: 0,
-            centerTitle: true,
-            title: Image.asset(
-              'assets/images/KFA_CRM.png',
-              height: 160,
-              width: 160,
-            ),
-            toolbarHeight: 130,
-          ),
+      color: kPrimaryColor,
+      inAsyncCall: isApiCallProcess,
+      opacity: 0.5,
+      child: Scaffold(
+        appBar: AppBar(
           backgroundColor: kwhite_new,
-          body: Container(
-            height: MediaQuery.of(context).size.height * 0.6,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: kwhite,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(100.0),
-                bottomRight: Radius.circular(100.0),
-              ),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Responsive(
-                    mobile: login(context),
-                    tablet: Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 500,
-                                child: login(context),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    desktop: Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 500,
-                                child: login(context),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                    phone: login(context),
-                  ),
-                ],
-              ),
+          elevation: 0,
+          centerTitle: true,
+          title: Image.asset(
+            'assets/images/KFA_CRM.png',
+            height: 160,
+            width: 160,
+          ),
+          toolbarHeight: 130,
+        ),
+        backgroundColor: kwhite_new,
+        body: Container(
+          height: MediaQuery.of(context).size.height * 0.6,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: kwhite,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(100.0),
+              bottomRight: Radius.circular(100.0),
             ),
           ),
-        ));
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Responsive(
+                  mobile: login(context),
+                  tablet: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 500,
+                              child: login(context),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  desktop: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 500,
+                              child: login(context),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  phone: login(context),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget login(BuildContext context) {
@@ -372,11 +386,11 @@ class _LoginState extends State<Login> {
                                 requestModel.email,
                                 requestModel.password
                               ]);
-                          // print("jksfdjhsdfjhsdhjfghsagddfasdf");
                         } else {
                           var check_Sql = await mydb.db.rawQuery(
-                              'SELECT * FROM user  WHERE  email=? AND password=?',
-                              [requestModel.email, requestModel.password]);
+                            'SELECT * FROM user  WHERE  email=? AND password=?',
+                            [requestModel.email, requestModel.password],
+                          );
                           if (check_Sql.length == 0) {
                             mydb.db.rawInsert(
                                 "UPDATE user SET id=? ,first_name=?, last_name=?, username=?, gender=?, tel_num=?, known_from=?, email=?, password=? WHERE 1",
@@ -393,8 +407,6 @@ class _LoginState extends State<Login> {
                                 ]);
                           }
                         }
-                        // OneSignal.User.addEmail('${requestModel.email}');
-
                         AwesomeDialog(
                           btnOkOnPress: () {},
                           context: context,
@@ -407,11 +419,13 @@ class _LoginState extends State<Login> {
                           onDismissCallback: (type) {
                             // debugPrint('Dialog Dissmiss from callback $type');
                             dispose();
+
                             Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomePage1(),
-                                ));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage1(),
+                              ),
+                            );
                           },
                         ).show();
                       } else if (value.message == "Login unSuccessfully!") {
@@ -440,10 +454,8 @@ class _LoginState extends State<Login> {
                           btnOkIcon: Icons.cancel,
                           btnOkColor: Colors.red,
                         ).show();
-                        // print(value.message);
                       }
                     });
-                    // print(requestModel.toJson());
                   }
                 }
               },
@@ -453,23 +465,30 @@ class _LoginState extends State<Login> {
             height: 20.0,
           ),
 
-          Text.rich(TextSpan(children: [
+          Text.rich(
             TextSpan(
-              text: "Don't have any account? ",
-              style: TextStyle(fontSize: 16.0, color: kTextLightColor),
+              children: [
+                TextSpan(
+                  text: "Don't have any account? ",
+                  style: TextStyle(fontSize: 16.0, color: kTextLightColor),
+                ),
+                TextSpan(
+                  text: 'Register',
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).textScaleFactor * 16,
+                    color: kPrimaryColor,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Register()),
+                      );
+                    },
+                ),
+              ],
             ),
-            TextSpan(
-              text: 'Register',
-              style: TextStyle(
-                  fontSize: MediaQuery.of(context).textScaleFactor * 16,
-                  color: kPrimaryColor),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Register()));
-                },
-            ),
-          ])),
+          ),
         ],
       ),
     );
@@ -479,7 +498,8 @@ class _LoginState extends State<Login> {
     setState(() {});
     var rs = await http.get(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user'),
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user',
+      ),
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",

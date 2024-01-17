@@ -1,10 +1,8 @@
 // ignore_for_file: file_names, prefer_const_constructors, non_constant_identifier_names, avoid_print, prefer_interpolation_to_compose_strings, prefer_const_literals_to_create_immutables, unnecessary_new, unused_local_variable, unnecessary_brace_in_string_interps, prefer_typing_uninitialized_variables, no_leading_underscores_for_local_identifiers, await_only_futures, unnecessary_null_comparison, empty_catches, unused_field, unrelated_type_equality_checks, sized_box_for_whitespace, use_build_context_synchronously
 import 'dart:ui' as ui;
-import 'package:animated_text_kit/animated_text_kit.dart';
 
 import 'package:flutter/material.dart';
 import 'package:itckfa/screen/Contacts/ContactsUs.dart';
-import 'package:itckfa/screen/Property/Screen_Page/Search_Screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -68,7 +66,7 @@ class _WalletscreenState extends State<Walletscreen > {
                 boxShadow: [
                   BoxShadow(
                       blurRadius: 15,
-                      color: ui.Color.fromARGB(255, 191, 197, 186))
+                      color: ui.Color.fromARGB(255, 191, 197, 186),)
                 ],
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(250),
@@ -97,7 +95,7 @@ class _WalletscreenState extends State<Walletscreen > {
               bottom: -10,
               right: 1,
               child: SizedBox(
-                  height: 90, child: Image.asset("assets/images/KFA_CRM.png")),
+                  height: 90, child: Image.asset("assets/images/KFA_CRM.png"),),
             ),
             Positioned(
                 top: 1,
@@ -110,7 +108,7 @@ class _WalletscreenState extends State<Walletscreen > {
                       Icons.chevron_left_outlined,
                       size: 35,
                       color: Colors.white,
-                    ))),
+                    ),),),
           ],
         ),
       ),

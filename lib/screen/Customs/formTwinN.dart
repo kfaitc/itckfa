@@ -67,12 +67,12 @@ class _FormTwinNState extends State<FormTwinN> {
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         labelStyle: TextStyle(
                             color: kPrimaryColor,
-                            overflow: TextOverflow.ellipsis),
+                            overflow: TextOverflow.ellipsis,),
                         labelText: widget.Label1,
                         prefixIcon: widget.icon1,
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                              color: kPrimaryColor, width: 2.0),
+                              color: kPrimaryColor, width: 2.0,),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -103,7 +103,7 @@ class _FormTwinNState extends State<FormTwinN> {
                         prefixIcon: widget.icon1,
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                              color: kPrimaryColor, width: 2.0),
+                              color: kPrimaryColor, width: 2.0,),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -150,7 +150,7 @@ class _FormTwinNState extends State<FormTwinN> {
                         prefixIcon: widget.icon2,
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                              color: kPrimaryColor, width: 2.0),
+                              color: kPrimaryColor, width: 2.0,),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -188,7 +188,7 @@ class _FormTwinNState extends State<FormTwinN> {
                         prefixIcon: widget.icon2,
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                              color: kPrimaryColor, width: 2.0),
+                              color: kPrimaryColor, width: 2.0,),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(

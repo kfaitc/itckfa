@@ -10,7 +10,7 @@ class Model_Image_ptys_post {
       {required this.idImage,
       required this.propertyTypeId,
       required this.imageName,
-      required this.url});
+      required this.url,});
 
   Model_Image_ptys_post.fromJson(Map<String, dynamic> json) {
     idImage = json['id_image'];

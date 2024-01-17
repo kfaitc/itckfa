@@ -3,40 +3,20 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/Memory_local/database.dart';
-import 'package:itckfa/afa/components/LandBuilding.dart';
 import 'package:itckfa/afa/components/contants.dart';
 import 'package:itckfa/afa/customs/readonly.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
 import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
-import 'package:itckfa/models/model_bl_new.dart';
-import 'package:itckfa/screen/components/map_all/map_in_edit_verbal.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 
 import '../../../../api/api_service.dart';
 import '../../../../models/autoVerbal.dart';
-import '../../../../screen/Customs/formTwinN.dart';
-import '../../../../screen/Customs/responsive.dart';
-import '../../../../screen/Profile/components/Drop.dart';
-import '../../../components/ApprovebyAndVerifyby.dart';
-import '../../../components/code.dart';
-import '../../../components/comment.dart';
-import '../../../components/forceSale.dart';
-import '../../../components/property.dart';
-import '../../../customs/uplandBuilding.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 
 class Edit extends StatefulWidget {
   const Edit({
@@ -51,9 +31,9 @@ class Edit extends StatefulWidget {
 }
 
 class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
-  MyDb mydb_lb = new MyDb();
-  MyDb mydb_vb = new MyDb();
-  MyDb mydb_user = new MyDb();
+  MyDb mydb_lb = MyDb();
+  MyDb mydb_vb = MyDb();
+  MyDb mydb_user = MyDb();
   List<Map> DataAutoVerbal = [];
   List<Map> DataLandAutoVerbal = [];
   List list = [];
@@ -66,14 +46,14 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
     double x = 0, n = 0;
     land = await mydb_lb.db.rawQuery(
         "SELECT * FROM comverbal_land_models WHERE verbal_landid = ? ",
-        [widget.verbal_id.toString()]);
+        [widget.verbal_id.toString()],);
 
     list = await mydb_vb.db.rawQuery(
         "SELECT * FROM verbal_models  WHERE verbal_id = ?",
-        [widget.verbal_id.toString()]);
+        [widget.verbal_id.toString()],);
     user = await mydb_user.db.rawQuery(
         'SELECT * FROM user  WHERE username = ? ',
-        [widget.user_id_controller.toString()]);
+        [widget.user_id_controller.toString()],);
     setState(() {
       print("object\n $user \n");
       land;
@@ -91,7 +71,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
   var property_name = "";
   Future get_property() async {
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property?property_type_id=${list[0]['verbal_property_id']}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property?property_type_id=${list[0]['verbal_property_id']}',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
 
@@ -106,7 +86,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
   Future get_bank() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank?bank_id=${list[0]['verbal_bank_id']}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank?bank_id=${list[0]['verbal_bank_id']}',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       // print(jsonData);
@@ -122,7 +102,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
   void get_bankbranch() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bankbranch?bank_branch_id=${list[0]['verbal_bank_branch_id']}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bankbranch?bank_branch_id=${list[0]['verbal_bank_branch_id']}',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body.toString());
       // print(jsonData);
@@ -142,9 +122,9 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
   int check_ios_pay = 0;
   Future<void> get_count() async {
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${list[0]["verbal_user"]}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${list[0]["verbal_user"]}',),);
     var rs_ios = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       var jsonData_ios = jsonDecode(rs_ios.body);
@@ -159,7 +139,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
   void initState() {
     find();
 
-    if (list.length > 0) {}
+    if (list.isNotEmpty) {}
     // TODO: implement initState
     super.initState();
   }
@@ -185,7 +165,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
         centerTitle: true,
         title: Text("Check Out"),
       ),
-      body: (list.length > 0 &&
+      body: (list.isNotEmpty &&
               bank != '' &&
               property_name != '' &&
               _branch != '')
@@ -204,7 +184,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     image: NetworkImage(
-                                        'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_la"]},${list[0]["latlong_log"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_la"]},${list[0]["latlong_log"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                                        'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_la"]},${list[0]["latlong_log"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_la"]},${list[0]["latlong_log"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -219,7 +199,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                              'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_log"]},${list[0]["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_log"]},${list[0]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                                              'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_log"]},${list[0]["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_log"]},${list[0]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),
                                           fit: BoxFit.contain,
                                         ),
                                       ),
@@ -233,7 +213,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                                       decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: MemoryImage(base64
-                                              .decode(list[0]["verbal_image"])),
+                                              .decode(list[0]["verbal_image"]),),
                                           //  NetworkImage(
                                           //     'https://maps.googleapis.com/maps/api/staticmap?center=${list[0]["latlong_la"]},${list[0]["latlong_log"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list[0]["latlong_la"]},${list[0]["latlong_log"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
                                           fit: BoxFit.contain,
@@ -346,8 +326,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                             Icons.location_on_rounded,
                             color: kImageColor,
                           ),
-                          value: list[0]["verbal_address"].toString() +
-                                  ' / ' +
+                          value: '${list[0]["verbal_address"]} / ' +
                                   list[0]["verbal_khan"] ??
                               "",
                         ),
@@ -574,10 +553,10 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                   if (value.message == "Save Successfully") {
                     await mydb_vb.db.rawDelete(
                         "DELETE FROM verbal_models WHERE verbal_id = ?",
-                        [list[0]["verbal_id"]]);
+                        [list[0]["verbal_id"]],);
                     await mydb_lb.db.rawDelete(
                         "DELETE FROM comverbal_land_models WHERE verbal_landid = ?",
-                        [list[0]["verbal_id"]]);
+                        [list[0]["verbal_id"]],);
 
                     await payment_done(context);
                     // ignore: use_build_context_synchronously
@@ -596,13 +575,13 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => save_image_after_add_verbal(
                                     set_data_verbal: list[0]["verbal_id"],
-                                  )));
+                                  ),),);
                         },
                         btnCancelOnPress: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => save_image_after_add_verbal(
                                     set_data_verbal: list[0]["verbal_id"],
-                                  )));
+                                  ),),);
                         },
                         btnOkIcon: Icons.info_outline,
                         btnOkColor: Colors.blueAccent,
@@ -615,7 +594,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                               ),
                             ),
                           );
-                        }).show();
+                        },).show();
                   } else {
                     AwesomeDialog(
                       context: context,
@@ -703,15 +682,15 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
                   blurRadius: 5,
                   color: Colors.black87,
                   offset: (bnt1 == false) ? Offset(1, 0.5) : Offset(0, 0),
-                  blurStyle: BlurStyle.outer)
-            ], color: kwhite_new, borderRadius: BorderRadius.circular(10)),
+                  blurStyle: BlurStyle.outer,)
+            ], color: kwhite_new, borderRadius: BorderRadius.circular(10),),
             child: Text(
               "Payment",
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
-                  fontWeight: FontWeight.w100),
-            )),
+                  fontWeight: FontWeight.w100,),
+            ),),
       ),
     );
   }
@@ -719,7 +698,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
   AutoVerbalRequestModel? requestModelAuto;
   bool bnt1 = false;
   List<Map<String, dynamic>> convertList(
-      List<Map<dynamic, dynamic>> originalList) {
+      List<Map<dynamic, dynamic>> originalList,) {
     List<Map<String, dynamic>> convertedList = [];
 
     for (var originalMap in originalList) {
@@ -743,7 +722,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
     };
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0'),
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0',),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -771,7 +750,7 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
 
   TextStyle NameProperty() {
     return TextStyle(
-        color: kImageColor, fontSize: 11, fontWeight: FontWeight.bold);
+        color: kImageColor, fontSize: 11, fontWeight: FontWeight.bold,);
   }
 
   var formatter = NumberFormat("##,###,###,###", "en_US");

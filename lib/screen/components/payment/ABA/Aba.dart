@@ -2,14 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:any_link_preview/any_link_preview.dart';
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/checkbox_list_tile/gf_checkbox_list_tile.dart';
-import 'package:getwidget/types/gf_checkbox_type.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/screen/Home/Home.dart';
@@ -18,15 +14,16 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class ABA extends StatefulWidget {
-  const ABA(
-      {super.key,
-      required this.price,
-      required this.option,
-      required this.id_set_use,
-      required this.tran_id,
-      required this.set_email,
-      required this.set_phone,
-      this.id_verbal});
+  const ABA({
+    super.key,
+    required this.price,
+    required this.option,
+    required this.id_set_use,
+    required this.tran_id,
+    required this.set_email,
+    required this.set_phone,
+    this.id_verbal,
+  });
   final String price;
   final String option;
   final String id_set_use;
@@ -79,7 +76,7 @@ class _ABAState extends State<ABA> {
 
   void fetchData() async {
     // Simulating an asynchronous operation, like a network request
-    await Future.delayed(Duration(seconds: 2), () {
+    await Future.delayed(const Duration(seconds: 2), () {
       // Check if the widget is still mounted before calling setState
       if (mounted) {
         setState(() {
@@ -96,34 +93,37 @@ class _ABAState extends State<ABA> {
   }
 
   String? reqTime;
+  int? thierPlan;
   Future traslation_aba() async {
     DateTime currentDateTime = DateTime.now();
     reqTime = DateFormat('yyyyMMddHHmmss').format(currentDateTime);
-    var count_number = widget.option.split(' ');
-    var thier_plan;
-    if (count_number[4] == "Day") {
-      thier_plan = 1;
-    } else if (count_number[4] == "Week") {
-      thier_plan = 7;
-    } else if (count_number[4] == "Mount") {
-      thier_plan = 30;
+    var countNumber = widget.option.split(' ');
+
+    if (countNumber[4] == "Day") {
+      thierPlan = 1;
+    } else if (countNumber[4] == "Week") {
+      thierPlan = 7;
+    } else if (countNumber[4] == "Mount") {
+      thierPlan = 30;
     }
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/transaction/aba'));
+      'POST',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/transaction/aba',
+      ),
+    );
     request.body = json.encode({
       "req_time": reqTime,
       "tran_id": widget.tran_id,
       // "firstname": "${widget.id_set_use.toString()}",
       // "lastname": "$thier_plan",
-      "email": "${widget.set_email}",
-      "phone": "${widget.set_phone}",
+      "email": widget.set_email,
+      "phone": widget.set_phone,
       "amount": widget.price,
       "payment_option": "abapay_khqr_deeplink",
       "return_url":
-          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/${thier_plan}?amount=${widget.price}&orderId=${widget.tran_id}"
+          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/$thierPlan?amount=${widget.price}&orderId=${widget.tran_id}"
     });
     request.headers.addAll(headers);
 
@@ -146,35 +146,38 @@ class _ABAState extends State<ABA> {
   Future traslation_aba_AutoVerbal() async {
     DateTime currentDateTime = DateTime.now();
     reqTime = DateFormat('yyyyMMddHHmmss').format(currentDateTime);
-    var count_number = widget.option.split(' ');
-    var thier_plan;
-    if (count_number[4] == "Day") {
-      thier_plan = 1;
-    } else if (count_number[4] == "Week") {
-      thier_plan = 7;
-    } else if (count_number[4] == "Mount") {
-      thier_plan = 30;
+    var countNumber = widget.option.split(' ');
+
+    if (countNumber[4] == "Day") {
+      thierPlan = 1;
+    } else if (countNumber[4] == "Week") {
+      thierPlan = 7;
+    } else if (countNumber[4] == "Mount") {
+      thierPlan = 30;
     }
     var headers = {'Content-Type': 'application/json'};
     setState(() {
       print(
-          " \n\n\n\n koko ${widget.id_verbal} \nkakak ${widget.id_set_use}\n");
+        " \n\n\n\n koko ${widget.id_verbal} \nkakak ${widget.id_set_use}\n",
+      );
     });
     var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/transaction/aba'));
+      'POST',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/transaction/aba',
+      ),
+    );
     request.body = json.encode({
       "req_time": reqTime,
       "tran_id": widget.tran_id,
-      "user_id_control": "${widget.id_set_use.toString()}",
-      "verbal_id": "${widget.id_verbal.toString()}",
-      "email": "${widget.set_email}",
-      "phone": "${widget.set_phone}",
+      "user_id_control": widget.id_set_use.toString(),
+      "verbal_id": widget.id_verbal.toString(),
+      "email": widget.set_email,
+      "phone": widget.set_phone,
       "amount": widget.price,
       "payment_option": "abapay_khqr_deeplink",
       "return_url":
-          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/${thier_plan}?amount=${widget.price}&orderId=${widget.tran_id}"
+          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/$thierPlan?amount=${widget.price}&orderId=${widget.tran_id}"
     });
     request.headers.addAll(headers);
 
@@ -184,7 +187,7 @@ class _ABAState extends State<ABA> {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       setState(() {
         url_qr = jsonResponse['checkout_qr_url'];
-        print("\n\tran_id = ${widget.tran_id}\n\n\n${jsonResponse}\n");
+        print("\n\tran_id = ${widget.tran_id}\n\n\n$jsonResponse\n");
       });
       if (url_qr != null) {
         await openDeepLink(jsonResponse['abapay_deeplink']);
@@ -196,8 +199,7 @@ class _ABAState extends State<ABA> {
 
   Future check_traslation_aba() async {
     var headers = {'Content-Type': 'application/json'};
-    var data =
-        json.encode({"req_time": "$reqTime", "tran_id": "${widget.tran_id}"});
+    var data = json.encode({"req_time": "$reqTime", "tran_id": widget.tran_id});
     var dio = Dio();
     var response = await dio.request(
       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_transaction/aba',
@@ -213,7 +215,7 @@ class _ABAState extends State<ABA> {
       if (data.toString() == "0") {
         _showCustomSnackbar("Payment Success");
         // ignore: use_build_context_synchronously
-        Get.to(() => HomePage1(pf: true));
+        Get.to(() => const HomePage1(pf: true));
         dispose();
       } else {
         print("\n\n\n\nDelayed code executed!\n\n\n\n");
@@ -225,8 +227,7 @@ class _ABAState extends State<ABA> {
 
   Future check_traslation_aba_is_not() async {
     var headers = {'Content-Type': 'application/json'};
-    var data =
-        json.encode({"req_time": "$reqTime", "tran_id": "${widget.tran_id}"});
+    var data = json.encode({"req_time": "$reqTime", "tran_id": widget.tran_id});
     var dio = Dio();
     var response = await dio.request(
       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_transaction/aba',
@@ -247,7 +248,9 @@ class _ABAState extends State<ABA> {
             width: double.infinity,
             margin: const EdgeInsets.only(bottom: 60),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: const Text(
               "Payment not Success,please try again!",
               style: TextStyle(color: Colors.black, fontSize: 12),
@@ -264,7 +267,7 @@ class _ABAState extends State<ABA> {
       } else {
         await _showCustomSnackbar("Payment successfully");
         // ignore: use_build_context_synchronously
-        Get.to(() => HomePage1(pf: true));
+        Get.to(() => const HomePage1(pf: true));
         dispose();
       }
     } else {
@@ -275,11 +278,11 @@ class _ABAState extends State<ABA> {
   Future openDeepLink(var qrString) async {
     try {
       // ignore: deprecated_member_use
-      bool check_link = await launch(qrString);
-      print("check_link ${check_link}");
+      bool checkLink = await launch(qrString);
+      print("check_link $checkLink");
     } catch (e) {
       if (Platform.isAndroid) {
-        final playStoreUrl =
+        const playStoreUrl =
             'https://play.google.com/store/apps/details?id=com.paygo24.ibank';
         // ignore: deprecated_member_use
         if (await canLaunch(playStoreUrl)) {
@@ -290,7 +293,7 @@ class _ABAState extends State<ABA> {
         }
       }
       if (Platform.isIOS) {
-        final playStoreUrl =
+        const playStoreUrl =
             'https://itunes.apple.com/al/app/aba-mobile-bank/id968860649?mt=8';
         // ignore: deprecated_member_use
         if (await canLaunch(playStoreUrl)) {
@@ -311,7 +314,9 @@ class _ABAState extends State<ABA> {
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 60),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Row(
           children: [
             const CircleAvatar(
@@ -341,13 +346,14 @@ class _ABAState extends State<ABA> {
       traslation_aba_AutoVerbal();
       setState(() {
         print(
-            " \n\n\n\n koko455465 ${widget.id_verbal} \nkakak ${widget.id_set_use}\n");
+          " \n\n\n\n koko455465 ${widget.id_verbal} \nkakak ${widget.id_set_use}\n",
+        );
       });
     } else {
       traslation_aba();
     }
 
-    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       check_traslation_aba();
     });
   }
@@ -361,100 +367,105 @@ class _ABAState extends State<ABA> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[100],
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: IconButton(
-              onPressed: () {
-                // Navigator.of(context).pop();
-                check_traslation_aba_is_not();
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Color.fromRGBO(49, 27, 146, 1),
-              )),
-          title: Text(
-            "Scan for payments",
-            style: TextStyle(
-                color: const Color.fromRGBO(49, 27, 146, 1),
-                fontSize: MediaQuery.textScaleFactorOf(context) * 18,
-                fontWeight: FontWeight.w900),
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            // Navigator.of(context).pop();
+            check_traslation_aba_is_not();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Color.fromRGBO(49, 27, 146, 1),
           ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  await screenshotController
-                      .capture(delay: const Duration(milliseconds: 10))
-                      .then((capturedImage) async {
-                    await _saved(capturedImage, context);
-                    const snackBar = SnackBar(
-                      content: Text('Photo saved'),
-                    );
-                    // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  }).catchError((onError) {
-                    // print(onError);
-                  });
-                },
-                icon: const Icon(
-                  Icons.photo_camera_back_outlined,
-                  color: Color.fromRGBO(49, 27, 146, 1),
-                  size: 35,
-                  shadows: [
-                    Shadow(
-                        offset: Offset(3, -3),
-                        blurRadius: 5,
-                        color: Colors.black54)
+        ),
+        title: Text(
+          "Scan for payments",
+          style: TextStyle(
+            color: const Color.fromRGBO(49, 27, 146, 1),
+            fontSize: MediaQuery.textScaleFactorOf(context) * 18,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await screenshotController
+                  .capture(delay: const Duration(milliseconds: 10))
+                  .then((capturedImage) async {
+                await _saved(capturedImage, context);
+                const snackBar = SnackBar(
+                  content: Text('Photo saved'),
+                );
+                // ignore: use_build_context_synchronously
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }).catchError((onError) {
+                // print(onError);
+              });
+            },
+            icon: const Icon(
+              Icons.photo_camera_back_outlined,
+              color: Color.fromRGBO(49, 27, 146, 1),
+              size: 35,
+              shadows: [
+                Shadow(
+                  offset: Offset(3, -3),
+                  blurRadius: 5,
+                  color: Colors.black54,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (url_qr != null)
+              Screenshot(
+                controller: screenshotController,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.9,
+                  width: double.infinity,
+                  child: InAppWebView(
+                    initialUrlRequest: URLRequest(url: Uri.parse("$url_qr")),
+                  ),
+                ),
+              ),
+            if (url_qr != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'V-Point',
+                      style: TextStyle(
+                        overflow: TextOverflow.visible,
+                        color: const Color.fromRGBO(158, 158, 158, 1),
+                        fontWeight: FontWeight.w800,
+                        fontSize: MediaQuery.textScaleFactorOf(context) * 11,
+                      ),
+                    ),
+                    Text(
+                      " ${widget.option}",
+                      style: TextStyle(
+                        overflow: TextOverflow.visible,
+                        color: const Color.fromRGBO(158, 158, 158, 1),
+                        fontWeight: FontWeight.w800,
+                        fontSize: MediaQuery.textScaleFactorOf(context) * 11,
+                      ),
+                    ),
                   ],
-                ))
+                ),
+              ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (url_qr != null)
-                Screenshot(
-                  controller: screenshotController,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.9,
-                    width: double.infinity,
-                    child: InAppWebView(
-                      initialUrlRequest: URLRequest(url: Uri.parse("$url_qr")),
-                    ),
-                  ),
-                ),
-              if (url_qr != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'V-Point',
-                        style: TextStyle(
-                            overflow: TextOverflow.visible,
-                            color: const Color.fromRGBO(158, 158, 158, 1),
-                            fontWeight: FontWeight.w800,
-                            fontSize:
-                                MediaQuery.textScaleFactorOf(context) * 11),
-                      ),
-                      Text(
-                        " ${widget.option}",
-                        style: TextStyle(
-                            overflow: TextOverflow.visible,
-                            color: const Color.fromRGBO(158, 158, 158, 1),
-                            fontWeight: FontWeight.w800,
-                            fontSize:
-                                MediaQuery.textScaleFactorOf(context) * 11),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ));
+      ),
+    );
   }
 }

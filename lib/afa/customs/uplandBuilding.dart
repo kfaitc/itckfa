@@ -149,7 +149,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         insetPadding: EdgeInsets.only(
-                            top: 30, left: 10, right: 15, bottom: 20),
+                            top: 30, left: 10, right: 15, bottom: 20,),
                         shape: RoundedRectangleBorder(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(15.0),
@@ -255,9 +255,9 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                                     onSaved: (newValue) {
                                                       setState(() {
                                                         Minimum = double.parse(
-                                                            newValue!);
+                                                            newValue!,);
                                                       });
-                                                    }),
+                                                    },),
                                               ),
                                               Container(
                                                 margin:
@@ -272,7 +272,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                                   onSaved: (newValue) {
                                                     setState(() {
                                                       Maximun = double.parse(
-                                                          newValue!);
+                                                          newValue!,);
                                                     });
                                                   },
                                                 ),
@@ -304,7 +304,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                                       margin: EdgeInsets.only(
                                                           left: 30,
                                                           top: 10,
-                                                          right: 30),
+                                                          right: 30,),
                                                       child:
                                                           DropdownButtonFormField<
                                                               String>(
@@ -353,11 +353,11 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                                                 const BorderSide(
                                                                     color:
                                                                         kPrimaryColor,
-                                                                    width: 2.0),
+                                                                    width: 2.0,),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10.0),
+                                                                        10.0,),
                                                           ),
                                                           enabledBorder:
                                                               OutlineInputBorder(
@@ -370,7 +370,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10.0),
+                                                                        10.0,),
                                                           ),
                                                           errorBorder:
                                                               OutlineInputBorder(
@@ -383,7 +383,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10.0),
+                                                                        10.0,),
                                                           ),
                                                           focusedErrorBorder:
                                                               OutlineInputBorder(
@@ -396,7 +396,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10.0),
+                                                                        10.0,),
                                                           ),
                                                         ),
                                                       ),
@@ -425,7 +425,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                                   .validate()) {
                                                 _formKey.currentState!.save();
                                                 calElse(
-                                                    area, autoverbalTypeValue);
+                                                    area, autoverbalTypeValue,);
                                                 // Navigator.of(context).pop();
                                               }
                                             }
@@ -449,7 +449,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                           ],
                         ),
                       );
-                    });
+                    },);
               },
               icon: Icon(
                 Icons.add,
@@ -524,7 +524,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
                                 Icons.location_on_sharp,
                                 color: kPrimaryColor,
                                 size: 14,
-                              )),
+                              ),),
                               TextSpan(text: list[index]["address"]),
                             ],
                           ),
@@ -610,26 +610,22 @@ class _LandBuildingState extends State<up_LandBuilding> {
                               ),
                               SizedBox(height: 2),
                               Text(
-                                ':   ${(list[index]["verbal_land_minsqm"] != null) ? formatter.format(double.parse(list[index]["verbal_land_minsqm"].toString())) : '0'}' +
-                                    '\$',
+                                ':   ${(list[index]["verbal_land_minsqm"] != null) ? formatter.format(double.parse(list[index]["verbal_land_minsqm"].toString())) : '0'}' '\$',
                                 style: Name(),
                               ),
                               SizedBox(height: 2),
                               Text(
-                                ':   ${(list[index]["verbal_land_maxsqm"] != null) ? formatter.format(double.parse(list[index]["verbal_land_maxsqm"].toString())) : '0'}' +
-                                    '\$',
+                                ':   ${(list[index]["verbal_land_maxsqm"] != null) ? formatter.format(double.parse(list[index]["verbal_land_maxsqm"].toString())) : '0'}' '\$',
                                 style: Name(),
                               ),
                               SizedBox(height: 2),
                               Text(
-                                ':   ${(list[index]["verbal_land_minvalue"] != null) ? formatter.format(double.parse(list[index]["verbal_land_minvalue"].toString())) : '0'}' +
-                                    '\$',
+                                ':   ${(list[index]["verbal_land_minvalue"] != null) ? formatter.format(double.parse(list[index]["verbal_land_minvalue"].toString())) : '0'}' '\$',
                                 style: Name(),
                               ),
                               SizedBox(height: 2),
                               Text(
-                                ':   ${(list[index]["verbal_land_maxvalue"] != null) ? formatter.format(double.parse(list[index]["verbal_land_maxvalue"].toString())) : '0'}' +
-                                    '\$',
+                                ':   ${(list[index]["verbal_land_maxvalue"] != null) ? formatter.format(double.parse(list[index]["verbal_land_maxvalue"].toString())) : '0'}' '\$',
                                 style: Name(),
                               ),
                             ],
@@ -658,7 +654,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
       //     widget.ID_sangkat);
       if (_selectedValue == 'Commercial') {
         var rs = await http.get(Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/commercial?Khan_ID=${khan_id}&Sangkat_ID=${sangkat_id}'));
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/commercial?Khan_ID=$khan_id&Sangkat_ID=$sangkat_id',),);
         var jsonData = jsonDecode(rs.body);
         setState(() {
           maxSqm = double.parse(jsonData[0]['Max_Value']);
@@ -666,7 +662,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
         });
       } else if (_selectedValue == 'Residencial') {
         var rs = await http.get(Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/residential?Khan_ID=${khan_id}&Sangkat_ID=${sangkat_id}'));
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/residential?Khan_ID=$khan_id&Sangkat_ID=$sangkat_id',),);
         var jsonData = jsonDecode(rs.body);
         setState(() {
           maxSqm = double.parse(jsonData[0]['Max_Value']);
@@ -702,7 +698,7 @@ class _LandBuildingState extends State<up_LandBuilding> {
       isApiCallProcess = true;
     });
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/type?autoverbal_id=$autoverbalTypeValue'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/type?autoverbal_id=$autoverbalTypeValue',),);
     //  if (rs.statusCode == 200) {
     var jsonData = jsonDecode(rs.body);
     setState(() {
@@ -728,11 +724,11 @@ class _LandBuildingState extends State<up_LandBuilding> {
 
   TextStyle Name() {
     return TextStyle(
-        color: kImageColor, fontSize: 14, fontWeight: FontWeight.bold);
+        color: kImageColor, fontSize: 14, fontWeight: FontWeight.bold,);
   }
 
   TextStyle NameProperty() {
     return TextStyle(
-        color: kImageColor, fontSize: 15, fontWeight: FontWeight.bold);
+        color: kImageColor, fontSize: 15, fontWeight: FontWeight.bold,);
   }
 }

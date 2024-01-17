@@ -141,14 +141,14 @@ class _List_Sale_AllState extends State<List_All> {
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30))),
+                      bottomRight: Radius.circular(30),),),
             ),
             Container(
               decoration: BoxDecoration(
                   color: Color.fromARGB(255, 10, 18, 119),
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30))),
+                      bottomRight: Radius.circular(30),),),
               height: MediaQuery.of(context).size.height * 0.35,
               width: double.infinity,
               child: Column(
@@ -167,7 +167,7 @@ class _List_Sale_AllState extends State<List_All> {
                               Icons.arrow_back_ios,
                               color: Colors.white,
                               size: MediaQuery.of(context).size.height * 0.04,
-                            )),
+                            ),),
                         Text(
                           'More Option',
                           style: TextStyle(color: Colors.white),
@@ -194,9 +194,9 @@ class _List_Sale_AllState extends State<List_All> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         dropdown('Bedrooms', bedhroom_dropdown,
-                            widget.list_bedrooms!, 'value', 'id'),
+                            widget.list_bedrooms!, 'value', 'id',),
                         dropdown('bathrooms', bathroom_dropdown,
-                            widget.list_bathrooms!, 'value', 'id'),
+                            widget.list_bathrooms!, 'value', 'id',),
                       ],
                     ),
                   ),
@@ -207,13 +207,13 @@ class _List_Sale_AllState extends State<List_All> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         dropdown('Hometype', hometype, widget.hometype_api!,
-                            'hometype', 'hometype'),
+                            'hometype', 'hometype',),
                         dropdown(
                             'Province/City',
                             province_dropdown,
                             widget.province_list!,
                             'property_type_id',
-                            'Name_cummune'),
+                            'Name_cummune',),
                       ],
                     ),
                   ),
@@ -224,9 +224,9 @@ class _List_Sale_AllState extends State<List_All> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         dropdown('Pirce Min', price_dropdown_min,
-                            widget.list_price!, 'value', 'id'),
+                            widget.list_price!, 'value', 'id',),
                         dropdown('Pirce Max', price_dropdown_max,
-                            widget.list_price!, 'value', 'id'),
+                            widget.list_price!, 'value', 'id',),
                       ],
                     ),
                   ),
@@ -256,7 +256,7 @@ class _List_Sale_AllState extends State<List_All> {
   Future<void> option_more() async {
     var jsonData;
     final response = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/More_option$optin_firest${(option_ == 'Province/City') ? "" : province_id}${(option_ == 'Pirce Min') ? "" : min_p}${(option_ == 'Pirce Max') ? "" : max_p}${(option_ == 'Bedrooms') ? "" : bed_p}${(option_ == 'Bathrooms') ? "" : bath_p}${(option_ == 'Hometype') ? "" : hometype_p}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/More_option$optin_firest${(option_ == 'Province/City') ? "" : province_id}${(option_ == 'Pirce Min') ? "" : min_p}${(option_ == 'Pirce Max') ? "" : max_p}${(option_ == 'Bedrooms') ? "" : bed_p}${(option_ == 'Bathrooms') ? "" : bath_p}${(option_ == 'Hometype') ? "" : hometype_p}',),);
     // '${widget.url}'));
     if (response.statusCode == 200) {
       jsonData = jsonDecode(response.body);
@@ -291,7 +291,7 @@ class _List_Sale_AllState extends State<List_All> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 239, 238, 238), body: body());
+        backgroundColor: Color.fromARGB(255, 239, 238, 238), body: body(),);
   }
 
   Widget dropdown_hometype() {
@@ -306,7 +306,7 @@ class _List_Sale_AllState extends State<List_All> {
               icon: Icon(
                 Icons.arrow_back_ios,
                 color: Color.fromARGB(255, 107, 105, 105),
-              )),
+              ),),
           Row(
             children: [
               Container(
@@ -339,7 +339,7 @@ class _List_Sale_AllState extends State<List_All> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontSize:
-                                    MediaQuery.textScaleFactorOf(context) * 11),
+                                    MediaQuery.textScaleFactorOf(context) * 11,),
                           ),
                         ),
                       )
@@ -357,7 +357,7 @@ class _List_Sale_AllState extends State<List_All> {
                         EdgeInsets.symmetric(vertical: 8, horizontal: 0),
                     labelStyle: TextStyle(
                         color: Colors.grey,
-                        fontSize: MediaQuery.textScaleFactorOf(context) * 11),
+                        fontSize: MediaQuery.textScaleFactorOf(context) * 11,),
                     prefixIcon: Icon(
                       Icons.search,
                       color: Color.fromARGB(255, 84, 83, 83),
@@ -400,12 +400,12 @@ class _List_Sale_AllState extends State<List_All> {
                   Container(
                       height: MediaQuery.of(context).size.height * 0.04,
                       width: MediaQuery.of(context).size.width * 0.06,
-                      child: Image.asset('assets/icons/all.png')),
+                      child: Image.asset('assets/icons/all.png'),),
                   Text(
                     'All List',
                     style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.013,
-                        color: Colors.white),
+                        color: Colors.white,),
                   )
                 ],
               ),
@@ -432,7 +432,7 @@ class _List_Sale_AllState extends State<List_All> {
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(40),
-                              bottomRight: Radius.circular(40)),
+                              bottomRight: Radius.circular(40),),
                         ),
                       ),
                       Container(
@@ -442,7 +442,7 @@ class _List_Sale_AllState extends State<List_All> {
                           color: Color.fromARGB(255, 10, 8, 123),
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(40),
-                              bottomRight: Radius.circular(40)),
+                              bottomRight: Radius.circular(40),),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.only(top: 30),
@@ -456,7 +456,7 @@ class _List_Sale_AllState extends State<List_All> {
                                   color: Colors.white,
                                   size:
                                       MediaQuery.of(context).size.height * 0.04,
-                                )),
+                                ),),
                           ),
                         ),
                       ),
@@ -470,7 +470,7 @@ class _List_Sale_AllState extends State<List_All> {
                   (widget.option == 'Option')
                       ? Padding(
                           padding: const EdgeInsets.only(
-                              top: 10, right: 10, left: 10, bottom: 10),
+                              top: 10, right: 10, left: 10, bottom: 10,),
                           child: Row(
                             children: [
                               Spacer(),
@@ -486,15 +486,15 @@ class _List_Sale_AllState extends State<List_All> {
                                             option: 'No_app',
                                           );
                                         },
-                                      ));
+                                      ),);
                                     });
                                   },
                                   child: Text(
                                     'View all',
                                     style: TextStyle(
                                         color:
-                                            Color.fromARGB(255, 101, 100, 100)),
-                                  ))
+                                            Color.fromARGB(255, 101, 100, 100),),
+                                  ),)
                             ],
                           ),
                         )
@@ -514,7 +514,7 @@ class _List_Sale_AllState extends State<List_All> {
                     : listview(controller_id.list_value_hometype),
         page_next(),
       ],
-    ));
+    ),);
   }
 
   Future<void> detail(int index, List list_get) async {
@@ -539,7 +539,7 @@ class _List_Sale_AllState extends State<List_All> {
             onTap: () {
               _pageController.previousPage(
                   duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
+                  curve: Curves.easeInOut,);
             },
             child: Icon(Icons.arrow_back_ios_rounded),
           ),
@@ -547,7 +547,7 @@ class _List_Sale_AllState extends State<List_All> {
             onTap: () {
               _pageController.nextPage(
                   duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
+                  curve: Curves.easeInOut,);
             },
             child: Icon(Icons.arrow_forward_ios),
           ),
@@ -594,7 +594,7 @@ class _List_Sale_AllState extends State<List_All> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.white),
+                      color: Colors.white,),
                   child: Padding(
                     padding: const EdgeInsets.only(right: 00, left: 0),
                     child: Column(
@@ -612,7 +612,7 @@ class _List_Sale_AllState extends State<List_All> {
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 0, bottom: 4, top: 0, right: 0),
+                                    left: 0, bottom: 4, top: 0, right: 0,),
                                 child: Container(
                                   height:
                                       MediaQuery.of(context).size.height * 0.23,
@@ -620,7 +620,7 @@ class _List_Sale_AllState extends State<List_All> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10)),
+                                        topRight: Radius.circular(10),),
                                     child: CachedNetworkImage(
                                       imageUrl: items[index]['url'].toString(),
                                       fit: BoxFit.cover,
@@ -628,7 +628,7 @@ class _List_Sale_AllState extends State<List_All> {
                                           (context, url, downloadProgress) =>
                                               Center(
                                         child: CircularProgressIndicator(
-                                            value: downloadProgress.progress),
+                                            value: downloadProgress.progress,),
                                       ),
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
@@ -655,7 +655,7 @@ class _List_Sale_AllState extends State<List_All> {
                                     style: font_value_b,
                                   ),
                                   Text('  ${items[index]['type']},',
-                                      style: font_value),
+                                      style: font_value,),
                                   Text(
                                     ' ${(items[index]['urgent'] ?? "")}',
                                     style: font_value,
@@ -684,19 +684,19 @@ class _List_Sale_AllState extends State<List_All> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   _icon('bed.png',
-                                      '   ${items[index]['bed'] ?? ""}', 'Bed'),
+                                      '   ${items[index]['bed'] ?? ""}', 'Bed',),
                                   _icon(
                                       'bath.png',
                                       '   ${items[index]['bath'] ?? ""}',
-                                      'bath'),
+                                      'bath',),
                                   _icon(
                                       'parking.png',
                                       '   ${items[index]['Parking'] ?? ""}',
-                                      'Parking'),
+                                      'Parking',),
                                   _icon(
                                       'lot.png',
                                       '   ${items[index]['land'] ?? ""}',
-                                      'Size Land'),
+                                      'Size Land',),
                                 ],
                               ),
                             ],
@@ -731,7 +731,7 @@ class _List_Sale_AllState extends State<List_All> {
         Container(
             height: MediaQuery.of(context).size.height * 0.04,
             width: MediaQuery.of(context).size.width * 0.06,
-            child: Image.asset('assets/icons/$icon')),
+            child: Image.asset('assets/icons/$icon'),),
         Text(
           value,
           style: font_value,
@@ -756,6 +756,8 @@ class _List_Sale_AllState extends State<List_All> {
                 height: MediaQuery.of(context).size.height * 0.033,
                 width: MediaQuery.of(context).size.width,
                 child: Shimmer.fromColors(
+                  baseColor: Color.fromARGB(255, 151, 150, 150),
+                  highlightColor: Color.fromARGB(255, 221, 221, 219),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -764,20 +766,18 @@ class _List_Sale_AllState extends State<List_All> {
                         width: MediaQuery.of(context).size.height * 0.2,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: Color.fromARGB(255, 73, 72, 69)),
+                            color: Color.fromARGB(255, 73, 72, 69),),
                       ),
                       Container(
                         height: MediaQuery.of(context).size.height * 0.033,
                         width: MediaQuery.of(context).size.height * 0.09,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: Color.fromARGB(255, 73, 72, 69)),
+                            color: Color.fromARGB(255, 73, 72, 69),),
                       ),
                     ],
                   ),
-                  baseColor: Color.fromARGB(255, 151, 150, 150),
-                  highlightColor: Color.fromARGB(255, 221, 221, 219),
-                )),
+                ),),
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -827,7 +827,7 @@ class _List_Sale_AllState extends State<List_All> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: Color.fromARGB(
-                                                255, 73, 72, 69)),
+                                                255, 73, 72, 69,),),
                                       ),
                                       SizedBox(
                                         width: 5,
@@ -839,7 +839,7 @@ class _List_Sale_AllState extends State<List_All> {
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             color: Color.fromARGB(
-                                                255, 73, 72, 69)),
+                                                255, 73, 72, 69,),),
                                       ),
                                     ],
                                   ),
@@ -855,10 +855,10 @@ class _List_Sale_AllState extends State<List_All> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 106, 7, 86),
-                                  borderRadius: BorderRadius.circular(5)),
+                                  borderRadius: BorderRadius.circular(5),),
                               height: 25,
                               width: 50,
-                            )),
+                            ),),
                         Positioned(
                             left: MediaQuery.of(context).size.width * 0.25,
                             top: MediaQuery.of(context).size.height * 0.15,
@@ -867,10 +867,10 @@ class _List_Sale_AllState extends State<List_All> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 8, 48, 170),
-                                  borderRadius: BorderRadius.circular(5)),
+                                  borderRadius: BorderRadius.circular(5),),
                               height: 25,
                               width: 80,
-                            )),
+                            ),),
                         Positioned(
                           left: MediaQuery.of(context).size.width * 0.02,
                           top: MediaQuery.of(context).size.height * 0.02,
@@ -880,20 +880,20 @@ class _List_Sale_AllState extends State<List_All> {
                             width: 60,
                             decoration: BoxDecoration(
                                 color: Color.fromARGB(255, 109, 160, 6),
-                                borderRadius: BorderRadius.circular(10)),
+                                borderRadius: BorderRadius.circular(10),),
                             child: Text(
                               'For Rent',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromARGB(255, 250, 246, 245),
-                                  fontSize: 12),
+                                  fontSize: 12,),
                             ),
                           ),
                         ),
                       ],
                     );
                   },
-                )),
+                ),),
           ),
         ],
       ),
@@ -905,11 +905,11 @@ class _List_Sale_AllState extends State<List_All> {
   String? option_ = '';
   bool _option = false;
   Widget dropdown(text, values, List list, value_drop, name_dropdown) {
-    var _color = Color.fromARGB(255, 94, 93, 93);
+    var color = Color.fromARGB(255, 94, 93, 93);
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Container(
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            color: Colors.white, borderRadius: BorderRadius.circular(10),),
         height: MediaQuery.of(context).size.height * 0.05,
         width: MediaQuery.of(context).size.height * 0.2,
         child: DropdownButtonFormField<String>(
@@ -919,11 +919,11 @@ class _List_Sale_AllState extends State<List_All> {
             filled: true,
             labelText: text,
             labelStyle: TextStyle(
-                fontSize: MediaQuery.of(context).textScaleFactor * 11),
+                fontSize: MediaQuery.of(context).textScaleFactor * 11,),
             hintText: text,
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(
-                  color: Color.fromARGB(255, 103, 101, 101), width: 2.0),
+                  color: Color.fromARGB(255, 103, 101, 101), width: 2.0,),
               borderRadius: BorderRadius.circular(10.0),
             ),
             enabledBorder: OutlineInputBorder(
@@ -937,7 +937,7 @@ class _List_Sale_AllState extends State<List_All> {
             errorBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 width: 1,
-                color: _color,
+                color: color,
               ),
               borderRadius: BorderRadius.circular(10.0),
             ),
@@ -1053,13 +1053,13 @@ class _List_Sale_AllState extends State<List_All> {
           },
         ),
       )
-    ]);
+    ],);
   }
 
   String? verbal_ID;
   void delete_property(url, id) async {
     final response = await http.delete(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$url/$id'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$url/$id',),);
     if (response.statusCode == 200) {
       Navigator.pop(context);
     } else {

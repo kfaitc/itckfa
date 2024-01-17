@@ -98,14 +98,14 @@ class _LandBuildingDetailState extends State<LandBuildingDetail> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 14,
-                                              color: kImageColor),
+                                              color: kImageColor,),
                                         ),
                                 ),
                               ],
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
-                                  left: 10, right: 10, top: 10),
+                                  left: 10, right: 10, top: 10,),
                               child: Text.rich(
                                 TextSpan(
                                   children: <InlineSpan>[
@@ -114,17 +114,17 @@ class _LandBuildingDetailState extends State<LandBuildingDetail> {
                                       Icons.location_on_sharp,
                                       color: kPrimaryColor,
                                       size: 14,
-                                    )),
+                                    ),),
                                     TextSpan(
                                         // ignore: prefer_if_null_operators
                                         text: list[index]["address"] != null
                                             ? list[index]["address"]
-                                            : "N/A"),
+                                            : "N/A",),
                                   ],
                                 ),
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
-                                    fontSize: 12, color: kPrimaryColor),
+                                    fontSize: 12, color: kPrimaryColor,),
                               ),
                             ),
                             SizedBox(
@@ -209,7 +209,7 @@ class _LandBuildingDetailState extends State<LandBuildingDetail> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 14,
-                                                color: kImageColor),
+                                                color: kImageColor,),
                                           ),
                                     SizedBox(height: 2),
                                     list[index]["verbal_land_area"] != null
@@ -244,7 +244,7 @@ class _LandBuildingDetailState extends State<LandBuildingDetail> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 14,
-                                                color: kImageColor),
+                                                color: kImageColor,),
                                           ),
                                     SizedBox(height: 2),
                                     list[index]["verbal_land_maxsqm"] != null
@@ -261,7 +261,7 @@ class _LandBuildingDetailState extends State<LandBuildingDetail> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 14,
-                                                color: kImageColor),
+                                                color: kImageColor,),
                                           ),
                                     SizedBox(height: 2),
                                     list[index]["verbal_land_minvalue"] != null
@@ -278,7 +278,7 @@ class _LandBuildingDetailState extends State<LandBuildingDetail> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 14,
-                                                color: kPrimaryColor),
+                                                color: kPrimaryColor,),
                                           ),
                                     SizedBox(height: 2),
                                     list[index]["verbal_land_maxvalue"] != null
@@ -295,7 +295,7 @@ class _LandBuildingDetailState extends State<LandBuildingDetail> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 14,
-                                                color: kImageColor),
+                                                color: kImageColor,),
                                           ),
                                   ],
                                 ),
@@ -320,7 +320,7 @@ class _LandBuildingDetailState extends State<LandBuildingDetail> {
     var id = widget.id;
     //print(id);
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/list_land?verbal_landid=$id'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/list_land?verbal_landid=$id',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
 
@@ -338,11 +338,11 @@ class _LandBuildingDetailState extends State<LandBuildingDetail> {
 
   TextStyle Name() {
     return TextStyle(
-        color: kImageColor, fontSize: 14, fontWeight: FontWeight.bold);
+        color: kImageColor, fontSize: 14, fontWeight: FontWeight.bold,);
   }
 
   TextStyle NameProperty() {
     return TextStyle(
-        color: kImageColor, fontSize: 15, fontWeight: FontWeight.bold);
+        color: kImageColor, fontSize: 15, fontWeight: FontWeight.bold,);
   }
 }

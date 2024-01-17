@@ -43,7 +43,7 @@ class Map_Sale_full extends StatefulWidget {
 class _SearchPlacesScreenState extends State<Map_Sale_full> {
   String sendAddrress = '';
 
-  final Set<Marker> _marker = new Set();
+  final Set<Marker> _marker = {};
   var _selectedValue;
   List<String> option = [
     'Residencial',
@@ -64,7 +64,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services'),
+              'Location services are disabled. Please enable the services',),
         ),
       );
       return false;
@@ -74,14 +74,14 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
+            const SnackBar(content: Text('Location permissions are denied')),);
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.')));
+              'Location permissions are permanently denied, we cannot request permissions.',),),);
       return false;
     }
     return true;
@@ -92,7 +92,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high,);
 
     setState(() {
       mapController!.animateCamera(CameraUpdate.newCameraPosition(
@@ -100,7 +100,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
           target: LatLng(position.latitude, position.longitude),
           zoom: 16.0,
         ),
-      ));
+      ),);
       lat1 = position.latitude;
       log1 = position.longitude;
       latLng = LatLng(lat1!, log1!);
@@ -317,12 +317,12 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
   Set<Marker> markersList = {};
   late GoogleMapController googleMapController;
   int id = 1;
-  Set<Polyline> _polylines = Set<Polyline>();
+  final Set<Polyline> _polylines = <Polyline>{};
   List<MapType> style_map = [
     MapType.hybrid,
     MapType.normal,
   ];
-  TextEditingController Tcon = new TextEditingController();
+  TextEditingController Tcon = TextEditingController();
   int index = 0;
   String? name_of_place;
 
@@ -369,7 +369,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
                       widget.get_log(argument.longitude.toString());
                       _addMarker(argument);
                     },
-                  )),
+                  ),),
               Container(
                 width: wth,
                 margin: EdgeInsets.only(right: 50, top: 10),
@@ -441,19 +441,19 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
                           icon: const Icon(
                             Icons.search,
                             size: 30,
-                          )),
+                          ),),
                       IconButton(
                           onPressed: () {
                             setState(() {
                               _getCurrentLocation();
                             });
                           },
-                          icon: Icon(Icons.person_pin_circle_outlined))
+                          icon: Icon(Icons.person_pin_circle_outlined),)
                     ],
                   ),
                 ),
               ),
-              if (name_place.length >= 1)
+              if (name_place.isNotEmpty)
                 Container(
                     height: h,
                     color: Color.fromARGB(159, 255, 255, 255),
@@ -472,7 +472,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
                                     1; // use num for when user click on list search
                                 name_of_place != name_place[index].toString();
                                 poin_map_by_search(
-                                    ln[index].toString(), lg[index].toString());
+                                    ln[index].toString(), lg[index].toString(),);
                               },
                               child: Text(
                                 name_place[index],
@@ -480,7 +480,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
                               ),
                             ),
                           );
-                        })),
+                        },),),
             ],
           ),
         ),
@@ -499,12 +499,12 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
             Icons.map_outlined,
             size: 30,
           ),
-        ));
+        ),);
   }
 
   Future<void> Find_by_piont(double la, double lo) async {
     final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${la},${lo}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
 
     if (response.statusCode == 200) {
       // Successful response
@@ -531,7 +531,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
                 // Load_khan(district);
 
                 widget.get_district(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name']);
+                    ['address_components'][i]['short_name'],);
               });
             }
             if (jsonResponse['results'][j]['address_components'][i]['types']
@@ -543,14 +543,14 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
                     ['short_name']);
                 // Load_sangkat(commune);
                 widget.get_commune(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name']);
+                    ['address_components'][i]['short_name'],);
               });
             }
           }
         }
       }
       final response_rc = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',),);
       var jsonResponse_rc = json.decode(response_rc.body);
       setState(() {
         maxSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
@@ -597,17 +597,17 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
                     Row(
                       children: [
                         const Text("Max = ",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold),),
                         Text("${maxSqm1}0\$",
-                            style: const TextStyle(color: Colors.red))
+                            style: const TextStyle(color: Colors.red),)
                       ],
                     ),
                     Row(
                       children: [
                         const Text("Min = ",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold),),
                         Text("${minSqm1}0\$",
-                            style: const TextStyle(color: Colors.red))
+                            style: const TextStyle(color: Colors.red),)
                       ],
                     )
                   ],
@@ -634,17 +634,17 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
                     Row(
                       children: [
                         const Text("Max = ",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold),),
                         Text("${maxSqm2}0\$",
-                            style: const TextStyle(color: Colors.red))
+                            style: const TextStyle(color: Colors.red),)
                       ],
                     ),
                     Row(
                       children: [
                         const Text("Min = ",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                            style: TextStyle(fontWeight: FontWeight.bold),),
                         Text("${minSqm2}0\$",
-                            style: const TextStyle(color: Colors.red))
+                            style: const TextStyle(color: Colors.red),)
                       ],
                     )
                   ],
@@ -725,7 +725,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
       // print('------------------- $longitude');
 
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: latLng, zoom: 13)));
+          CameraPosition(target: latLng, zoom: 13),),);
       List ls = jsonResponse['results'];
       List ac;
       for (int j = 0; j < ls.length; j++) {
@@ -750,7 +750,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
       }
     } else {
       final response = await http.get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${check_charetor[0]},${check_charetor[1]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
+          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${check_charetor[0]},${check_charetor[1]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
 
       // Successful response
       var jsonResponse = json.decode(response.body);
@@ -780,7 +780,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
       // print('------------------- $longitude');
 
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: latLng, zoom: 13)));
+          CameraPosition(target: latLng, zoom: 13),),);
       List ls = jsonResponse['results'];
       List ac;
       for (int j = 0; j < ls.length; j++) {
@@ -810,12 +810,12 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
 
   List list = [];
 
-  final Set<Marker> marker = Set(); //163
+  final Set<Marker> marker = {}; //163
   List ln = [];
   List lg = [];
   Future<void> get_name_search(var name) async {
     String url =
-        'https://maps.googleapis.com/maps/api/place/textsearch/json?query=${name}&radius=1000&language=km&region=KH&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI&libraries=places';
+        'https://maps.googleapis.com/maps/api/place/textsearch/json?query=$name&radius=1000&language=km&region=KH&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI&libraries=places';
     final response = await http.get(Uri.parse(url));
     final jsonResponse = json.decode(response.body);
     List ls = jsonResponse['results'];
@@ -838,7 +838,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
 
   Future<void> poin_map_by_search(var ln, var lg) async {
     final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lg},${ln}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lg,$ln&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
     var jsonResponse = json.decode(response.body);
     latLng = LatLng(double.parse(lg), double.parse(ln));
     Marker newMarker = Marker(
@@ -856,7 +856,7 @@ class _SearchPlacesScreenState extends State<Map_Sale_full> {
       _marker.add(newMarker);
     });
     mapController?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: latLng, zoom: 13)));
+        CameraPosition(target: latLng, zoom: 13),),);
     List ls = jsonResponse['results'];
     List ac;
     for (int j = 0; j < ls.length; j++) {

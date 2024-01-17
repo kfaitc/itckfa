@@ -21,7 +21,7 @@ class controller_for_sale extends GetxController {
   Future<void> value_all_list_sale() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_Sale_a'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_Sale_a',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_all.value = jsonBody;
@@ -37,7 +37,7 @@ class controller_for_sale extends GetxController {
   Future<void> value_all_list_hometype(hometype) async {
     try {
       final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_Sale_c/$hometype'));
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get_all_Sale_c/$hometype',),);
       if (response.statusCode == 200) {
         final List<dynamic> jsonBody = jsonDecode(response.body);
         list_value_hometype.value = jsonBody;

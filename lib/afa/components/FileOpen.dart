@@ -6,6 +6,8 @@ import 'package:open_file/open_file.dart';
 import 'package:flutter/material.dart';
 
 class FileOpen extends StatefulWidget {
+  const FileOpen({super.key});
+
   @override
   State<FileOpen> createState() => _FileOpenState();
 }
@@ -75,7 +77,7 @@ class _FileOpenState extends State<FileOpen> {
                           child: Text(
                             'Choose File',
                             style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
+                                fontSize: 14, fontWeight: FontWeight.w500,),
                           ),
                         ),
                       ],
@@ -88,7 +90,7 @@ class _FileOpenState extends State<FileOpen> {
                       child: GestureDetector(
                         child: nameFile != ''
                             ? Text(nameFile.toString(),
-                                style: TextStyle(color: kImageColor))
+                                style: TextStyle(color: kImageColor),)
                             : Text(
                                 nameFile.toString(),
                                 style: TextStyle(color: kImageColor),

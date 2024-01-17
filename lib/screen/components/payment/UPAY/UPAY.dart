@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,10 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'UPay_qr.dart';
 
 class UPAY extends GetxController {
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   var set_id_user;
   static String baseUrl2 = 'https://upayapi.u-pay.com/upayApi/mc/mcOrder';
@@ -20,18 +15,18 @@ class UPAY extends GetxController {
   var loading = false;
   var thier_plan;
   Future<void> createOrder(
-      var price, var number_order, id_user, BuildContext context) async {
+      var price, var numberOrder, idUser, BuildContext context,) async {
     if (loading) {
       return;
     }
     loading = true;
-    var count_number = number_order!.split(' ');
+    var countNumber = numberOrder!.split(' ');
 
-    if (count_number[4] == "Day") {
+    if (countNumber[4] == "Day") {
       thier_plan = 1;
-    } else if (count_number[4] == "Week") {
+    } else if (countNumber[4] == "Week") {
       thier_plan = 7;
-    } else if (count_number[4] == "Mount") {
+    } else if (countNumber[4] == "Mount") {
       thier_plan = 30;
     }
     if (thier_plan != null) {
@@ -47,7 +42,7 @@ class UPAY extends GetxController {
         'money': price.toString(),
         'returnUrl': "kfa://callback",
         'notifyUrl':
-            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6591/${id_user}/${price}/${thier_plan}",
+            "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6591/$idUser/$price/$thier_plan",
         'version': 'V1',
       };
       var sign = SignUtil.getSign(map, merchantKey);
@@ -60,7 +55,7 @@ class UPAY extends GetxController {
           var upayDeeplink = data['data']['upayDeeplink'].toString();
           // await launchUrl(Uri.parse(upayDeeplink));
           await launch(
-            '$upayDeeplink',
+            upayDeeplink,
             forceSafariVC: false,
             forceWebView: false,
           );

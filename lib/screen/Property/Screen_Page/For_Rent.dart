@@ -66,14 +66,14 @@ class SearchPropertyState extends State<For_Rent> {
   String? district;
   Future<void> _getCurrentPosition() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high,);
 
     setState(() {
       lat = position.latitude;
       log = position.longitude;
     });
     final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
 
     if (response.statusCode == 200) {
       // Successful response
@@ -117,7 +117,7 @@ class SearchPropertyState extends State<For_Rent> {
         decoration: BoxDecoration(
             // color: Color.fromARGB(255, 158, 20, 20),
             border: Border.all(width: 1, color: Colors.grey),
-            borderRadius: BorderRadius.circular(5)),
+            borderRadius: BorderRadius.circular(5),),
         height: MediaQuery.of(context).size.height * 0.3,
         width: double.infinity,
         child: ClipRRect(
@@ -150,7 +150,7 @@ class SearchPropertyState extends State<For_Rent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 237, 235, 235), body: gridview());
+        backgroundColor: Color.fromARGB(255, 237, 235, 235), body: gridview(),);
   }
 
   Widget no_data() {
@@ -160,10 +160,6 @@ class SearchPropertyState extends State<For_Rent> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GFShimmer(
-            child: const Text(
-              'No Data',
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w700),
-            ),
             showGradient: true,
             gradient: LinearGradient(
               begin: Alignment.bottomRight,
@@ -176,6 +172,10 @@ class SearchPropertyState extends State<For_Rent> {
                 Color.fromARGB(255, 21, 13, 178),
                 Color.fromARGB(255, 14, 5, 182),
               ],
+            ),
+            child: const Text(
+              'No Data',
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w700),
             ),
           ),
         ],
@@ -211,7 +211,7 @@ class SearchPropertyState extends State<For_Rent> {
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(60),
-                        bottomRight: Radius.circular(60))),
+                        bottomRight: Radius.circular(60),),),
               ),
               Positioned(
                 child: Container(
@@ -221,7 +221,7 @@ class SearchPropertyState extends State<For_Rent> {
                       color: Color.fromARGB(255, 20, 13, 113),
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(60),
-                          bottomRight: Radius.circular(60))),
+                          bottomRight: Radius.circular(60),),),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: ListTile(
@@ -232,21 +232,21 @@ class SearchPropertyState extends State<For_Rent> {
                             icon: Icon(
                               Icons.arrow_back_ios_new,
                               color: Colors.white,
-                            )),
+                            ),),
                         title: Center(
                           child: Text(
                             'For Rent',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize:
-                                    MediaQuery.of(context).size.height * 0.02),
+                                    MediaQuery.of(context).size.height * 0.02,),
                           ),
                         ),
-                        trailing: Text('')),
+                        trailing: Text(''),),
                   ),
                 ),
               ),
-            ]),
+            ],),
             SizedBox(
               height: 10,
             ),
@@ -273,7 +273,7 @@ class SearchPropertyState extends State<For_Rent> {
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40))),
+                    topRight: Radius.circular(40),),),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -288,7 +288,7 @@ class SearchPropertyState extends State<For_Rent> {
                             fontWeight: FontWeight.bold,
                             fontSize:
                                 MediaQuery.of(context).size.height * 0.015,
-                            color: Color.fromARGB(255, 94, 94, 94)),
+                            color: Color.fromARGB(255, 94, 94, 94),),
                       ),
                       TextButton(
                           onPressed: () {
@@ -307,7 +307,7 @@ class SearchPropertyState extends State<For_Rent> {
                                 hometype_api: controller_verbal.list_hometype,
                                 list_get: controller_list.list_value_all,
                               );
-                            }));
+                            },),);
                           },
                           child: Text(
                             'Show all',
@@ -315,8 +315,8 @@ class SearchPropertyState extends State<For_Rent> {
                                 fontWeight: FontWeight.bold,
                                 fontSize:
                                     MediaQuery.of(context).size.height * 0.015,
-                                color: Color.fromARGB(255, 94, 94, 94)),
-                          )),
+                                color: Color.fromARGB(255, 94, 94, 94),),
+                          ),),
                     ],
                   ),
                 ),
@@ -372,11 +372,11 @@ class SearchPropertyState extends State<For_Rent> {
                                             (context, url, downloadProgress) =>
                                                 Center(
                                           child: CircularProgressIndicator(
-                                              value: downloadProgress.progress),
+                                              value: downloadProgress.progress,),
                                         ),
                                         errorWidget: (context, url, error) =>
                                             Icon(Icons.error),
-                                      )),
+                                      ),),
                                 ),
                                 Positioned(
                                   top: MediaQuery.of(context).size.height *
@@ -395,15 +395,15 @@ class SearchPropertyState extends State<For_Rent> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: color_text,
-                                                  fontSize: 10),
+                                                  fontSize: 10,),
                                             ),
                                             Text(
                                               '\$',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
-                                                      255, 48, 92, 5),
-                                                  fontSize: 10),
+                                                      255, 48, 92, 5,),
+                                                  fontSize: 10,),
                                             ),
                                             SizedBox(
                                               width: 5,
@@ -413,7 +413,7 @@ class SearchPropertyState extends State<For_Rent> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: color_text,
-                                                  fontSize: 10),
+                                                  fontSize: 10,),
                                             ),
                                             SizedBox(
                                               width: 5,
@@ -434,7 +434,7 @@ class SearchPropertyState extends State<For_Rent> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: color_text,
-                                                  fontSize: 10),
+                                                  fontSize: 10,),
                                             ),
                                             SizedBox(
                                               width: 5,
@@ -444,7 +444,7 @@ class SearchPropertyState extends State<For_Rent> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: color_text,
-                                                  fontSize: 10),
+                                                  fontSize: 10,),
                                             ),
                                           ],
                                         ),
@@ -462,14 +462,14 @@ class SearchPropertyState extends State<For_Rent> {
                                     decoration: BoxDecoration(
                                         color: Color.fromARGB(255, 74, 108, 6),
                                         borderRadius:
-                                            BorderRadius.circular(10)),
+                                            BorderRadius.circular(10),),
                                     child: Text(
                                       'For Rent',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Color.fromARGB(
-                                              255, 185, 182, 182),
-                                          fontSize: 10),
+                                              255, 185, 182, 182,),
+                                          fontSize: 10,),
                                     ),
                                   ),
                                 ),

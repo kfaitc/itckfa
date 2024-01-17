@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class List_detail extends StatefulWidget {
       this.type,
       this.add,
       this.province_id,
-      this.reloard});
+      this.reloard,});
   String? province_id;
   final List? listget;
   String? reloard;
@@ -71,7 +70,7 @@ class _Show_allState extends State<List_detail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _appbar(),
-              (imageList.length == 0)
+              (imageList.isEmpty)
                   ? SizedBox()
                   : (widget.add.toString() == 'add')
                       ? add()
@@ -170,7 +169,7 @@ class _Show_allState extends State<List_detail> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30)),
+                bottomRight: Radius.circular(30),),
             color: Colors.white,
           ),
         ),
@@ -181,7 +180,7 @@ class _Show_allState extends State<List_detail> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30)),
+                  bottomRight: Radius.circular(30),),
               color: Color.fromARGB(255, 20, 13, 113),
             ),
             child: Padding(
@@ -203,7 +202,7 @@ class _Show_allState extends State<List_detail> {
                       ),
                     ),
                   ),
-                  trailing: Text('')),
+                  trailing: Text(''),),
             ),
           ),
         ),
@@ -220,7 +219,7 @@ class _Show_allState extends State<List_detail> {
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                topLeft: Radius.circular(30), topRight: Radius.circular(30),),),
         height: MediaQuery.of(context).size.height,
         width: double.infinity,
         child: Padding(
@@ -268,11 +267,11 @@ class _Show_allState extends State<List_detail> {
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) => Center(
                                   child: CircularProgressIndicator(
-                                      value: downloadProgress.progress),
+                                      value: downloadProgress.progress,),
                                 ),
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.error),
-                              )),
+                              ),),
                         ),
                         Positioned(
                           top: MediaQuery.of(context).size.height * 0.175,
@@ -288,14 +287,14 @@ class _Show_allState extends State<List_detail> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: color_text,
-                                          fontSize: 10),
+                                          fontSize: 10,),
                                     ),
                                     Text(
                                       '\$',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Color.fromARGB(255, 48, 92, 5),
-                                          fontSize: 10),
+                                          fontSize: 10,),
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -305,7 +304,7 @@ class _Show_allState extends State<List_detail> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: color_text,
-                                          fontSize: 10),
+                                          fontSize: 10,),
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -325,7 +324,7 @@ class _Show_allState extends State<List_detail> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: color_text,
-                                          fontSize: 10),
+                                          fontSize: 10,),
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -335,7 +334,7 @@ class _Show_allState extends State<List_detail> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: color_text,
-                                          fontSize: 10),
+                                          fontSize: 10,),
                                     ),
                                   ],
                                 ),
@@ -352,13 +351,13 @@ class _Show_allState extends State<List_detail> {
                             width: 60,
                             decoration: BoxDecoration(
                                 color: Color.fromARGB(255, 74, 108, 6),
-                                borderRadius: BorderRadius.circular(10)),
+                                borderRadius: BorderRadius.circular(10),),
                             child: Text(
                               '${list[index]['type'].toString()}',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromARGB(255, 185, 182, 182),
-                                  fontSize: 10),
+                                  fontSize: 10,),
                             ),
                           ),
                         ),
@@ -428,16 +427,16 @@ class _Show_allState extends State<List_detail> {
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30))),
+                    topRight: Radius.circular(30),),),
             // height: MediaQuery.of(context).size.height * 0.5,
             width: double.infinity,
             child: gridview(
-                controller_value.list_value_all, 'Sale', 'Show all', 'Sale')),
+                controller_value.list_value_all, 'Sale', 'Show all', 'Sale',),),
         Container(
             color: Colors.white,
             width: double.infinity,
             child: gridview(
-                controller_rent.list_value_pid, 'Rent', 'Show all', 'Rent')),
+                controller_rent.list_value_pid, 'Rent', 'Show all', 'Rent',),),
       ],
     );
   }
@@ -451,7 +450,7 @@ class _Show_allState extends State<List_detail> {
             '$text',
             style: TextStyle(
                 color: Colors.grey,
-                fontSize: MediaQuery.of(context).size.height * 0.02),
+                fontSize: MediaQuery.of(context).size.height * 0.02,),
           ),
           Spacer(),
           InkWell(
@@ -465,14 +464,14 @@ class _Show_allState extends State<List_detail> {
                       add: 'No',
                     );
                   },
-                ));
+                ),);
               });
             },
             child: Text(
               '$text1',
               style: TextStyle(
                   color: Colors.grey,
-                  fontSize: MediaQuery.of(context).size.height * 0.02),
+                  fontSize: MediaQuery.of(context).size.height * 0.02,),
             ),
           ),
         ],
@@ -507,7 +506,7 @@ class _Show_allState extends State<List_detail> {
                           // print(verbal_ID);
                         });
                         detail_property_sale(
-                            list, list[index]['id_ptys'].toString());
+                            list, list[index]['id_ptys'].toString(),);
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -534,11 +533,11 @@ class _Show_allState extends State<List_detail> {
                                         (context, url, downloadProgress) =>
                                             Center(
                                       child: CircularProgressIndicator(
-                                          value: downloadProgress.progress),
+                                          value: downloadProgress.progress,),
                                     ),
                                     errorWidget: (context, url, error) =>
                                         Icon(Icons.error),
-                                  )),
+                                  ),),
                             ),
                             Positioned(
                               top: MediaQuery.of(context).size.height * 0.186,
@@ -554,15 +553,15 @@ class _Show_allState extends State<List_detail> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: color_text,
-                                              fontSize: 10),
+                                              fontSize: 10,),
                                         ),
                                         Text(
                                           '\$',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Color.fromARGB(
-                                                  255, 48, 92, 5),
-                                              fontSize: 10),
+                                                  255, 48, 92, 5,),
+                                              fontSize: 10,),
                                         ),
                                         SizedBox(
                                           width: 5,
@@ -572,7 +571,7 @@ class _Show_allState extends State<List_detail> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: color_text,
-                                              fontSize: 10),
+                                              fontSize: 10,),
                                         ),
                                         SizedBox(
                                           width: 5,
@@ -595,7 +594,7 @@ class _Show_allState extends State<List_detail> {
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: color_text,
-                                                    fontSize: 10),
+                                                    fontSize: 10,),
                                               )
                                             : Text(''),
                                         SizedBox(
@@ -607,7 +606,7 @@ class _Show_allState extends State<List_detail> {
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: color_text,
-                                                    fontSize: 10),
+                                                    fontSize: 10,),
                                               )
                                             : Text(''),
                                       ],
@@ -632,9 +631,9 @@ class _Show_allState extends State<List_detail> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: color_texts,
-                                                fontSize: 12),
+                                                fontSize: 12,),
                                           )
-                                        : Text(''))),
+                                        : Text(''),),),
                             Positioned(
                                 left: MediaQuery.of(context).size.width * 0.25,
                                 top: MediaQuery.of(context).size.height * 0.15,
@@ -653,9 +652,9 @@ class _Show_allState extends State<List_detail> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 color: color_texts,
-                                                fontSize: 10),
+                                                fontSize: 10,),
                                           )
-                                        : Text(''))),
+                                        : Text(''),),),
                             Positioned(
                               left: MediaQuery.of(context).size.width * 0.02,
                               top: MediaQuery.of(context).size.height * 0.02,
@@ -665,13 +664,13 @@ class _Show_allState extends State<List_detail> {
                                 width: 60,
                                 decoration: BoxDecoration(
                                     color: Color.fromARGB(255, 74, 108, 6),
-                                    borderRadius: BorderRadius.circular(10)),
+                                    borderRadius: BorderRadius.circular(10),),
                                 child: Text(
                                   '${item['type']}',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Color.fromARGB(255, 185, 182, 182),
-                                      fontSize: 10),
+                                      fontSize: 10,),
                                 ),
                               ),
                             ),
@@ -708,6 +707,8 @@ class _Show_allState extends State<List_detail> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 0.05,
           child: Shimmer.fromColors(
+            baseColor: Color.fromARGB(255, 151, 150, 150),
+            highlightColor: Color.fromARGB(255, 221, 221, 219),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -716,19 +717,17 @@ class _Show_allState extends State<List_detail> {
                   height: MediaQuery.of(context).size.height * 0.05,
                   decoration: BoxDecoration(
                       color: Colors.grey,
-                      borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(8),),
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.3,
                   height: MediaQuery.of(context).size.height * 0.05,
                   decoration: BoxDecoration(
                       color: Colors.grey,
-                      borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(8),),
                 ),
               ],
             ),
-            baseColor: Color.fromARGB(255, 151, 150, 150),
-            highlightColor: Color.fromARGB(255, 221, 221, 219),
           ),
         ),
         SizedBox(
@@ -751,7 +750,7 @@ class _Show_allState extends State<List_detail> {
                       Container(
                         decoration: BoxDecoration(
                             border: Border.all(width: 1),
-                            borderRadius: BorderRadius.circular(5)),
+                            borderRadius: BorderRadius.circular(5),),
                         width: MediaQuery.of(context).size.width * 0.5,
                         height: MediaQuery.of(context).size.height * 0.3,
                       ),
@@ -780,7 +779,7 @@ class _Show_allState extends State<List_detail> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           color:
-                                              Color.fromARGB(255, 73, 72, 69)),
+                                              Color.fromARGB(255, 73, 72, 69),),
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -792,7 +791,7 @@ class _Show_allState extends State<List_detail> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           color:
-                                              Color.fromARGB(255, 73, 72, 69)),
+                                              Color.fromARGB(255, 73, 72, 69),),
                                     ),
                                   ],
                                 ),
@@ -808,10 +807,10 @@ class _Show_allState extends State<List_detail> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 color: Color.fromARGB(255, 106, 7, 86),
-                                borderRadius: BorderRadius.circular(5)),
+                                borderRadius: BorderRadius.circular(5),),
                             height: 25,
                             width: 50,
-                          )),
+                          ),),
                       Positioned(
                           left: MediaQuery.of(context).size.width * 0.25,
                           top: MediaQuery.of(context).size.height * 0.15,
@@ -820,10 +819,10 @@ class _Show_allState extends State<List_detail> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                                 color: Color.fromARGB(255, 8, 48, 170),
-                                borderRadius: BorderRadius.circular(5)),
+                                borderRadius: BorderRadius.circular(5),),
                             height: 25,
                             width: 80,
-                          )),
+                          ),),
                       Positioned(
                         left: MediaQuery.of(context).size.width * 0.02,
                         top: MediaQuery.of(context).size.height * 0.02,
@@ -833,20 +832,20 @@ class _Show_allState extends State<List_detail> {
                           width: 60,
                           decoration: BoxDecoration(
                               color: Color.fromARGB(255, 109, 160, 6),
-                              borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(10),),
                           child: Text(
                             'For Rent',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 250, 246, 245),
-                                fontSize: 12),
+                                fontSize: 12,),
                           ),
                         ),
                       ),
                     ],
                   );
                 },
-              )),
+              ),),
         ),
       ],
     );

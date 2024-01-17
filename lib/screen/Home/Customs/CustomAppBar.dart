@@ -8,7 +8,7 @@ class AppBarCustom extends CustomClipper<Path> {
     Path path = Path();
     path.lineTo(100, size.height - 100);
     path.quadraticBezierTo(
-        size.width / 2, size.height, size.width, size.height + 50);
+        size.width / 2, size.height, size.width, size.height + 50,);
     path.lineTo(size.width, 0);
     path.close();
     return path;

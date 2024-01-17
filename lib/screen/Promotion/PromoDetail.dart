@@ -55,9 +55,9 @@ class _PromoDetailState extends State<PromoDetail> {
                   // topRight: Radius.circular(25),
                   ),
             ),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Title_promotion(
                   title_promo: 'All Promotion',
                   title_promo1: '',

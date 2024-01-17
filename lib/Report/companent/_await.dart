@@ -24,9 +24,9 @@ class _Await_valueState extends State<Await_Transtion> {
       child: Column(
         children: [
           Shimmer.fromColors(
-            baseColor: Color.fromARGB(255, 180, 177, 177),
-            highlightColor: Color.fromARGB(255, 221, 221, 219),
-            child: Container(
+            baseColor: const Color.fromARGB(255, 180, 177, 177),
+            highlightColor: const Color.fromARGB(255, 221, 221, 219),
+            child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.08,
               width: double.infinity,
               // color: Colors.grey,
@@ -45,8 +45,8 @@ class _Await_valueState extends State<Await_Transtion> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.7,
             child: Shimmer.fromColors(
-                baseColor: Color.fromARGB(255, 180, 177, 177),
-                highlightColor: Color.fromARGB(255, 221, 221, 219),
+                baseColor: const Color.fromARGB(255, 180, 177, 177),
+                highlightColor: const Color.fromARGB(255, 221, 221, 219),
                 child: ListView.builder(
                   itemCount: 10,
                   itemBuilder: (context, index) {
@@ -55,35 +55,35 @@ class _Await_valueState extends State<Await_Transtion> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 176, 174, 174),
+                              color: const Color.fromARGB(255, 176, 174, 174),
                               border: Border.all(width: 1),
                             ),
                             width: double.infinity,
                             height: MediaQuery.of(context).size.height * 0.07,
                           ),
-                          Divider(
+                          const Divider(
                             height: 1,
                           ),
                         ],
                       ),
                     );
                   },
-                )),
+                ),),
           ),
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height * 0.08,
             width: double.infinity,
             // color: Colors.grey,
             child: Shimmer.fromColors(
-              baseColor: Color.fromARGB(255, 180, 177, 177),
-              highlightColor: Color.fromARGB(255, 221, 221, 219),
+              baseColor: const Color.fromARGB(255, 180, 177, 177),
+              highlightColor: const Color.fromARGB(255, 221, 221, 219),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _contaner(0.03, 0.1),
                   _contaner(0.03, 0.1),
                   _contaner(0.03, 0.25),
-                  Row(
+                  const Row(
                     children: [
                       Icon(Icons.arrow_back_ios),
                       Icon(Icons.arrow_forward_ios),
@@ -105,7 +105,7 @@ class _Await_valueState extends State<Await_Transtion> {
         height: MediaQuery.of(context).size.height * h,
         width: MediaQuery.of(context).size.width * w,
         decoration: BoxDecoration(
-            color: Colors.grey, borderRadius: BorderRadius.circular(5)),
+            color: Colors.grey, borderRadius: BorderRadius.circular(5),),
       ),
     );
   }

@@ -27,7 +27,7 @@ class _SilderPromoState extends State<SilderPromo> {
               img: widget.promoList[index]["img_promo"],
               isPromo: true,
             );
-          }),
+          },),
     );
   }
 }
@@ -89,7 +89,7 @@ class PromoItem extends StatelessWidget {
                 ),
               ),
             ],
-          )),
+          ),),
     );
   }
 }

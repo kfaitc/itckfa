@@ -94,7 +94,7 @@ class _LandBuildingState extends State<LandBuilding> {
       });
       lb.add(
         L_B(autoverbalType, des ?? '', dep, widget.address, widget.landId, area,
-            minSqm!, maxSqm!, totalMin!, totalMax ?? 0),
+            minSqm!, maxSqm!, totalMin!, totalMax ?? 0,),
       );
     });
     //  print(id);
@@ -339,7 +339,7 @@ class _LandBuildingState extends State<LandBuilding> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
-                                      color: kPrimaryColor, width: 2.0),
+                                      color: kPrimaryColor, width: 2.0,),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 enabledBorder: OutlineInputBorder(
@@ -393,7 +393,7 @@ class _LandBuildingState extends State<LandBuilding> {
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       height: 250,
                       child: ListView.builder(
@@ -441,7 +441,7 @@ class _LandBuildingState extends State<LandBuilding> {
                                               onPressed: () {
                                                 setState(() {
                                                   deleteItemToList(index);
-                                                  if (list.length == 0) {
+                                                  if (list.isEmpty) {
                                                     Navigator.pop(context);
                                                   }
                                                 });
@@ -455,7 +455,7 @@ class _LandBuildingState extends State<LandBuilding> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 10, right: 10),
+                                      left: 10, right: 10,),
                                   child: Text.rich(
                                     TextSpan(
                                       children: <InlineSpan>[
@@ -464,11 +464,11 @@ class _LandBuildingState extends State<LandBuilding> {
                                           Icons.location_on_sharp,
                                           color: kPrimaryColor,
                                           size: 14,
-                                        )),
+                                        ),),
                                         TextSpan(
                                             style: Label(),
                                             text:
-                                                "${list[index]["address"].toString()} "),
+                                                "${list[index]["address"].toString()} ",),
                                       ],
                                     ),
                                     textAlign: TextAlign.left,
@@ -555,8 +555,7 @@ class _LandBuildingState extends State<LandBuilding> {
                                         ),
                                         SizedBox(height: 3),
                                         Text(
-                                          ':   ${formatter.format(double.parse((list[index]["verbal_land_area"].toString())))} m' +
-                                              '\u00B2',
+                                          ':   ${formatter.format(double.parse((list[index]["verbal_land_area"].toString())))} m' '\u00B2',
                                           style: Name(),
                                         ),
                                         SizedBox(height: 3),
@@ -583,7 +582,7 @@ class _LandBuildingState extends State<LandBuilding> {
                                               formatter
                                                   .format(double.parse((list[
                                                           index][
-                                                      "verbal_land_minvalue"])))
+                                                      "verbal_land_minvalue"]),),)
                                                   .toString() +
                                               '\$',
                                           style: Name(),
@@ -598,7 +597,7 @@ class _LandBuildingState extends State<LandBuilding> {
                                               formatter
                                                   .format(double.parse((list[
                                                           index][
-                                                      "verbal_land_maxvalue"])))
+                                                      "verbal_land_maxvalue"]),),)
                                                   .toString() +
                                               '\$',
                                           style: Name(),
@@ -626,12 +625,12 @@ class _LandBuildingState extends State<LandBuilding> {
   }
 
   void calLs(double area) {
-    var khan_id = widget.ID_khan;
-    var sangkat_id = widget.ID_sangkat;
+    var khanId = widget.ID_khan;
+    var sangkatId = widget.ID_sangkat;
     setState(() async {
       if (_selectedValue == 'Commercial') {
         var rs = await http.get(Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/commercial?Khan_ID=${khan_id}&Sangkat_ID=${sangkat_id}'));
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/commercial?Khan_ID=$khanId&Sangkat_ID=$sangkatId',),);
         var jsonData = jsonDecode(rs.body);
         setState(() {
           maxSqm = double.parse(jsonData[0]['Max_Value']);
@@ -639,7 +638,7 @@ class _LandBuildingState extends State<LandBuilding> {
         });
       } else if (_selectedValue == 'Residencial') {
         var rs = await http.get(Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/residential?Khan_ID=${khan_id}&Sangkat_ID=${sangkat_id}'));
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/residential?Khan_ID=$khanId&Sangkat_ID=$sangkatId',),);
         var jsonData = jsonDecode(rs.body);
         setState(() {
           maxSqm = double.parse(jsonData[0]['Max_Value']);
@@ -703,7 +702,7 @@ class _LandBuildingState extends State<LandBuilding> {
       isApiCallProcess = true;
     });
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/type?autoverbal_id=${autoverbalTypeValue}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/type?autoverbal_id=$autoverbalTypeValue',),);
 
     setState(() {
       var jsonData = jsonDecode(rs.body);
@@ -735,11 +734,11 @@ class _LandBuildingState extends State<LandBuilding> {
 
   TextStyle Name() {
     return TextStyle(
-        color: kImageColor, fontSize: 9, fontWeight: FontWeight.bold);
+        color: kImageColor, fontSize: 9, fontWeight: FontWeight.bold,);
   }
 
   TextStyle NameProperty() {
     return TextStyle(
-        color: kImageColor, fontSize: 10, fontWeight: FontWeight.bold);
+        color: kImageColor, fontSize: 10, fontWeight: FontWeight.bold,);
   }
 }

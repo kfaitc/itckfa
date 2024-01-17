@@ -37,7 +37,7 @@ class _persoin_UserState extends State<persoin_User> {
   Future<List> Get_User() async {
     // index = int.parse(widget.index.toString());
     final rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/User_Tran/${widget.id_controller}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/User_Tran/${widget.id_controller}',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -58,7 +58,7 @@ class _persoin_UserState extends State<persoin_User> {
               Navigator.pop(context);
             },
             icon: Icon(Icons.arrow_back_ios,
-                color: Color.fromARGB(255, 47, 46, 46), size: 25)),
+                color: Color.fromARGB(255, 47, 46, 46), size: 25,),),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 150, 148, 148),
         elevation: 1,
@@ -66,7 +66,7 @@ class _persoin_UserState extends State<persoin_User> {
           '${widget.id_controller}',
           style: TextStyle(color: Color.fromARGB(255, 43, 42, 42)),
         ),
-        actions: [
+        actions: const [
           // Padding(
           //   padding: const EdgeInsets.only(right: 10),
           //   child: CircleAvatar(
@@ -122,7 +122,7 @@ class _persoin_UserState extends State<persoin_User> {
       style: TextStyle(
           color: Color.fromARGB(255, 46, 45, 45),
           fontSize: MediaQuery.textScaleFactorOf(context) * 09,
-          fontWeight: FontWeight.bold),
+          fontWeight: FontWeight.bold,),
     );
   }
 }
@@ -140,7 +140,7 @@ Naviga(BuildContext context, List list, index, type_bank, url) {
         index_get: index.toString(),
       );
     },
-  ));
+  ),);
 }
 
 class _DataSource extends DataTableSource {
@@ -173,7 +173,7 @@ class _DataSource extends DataTableSource {
         cells: [
           DataCell(
             Text(
-              '${(item['bank_id'].toString() == '6591') ? item['orderId'].toString() : item['order_reference_no'].toString()}',
+              (item['bank_id'].toString() == '6591') ? item['orderId'].toString() : item['order_reference_no'].toString(),
               style: TextStyle(fontSize: 10),
               overflow: TextOverflow.ellipsis,
             ),
@@ -184,7 +184,7 @@ class _DataSource extends DataTableSource {
           DataCell(
             placeholder: true,
             Text(
-              '${(item['username'] != null) ? item['username'].toString() : ""}',
+              (item['username'] != null) ? item['username'].toString() : "",
               style: TextStyle(fontSize: 10),
             ),
             onTap: () {
@@ -193,17 +193,7 @@ class _DataSource extends DataTableSource {
           ),
           DataCell(
             Text(
-              '${(item['gender'] != null) ? item['gender'].toString() : ""}',
-              style: TextStyle(fontSize: 10),
-              overflow: TextOverflow.ellipsis,
-            ),
-            onTap: () {
-              Naviga(context, data, index, '${item['bank_id']}', url);
-            },
-          ),
-          DataCell(
-            Text(
-              '${(item['bank_id'].toString() == '6591') ? item['payAmount'].toString() : item['amount'].toString()}',
+              (item['gender'] != null) ? item['gender'].toString() : "",
               style: TextStyle(fontSize: 10),
               overflow: TextOverflow.ellipsis,
             ),
@@ -213,7 +203,17 @@ class _DataSource extends DataTableSource {
           ),
           DataCell(
             Text(
-              '${(item['tel_num'] != null) ? item['tel_num'].toString() : ""}',
+              (item['bank_id'].toString() == '6591') ? item['payAmount'].toString() : item['amount'].toString(),
+              style: TextStyle(fontSize: 10),
+              overflow: TextOverflow.ellipsis,
+            ),
+            onTap: () {
+              Naviga(context, data, index, '${item['bank_id']}', url);
+            },
+          ),
+          DataCell(
+            Text(
+              (item['tel_num'] != null) ? item['tel_num'].toString() : "",
               style: TextStyle(fontSize: 10),
               overflow: TextOverflow.ellipsis,
             ),
@@ -223,7 +223,7 @@ class _DataSource extends DataTableSource {
           ),
           DataCell(
             Text(
-              '${(item['email'] != null) ? item['email'].toString() : ""}',
+              (item['email'] != null) ? item['email'].toString() : "",
               style: TextStyle(fontSize: 10),
               overflow: TextOverflow.ellipsis,
             ),
@@ -231,7 +231,7 @@ class _DataSource extends DataTableSource {
               // Naviga(context, data, index, payment);
             },
           ),
-        ]);
+        ],);
   }
 
   @override

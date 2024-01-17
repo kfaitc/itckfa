@@ -35,7 +35,7 @@ class HomeListView extends StatelessWidget {
                 ),
               ),
             );
-          }),
+          },),
     );
   }
 }

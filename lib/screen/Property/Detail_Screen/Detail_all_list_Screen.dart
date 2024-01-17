@@ -76,7 +76,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
       style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Color.fromARGB(255, 131, 128, 128),
-          fontSize: MediaQuery.of(context).size.height * 0.015),
+          fontSize: MediaQuery.of(context).size.height * 0.015,),
     );
   }
 
@@ -127,13 +127,13 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
                 child: Image.asset(
                   'assets/icons/arrow_icons.png',
                   fit: BoxFit.cover,
-                )),
+                ),),
             SizedBox(width: 10),
             Text(
               'Desciption ៖ ',
               // maxLines: 30,
               style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.height * 0.015),
+                  fontSize: MediaQuery.of(context).size.height * 0.015,),
             ),
           ],
         ),
@@ -155,7 +155,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _icons_text('assets/icons/arrow_icons.png', 'Price', '\$',
-              '${myElement['price'] ?? ""}', '(Negotiate)'),
+              '${myElement['price'] ?? ""}', '(Negotiate)',),
           dc(),
           _size(
               'assets/icons/arrow_icons.png',
@@ -163,14 +163,14 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
               '${myElement['land_w'] ?? ""}',
               '៖',
               '${myElement['land_l'] ?? ""}',
-              '${myElement['land'] ?? ""}'),
+              '${myElement['land'] ?? ""}',),
           _size(
               'assets/icons/arrow_icons.png',
               'Size House',
               '${myElement['Size_l'] ?? ""}',
               '៖',
               '${myElement['size_w'] ?? ""}',
-              '${myElement['size_house'] ?? ""}'),
+              '${myElement['size_house'] ?? ""}',),
           issuance(),
           Sizebox_10,
           _text('Plese Contact ៖'),
@@ -178,7 +178,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
           _phone('assets/icons/phone_icon.png', '(CellCard)', '077 216 168'),
           Sizebox_10,
           _phone('assets/icons/phone_icon.png', 'Officer',
-              '023 999 855 | 023 988 911'),
+              '023 999 855 | 023 988 911',),
           Sizebox_10,
           InkWell(
             onTap: () {
@@ -191,7 +191,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
               });
             },
             child: _phone('assets/icons/web_icons.png', '',
-                'https://kfa.com.kh/contacts'),
+                'https://kfa.com.kh/contacts',),
           ),
           Sizebox_10,
           InkWell(
@@ -205,7 +205,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
               });
             },
             child: _phone(
-                'assets/icons/gmail_icon.png', '(Gmail) : ', 'info@kfa.com.kh'),
+                'assets/icons/gmail_icon.png', '(Gmail) : ', 'info@kfa.com.kh',),
           ),
           Sizebox_10,
           InkWell(
@@ -228,16 +228,16 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
             child: Row(
               children: [
                 link_url('assets/icons/facebook.png',
-                    'https://www.facebook.com/kfa.com.kh/'),
+                    'https://www.facebook.com/kfa.com.kh/',),
                 SizedBox_w_5,
                 link_url(
-                    'assets/icons/telegram.png', 'https://t.me/kfa_official'),
+                    'assets/icons/telegram.png', 'https://t.me/kfa_official',),
                 SizedBox_w_5,
                 link_url('assets/icons/twitter.jpg',
-                    'https://twitter.com/i/flow/login?redirect_after_login=%2FKFA_Cambodia'),
+                    'https://twitter.com/i/flow/login?redirect_after_login=%2FKFA_Cambodia',),
                 SizedBox_w_5,
                 link_url('assets/icons/in.png',
-                    'https://www.linkedin.com/company/khmerfoundationappraisal/'),
+                    'https://www.linkedin.com/company/khmerfoundationappraisal/',),
                 Spacer(),
               ],
             ),
@@ -339,7 +339,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
             child: Image.asset(
               '$icon',
               fit: BoxFit.cover,
-            )),
+            ),),
         SizedBox(width: 8),
         Text(
           '$man  $text',
@@ -360,7 +360,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
             child: Image.asset(
               'assets/icons/arrow_icons.png',
               fit: BoxFit.cover,
-            )),
+            ),),
         SizedBox(width: 8),
         Text(
           'issuance of transfer service (hard copy)',
@@ -381,7 +381,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
             child: Image.asset(
               'assets/icons/arrow_icons.png',
               fit: BoxFit.cover,
-            )),
+            ),),
         SizedBox(width: 8),
         Text(
           '$text $man $l x $w = $size' + ' m' + '\u00B2',
@@ -402,7 +402,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
             child: Image.asset(
               'assets/icons/arrow_icons.png',
               fit: BoxFit.cover,
-            )),
+            ),),
         SizedBox(width: 8),
         Text(
           '$text ៖ $type$value $explan',
@@ -421,7 +421,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
           decoration: BoxDecoration(
               color: Color.fromARGB(255, 242, 240, 240),
               borderRadius: BorderRadius.circular(5),
-              border: Border.all(width: 0.06)),
+              border: Border.all(width: 0.06),),
           height: MediaQuery.of(context).size.height * 0.045,
           width: double.infinity,
           child: Row(
@@ -439,17 +439,17 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
                 '${myElement['type'] ?? ""} >',
                 style: TextStyle(
                     fontSize: MediaQuery.of(context).size.height * 0.015,
-                    color: Color.fromARGB(255, 15, 93, 157)),
+                    color: Color.fromARGB(255, 15, 93, 157),),
               ),
               Text(
                 '\$${myElement['price'] ?? ""}',
                 style: TextStyle(
                     fontSize: MediaQuery.of(context).size.height * 0.015,
-                    color: Color.fromARGB(255, 160, 29, 20)),
+                    color: Color.fromARGB(255, 160, 29, 20),),
               ),
               Spacer(),
               Print_property(
-                  list: widget.list_get_sale!, verbal_ID: widget.verbal_ID),
+                  list: widget.list_get_sale!, verbal_ID: widget.verbal_ID,),
               SizedBox(width: 10),
             ],
           ),
@@ -502,7 +502,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
       text,
       style: TextStyle(
           fontSize: MediaQuery.of(context).size.height * 0.014,
-          fontWeight: FontWeight.bold),
+          fontWeight: FontWeight.bold,),
     );
   }
 
@@ -514,16 +514,16 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _Icons('assets/icons/house.png', 'hometype',
-                '${myElement['type'] ?? ""}'),
+                '${myElement['type'] ?? ""}',),
             _Icons('assets/icons/lot.png', 'lot(sqm)',
-                '${myElement['land'] ?? ""}'),
+                '${myElement['land'] ?? ""}',),
             _Icons('assets/icons/parking.png', 'parking',
-                '${myElement['Parking'] ?? ""}'),
+                '${myElement['Parking'] ?? ""}',),
             _Icons(
                 'assets/icons/size_house.png',
                 "price(sqm)",
                 // '${myElement['Livingroom'] ?? ""}'),
-                '${myElement['price_sqm'] ?? ""}'),
+                '${myElement['price_sqm'] ?? ""}',),
           ],
         ),
         Column(
@@ -531,30 +531,30 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
           children: [
             _Icons('assets/icons/bed.png', 'Bed', '${myElement['bed'] ?? ""}'),
             _Icons('assets/icons/Size.png', 'Size(sqm)',
-                '${myElement['sqm'] ?? ""}'),
+                '${myElement['sqm'] ?? ""}',),
             _Icons('assets/icons/floor.png', 'Floor',
-                '${myElement['floor'] ?? ""}'),
+                '${myElement['floor'] ?? ""}',),
             _Icons(
                 'assets/icons/ice.png',
                 "Aircon",
                 // '${myElement['Livingroom'] ?? ""}'),
-                '${myElement['aircon'] ?? ""}'),
+                '${myElement['aircon'] ?? ""}',),
           ],
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _Icons(
-                'assets/icons/bath.png', 'bath', '${myElement['bath'] ?? ""}'),
+                'assets/icons/bath.png', 'bath', '${myElement['bath'] ?? ""}',),
             _Icons('assets/icons/area.png', 'Private_Area(${' m' + '\u00B2'})',
-                '${myElement['Private_Area'] ?? ""}'),
+                '${myElement['Private_Area'] ?? ""}',),
             _Icons('assets/icons/living_room.png', 'Livingroom',
-                '${myElement['Livingroom'] ?? ""}'),
+                '${myElement['Livingroom'] ?? ""}',),
             _Icons(
                 'assets/icons/total_area.png',
                 "TotalArea(${' m' + '\u00B2'})",
                 // '${myElement['Livingroom'] ?? ""}'),
-                '${myElement['total_area'] ?? ""}'),
+                '${myElement['total_area'] ?? ""}',),
           ],
         ),
       ],
@@ -572,11 +572,11 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: MediaQuery.of(context).size.height * 0.014,
-              color: Colors.black),
+              color: Colors.black,),
         ),
         SizedBox(height: 5),
         _text(
-            '${myElement['address'] ?? ""} / ${myElement['Name_cummune'] ?? ""} / Cambodia'),
+            '${myElement['address'] ?? ""} / ${myElement['Name_cummune'] ?? ""} / Cambodia',),
       ],
     );
   }
@@ -603,7 +603,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
                             progressIndicatorBuilder:
                                 (context, url, downloadProgress) => Center(
                               child: CircularProgressIndicator(
-                                  value: downloadProgress.progress),
+                                  value: downloadProgress.progress,),
                             ),
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.error),
@@ -624,7 +624,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => Center(
                         child: CircularProgressIndicator(
-                            value: downloadProgress.progress),
+                            value: downloadProgress.progress,),
                       ),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
@@ -648,7 +648,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
                             progressIndicatorBuilder:
                                 (context, url, downloadProgress) => Center(
                               child: CircularProgressIndicator(
-                                  value: downloadProgress.progress),
+                                  value: downloadProgress.progress,),
                             ),
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.error),
@@ -669,7 +669,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) => Center(
                         child: CircularProgressIndicator(
-                            value: downloadProgress.progress),
+                            value: downloadProgress.progress,),
                       ),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
@@ -678,7 +678,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
               ),
             ),
           ],
-        ));
+        ),);
   }
 
   Widget _image() {
@@ -708,7 +708,7 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
               Icons.arrow_back_ios_new_outlined,
               size: MediaQuery.of(context).size.height * 0.05,
               color: Colors.white,
-            )),
+            ),),
       ),
       Positioned(
           top: MediaQuery.of(context).size.height * 0.21,
@@ -717,8 +717,8 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
             'ID : ${myElement['id_ptys']}',
             style: TextStyle(
                 color: Colors.white,
-                fontSize: MediaQuery.of(context).size.height * 0.018),
-          )),
+                fontSize: MediaQuery.of(context).size.height * 0.018,),
+          ),),
       Positioned(
           top: MediaQuery.of(context).size.height * 0.235,
           left: 10,
@@ -726,8 +726,8 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
             '${myElement['type']}  ${myElement['urgent']}',
             style: TextStyle(
                 color: Colors.white,
-                fontSize: MediaQuery.of(context).size.height * 0.018),
-          )),
+                fontSize: MediaQuery.of(context).size.height * 0.018,),
+          ),),
       Positioned(
           top: MediaQuery.of(context).size.height * 0.27,
           left: 10,
@@ -735,8 +735,8 @@ class _Detail_propertyState extends State<Detail_property_sale_all> {
             '\$ ${myElement['price']}',
             style: TextStyle(
                 color: Colors.white,
-                fontSize: MediaQuery.of(context).size.height * 0.03),
-          )),
-    ]);
+                fontSize: MediaQuery.of(context).size.height * 0.03,),
+          ),),
+    ],);
   }
 }

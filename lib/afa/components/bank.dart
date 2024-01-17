@@ -191,7 +191,7 @@ class _BankDropdownState extends State<BankDropdown> {
   void Load() async {
     setState(() {});
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank',),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       // print(jsonData);
@@ -207,7 +207,7 @@ class _BankDropdownState extends State<BankDropdown> {
     setState(() {});
     var rs = await http.get(Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bankbranch?bank_branch_details_id=' +
-            value));
+            value,),);
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body.toString());
       // print(jsonData);

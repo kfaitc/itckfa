@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:crypto/crypto.dart' as crypto;
 
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
@@ -21,7 +20,7 @@ class Qr_UPay extends StatefulWidget {
       this.phone,
       this.option,
       this.id,
-      this.control_user});
+      this.control_user,});
   final String? price;
   final String? accont;
   final String? phone;
@@ -98,7 +97,7 @@ class Qr_UPayState extends State<Qr_UPay> {
   bool success_payment = false;
   Future<void> Load() async {
     var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_done_upay?mcOrderId=${orderId}'));
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_done_upay?mcOrderId=$orderId',),);
     var jsonData = jsonDecode(rs.body);
     setState(() {
       if (jsonData.toString() == orderId.toString()) {
@@ -120,13 +119,13 @@ class Qr_UPayState extends State<Qr_UPay> {
   void initState() {
     super.initState();
     setState(() {
-      var count_number = widget.option!.split(' ');
+      var countNumber = widget.option!.split(' ');
 
-      if (count_number[4] == "Day") {
+      if (countNumber[4] == "Day") {
         thier_plan = 1;
-      } else if (count_number[4] == "Week") {
+      } else if (countNumber[4] == "Week") {
         thier_plan = 7;
-      } else if (count_number[4] == "Mount") {
+      } else if (countNumber[4] == "Mount") {
         thier_plan = 30;
       }
     });
@@ -138,7 +137,7 @@ class Qr_UPayState extends State<Qr_UPay> {
       usdText.text = 'USD';
       versionText.text = 'V1';
       notifyText.text =
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6591/${widget.control_user}/${widget.price}/${thier_plan}';
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6591/${widget.control_user}/${widget.price}/$thier_plan';
       returnText.text = 'kfa://callback';
       langText.text = 'EN';
       createOrderQR();
@@ -173,13 +172,13 @@ class Qr_UPayState extends State<Qr_UPay> {
               icon: const Icon(
                 Icons.arrow_back_ios,
                 color: Color.fromRGBO(49, 27, 146, 1),
-              )),
+              ),),
           title: Text(
             "Scan for payments",
             style: TextStyle(
                 color: const Color.fromRGBO(49, 27, 146, 1),
                 fontSize: MediaQuery.textScaleFactorOf(context) * 18,
-                fontWeight: FontWeight.w900),
+                fontWeight: FontWeight.w900,),
           ),
           centerTitle: true,
           actions: [
@@ -206,9 +205,9 @@ class Qr_UPayState extends State<Qr_UPay> {
                     Shadow(
                         offset: Offset(3, -3),
                         blurRadius: 5,
-                        color: Colors.black54)
+                        color: Colors.black54,)
                   ],
-                ))
+                ),)
           ],
         ),
         body: SingleChildScrollView(
@@ -236,7 +235,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                         borderRadius: BorderRadius.circular(30),
                         image: const DecorationImage(
                             image: AssetImage("assets/images/logoqr.png"),
-                            fit: BoxFit.fill)),
+                            fit: BoxFit.fill,),),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -249,7 +248,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                               color: const Color.fromRGBO(121, 121, 121, 1),
                               fontWeight: FontWeight.w700,
                               fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 20),
+                                  MediaQuery.textScaleFactorOf(context) * 20,),
                         ),
                         Text(
                           "\t\t\t\t\t\t\t\t${widget.price ?? ""} \$",
@@ -257,7 +256,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                               color: const Color.fromRGBO(63, 63, 63, 1),
                               fontWeight: FontWeight.w700,
                               fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 20),
+                                  MediaQuery.textScaleFactorOf(context) * 20,),
                         ),
                         //  Text(
                         //   '------------------------------------------------',
@@ -278,7 +277,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
                                 ),
-                                backgroundColor: Colors.white),
+                                backgroundColor: Colors.white,),
                           ),
                         ),
                       ],
@@ -300,7 +299,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                       overflow: TextOverflow.visible,
                       color: const Color.fromRGBO(158, 158, 158, 1),
                       fontWeight: FontWeight.w500,
-                      fontSize: MediaQuery.textScaleFactorOf(context) * 10),
+                      fontSize: MediaQuery.textScaleFactorOf(context) * 10,),
                 ),
               ),
               if (success_payment)
@@ -337,7 +336,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                           overflow: TextOverflow.visible,
                           color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 11),
+                          fontSize: MediaQuery.textScaleFactorOf(context) * 11,),
                     ),
                     // Text(' ${count.toString()}'),
                     Text(
@@ -346,7 +345,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                           overflow: TextOverflow.visible,
                           color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 11),
+                          fontSize: MediaQuery.textScaleFactorOf(context) * 11,),
                     ),
                   ],
                 ),
@@ -368,7 +367,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                           overflow: TextOverflow.visible,
                           color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 11),
+                          fontSize: MediaQuery.textScaleFactorOf(context) * 11,),
                     ),
                     Text(
                       " ${widget.option}",
@@ -376,7 +375,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                           overflow: TextOverflow.visible,
                           color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 11),
+                          fontSize: MediaQuery.textScaleFactorOf(context) * 11,),
                     ),
                   ],
                 ),
@@ -401,7 +400,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                           overflow: TextOverflow.visible,
                           color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 12),
+                          fontSize: MediaQuery.textScaleFactorOf(context) * 12,),
                     ),
                     Text(
                       " ${widget.price} USD",
@@ -409,7 +408,7 @@ class Qr_UPayState extends State<Qr_UPay> {
                           overflow: TextOverflow.visible,
                           color: const Color.fromRGBO(158, 158, 158, 1),
                           fontWeight: FontWeight.w800,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 12),
+                          fontSize: MediaQuery.textScaleFactorOf(context) * 12,),
                     ),
                   ],
                 ),
@@ -417,7 +416,7 @@ class Qr_UPayState extends State<Qr_UPay> {
               const SizedBox(height: 50),
             ],
           ),
-        ));
+        ),);
   }
 }
 
@@ -463,7 +462,7 @@ class SignUtil {
   var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 
   String RandomString(int strlen) {
-    Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+    Random rnd = Random(DateTime.now().millisecondsSinceEpoch);
     String result = "";
     for (var i = 0; i < strlen; i++) {
       result += chars[rnd.nextInt(chars.length)];

@@ -84,8 +84,9 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
       child: Text(
         text,
         style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: MediaQuery.of(context).size.height * 0.02),
+          fontWeight: FontWeight.bold,
+          fontSize: MediaQuery.of(context).size.height * 0.02,
+        ),
       ),
     );
   }
@@ -103,41 +104,53 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 244, 244, 244),
-        body: (await_functino != '1')
-            ? body()
-            : LiquidLinearProgressIndicator(
-                value: 0.25, // Defaults to 0.5.
-                valueColor: AlwaysStoppedAnimation(Color.fromARGB(255, 53, 33,
-                    207)), // Defaults to the current Theme's accentColor.
-                backgroundColor: Colors
-                    .white, // Defaults to the current Theme's backgroundColor.
-                borderColor: Colors.white,
-                borderWidth: 5.0,
-                borderRadius: 12.0,
-                direction: Axis
-                    .vertical, // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
-                center: Text(
-                  "Please waiting...!",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: MediaQuery.of(context).size.height * 0.025),
+      backgroundColor: Color.fromARGB(255, 244, 244, 244),
+      body: (await_functino != '1')
+          ? body()
+          : LiquidLinearProgressIndicator(
+              value: 0.25, // Defaults to 0.5.
+              valueColor: AlwaysStoppedAnimation(
+                Color.fromARGB(
+                  255,
+                  53,
+                  33,
+                  207,
                 ),
-              ));
+              ), // Defaults to the current Theme's accentColor.
+              backgroundColor: Colors
+                  .white, // Defaults to the current Theme's backgroundColor.
+              borderColor: Colors.white,
+              borderWidth: 5.0,
+              borderRadius: 12.0,
+              direction: Axis
+                  .vertical, // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.horizontal.
+              center: Text(
+                "Please waiting...!",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQuery.of(context).size.height * 0.025,
+                ),
+              ),
+            ),
+    );
   }
 
   String? commune;
   String? district;
   Future<void> _getCurrentPosition() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     setState(() {
       lat = position.latitude;
       log = position.longitude;
     });
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'));
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
 
     if (response.statusCode == 200) {
       // Successful response
@@ -199,7 +212,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
   double total_area = 0.0;
   double price_sqm = 0.0;
   int aircon = 0;
-  void value_property(_url) async {
+  void value_property(url_p) async {
     Map<String, dynamic> payload = await {
       'id_ptys': controller_verbal.id_last.toString(),
       'property_type_id': property_type_id,
@@ -235,7 +248,8 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     };
 
     final url = await Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$_url');
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$url_p',
+    );
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -256,7 +270,8 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     };
 
     final url = Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/post_id_sale_last');
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/post_id_sale_last',
+    );
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -270,7 +285,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     }
   }
 
-  void _latlog(_url) async {
+  void _latlog(url_p) async {
     Map<String, dynamic> payload = await {
       'id_ptys': controller_verbal.id_last.toString(),
       'property_type_id': property_type_id,
@@ -279,7 +294,8 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     };
 
     final url = await Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$_url');
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$url_p',
+    );
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -293,7 +309,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     }
   }
 
-  void Urgent(_url) async {
+  void Urgent(url_p) async {
     Map<String, dynamic> payload = await {
       'id_ptys': controller_verbal.id_last.toString(),
       'property_type_id':
@@ -303,7 +319,8 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     };
 
     final url = await Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$_url');
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$url_p',
+    );
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -318,94 +335,103 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
   }
 
   Widget appbar() {
-    return Stack(children: [
-      Container(
-        decoration: BoxDecoration(
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(30),
-                bottomLeft: Radius.circular(30))),
-        height: MediaQuery.of(context).size.height * 0.17,
-        width: double.infinity,
-      ),
-      Container(
-        decoration: BoxDecoration(
+              bottomRight: Radius.circular(30),
+              bottomLeft: Radius.circular(30),
+            ),
+          ),
+          height: MediaQuery.of(context).size.height * 0.17,
+          width: double.infinity,
+        ),
+        Container(
+          decoration: BoxDecoration(
             color: Color.fromARGB(255, 20, 13, 113),
             borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(30),
-                bottomLeft: Radius.circular(30))),
-        height: MediaQuery.of(context).size.height * 0.145,
-        width: double.infinity,
-        child: Padding(
-          padding:
-              EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03),
-          child: ListTile(
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back_ios_new_outlined,
-                  size: MediaQuery.of(context).size.height * 0.04,
-                  color: Colors.white),
+              bottomRight: Radius.circular(30),
+              bottomLeft: Radius.circular(30),
             ),
-            title: Center(
-              child: Text(
-                '${controller_verbal.id_last.toString()}',
-                style: TextStyle(
+          ),
+          height: MediaQuery.of(context).size.height * 0.145,
+          width: double.infinity,
+          child: Padding(
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.03),
+            child: ListTile(
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios_new_outlined,
+                  size: MediaQuery.of(context).size.height * 0.04,
+                  color: Colors.white,
+                ),
+              ),
+              title: Center(
+                child: Text(
+                  '${controller_verbal.id_last.toString()}',
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 13),
+                    fontSize: 13,
+                  ),
+                ),
               ),
-            ),
-            trailing: GFButton(
-              textStyle: TextStyle(color: Colors.white),
-              onPressed: () async {
-                setState(() {
-                  if (khan != null || provice_map != null) {
-                    address =
-                        '${(khan == null) ? "" : khan} ${(provice_map == null) ? "" : provice_map}';
-                  } else {
-                    address = "";
+              trailing: GFButton(
+                textStyle: TextStyle(color: Colors.white),
+                onPressed: () async {
+                  setState(() {
+                    if (khan != null || provice_map != null) {
+                      address =
+                          '${(khan == null) ? "" : khan} ${(provice_map == null) ? "" : provice_map}';
+                    } else {
+                      address = "";
+                    }
+                    type;
+                    urgent;
+                  });
+                  if (type == 'For Sale' &&
+                      _imageFile != null &&
+                      // _images.length == 2
+                      // &&
+                      lat != 0) {
+                    // print('For Sale');
+                    await_functino = '1';
+                    // await _uploadImag_Multiple('mutiple_image_post');
+                    _latlog('lat_log_post');
+                    ID();
+                    Urgent('Urgent_Post');
+                    value_property('2_property');
+                    await _uploadImage('Image_ptys_post', 'image_name_sale');
+                  } else if (type == 'For Rent' &&
+                      _imageFile != null &&
+                      // _images.length == 2 &&
+                      lat != null) {
+                    // print('For Rent');
+                    await_functino = '1';
+                    //  await _uploadImag_Multiple('mutiple_imageR_post');
+                    _latlog('lat_log_post_rent');
+                    ID();
+                    Urgent('Urgen_rent');
+                    value_property('rent/more');
+                    await _uploadImage_rent('rent_post_image');
                   }
-                  type;
-                  urgent;
-                });
-                if (type == 'For Sale' &&
-                    _imageFile != null &&
-                    // _images.length == 2
-                    // &&
-                    lat != 0) {
-                  // print('For Sale');
-                  await_functino = '1';
-                  // await _uploadImag_Multiple('mutiple_image_post');
-                  _latlog('lat_log_post');
-                  ID();
-                  Urgent('Urgent_Post');
-                  value_property('2_property');
-                  await _uploadImage('Image_ptys_post', 'image_name_sale');
-                } else if (type == 'For Rent' &&
-                    _imageFile != null &&
-                    // _images.length == 2 &&
-                    lat != null) {
-                  // print('For Rent');
-                  await_functino = '1';
-                  //  await _uploadImag_Multiple('mutiple_imageR_post');
-                  _latlog('lat_log_post_rent');
-                  ID();
-                  Urgent('Urgen_rent');
-                  value_property('rent/more');
-                  await _uploadImage_rent('rent_post_image');
-                }
-              },
-              text: "Save",
-              icon: Icon(Icons.save_alt_outlined),
-              color: Colors.white,
-              type: GFButtonType.outline,
+                },
+                text: "Save",
+                icon: Icon(Icons.save_alt_outlined),
+                color: Colors.white,
+                type: GFButtonType.outline,
+              ),
             ),
           ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 
   Widget body() {
@@ -427,9 +453,12 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
       height: MediaQuery.of(context).size.height,
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(60), topRight: Radius.circular(60))),
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(60),
+          topRight: Radius.circular(60),
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.only(right: 30, left: 30),
         child: Column(
@@ -446,12 +475,13 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                   height: MediaQuery.of(context).size.height * 0.04,
                   width: MediaQuery.of(context).size.width * 0.27,
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 208, 208, 211),
-                      border: Border.all(
-                        width: 0.6,
-                        color: Color.fromARGB(255, 210, 210, 213),
-                      ),
-                      borderRadius: BorderRadius.circular(10)),
+                    color: Color.fromARGB(255, 208, 208, 211),
+                    border: Border.all(
+                      width: 0.6,
+                      color: Color.fromARGB(255, 210, 210, 213),
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -474,9 +504,10 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                       Text(
                         '$urgent',
                         style: TextStyle(
-                            color: Color.fromARGB(255, 100, 100, 100),
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold),
+                          color: Color.fromARGB(255, 100, 100, 100),
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -505,48 +536,63 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                       ),
                     )
                   : Image_select(
-                      'https://as1.ftcdn.net/v2/jpg/01/80/31/10/1000_F_180311099_Vlj8ufdHvec4onKSDLxxdrNiP6yX4PnP.jpg'),
+                      'https://as1.ftcdn.net/v2/jpg/01/80/31/10/1000_F_180311099_Vlj8ufdHvec4onKSDLxxdrNiP6yX4PnP.jpg',
+                    ),
             ),
             _size_10,
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return Map_verbal_address_Sale(
-                      get_province: (value) {
-                        setState(() {
-                          songkat = value.toString();
-                        });
-                      },
-                      get_district: (value) {
-                        setState(() {
-                          provice_map = value.toString();
-                        });
-                      },
-                      get_commune: (value) {
-                        setState(() {
-                          khan = value.toString();
-                        });
-                      },
-                      get_log: (value) {
-                        setState(() {
-                          log = double.parse(value);
-                        });
-                      },
-                      get_lat: (value) {
-                        lat = double.parse(value);
-                      },
-                    );
-                  },
-                ));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Map_verbal_address_Sale(
+                        get_province: (value) {
+                          setState(() {
+                            songkat = value.toString();
+                          });
+                        },
+                        get_district: (value) {
+                          setState(() {
+                            provice_map = value.toString();
+                          });
+                        },
+                        get_commune: (value) {
+                          setState(() {
+                            khan = value.toString();
+                          });
+                        },
+                        get_log: (value) {
+                          setState(() {
+                            log = double.parse(value);
+                          });
+                        },
+                        get_lat: (value) {
+                          lat = double.parse(value);
+                        },
+                      );
+                    },
+                  ),
+                );
               },
               child: Image_select(
-                  'https://maps.googleapis.com/maps/api/staticmap?center=${lat.toString()},${log.toString()}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${lat.toString()},${log.toString()}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI'),
+                'https://maps.googleapis.com/maps/api/staticmap?center=${lat.toString()},${log.toString()}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${lat.toString()},${log.toString()}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+              ),
             ),
-            dropdown(hometype, controller_verbal.list_hometype, 'hometype',
-                'hometype', 'Hometype'),
-            dropdown(property_type_id, controller_verbal.list_cummone,
-                'property_type_id', 'Name_cummune', 'Province*'),
+            dropdown(
+              hometype,
+              controller_verbal.list_hometype,
+              'hometype',
+              'hometype',
+              'Hometype',
+            ),
+            dropdown(
+              property_type_id,
+              controller_verbal.list_cummone,
+              'property_type_id',
+              'Name_cummune',
+              'Province*',
+            ),
             _size_10,
             Row(
               children: [
@@ -701,8 +747,9 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                       value,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 13,
-                          height: 1),
+                        fontSize: MediaQuery.textScaleFactorOf(context) * 13,
+                        height: 1,
+                      ),
                     ),
                   ),
                 )
@@ -800,7 +847,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     );
   }
 
-  Widget text_double(double _value, text) {
+  Widget text_double(double value_p, text) {
     return Expanded(
       child: SizedBox(
         child: Padding(
@@ -813,17 +860,17 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
             keyboardType: TextInputType.number,
             onChanged: (value) {
               setState(() {
-                _value = double.parse(value.toString());
+                value_p = double.parse(value.toString());
                 if (text == 'Price*') {
-                  price = _value;
+                  price = value_p;
                 } else if (text == 'Sqm') {
-                  sqm = _value;
+                  sqm = value_p;
                 } else if (text == 'Total Area') {
-                  total_area = _value;
+                  total_area = value_p;
                 } else if (text == 'Price(sqm)*') {
-                  price_sqm = _value;
+                  price_sqm = value_p;
                 } else {
-                  Private_Area = _value;
+                  Private_Area = value_p;
                 }
               });
             },
@@ -865,7 +912,7 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     );
   }
 
-  Widget text_int(int _value, text) {
+  Widget text_int(int value_p, text) {
     return Expanded(
       child: SizedBox(
         child: Padding(
@@ -878,21 +925,21 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
             keyboardType: TextInputType.number,
             onChanged: (value) {
               setState(() {
-                _value = int.parse(value.toString());
+                value_p = int.parse(value.toString());
                 if (text == 'Bed') {
-                  bed = _value;
+                  bed = value_p;
                 } else if (text == 'Bed') {
-                  bed = _value;
+                  bed = value_p;
                 } else if (text == 'Bath') {
-                  bath = _value;
+                  bath = value_p;
                 } else if (text == 'floor') {
-                  floor = _value;
+                  floor = value_p;
                 } else if (text == 'Parking') {
-                  Parking = _value;
+                  Parking = value_p;
                 } else if (text == 'LivingRoom') {
-                  Livingroom = _value;
+                  Livingroom = value_p;
                 } else {
-                  aircon = _value;
+                  aircon = value_p;
                 }
               });
             },
@@ -960,17 +1007,19 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                     child: Text(
                       'Code : ${controller_verbal.id_last.toString()}',
                       style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
                   Container(
                     height: MediaQuery.of(context).size.height * 0.06,
                     width: MediaQuery.of(context).size.width * 0.37,
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 6, 25, 121),
-                        borderRadius: BorderRadius.circular(10)),
+                      color: Color.fromARGB(255, 6, 25, 121),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -993,9 +1042,10 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                         Text(
                           '$urgent',
                           style: TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255),
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold),
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -1011,11 +1061,16 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               },
               child: Padding(
                 padding: const EdgeInsets.only(
-                    right: 30, left: 30, top: 10, bottom: 10),
+                  right: 30,
+                  left: 30,
+                  top: 10,
+                  bottom: 10,
+                ),
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1)),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 1),
+                  ),
                   height: MediaQuery.of(context).size.height * 0.2,
                   width: double.infinity,
                   child: ClipRRect(
@@ -1032,48 +1087,59 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                             width: double.infinity,
                             fit: BoxFit.cover,
                           )
-                        : Stack(children: [
-                            CachedNetworkImage(
-                              imageUrl:
-                                  'https://as1.ftcdn.net/v2/jpg/01/80/31/10/1000_F_180311099_Vlj8ufdHvec4onKSDLxxdrNiP6yX4PnP.jpg',
-                              fit: BoxFit.cover,
-                              height: MediaQuery.of(context).size.height * 0.19,
-                              width: double.infinity,
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) => Center(
-                                child: CircularProgressIndicator(
-                                    value: downloadProgress.progress),
+                        : Stack(
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl:
+                                    'https://as1.ftcdn.net/v2/jpg/01/80/31/10/1000_F_180311099_Vlj8ufdHvec4onKSDLxxdrNiP6yX4PnP.jpg',
+                                fit: BoxFit.cover,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.19,
+                                width: double.infinity,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) => Center(
+                                  child: CircularProgressIndicator(
+                                    value: downloadProgress.progress,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            ),
-                            Positioned(
-                              left: MediaQuery.of(context).size.height * 0.09,
-                              top: MediaQuery.of(context).size.height * 0.05,
-                              child: GFShimmer(
-                                child: Text(
-                                  'Select Image',
-                                  style: TextStyle(
+                              Positioned(
+                                left: MediaQuery.of(context).size.height * 0.09,
+                                top: MediaQuery.of(context).size.height * 0.05,
+                                child: GFShimmer(
+                                  showGradient: true,
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomRight,
+                                    end: Alignment.centerLeft,
+                                    stops: const <double>[
+                                      0.2,
+                                      0.7,
+                                      0.8,
+                                      0.9,
+                                      1
+                                    ],
+                                    colors: [
+                                      Color.fromARGB(255, 5, 10, 159)
+                                          .withOpacity(0.1),
+                                      Color.fromARGB(255, 5, 9, 114),
+                                      Color.fromARGB(255, 4, 8, 103),
+                                      Color.fromARGB(255, 5, 8, 93),
+                                      Color.fromARGB(255, 4, 6, 82),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    'Select Image',
+                                    style: TextStyle(
                                       fontSize: 30,
-                                      fontWeight: FontWeight.w700),
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ),
-                                showGradient: true,
-                                gradient: LinearGradient(
-                                  begin: Alignment.bottomRight,
-                                  end: Alignment.centerLeft,
-                                  stops: const <double>[0.2, 0.7, 0.8, 0.9, 1],
-                                  colors: [
-                                    Color.fromARGB(255, 5, 10, 159)
-                                        .withOpacity(0.1),
-                                    Color.fromARGB(255, 5, 9, 114),
-                                    Color.fromARGB(255, 4, 8, 103),
-                                    Color.fromARGB(255, 5, 8, 93),
-                                    Color.fromARGB(255, 4, 6, 82),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ]),
+                              )
+                            ],
+                          ),
                   ),
                 ),
               ),
@@ -1124,31 +1190,33 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
             // ),
             InkWell(
               onTap: () {
-                Get.to(Map_verbal_address_Sale(
-                  get_province: (value) {
-                    setState(() {
-                      songkat = value.toString();
-                    });
-                  },
-                  get_district: (value) {
-                    setState(() {
-                      provice_map = value.toString();
-                    });
-                  },
-                  get_commune: (value) {
-                    setState(() {
-                      khan = value.toString();
-                    });
-                  },
-                  get_log: (value) {
-                    setState(() {
-                      log = double.parse(value);
-                    });
-                  },
-                  get_lat: (value) {
-                    lat = double.parse(value);
-                  },
-                ));
+                Get.to(
+                  Map_verbal_address_Sale(
+                    get_province: (value) {
+                      setState(() {
+                        songkat = value.toString();
+                      });
+                    },
+                    get_district: (value) {
+                      setState(() {
+                        provice_map = value.toString();
+                      });
+                    },
+                    get_commune: (value) {
+                      setState(() {
+                        khan = value.toString();
+                      });
+                    },
+                    get_log: (value) {
+                      setState(() {
+                        log = double.parse(value);
+                      });
+                    },
+                    get_lat: (value) {
+                      lat = double.parse(value);
+                    },
+                  ),
+                );
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 30, left: 30),
@@ -1190,9 +1258,10 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                           value['hometype'],
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 13,
-                              height: 1),
+                            fontSize:
+                                MediaQuery.textScaleFactorOf(context) * 13,
+                            height: 1,
+                          ),
                         ),
                       ),
                     )
@@ -1252,9 +1321,10 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                           value["Name_cummune"],
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 13,
-                              height: 1),
+                            fontSize:
+                                MediaQuery.textScaleFactorOf(context) * 13,
+                            height: 1,
+                          ),
                         ),
                       ),
                     )
@@ -1527,255 +1597,261 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
             _size_10,
             Padding(
               padding: EdgeInsets.only(right: 30, left: 30, top: 10),
-              child: Row(children: [
-                Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.015,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        floor = int.parse(value);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      prefixIcon: Icon(
-                        Icons.bed_outlined,
-                        color: kImageColor,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.015,
+                        fontWeight: FontWeight.bold,
                       ),
-                      hintText: 'floor',
-                      fillColor: kwhite,
-                      filled: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: kPrimaryColor,
-                          width: 2.0,
+                      onChanged: (value) {
+                        setState(() {
+                          floor = int.parse(value);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        prefixIcon: Icon(
+                          Icons.bed_outlined,
+                          color: kImageColor,
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: kPrimaryColor,
+                        hintText: 'floor',
+                        fillColor: kwhite,
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.015,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        Parking = int.parse(value);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      prefixIcon: Icon(
-                        Icons.feed_outlined,
-                        color: kImageColor,
-                      ),
-                      hintText: 'parking',
-                      fillColor: kwhite,
-                      filled: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: kPrimaryColor,
-                          width: 2.0,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: kPrimaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: kPrimaryColor,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
                   ),
-                ),
-              ]),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.015,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          Parking = int.parse(value);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        prefixIcon: Icon(
+                          Icons.feed_outlined,
+                          color: kImageColor,
+                        ),
+                        hintText: 'parking',
+                        fillColor: kwhite,
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: kPrimaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(right: 30, left: 30, top: 10),
-              child: Row(children: [
-                Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.015,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        total_area = double.parse(value);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      prefixIcon: Icon(
-                        Icons.bed_outlined,
-                        color: kImageColor,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.015,
+                        fontWeight: FontWeight.bold,
                       ),
-                      hintText: 'Total Area',
-                      fillColor: kwhite,
-                      filled: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: kPrimaryColor,
-                          width: 2.0,
+                      onChanged: (value) {
+                        setState(() {
+                          total_area = double.parse(value);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        prefixIcon: Icon(
+                          Icons.bed_outlined,
+                          color: kImageColor,
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: kPrimaryColor,
+                        hintText: 'Total Area',
+                        fillColor: kwhite,
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.015,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        price_sqm = double.parse(value);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      prefixIcon: Icon(
-                        Icons.feed_outlined,
-                        color: kImageColor,
-                      ),
-                      hintText: 'Price(sqm)*',
-                      fillColor: kwhite,
-                      filled: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: kPrimaryColor,
-                          width: 2.0,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: kPrimaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: kPrimaryColor,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
                   ),
-                ),
-              ]),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.015,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          price_sqm = double.parse(value);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        prefixIcon: Icon(
+                          Icons.feed_outlined,
+                          color: kImageColor,
+                        ),
+                        hintText: 'Price(sqm)*',
+                        fillColor: kwhite,
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: kPrimaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(right: 30, left: 30, top: 10),
-              child: Row(children: [
-                Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.015,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        Livingroom = int.parse(value);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      prefixIcon: Icon(
-                        Icons.bed_outlined,
-                        color: kImageColor,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.015,
+                        fontWeight: FontWeight.bold,
                       ),
-                      hintText: 'LivingRoom',
-                      fillColor: kwhite,
-                      filled: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: kPrimaryColor,
-                          width: 2.0,
+                      onChanged: (value) {
+                        setState(() {
+                          Livingroom = int.parse(value);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        prefixIcon: Icon(
+                          Icons.bed_outlined,
+                          color: kImageColor,
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: kPrimaryColor,
+                        hintText: 'LivingRoom',
+                        fillColor: kwhite,
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.015,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        aircon = int.parse(value);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      prefixIcon: Icon(
-                        Icons.feed_outlined,
-                        color: kImageColor,
-                      ),
-                      hintText: 'Aricon',
-                      fillColor: kwhite,
-                      filled: true,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: kPrimaryColor,
-                          width: 2.0,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: kPrimaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: kPrimaryColor,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
                   ),
-                ),
-              ]),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.015,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          aircon = int.parse(value);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        prefixIcon: Icon(
+                          Icons.feed_outlined,
+                          color: kImageColor,
+                        ),
+                        hintText: 'Aricon',
+                        fillColor: kwhite,
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: kPrimaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(right: 30, left: 30, top: 10),
@@ -1857,10 +1933,12 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
                                   value,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      fontSize: MediaQuery.textScaleFactorOf(
-                                              context) *
-                                          13,
-                                      height: 1),
+                                    fontSize: MediaQuery.textScaleFactorOf(
+                                          context,
+                                        ) *
+                                        13,
+                                    height: 1,
+                                  ),
                                 ),
                               ),
                             )
@@ -2013,8 +2091,9 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
       child: Text(
         text,
         style: TextStyle(
-            fontSize: MediaQuery.of(context).size.height * 0.016,
-            color: Color.fromARGB(255, 87, 86, 86)),
+          fontSize: MediaQuery.of(context).size.height * 0.016,
+          color: Color.fromARGB(255, 87, 86, 86),
+        ),
       ),
     );
   }
@@ -2073,36 +2152,41 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
         ),
         //property_type_id
         decoration: InputDecoration(
-            fillColor: kwhite,
-            filled: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 8),
-            labelText: '$lable',
-            labelStyle: TextStyle(
-                fontSize: MediaQuery.of(context).size.height * 0.015,
-                color: Colors.grey),
-            hintText: '$lable',
-            helperStyle: TextStyle(
-                fontSize: MediaQuery.of(context).size.height * 0.015,
-                color: Colors.grey),
-            prefixIcon: Icon(
-              (lable == 'Hometype')
-                  ? Icons.home_work_outlined
-                  : Icons.edit_location_alt_sharp,
+          fillColor: kwhite,
+          filled: true,
+          contentPadding: EdgeInsets.symmetric(vertical: 8),
+          labelText: '$lable',
+          labelStyle: TextStyle(
+            fontSize: MediaQuery.of(context).size.height * 0.015,
+            color: Colors.grey,
+          ),
+          hintText: '$lable',
+          helperStyle: TextStyle(
+            fontSize: MediaQuery.of(context).size.height * 0.015,
+            color: Colors.grey,
+          ),
+          prefixIcon: Icon(
+            (lable == 'Hometype')
+                ? Icons.home_work_outlined
+                : Icons.edit_location_alt_sharp,
+            color: Colors.grey,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: Color.fromARGB(255, 133, 132, 132),
+              width: 2.0,
+            ),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 1,
               color: Colors.grey,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                  color: Color.fromARGB(255, 133, 132, 132), width: 2.0),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                width: 1,
-                color: Colors.grey,
-              ),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            border: InputBorder.none),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          border: InputBorder.none,
+        ),
       ),
     );
   }
@@ -2110,9 +2194,10 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
   Widget Image_select(text) {
     return Container(
       decoration: BoxDecoration(
-          // color: Color.fromARGB(255, 158, 20, 20),
-          border: Border.all(width: 1, color: Colors.grey),
-          borderRadius: BorderRadius.circular(5)),
+        // color: Color.fromARGB(255, 158, 20, 20),
+        border: Border.all(width: 1, color: Colors.grey),
+        borderRadius: BorderRadius.circular(5),
+      ),
       height: MediaQuery.of(context).size.height * 0.222,
       width: double.infinity,
       child: ClipRRect(
@@ -2164,7 +2249,8 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
   File? result;
   Future<void> _uploadImageRentMultiple() async {
     final url = Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/mutiple_imageR_post');
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/mutiple_imageR_post',
+    );
 
     final request = http.MultipartRequest('POST', url);
     request.fields['id_ptys'] = controller_verbal.id_last.toString();
@@ -2207,6 +2293,60 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     if (response.statusCode == 200) {
       // print('Images uploaded successfully!');
       AwesomeDialog(
+        context: context,
+        animType: AnimType.leftSlide,
+        headerAnimationLoop: false,
+        dialogType: DialogType.success,
+        showCloseIcon: false,
+        title: 'Succesfully',
+        autoHide: Duration(seconds: 3),
+        onDismissCallback: (type) {
+          setState(() {
+            get_re;
+            widget.refresh_homeScreen!(get_re);
+          });
+          Navigator.pop(context);
+        },
+      ).show();
+    } else {
+      // print('Error uploading images: ${response.reasonPhrase}');
+    }
+  }
+
+  Future<File?> _uploadImage(url_p, type_image) async {
+    if (_imageFile == null) {
+      return _imageFile;
+    }
+
+    final url = Uri.parse(
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$url_p',
+    );
+
+    final request = http.MultipartRequest('POST', url);
+    request.fields['id_image'] = controller_verbal.id_last.toString();
+    request.fields['hometype'] = hometype.toString();
+    request.fields['property_type_id'] = property_type_id.toString();
+    if (_imageFile != null) {
+      final tempDir = await getTemporaryDirectory();
+      final path = tempDir.path;
+
+      var compressedImageFile = await FlutterImageCompress.compressAndGetFile(
+        _imageFile!.absolute.path,
+        '$path/${DateTime.now().millisecondsSinceEpoch}.jpg',
+        quality: 70,
+      );
+
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          '$type_image',
+          compressedImageFile!.path,
+        ),
+      );
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        AwesomeDialog(
           context: context,
           animType: AnimType.leftSlide,
           headerAnimationLoop: false,
@@ -2220,55 +2360,8 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
               widget.refresh_homeScreen!(get_re);
             });
             Navigator.pop(context);
-          }).show();
-    } else {
-      // print('Error uploading images: ${response.reasonPhrase}');
-    }
-  }
-
-  Future<File?> _uploadImage(_url, type_image) async {
-    if (_imageFile == null) {
-      return _imageFile;
-    }
-
-    final url = Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$_url');
-
-    final request = http.MultipartRequest('POST', url);
-    request.fields['id_image'] = controller_verbal.id_last.toString();
-    request.fields['hometype'] = hometype.toString();
-    request.fields['property_type_id'] = property_type_id.toString();
-    if (_imageFile != null) {
-      final tempDir = await getTemporaryDirectory();
-      final path = tempDir.path;
-
-      var compressedImageFile = await FlutterImageCompress.compressAndGetFile(
-        _imageFile!.absolute.path,
-        '$path/${DateTime.now().millisecondsSinceEpoch}.jpg',
-        quality: 70,
-      );
-
-      request.files.add(await http.MultipartFile.fromPath(
-          '$type_image', compressedImageFile!.path));
-
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        AwesomeDialog(
-            context: context,
-            animType: AnimType.leftSlide,
-            headerAnimationLoop: false,
-            dialogType: DialogType.success,
-            showCloseIcon: false,
-            title: 'Succesfully',
-            autoHide: Duration(seconds: 3),
-            onDismissCallback: (type) {
-              setState(() {
-                get_re;
-                widget.refresh_homeScreen!(get_re);
-              });
-              Navigator.pop(context);
-            }).show();
+          },
+        ).show();
         // print('Image Successfully');
       } else {
         // print('Error uploading image: ${response.reasonPhrase}');
@@ -2276,13 +2369,14 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
     }
   }
 
-  Future<File?> _uploadImage_rent(_url) async {
+  Future<File?> _uploadImage_rent(url_p) async {
     if (_imageFile == null) {
       return _imageFile;
     }
 
     final url = Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$_url');
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/$url_p',
+    );
 
     final request = http.MultipartRequest('POST', url);
     request.fields['id_image'] = controller_verbal.id_last.toString();
@@ -2298,27 +2392,32 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
         quality: 70,
       );
 
-      request.files.add(await http.MultipartFile.fromPath(
-          'image_name_rent', compressedImageFile!.path));
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'image_name_rent',
+          compressedImageFile!.path,
+        ),
+      );
 
       final response = await request.send();
 
       if (response.statusCode == 200) {
         AwesomeDialog(
-            context: context,
-            animType: AnimType.leftSlide,
-            headerAnimationLoop: false,
-            dialogType: DialogType.success,
-            showCloseIcon: false,
-            title: 'Succesfully',
-            autoHide: Duration(seconds: 3),
-            onDismissCallback: (type) {
-              setState(() {
-                get_re;
-                widget.refresh_homeScreen!(get_re);
-              });
-              Navigator.pop(context);
-            }).show();
+          context: context,
+          animType: AnimType.leftSlide,
+          headerAnimationLoop: false,
+          dialogType: DialogType.success,
+          showCloseIcon: false,
+          title: 'Succesfully',
+          autoHide: Duration(seconds: 3),
+          onDismissCallback: (type) {
+            setState(() {
+              get_re;
+              widget.refresh_homeScreen!(get_re);
+            });
+            Navigator.pop(context);
+          },
+        ).show();
         // print('Image uploaded!');
       } else {
         // print('Error uploading image: ${response.reasonPhrase}');

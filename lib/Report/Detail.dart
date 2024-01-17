@@ -45,19 +45,19 @@ class _Detai_VPointState extends State<Detai_VPoint> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 225, 224, 224),
+      backgroundColor: const Color.fromARGB(255, 225, 224, 224),
       appBar: AppBar(
         // title: Text('${widget.typebank}'),
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-            )),
+            ),),
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 30, 11, 129),
+        backgroundColor: const Color.fromARGB(255, 30, 11, 129),
       ),
       body: _body(),
     );
@@ -74,7 +74,7 @@ class _Detai_VPointState extends State<Detai_VPoint> {
   }
 
   Widget _Box(bool b) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.85,
       child: Stack(
@@ -82,7 +82,7 @@ class _Detai_VPointState extends State<Detai_VPoint> {
           Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height * 0.25,
-            color: Color.fromARGB(255, 30, 11, 129),
+            color: const Color.fromARGB(255, 30, 11, 129),
             child: Padding(
               padding: const EdgeInsets.only(top: 10, right: 20, left: 20),
               child: Column(
@@ -98,9 +98,9 @@ class _Detai_VPointState extends State<Detai_VPoint> {
                               CircleAvatar(
                                 radius: 15,
                                 child: Image.network(
-                                    'https://www.oneclickonedollar.com/laravel_kfa_2023/public/data_imgs_kfa/Form_Image/v.png'),
+                                    'https://www.oneclickonedollar.com/laravel_kfa_2023/public/data_imgs_kfa/Form_Image/v.png',),
                               ),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               _text('V Point', 15, false, false),
                             ],
                           ),
@@ -112,7 +112,7 @@ class _Detai_VPointState extends State<Detai_VPoint> {
                                     '${widget.list[index]['count_autoverbal']}',
                                     20,
                                     true,
-                                    false),
+                                    false,),
                               ],
                             ),
                           ),
@@ -125,13 +125,13 @@ class _Detai_VPointState extends State<Detai_VPoint> {
                                 color: Colors.white,
                                 border:
                                     Border.all(width: 1, color: Colors.white),
-                                borderRadius: BorderRadius.circular(30)),
+                                borderRadius: BorderRadius.circular(30),),
                             child: CircleAvatar(
                               backgroundColor: Colors.transparent,
                               foregroundColor:
                                   Colors.white, // Set the border color to white
                               backgroundImage: NetworkImage(
-                                  '${(widget.list[index]['url'] != null) ? widget.list[index]['url'] : (widget.await_image.toString() == 'true') ? "${widget.url}" : 'https://www.oneclickonedollar.com/laravel_kfa_2023/public/data_imgs_kfa/Form_Image/images.png'}'),
+                                  '${(widget.list[index]['url'] != null) ? widget.list[index]['url'] : (widget.await_image.toString() == 'true') ? "${widget.url}" : 'https://www.oneclickonedollar.com/laravel_kfa_2023/public/data_imgs_kfa/Form_Image/images.png'}',),
                               radius: 30,
                             ),
                           )
@@ -139,9 +139,9 @@ class _Detai_VPointState extends State<Detai_VPoint> {
                       ),
                     ],
                   ),
-                  Padding(
-                      padding: const EdgeInsets.only(top: 15, bottom: 10),
-                      child: Divider(height: 1, color: Colors.white)),
+                  const Padding(
+                      padding: EdgeInsets.only(top: 15, bottom: 10),
+                      child: Divider(height: 1, color: Colors.white),),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -149,12 +149,12 @@ class _Detai_VPointState extends State<Detai_VPoint> {
                           'Day : ( ${(widget.list[index]['their_plans'] != null) ? widget.list[index]['their_plans'] : ""} )',
                           10,
                           false,
-                          false),
+                          false,),
                       _text(
                           'Expiry : ( ${(widget.list[index]['expiry'] != null) ? widget.list[index]['expiry'] : ""} )',
                           10,
                           false,
-                          false),
+                          false,),
                     ],
                   )
                 ],
@@ -191,43 +191,43 @@ class _Detai_VPointState extends State<Detai_VPoint> {
                         ),
                         _size(),
                         _text("Name : ${widget.list[index]['username']}", 12,
-                            false, true),
+                            false, true,),
                         _size(),
                         _text("Gender : ${widget.list[index]['gender']}", 12,
-                            false, true),
+                            false, true,),
                         _size(),
                         _text("Phone : ${widget.list[index]['tel_num']}", 12,
-                            false, true),
+                            false, true,),
                         _size(),
                         _text("Know From : ${widget.list[index]['known_from']}",
-                            12, false, true),
+                            12, false, true,),
                         _size(),
                         _text(
                             "Payment : ${widget.list[index]['${widget.TypePayment_bank}']} \$",
                             12,
                             false,
-                            true),
+                            true,),
                       ],
                     ),
                   ),
                 ),
-              )),
+              ),),
         ],
       ),
     );
   }
 
   Widget _size() {
-    return SizedBox(height: 10);
+    return const SizedBox(height: 10);
   }
 
   Widget _text(text, double f, bool b, bool c) {
     return Text(
       text,
       style: TextStyle(
-          color: (c == false) ? Colors.white : Color.fromARGB(255, 78, 77, 77),
+          color: (c == false) ? Colors.white : const Color.fromARGB(255, 78, 77, 77),
           fontSize: MediaQuery.textScaleFactorOf(context) * f,
-          fontWeight: (b == true) ? FontWeight.bold : null),
+          fontWeight: (b == true) ? FontWeight.bold : null,),
     );
   }
 }

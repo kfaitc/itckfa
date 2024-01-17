@@ -27,7 +27,7 @@ class MyDb {
                         password varchar(255)  not null
                       );
                   ''');
-    });
+    },);
   }
 
   Future open_land_verbal() async {
@@ -51,7 +51,7 @@ class MyDb {
                                     local_offline default 0
                                 );
                   ''');
-    });
+    },);
   }
 
   Future open_verbal() async {
@@ -87,7 +87,7 @@ class MyDb {
                           local_offline default 0
                       );
                   ''');
-    });
+    },);
   }
 
   Future open_offline() async {
@@ -102,6 +102,6 @@ class MyDb {
                           verbal_image BLOB  DEFAULT null
                       );
                   ''');
-    });
+    },);
   }
 }

@@ -73,7 +73,7 @@ class _PromotionState extends State<Promotion> with TickerProviderStateMixin {
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/images/Promo-pic.jpg')),
+                    image: AssetImage('assets/images/Promo-pic.jpg'),),
                 borderRadius: BorderRadius.circular(80),
               ),
             ),
@@ -101,7 +101,7 @@ class _PromotionState extends State<Promotion> with TickerProviderStateMixin {
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/images/Promo-pic.jpg')),
+                    image: AssetImage('assets/images/Promo-pic.jpg'),),
                 borderRadius: BorderRadius.circular(80),
               ),
             ),
@@ -129,7 +129,7 @@ class _PromotionState extends State<Promotion> with TickerProviderStateMixin {
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/images/Promo-pic.jpg')),
+                    image: AssetImage('assets/images/Promo-pic.jpg'),),
                 borderRadius: BorderRadius.circular(80),
               ),
             ),
@@ -170,7 +170,7 @@ class Title_promo extends StatelessWidget {
                 context,
                 MaterialPageRoute(builder: (context) {
                   return PromoDetail();
-                }),
+                },),
               );
             },
             child: Wrap(
@@ -181,7 +181,7 @@ class Title_promo extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 14,
                       height: 1,
-                      color: Color.fromARGB(255, 12, 119, 206)),
+                      color: Color.fromARGB(255, 12, 119, 206),),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),

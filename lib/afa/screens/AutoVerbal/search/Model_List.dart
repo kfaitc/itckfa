@@ -145,7 +145,7 @@ class AutoVerbal_List {
       this.agenttypeCreatedBy,
       this.agenttypeCreatedDate,
       this.agenttypeModifyBy,
-      this.agenttypeModifyDate});
+      this.agenttypeModifyDate,});
 
   factory AutoVerbal_List.fromJson(Map<String, dynamic> json) {
     return AutoVerbal_List(
@@ -355,7 +355,7 @@ class AutoVerbalRequestModel {
       required this.verbal_con,
       required this.agent,
       //   required this.autoVerbal,
-      required this.verbal});
+      required this.verbal,});
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
       "verbal_property_id": property_type_id.trim(),

@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
@@ -66,7 +65,7 @@ class _Menu_of_AutovervalState extends State<Menu_of_Autoverval>
           margin: EdgeInsets.only(left: 20, right: 20, bottom: 70),
           alignment: Alignment.topCenter,
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              color: Colors.white, borderRadius: BorderRadius.circular(20),),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,7 +83,7 @@ class _Menu_of_AutovervalState extends State<Menu_of_Autoverval>
                             get_min1: (value) {},
                             get_min2: (value) {},
                             get_province: (value) {},
-                          )));
+                          ),),);
                 },
                 child: Container(
                   height: 200,
@@ -96,7 +95,7 @@ class _Menu_of_AutovervalState extends State<Menu_of_Autoverval>
                       BoxShadow(
                           blurRadius: 5,
                           color: Colors.black54,
-                          blurStyle: BlurStyle.outer)
+                          blurStyle: BlurStyle.outer,)
                     ],
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -116,7 +115,7 @@ class _Menu_of_AutovervalState extends State<Menu_of_Autoverval>
                     style: TextStyle(
                         fontSize: 24,
                         color: Colors.white,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,),
                   ),
                 ),
               ),
@@ -129,7 +128,7 @@ class _Menu_of_AutovervalState extends State<Menu_of_Autoverval>
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => list_verbal(
                             verbal_id: widget.id,
-                          )));
+                          ),),);
                 },
                 child: Container(
                   height: 200,
@@ -153,7 +152,7 @@ class _Menu_of_AutovervalState extends State<Menu_of_Autoverval>
                       BoxShadow(
                           blurRadius: 5,
                           color: Colors.black54,
-                          blurStyle: BlurStyle.outer)
+                          blurStyle: BlurStyle.outer,)
                     ],
                   ),
                   child: Row(
@@ -168,7 +167,7 @@ class _Menu_of_AutovervalState extends State<Menu_of_Autoverval>
                             fontWeight: FontWeight.bold,
                             shadows: [
                               Shadow(blurRadius: 2, color: Colors.blue)
-                            ]),
+                            ],),
                         child: AnimatedTextKit(
                           repeatForever: true,
                           pause: const Duration(milliseconds: 300),
@@ -179,7 +178,7 @@ class _Menu_of_AutovervalState extends State<Menu_of_Autoverval>
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => list_verbal(
                                       verbal_id: widget.id,
-                                    )));
+                                    ),),);
                           },
                         ),
                       ),
@@ -188,7 +187,7 @@ class _Menu_of_AutovervalState extends State<Menu_of_Autoverval>
                         style: TextStyle(
                             fontSize: 23,
                             color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,),
                       ),
                       SizedBox(width: 10),
                     ],
@@ -243,7 +242,7 @@ class _Menu_list_verbalState extends State<list_verbal> {
   bool? check_data;
   Future<void> _fetchData() async {
     final url = Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verbal/id_verbal');
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/verbal/id_verbal',);
     final response = await http.get(url);
     final jsonData = json.decode(response.body);
     List d1 = [];
@@ -304,7 +303,7 @@ class _Menu_list_verbalState extends State<list_verbal> {
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(blurRadius: 5, color: Colors.black45)
-                        ]
+                        ],
                         // image: DecorationImage(
                         //     opacity: 1.0,
                         //     image: AssetImage('assets/images/New_KFA_Logo_pdf.png'),
@@ -349,7 +348,7 @@ class _Menu_list_verbalState extends State<list_verbal> {
                                 color: Colors.white,
                                 fontSize:
                                     MediaQuery.of(context).textScaleFactor *
-                                        16),
+                                        16,),
                             fullWidthButton: true,
                           ),
                         ),
@@ -403,17 +402,17 @@ class _Menu_list_verbalState extends State<list_verbal> {
                         label: Text(
                       'Verbal ID',
                       style: TextStyle(color: Colors.green),
-                    )),
+                    ),),
                     DataColumn(
                         label: Text(
                       'Address',
                       style: TextStyle(color: Colors.green),
-                    )),
+                    ),),
                     DataColumn(
                         label: Text(
                       'Bank',
                       style: TextStyle(color: Colors.green),
-                    )),
+                    ),),
                   ],
                   dataRowHeight: 50,
                   rowsPerPage: on_row,
@@ -526,7 +525,7 @@ class _DataSource extends DataTableSource {
               );
             },
           ),
-        ]);
+        ],);
   }
 
   @override

@@ -19,7 +19,7 @@ class L_B {
       this.verbal_land_minsqm,
       this.verbal_land_maxsqm,
       this.verbal_land_minvalue,
-      this.verbal_land_maxvalue);
+      this.verbal_land_maxvalue,);
 
   factory L_B.fromJson(Map<String, dynamic> json) {
     return L_B(
