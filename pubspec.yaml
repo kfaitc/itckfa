@@ -111,6 +111,8 @@ dependencies:
   in_app_purchase: 3.1.11
   in_app_purchase_storekit: ^0.3.7
   http: ^0.13.6
+  file_selector: ^1.0.2
+  share_plus: ^4.5.3
 
 flutter_launcher_icons:
   android: "launcher_icon"
