@@ -39,7 +39,8 @@ void main() async {
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],);
+    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+  );
   // final ImagePickerPlatform imagePickerImplementation =
   //     ImagePickerPlatform.instance;
   // if (imagePickerImplementation is ImagePickerAndroid) {
@@ -290,8 +291,12 @@ class _ThankYouPageState extends State<ThankYouPage> {
         if (_secondsRemaining == 0) {
           timer.cancel();
           if (widget.title.toString() == "varbal") {
-            Get.to(() => Edit(
-                user_id_controller: user_id_control!, verbal_id: verbal_id!,),);
+            Get.to(
+              () => Edit(
+                user_id_controller: user_id_control!,
+                verbal_id: verbal_id!,
+              ),
+            );
           } else {
             Get.to(() => const HomePage1());
           }
@@ -338,9 +343,10 @@ class _ThankYouPageState extends State<ThankYouPage> {
               height: 170,
               padding: const EdgeInsets.all(35),
               decoration: BoxDecoration(
-                  color: themeColor,
-                  shape: BoxShape.circle,
-                  image: DecorationImage(image: AssetImage(image)),),
+                color: themeColor,
+                shape: BoxShape.circle,
+                image: DecorationImage(image: AssetImage(image)),
+              ),
             ),
             SizedBox(height: screenHeight * 0.1),
             Text(
@@ -378,9 +384,12 @@ class _ThankYouPageState extends State<ThankYouPage> {
                 type: GFButtonType.outline2x,
                 onPressed: () {
                   if (widget.title.toString() == "varbal") {
-                    Get.to(() => Edit(
+                    Get.to(
+                      () => Edit(
                         user_id_controller: user_id_control!,
-                        verbal_id: verbal_id!,),);
+                        verbal_id: verbal_id!,
+                      ),
+                    );
                   } else {
                     Get.to(() => const HomePage1());
                   }

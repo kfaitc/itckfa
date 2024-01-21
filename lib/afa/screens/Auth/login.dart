@@ -62,6 +62,7 @@ class _LoginState extends State<Login> {
   static bool status = false;
   late TextEditingController Email;
   late TextEditingController Password;
+
   // selectPeople() async {
   //   // list = await PeopleController().selectPeople();
   //   // if (list.isEmpty) {
@@ -113,9 +114,14 @@ class _LoginState extends State<Login> {
           print("objects: $id");
           Email = TextEditingController(text: slist[i]['email']);
           Password = TextEditingController(text: slist[i]['password']);
-          OneSignal.login(control_user);
-          OneSignal.User.addAlias("fb_id", "1341524");
 
+          // OneSignal.logout();
+          OneSignalPushSubscription().optIn().then((value) {});
+          OneSignal.login(control_user);
+          OneSignal.User.addAlias("fb_id", "$control_user");
+          OneSignal.User.addEmail(slist[i]['email'].toString());
+          // OneSignal.User.addAlias("fb_id", "kfa123");
+          // OneSignal.User.addAliases({"fb_id": "11525-52442"});
           // OneSignal.login(slist[i]['username'].toString());
           // OneSignal.User.addAlias(
           //   "fb_id$id",

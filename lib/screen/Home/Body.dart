@@ -75,7 +75,8 @@ class _BodyState extends State<Body> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services',),
+            'Location services are disabled. Please enable the services',
+          ),
         ),
       );
       return false;
@@ -85,14 +86,19 @@ class _BodyState extends State<Body> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')),);
+          const SnackBar(content: Text('Location permissions are denied')),
+        );
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.',),),);
+            'Location permissions are permanently denied, we cannot request permissions.',
+          ),
+        ),
+      );
       return false;
     }
     // _getCurrentPosition();
@@ -101,7 +107,8 @@ class _BodyState extends State<Body> {
 
   Future<void> _getCurrentPosition() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     setState(() {
       lat = position.latitude;
@@ -114,8 +121,11 @@ class _BodyState extends State<Body> {
   var maxSqm2, minSqm2;
   var formatter = NumberFormat("##,###,###,###.00", "en_US");
   Future<void> Find_by_piont(double la, double lo) async {
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
@@ -147,8 +157,11 @@ class _BodyState extends State<Body> {
           }
         }
       }
-      final response_rc = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',),);
+      final response_rc = await http.get(
+        Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
+        ),
+      );
       var jsonResponse_rc = json.decode(response_rc.body);
       setState(() {
         maxSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
@@ -170,8 +183,11 @@ class _BodyState extends State<Body> {
   double? R_avg;
   double? C_avg;
   Future<void> change_price() async {
-    final response_rc = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',),);
+    final response_rc = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
+      ),
+    );
     var jsonResponse_rc = json.decode(response_rc.body);
     setState(() {
       maxSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
@@ -219,17 +235,22 @@ class _BodyState extends State<Body> {
       // print(id);
     });
     DataAutoVerbal = await mydb_vb.db.rawQuery(
-        "SELECT * FROM verbal_models WHERE verbal_user = ? ",
-        [control_user.toString()],);
+      "SELECT * FROM verbal_models WHERE verbal_user = ? ",
+      [control_user.toString()],
+    );
     final response = await http.get(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user',),
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user',
+      ),
       headers: {
         'Content-Type': 'application/json',
       },
     );
-    var rs_ios = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option',),);
+    var rs_ios = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option',
+      ),
+    );
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
       var jsonData_ios = jsonDecode(rs_ios.body);
@@ -358,12 +379,16 @@ class _BodyState extends State<Body> {
                     padding: const EdgeInsets.all(1),
                     onPressed: () {
                       setState(() {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return ProtectDataCrossCheck(
-                            id_user: control_user,
-                          );
-                        },),);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ProtectDataCrossCheck(
+                                id_user: control_user,
+                              );
+                            },
+                          ),
+                        );
                       });
                     },
                     icon: Icon(
@@ -400,8 +425,14 @@ class _BodyState extends State<Body> {
                 },
                 onPanEnd: (details) {
                   setState(() {
-                    position = Offset(MediaQuery.of(context).size.width * 0.78,
-                        MediaQuery.of(context).size.height * 0.16,);
+                    double dataX = MediaQuery.of(context).size.width / 2;
+                    if (position.dx > dataX) {
+                      position = Offset(
+                          MediaQuery.of(context).size.width * 0.9, position.dy);
+                    } else {
+                      position = Offset(
+                          MediaQuery.of(context).size.width * 0.0, position.dy);
+                    }
                   });
                 },
                 child: Stack(
@@ -412,10 +443,10 @@ class _BodyState extends State<Body> {
                           alignment: Alignment.topCenter,
                           children: [
                             Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
-                                width: MediaQuery.of(context).size.width * 1.0,
-                                color: kwhite_new,),
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              width: MediaQuery.of(context).size.width * 1.0,
+                              color: kwhite_new,
+                            ),
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 70),
                               margin: EdgeInsets.only(top: 160),
@@ -448,21 +479,25 @@ class _BodyState extends State<Body> {
                                       alignment: Alignment.topLeft,
                                       padding: EdgeInsets.all(5),
                                       margin: EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 15,),
+                                        horizontal: 15,
+                                        vertical: 15,
+                                      ),
                                       decoration: BoxDecoration(
-                                          color: kwhite_new,
-                                          boxShadow: [
-                                            BoxShadow(
-                                                blurRadius: 2,
-                                                color: Colors.grey,
-                                                offset: Offset(-1, 1),)
-                                          ],
-                                          border: Border.all(
-                                              color: kImageColor,
-                                              width: 2,
-                                              style: BorderStyle.solid,),
-                                          borderRadius:
-                                              BorderRadius.circular(10),),
+                                        color: kwhite_new,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            blurRadius: 2,
+                                            color: Colors.grey,
+                                            offset: Offset(-1, 1),
+                                          )
+                                        ],
+                                        border: Border.all(
+                                          color: kImageColor,
+                                          width: 2,
+                                          style: BorderStyle.solid,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
                                       child: Row(
                                         children: [
                                           Expanded(
@@ -476,30 +511,29 @@ class _BodyState extends State<Body> {
                                                 Text(
                                                   "Search your property anywhere",
                                                   style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontStyle:
-                                                          FontStyle.italic,
-                                                      fontSize: MediaQuery.of(
-                                                                  context,)
-                                                              .textScaleFactor *
-                                                          14,
-                                                      shadows: [
-                                                        Shadow(
-                                                            blurRadius: 2,
-                                                            color: Colors.grey,
-                                                            offset:
-                                                                Offset(-2, 1),)
-                                                      ],
-                                                      fontWeight:
-                                                          FontWeight.bold,),
+                                                    color: Colors.white,
+                                                    fontStyle: FontStyle.italic,
+                                                    fontSize: MediaQuery.of(
+                                                          context,
+                                                        ).textScaleFactor *
+                                                        14,
+                                                    shadows: [
+                                                      Shadow(
+                                                        blurRadius: 2,
+                                                        color: Colors.grey,
+                                                        offset: Offset(-2, 1),
+                                                      )
+                                                    ],
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                                 Text(
                                                   "by land market price and  can also add/view more properties listing  here, only 1\$.",
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: MediaQuery.of(
-                                                                context,)
-                                                            .textScaleFactor *
+                                                          context,
+                                                        ).textScaleFactor *
                                                         8,
                                                   ),
                                                 ),
@@ -587,18 +621,21 @@ class _BodyState extends State<Body> {
                                                         height: 50,
                                                         width: 50,
                                                         child: Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    8.0,),
-                                                            child: Image.asset(
-                                                              'assets/images/topup.png',
-                                                              fit: BoxFit.fill,
-                                                            ),),
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                            8.0,
+                                                          ),
+                                                          child: Image.asset(
+                                                            'assets/images/topup.png',
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        ),
                                                       ),
                                                       Text(
                                                         "Top Up",
                                                         style: TextStyle(
-                                                            fontSize: 12,),
+                                                          fontSize: 12,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -614,9 +651,10 @@ class _BodyState extends State<Body> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) {
-                                                return Walletscreen();
-                                              },),
+                                                builder: (context) {
+                                                  return Walletscreen();
+                                                },
+                                              ),
                                             );
                                           },
                                         ),
@@ -660,12 +698,14 @@ class _BodyState extends State<Body> {
                                           svgPic: 'assets/icons/property.svg',
                                           title: 'Property',
                                           press: () {
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                              builder: (context) {
-                                                return Home_Screen_property();
-                                              },
-                                            ),);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return Home_Screen_property();
+                                                },
+                                              ),
+                                            );
                                           },
                                         ),
                                         SCard(
@@ -1137,13 +1177,14 @@ class _BodyState extends State<Body> {
                                     onTap: () {
                                       setState(() {
                                         Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    Add_with_property(
-                                                      id: id,
-                                                      id_control_user:
-                                                          control_user,
-                                                    ),),);
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                Add_with_property(
+                                              id: id,
+                                              id_control_user: control_user,
+                                            ),
+                                          ),
+                                        );
                                       });
                                     },
                                     child: Container(
@@ -1159,9 +1200,9 @@ class _BodyState extends State<Body> {
                                         //   )
                                         // ],
                                         image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image:
-                                                AssetImage('assets/earth.gif'),),
+                                          fit: BoxFit.cover,
+                                          image: AssetImage('assets/earth.gif'),
+                                        ),
                                         borderRadius: BorderRadius.circular(90),
                                       ),
                                       child: DefaultTextStyle(
@@ -1176,7 +1217,11 @@ class _BodyState extends State<Body> {
                                             Shadow(
                                               blurRadius: 15.0,
                                               color: Color.fromARGB(
-                                                  255, 248, 195, 195,),
+                                                255,
+                                                248,
+                                                195,
+                                                195,
+                                              ),
                                               offset: Offset(0, 0),
                                             ),
                                           ],
@@ -1185,22 +1230,27 @@ class _BodyState extends State<Body> {
                                           repeatForever: true,
                                           animatedTexts: [
                                             TypewriterAnimatedText(
-                                                'Cross Check',),
+                                              'Cross Check',
+                                            ),
                                             TypewriterAnimatedText(
-                                                'Your Property',),
+                                              'Your Property',
+                                            ),
                                           ],
                                           onTap: () {
                                             setState(() {
                                               print(
-                                                  "id $id \n control_user $control_user",);
+                                                "id $id \n control_user $control_user",
+                                              );
                                               Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Add_with_property(
-                                                            id: id,
-                                                            id_control_user:
-                                                                control_user,
-                                                          ),),);
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Add_with_property(
+                                                    id: id,
+                                                    id_control_user:
+                                                        control_user,
+                                                  ),
+                                                ),
+                                              );
                                             });
                                           },
                                           pause:
@@ -1237,7 +1287,9 @@ class _BodyState extends State<Body> {
                                           borderRadius:
                                               BorderRadius.circular(5),
                                           border: Border.all(
-                                              color: Colors.white, width: 2,),
+                                            color: Colors.white,
+                                            width: 2,
+                                          ),
                                         ),
                                         child: Column(
                                           mainAxisAlignment:
@@ -1256,8 +1308,8 @@ class _BodyState extends State<Body> {
                                                           FontWeight.bold,
                                                       color: Colors.white,
                                                       fontSize: MediaQuery.of(
-                                                                  context,)
-                                                              .textScaleFactor *
+                                                            context,
+                                                          ).textScaleFactor *
                                                           10,
                                                     ),
                                                   ),
@@ -1265,14 +1317,16 @@ class _BodyState extends State<Body> {
                                                 Expanded(
                                                   flex: 1,
                                                   child: Text(
-                                                    (number_of_vpoint != null) ? "$number_of_vpoint V Point" : "0 V Point",
+                                                    (number_of_vpoint != null)
+                                                        ? "$number_of_vpoint V Point"
+                                                        : "0 V Point",
                                                     style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       color: Colors.white,
                                                       fontSize: MediaQuery.of(
-                                                                  context,)
-                                                              .textScaleFactor *
+                                                            context,
+                                                          ).textScaleFactor *
                                                           10,
                                                     ),
                                                   ),
@@ -1299,8 +1353,8 @@ class _BodyState extends State<Body> {
                                                           FontWeight.bold,
                                                       color: Colors.white,
                                                       fontSize: MediaQuery.of(
-                                                                  context,)
-                                                              .textScaleFactor *
+                                                            context,
+                                                          ).textScaleFactor *
                                                           10,
                                                     ),
                                                   ),
@@ -1314,8 +1368,8 @@ class _BodyState extends State<Body> {
                                                           FontWeight.bold,
                                                       color: Colors.white,
                                                       fontSize: MediaQuery.of(
-                                                                  context,)
-                                                              .textScaleFactor *
+                                                            context,
+                                                          ).textScaleFactor *
                                                           10,
                                                     ),
                                                   ),
@@ -1342,8 +1396,8 @@ class _BodyState extends State<Body> {
                                                           FontWeight.bold,
                                                       color: Colors.white,
                                                       fontSize: MediaQuery.of(
-                                                                  context,)
-                                                              .textScaleFactor *
+                                                            context,
+                                                          ).textScaleFactor *
                                                           10,
                                                     ),
                                                   ),
@@ -1357,8 +1411,8 @@ class _BodyState extends State<Body> {
                                                           FontWeight.bold,
                                                       color: Colors.white,
                                                       fontSize: MediaQuery.of(
-                                                                  context,)
-                                                              .textScaleFactor *
+                                                            context,
+                                                          ).textScaleFactor *
                                                           10,
                                                     ),
                                                   ),
@@ -1383,11 +1437,14 @@ class _BodyState extends State<Body> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            Navigator.of(context).push(MaterialPageRoute(
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
                                 builder: (context) => Add_with_property(
-                                      id: id,
-                                      id_control_user: control_user,
-                                    ),),);
+                                  id: id,
+                                  id_control_user: control_user,
+                                ),
+                              ),
+                            );
                           });
                         },
                         child: Column(
@@ -1404,14 +1461,16 @@ class _BodyState extends State<Body> {
                             Container(
                               padding: EdgeInsets.all(3),
                               decoration: BoxDecoration(
-                                  color: kImageColor,
-                                  borderRadius: BorderRadius.circular(10),),
+                                color: kImageColor,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               child: Text(
                                 "Cross Check \nYour Property",
                                 style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ],
@@ -1446,8 +1505,11 @@ class _BodyState extends State<Body> {
   List<dynamic> list_sangkat = [];
   void Load_sangkat(String id) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=$id',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=$id',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -1464,8 +1526,11 @@ class _BodyState extends State<Body> {
   int id_khan = 0;
   void Load_khan(String district) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=$district',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=$district',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {

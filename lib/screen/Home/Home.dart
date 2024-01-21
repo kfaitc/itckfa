@@ -111,11 +111,13 @@ class _HomePageState extends State<HomePage1> {
 
             // OneSignal.login(slist[i]['username'].toString());
             // OneSignal.User.addAlias(
-            //     "fb_id$id", slist[i]['username'].toString(),);
+            //   "fb_id$id",
+            //   slist[i]['username'].toString(),
+            // );
             // OneSignal.User.addTagWithKey(
             //     "fb_id$id", slist[i]['username'].toString(),);
             // OneSignal.User.addTags({'fb_id$id': '${slist[i]['username']}'});
-            print("pushSubscription ");
+            print("pushSubscription ${OneSignal.User.pushSubscription}");
           }
         });
         setState(() {

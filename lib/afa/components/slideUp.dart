@@ -30,14 +30,15 @@ import 'numDisplay.dart';
 typedef OnChangeCallback = void Function(dynamic value);
 
 class map_cross_verbal extends StatefulWidget {
-  const map_cross_verbal(
-      {super.key,
-      required this.get_province,
-      required this.get_district,
-      required this.get_commune,
-      required this.get_log,
-      required this.get_lat,
-      required this.asking_price,});
+  const map_cross_verbal({
+    super.key,
+    required this.get_province,
+    required this.get_district,
+    required this.get_commune,
+    required this.get_log,
+    required this.get_lat,
+    required this.asking_price,
+  });
   final OnChangeCallback get_province;
   final OnChangeCallback get_district;
   final OnChangeCallback get_commune;
@@ -86,7 +87,8 @@ class _HomePageState extends State<map_cross_verbal> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services',),
+            'Location services are disabled. Please enable the services',
+          ),
         ),
       );
       return false;
@@ -96,14 +98,19 @@ class _HomePageState extends State<map_cross_verbal> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')),);
+          const SnackBar(content: Text('Location permissions are denied')),
+        );
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.',),),);
+            'Location permissions are permanently denied, we cannot request permissions.',
+          ),
+        ),
+      );
       return false;
     }
     return true;
@@ -111,7 +118,8 @@ class _HomePageState extends State<map_cross_verbal> {
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     setState(() {
       latLng = LatLng(position.latitude, position.longitude);
@@ -198,14 +206,15 @@ class _HomePageState extends State<map_cross_verbal> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                if (groupValue == 0) {
-                  Dialog(context);
-                } else {
-                  for_market_price();
-                }
-              },
-              icon: Icon(Icons.line_style_rounded, color: Colors.white),)
+            onPressed: () {
+              if (groupValue == 0) {
+                Dialog(context);
+              } else {
+                for_market_price();
+              }
+            },
+            icon: Icon(Icons.line_style_rounded, color: Colors.white),
+          )
         ],
       ),
       body: Material(
@@ -234,8 +243,9 @@ class _HomePageState extends State<map_cross_verbal> {
               parallaxOffset: .5,
               panelBuilder: (ScrollController sc) => _panel(sc),
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(18.0),
-                  topRight: Radius.circular(18.0),),
+                topLeft: Radius.circular(18.0),
+                topRight: Radius.circular(18.0),
+              ),
               onPanelSlide: (double pos) => setState(() {}),
             ),
           ],
@@ -385,9 +395,10 @@ class _HomePageState extends State<map_cross_verbal> {
           SizedBox(height: 10.0),
           if (groupValue == 0)
             NumDisplay(
-                onSaved: (newValue) => setState(() {
-                      requestModel.num = newValue!;
-                    }),),
+              onSaved: (newValue) => setState(() {
+                requestModel.num = newValue!;
+              }),
+            ),
           SizedBox(height: 10.0),
           if (groupValue == 0)
             Row(
@@ -494,7 +505,8 @@ class _HomePageState extends State<map_cross_verbal> {
               markerId: MarkerId('mark'),
               position: argument,
               icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueRed,),
+                BitmapDescriptor.hueRed,
+              ),
             );
             setState(() {
               adding_price = 0;
@@ -563,16 +575,19 @@ class _HomePageState extends State<map_cross_verbal> {
         };
       } else {
         Jsondata = {
+          "property_type_id": "15",
           "num": requestModel.num,
           "lat": requestModel.lat,
           "lng": requestModel.lng,
         };
       }
       final rs = await http.post(
-          Uri.parse(
-              'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/map_action',),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(Jsondata),);
+        Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/map_action',
+        ),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(Jsondata),
+      );
       if (rs.statusCode == 200) {
         var jsonData = jsonDecode(rs.body);
         setState(() {
@@ -625,7 +640,8 @@ class _HomePageState extends State<map_cross_verbal> {
                 // print(map[i]['comparable_adding_price']);
               } else if (map[i]['comparable_adding_price'].contains(',')) {
                 adding_price += double.parse(
-                        map[i]['comparable_adding_price'].replaceAll(",", ""),) /
+                      map[i]['comparable_adding_price'].replaceAll(",", ""),
+                    ) /
                     map.length;
                 // print(map[i]['comparable_adding_price']);
                 //print(map[i]['comparable_adding_price'].split(",")[0]);
@@ -653,9 +669,9 @@ class _HomePageState extends State<map_cross_verbal> {
                             int.parse(requestModel.num);
                   } else if (map[i]['comparable_adding_price'].contains(',')) {
                     // print(map[i]['comparable_adding_price'].replaceAll(",", ""));
-                    adding_price += double.parse(map[i]
-                                ['comparable_adding_price']
-                            .replaceAll(",", ""),) /
+                    adding_price += double.parse(
+                          map[i]['comparable_adding_price'].replaceAll(",", ""),
+                        ) /
                         int.parse(requestModel.num);
                   } else {
                     adding_price +=
@@ -683,7 +699,9 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/l.png',),
+              ImageConfiguration(size: Size(50, 50)),
+              'assets/icons/l.png',
+            ),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -695,7 +713,9 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -705,22 +725,31 @@ class _HomePageState extends State<map_cross_verbal> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'ID\'s property',
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 'Price',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text('Land-Width',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Length',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Total',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'Land-Width',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Length',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Total',
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
                           Column(
@@ -728,42 +757,51 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['comparable_id']
-                                          .toString(),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['comparable_id']
+                                        .toString(),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
                                         ['comparable_adding_price'] +
                                     '\$',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['agenttype_name'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_width'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_length'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      formatter.format(double.parse(
-                                          data_adding_correct[i]
-                                                  ['comparable_land_total']
-                                              .replaceAll(",", "")
-                                              .toString(),),),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    formatter.format(
+                                      double.parse(
+                                        data_adding_correct[i]
+                                                ['comparable_land_total']
+                                            .replaceAll(",", "")
+                                            .toString(),
+                                      ),
+                                    ),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -794,7 +832,9 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/f.png',),
+              ImageConfiguration(size: Size(50, 50)),
+              'assets/icons/f.png',
+            ),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -806,7 +846,9 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -816,22 +858,31 @@ class _HomePageState extends State<map_cross_verbal> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'ID\'s property',
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 'Price',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text('Land-Width',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Length',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Total',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'Land-Width',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Length',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Total',
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
                           Column(
@@ -839,42 +890,51 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['comparable_id']
-                                          .toString(),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['comparable_id']
+                                        .toString(),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
                                         ['comparable_adding_price'] +
                                     '\$',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['agenttype_name'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_width'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_length'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      formatter.format(double.parse(
-                                          data_adding_correct[i]
-                                                  ['comparable_land_total']
-                                              .replaceAll(",", "")
-                                              .toString(),),),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    formatter.format(
+                                      double.parse(
+                                        data_adding_correct[i]
+                                                ['comparable_land_total']
+                                            .replaceAll(",", "")
+                                            .toString(),
+                                      ),
+                                    ),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -905,7 +965,9 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/v.png',),
+              ImageConfiguration(size: Size(50, 50)),
+              'assets/icons/v.png',
+            ),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -917,7 +979,9 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -927,22 +991,31 @@ class _HomePageState extends State<map_cross_verbal> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'ID\'s property',
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 'Price',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text('Land-Width',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Length',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Total',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'Land-Width',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Length',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Total',
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
                           Column(
@@ -950,42 +1023,51 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['comparable_id']
-                                          .toString(),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['comparable_id']
+                                        .toString(),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
                                         ['comparable_adding_price'] +
                                     '\$',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['agenttype_name'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_width'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_length'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      formatter.format(double.parse(
-                                          data_adding_correct[i]
-                                                  ['comparable_land_total']
-                                              .replaceAll(",", "")
-                                              .toString(),),),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    formatter.format(
+                                      double.parse(
+                                        data_adding_correct[i]
+                                                ['comparable_land_total']
+                                            .replaceAll(",", "")
+                                            .toString(),
+                                      ),
+                                    ),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1016,7 +1098,9 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/h.png',),
+              ImageConfiguration(size: Size(50, 50)),
+              'assets/icons/h.png',
+            ),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -1028,7 +1112,9 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -1038,22 +1124,31 @@ class _HomePageState extends State<map_cross_verbal> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'ID\'s property',
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 'Price',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text('Land-Width',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Length',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Total',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'Land-Width',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Length',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Total',
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
                           Column(
@@ -1061,42 +1156,51 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['comparable_id']
-                                          .toString(),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['comparable_id']
+                                        .toString(),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
                                         ['comparable_adding_price'] +
                                     '\$',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['agenttype_name'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_width'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_length'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      formatter.format(double.parse(
-                                          data_adding_correct[i]
-                                                  ['comparable_land_total']
-                                              .replaceAll(",", "")
-                                              .toString(),),),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    formatter.format(
+                                      double.parse(
+                                        data_adding_correct[i]
+                                                ['comparable_land_total']
+                                            .replaceAll(",", "")
+                                            .toString(),
+                                      ),
+                                    ),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1127,7 +1231,9 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/b.png',),
+              ImageConfiguration(size: Size(50, 50)),
+              'assets/icons/b.png',
+            ),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -1139,7 +1245,9 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -1149,22 +1257,31 @@ class _HomePageState extends State<map_cross_verbal> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'ID\'s property',
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 'Price',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text('Land-Width',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Length',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Total',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'Land-Width',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Length',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Total',
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
                           Column(
@@ -1172,42 +1289,51 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['comparable_id']
-                                          .toString(),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['comparable_id']
+                                        .toString(),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
                                         ['comparable_adding_price'] +
                                     '\$',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['agenttype_name'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_width'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_length'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      formatter.format(double.parse(
-                                          data_adding_correct[i]
-                                                  ['comparable_land_total']
-                                              .replaceAll(",", "")
-                                              .toString(),),),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    formatter.format(
+                                      double.parse(
+                                        data_adding_correct[i]
+                                                ['comparable_land_total']
+                                            .replaceAll(",", "")
+                                            .toString(),
+                                      ),
+                                    ),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1238,7 +1364,9 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/v.png',),
+              ImageConfiguration(size: Size(50, 50)),
+              'assets/icons/v.png',
+            ),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -1250,7 +1378,9 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -1260,22 +1390,31 @@ class _HomePageState extends State<map_cross_verbal> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'ID\'s property',
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 'Price',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text('Land-Width',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Length',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Total',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'Land-Width',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Length',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Total',
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
                           Column(
@@ -1283,42 +1422,51 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['comparable_id']
-                                          .toString(),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['comparable_id']
+                                        .toString(),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
                                         ['comparable_adding_price'] +
                                     '\$',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['agenttype_name'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_width'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_length'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      formatter.format(double.parse(
-                                          data_adding_correct[i]
-                                                  ['comparable_land_total']
-                                              .replaceAll(",", "")
-                                              .toString(),),),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    formatter.format(
+                                      double.parse(
+                                        data_adding_correct[i]
+                                                ['comparable_land_total']
+                                            .replaceAll(",", "")
+                                            .toString(),
+                                      ),
+                                    ),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1349,7 +1497,9 @@ class _HomePageState extends State<map_cross_verbal> {
               double.parse(data_adding_correct[i]['latlong_la'].toString()),
             ),
             icon: await BitmapDescriptor.fromAssetImage(
-                ImageConfiguration(size: Size(50, 50)), 'assets/icons/a.png',),
+              ImageConfiguration(size: Size(50, 50)),
+              'assets/icons/a.png',
+            ),
             onTap: () {
               setState(() {
                 showDialog<String>(
@@ -1361,7 +1511,9 @@ class _HomePageState extends State<map_cross_verbal> {
                     title: Text(
                       "Property: ${i + 1} ${data_adding_correct[i]['property_type_name']}",
                       style: TextStyle(
-                          color: kPrimaryColor, fontWeight: FontWeight.bold,),
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     content: SizedBox(
                       height: 150,
@@ -1371,22 +1523,31 @@ class _HomePageState extends State<map_cross_verbal> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('ID\'s property',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'ID\'s property',
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 'Price',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text('Land-Width',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Length',
-                                  style: TextStyle(fontSize: 12),),
-                              Text('Land-Total',
-                                  style: TextStyle(fontSize: 12),),
+                              Text(
+                                'Land-Width',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Length',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                'Land-Total',
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
                           Column(
@@ -1394,42 +1555,51 @@ class _HomePageState extends State<map_cross_verbal> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['comparable_id']
-                                          .toString(),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['comparable_id']
+                                        .toString(),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
                                 '  :   ' +
                                     data_adding_correct[i]
                                         ['comparable_adding_price'] +
                                     '\$',
                                 style: TextStyle(
-                                    color: kImageColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,),
+                                  color: kImageColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]['agenttype_name'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]['agenttype_name'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_width'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_width'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      data_adding_correct[i]
-                                          ['comparable_land_length'],
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    data_adding_correct[i]
+                                        ['comparable_land_length'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                               Text(
-                                  '  :   ' +
-                                      formatter.format(double.parse(
-                                          data_adding_correct[i]
-                                                  ['comparable_land_total']
-                                              .replaceAll(",", "")
-                                              .toString(),),),
-                                  style: TextStyle(fontSize: 12),),
+                                '  :   ' +
+                                    formatter.format(
+                                      double.parse(
+                                        data_adding_correct[i]
+                                                ['comparable_land_total']
+                                            .replaceAll(",", "")
+                                            .toString(),
+                                      ),
+                                    ),
+                                style: TextStyle(fontSize: 12),
+                              ),
                               // Text('  :   ' + map[i]['comparable_survey_date']),
                             ],
                           ),
@@ -1453,114 +1623,444 @@ class _HomePageState extends State<map_cross_verbal> {
           });
         }
       }
-      Dialog(context);
       await Find_by_piont(
-          double.parse(requestModel.lat), double.parse(requestModel.lng),);
+        double.parse(requestModel.lat),
+        double.parse(requestModel.lng),
+      );
+      await Dialog(context);
     } else {
       await Find_by_piont(
-          double.parse(requestModel.lat), double.parse(requestModel.lng),);
-      for_market_price();
+        double.parse(requestModel.lat),
+        double.parse(requestModel.lng),
+      );
+      await for_market_price();
     }
   }
 
+  var route, avg;
   Future Dialog(BuildContext context) {
-    min = adding_price - (0.1 * adding_price);
-    max = adding_price - (0.05 * adding_price);
-    var avg = (min!.toDouble() + max!.toDouble()) / 2;
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        actions: [
-          TextButton(
-            child: Text('Close'),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ],
-        content: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.55,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                for (int i = 0; i < data_adding_correct.length; i++)
-                  Card(
-                    elevation: 10,
-                    child: ListTile(
-                      title: Text(
-                          "comparable id : " +
-                              data_adding_correct[i]['comparable_id']
-                                  .toString(),
-                          style: TextStyle(fontSize: 12),),
-                      subtitle: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              "property : " +
-                                  data_adding_correct[i]['property_type_name']
-                                      .toString(),
-                              style: TextStyle(fontSize: 10),),
-                          Text(
-                              "Owner : " +
-                                  data_adding_correct[i]['agenttype_name']
-                                      .toString(),
-                              style: TextStyle(fontSize: 10),),
-                          Text(
-                              "adding price : " +
-                                  formatter.format(double.parse(
-                                      data_adding_correct[i]
-                                              ['comparable_adding_price']
-                                          .replaceAll(",", "")
-                                          .toString(),),) +
-                                  "\$",
-                              style: TextStyle(fontSize: 10),),
-                          Text(
-                              "Date : " +
-                                  data_adding_correct[i]
-                                          ['comparable_survey_date']
-                                      .toString(),
-                              style: TextStyle(fontSize: 10),),
-                        ],
+    if (!route.toString().contains('Preah Norodom Blvd') &&
+        !route.toString().contains('Preah Monivong Blvd (93)') &&
+        !route.toString().contains('NR1') &&
+        !route.toString().contains('Yothapol Khemarak Phoumin Blvd') &&
+        !route.toString().contains('Mao Tse Toung Blvd') &&
+        !route.toString().contains('Monireth') &&
+        !route.toString().contains('Preah Sihanouk Blvd') &&
+        !route.toString().contains('Kampuchea Krom Blvd') &&
+        !route.toString().contains('Russian Federation Blvd') &&
+        !route.toString().contains('Hun Sen Blvd') &&
+        !route.toString().contains('Street 2004') &&
+        !route.toString().contains('AH11') &&
+        !route.toString().contains('NR2') &&
+        !route.toString().contains('Chamkar Doung Street (217)') &&
+        !route.toString().contains('Samdach Sothearos Blvd (3)') &&
+        !route.toString().contains('Jawaharlal Nehru Blvd (215)') &&
+        !route.toString().contains('Charles de Gaulle Blvd (217)') &&
+        !route.toString().contains('Veng Sreng Blvd') &&
+        !route.toString().contains('Phnom Penh Hanoi Friendship Blvd (1019)') &&
+        !route.toString().contains('Samdach Penn Nouth St. (289)') &&
+        !route.toString().contains('Street 273') &&
+        !route.toString().contains('Street 355') &&
+        !route.toString().contains('Oknha Mong Reththy St. (1928)') &&
+        !route.toString().contains('NR5') &&
+        !route.toString().contains('Oknha Kleang Moeung St. (70)') &&
+        !route.toString().contains('Trung Morn St') &&
+        !route.toString().contains('មហាវិថី​ សហព័ន្ធរុស្ស៊ី') &&
+        !route.toString().contains('NR4') &&
+        !route.toString().contains('NR3') &&
+        !route.toString().contains('Oknha Tep Phan St. (182)') &&
+        !route.toString().contains('Northbridge St. (1019)') &&
+        !route.toString().contains('ផ្លូវ​ទំនប់​កប់ស្រូវ') &&
+        !route.toString().contains('Street 337') &&
+        !route.toString().contains('Saint 315') &&
+        !route.toString().contains('St 566') &&
+        !route.toString().contains('Street 598') &&
+        !route.toString().contains('Angkor Blvd') &&
+        !route.toString().contains('Preah Sisowath Quay') &&
+        !route.toString().contains('Sola Street (371)') &&
+        !route.toString().contains('Street 369') &&
+        !route.toString().contains('NR21B') &&
+        !route.toString().contains('NR6') &&
+        !route.toString().contains('Keo Chenda St') &&
+        !route.toString().contains('Tonle Sap St') &&
+        !route.toString().contains('Street 2011') &&
+        !route.toString().contains('Street 105K') &&
+        !route.toString().contains('ផ្លូវទំនប់ថ្មី (៣៧១)') &&
+        !route.toString().contains('NR20') &&
+        !route.toString().contains('Prey Sa') &&
+        !route.toString().contains('ផ្លូវ ៦០ម៉ែត្រ')) {
+      // adding_price /= int.parse(requestModel.num.toString());
+      min = adding_price - (0.03 * adding_price);
+      max = adding_price + (0.02 * adding_price);
+      avg = (min!.toDouble() + max!.toDouble()) / 2;
+      return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          actions: [
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          insetPadding: EdgeInsets.all(0),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.55,
+            width: MediaQuery.of(context).size.width * 1,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text(
+                      "Price of ${requestModel.num} comparable : ${formatter.format(adding_price)}\$",
+                      style: const TextStyle(
+                        fontSize: 15,
+                        decorationStyle: TextDecorationStyle.dashed,
+                        decoration: TextDecoration.underline,
+                      )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                          "minimum : ${formatter.format(adding_price - (0.01 * adding_price))}\$",
+                          style: const TextStyle(
+                            fontSize: 15,
+                            decorationStyle: TextDecorationStyle.dashed,
+                            decoration: TextDecoration.underline,
+                          )),
+                      Text(
+                          "maximum : ${formatter.format(adding_price + (0.03 * adding_price))}\$",
+                          style: const TextStyle(
+                            fontSize: 15,
+                            decorationStyle: TextDecorationStyle.dashed,
+                            decoration: TextDecoration.underline,
+                          )),
+                    ],
+                  ),
+                  for (int i = 0; i < data_adding_correct.length; i++)
+                    Card(
+                      elevation: 10,
+                      child: ListTile(
+                        title: Text(
+                            "comparable id : ${data_adding_correct[i]['comparable_id']}",
+                            style: const TextStyle(fontSize: 15)),
+                        subtitle: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "property : ${data_adding_correct[i]['property_type_name']}",
+                                style: const TextStyle(fontSize: 15)),
+                            Text(
+                                "Owner : ${data_adding_correct[i]['agenttype_name']}",
+                                style: const TextStyle(fontSize: 15)),
+                            Text(
+                                "adding price : ${formatter.format(double.parse(data_adding_correct[i]['comparable_adding_price'].replaceAll(",", "").toString()))}\$",
+                                style: const TextStyle(fontSize: 15)),
+                            Text(
+                                "Date : ${data_adding_correct[i]['comparable_survey_date']}",
+                                style: const TextStyle(fontSize: 15)),
+                          ],
+                        ),
                       ),
                     ),
+                  const SizedBox(
+                    height: 20,
                   ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text("minimum : ${formatter.format(min)}\$",
-                        style: TextStyle(
-                          fontSize: 11,
-                          decorationStyle: TextDecorationStyle.dashed,
-                          decoration: TextDecoration.underline,
-                        ),),
-                    Text("maximum : ${formatter.format(max)}\$",
-                        style: TextStyle(
-                          fontSize: 11,
-                          decorationStyle: TextDecorationStyle.dashed,
-                          decoration: TextDecoration.underline,
-                        ),),
-                  ],
-                ),
-                Text(
-                    "Avg price of property : " +
-                        formatter.format(avg).toString() +
-                        "\$",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12,
-                      decorationStyle: TextDecorationStyle.dashed,
-                      decoration: TextDecoration.underline,
-                    ),),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          actions: [
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          insetPadding: EdgeInsets.all(0),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.55,
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Text(
+                    "Compareble price",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 220, 221, 223),
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 1, color: Colors.grey)
+                      ],
+                      border: Border.all(
+                        width: 0.2,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Avg = ",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text("${formatter.format(adding_price)}\$",
+                                style: const TextStyle(
+                                    color: Color.fromARGB(255, 242, 11, 134)))
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              children: [
+                                const Text("Min = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text(
+                                    "${formatter.format(adding_price - (0.01 * adding_price))}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text("Max = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text(
+                                    "${formatter.format(adding_price + (0.01 * adding_price))}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Residential",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 220, 221, 223),
+                          boxShadow: const [
+                            BoxShadow(blurRadius: 1, color: Colors.grey)
+                          ],
+                          border: Border.all(
+                            width: 0.2,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Avg = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text("${formatter.format(R_avg)}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text("Min = ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        "${formatter.format(double.parse(minSqm1))}\$",
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 242, 11, 134)))
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Text("Max = ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        "${formatter.format(double.parse(maxSqm1))}\$",
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 242, 11, 134)))
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        "Commercial",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 220, 221, 223),
+                          border: Border.all(
+                            width: 0.2,
+                          ),
+                          boxShadow: const [
+                            BoxShadow(blurRadius: 1, color: Colors.grey)
+                          ],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Avg = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text("${formatter.format(C_avg)}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text("Min = ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        "${formatter.format(double.parse(minSqm2))}\$",
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 242, 11, 134)))
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Text("Max = ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        "${formatter.format(double.parse(maxSqm2))}\$",
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 242, 11, 134)))
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "Calculator Compareble and Land_price",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 220, 221, 223),
+                      border: Border.all(
+                        width: 0.2,
+                      ),
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 1, color: Colors.grey)
+                      ],
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Avg = ",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text("${formatter.format(avg)}\$",
+                                style: const TextStyle(
+                                    color: Color.fromARGB(255, 242, 11, 134)))
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              children: [
+                                const Text("Min = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text("${formatter.format(min)}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text("Max = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text("${formatter.format(max)}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    "$commune /  $district / Route : ${route.toString()}",
+                    style: const TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 8,
+                        fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Future for_market_price() {
@@ -1601,11 +2101,16 @@ class _HomePageState extends State<map_cross_verbal> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Avg = ",
-                        style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text("${formatter.format(R_avg)}\$",
-                        style: const TextStyle(
-                            color: Color.fromARGB(255, 242, 11, 134),),)
+                    const Text(
+                      "Avg = ",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "${formatter.format(R_avg)}\$",
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 242, 11, 134),
+                      ),
+                    )
                   ],
                 ),
                 Row(
@@ -1613,20 +2118,30 @@ class _HomePageState extends State<map_cross_verbal> {
                   children: [
                     Row(
                       children: [
-                        const Text("Min = ",
-                            style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${formatter.format(double.parse(minSqm1))}\$",
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134),),)
+                        const Text(
+                          "Min = ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${formatter.format(double.parse(minSqm1))}\$",
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 242, 11, 134),
+                          ),
+                        )
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("Max = ",
-                            style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${formatter.format(double.parse(maxSqm1))}\$",
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134),),)
+                        const Text(
+                          "Max = ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${formatter.format(double.parse(maxSqm1))}\$",
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 242, 11, 134),
+                          ),
+                        )
                       ],
                     ),
                   ],
@@ -1653,11 +2168,16 @@ class _HomePageState extends State<map_cross_verbal> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Avg = ",
-                        style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text("${formatter.format(C_avg)}\$",
-                        style: const TextStyle(
-                            color: Color.fromARGB(255, 242, 11, 134),),)
+                    const Text(
+                      "Avg = ",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "${formatter.format(C_avg)}\$",
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 242, 11, 134),
+                      ),
+                    )
                   ],
                 ),
                 Row(
@@ -1665,20 +2185,30 @@ class _HomePageState extends State<map_cross_verbal> {
                   children: [
                     Row(
                       children: [
-                        const Text("Min = ",
-                            style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${formatter.format(double.parse(minSqm2))}\$",
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134),),)
+                        const Text(
+                          "Min = ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${formatter.format(double.parse(minSqm2))}\$",
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 242, 11, 134),
+                          ),
+                        )
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("Max = ",
-                            style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${formatter.format(double.parse(maxSqm2))}\$",
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134),),)
+                        const Text(
+                          "Max = ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${formatter.format(double.parse(maxSqm2))}\$",
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 242, 11, 134),
+                          ),
+                        )
                       ],
                     ),
                   ],
@@ -1718,8 +2248,11 @@ class _HomePageState extends State<map_cross_verbal> {
       var message = address.first.coordinates.toString();
       latitude = address.first.coordinates.latitude!;
       longitude = address.first.coordinates.longitude!;
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: LatLng(latitude, longitude), zoom: 15),),);
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: LatLng(latitude, longitude), zoom: 15),
+        ),
+      );
       // ScaffoldMessenger.of(context).showSnackBar(
       //   SnackBar(
       //     content: Text(message),
@@ -1740,8 +2273,11 @@ class _HomePageState extends State<map_cross_verbal> {
   var commune, district;
   dynamic R_avg, C_avg;
   Future<void> Find_by_piont(double la, double lo) async {
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
@@ -1752,47 +2288,74 @@ class _HomePageState extends State<map_cross_verbal> {
       widget.get_log(longi.toString());
       List ls = jsonResponse['results'];
       List ac;
-      bool check_sk = false, check_kn = false;
+      bool checkSk = false, checkKn = false;
       for (int j = 0; j < ls.length; j++) {
         ac = jsonResponse['results'][j]['address_components'];
         for (int i = 0; i < ac.length; i++) {
-          if (check_kn == false || check_sk == false) {
+          if (checkKn == false || checkSk == false) {
             if (jsonResponse['results'][j]['address_components'][i]['types']
                     [0] ==
                 "political") {
               setState(() {
-                check_kn = true;
+                checkKn = true;
                 district = (jsonResponse['results'][j]['address_components'][i]
                     ['short_name']);
                 // Load_khan(district);
 
                 widget.get_district(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name'],);
+                    ['address_components'][i]['short_name']);
               });
             }
             if (jsonResponse['results'][j]['address_components'][i]['types']
                     [0] ==
                 "administrative_area_level_3") {
               setState(() {
-                check_sk = true;
+                checkSk = true;
                 commune = (jsonResponse['results'][j]['address_components'][i]
                     ['short_name']);
                 // Load_sangkat(commune);
                 widget.get_commune(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name'],);
+                    ['address_components'][i]['short_name']);
+              });
+            }
+            //check Route
+            // if (jsonResponse['results'][j]['address_components'][i]['types']
+            //         [0] ==
+            //     "route") {
+            //   setState(() {
+            //     route = (jsonResponse['results'][j]['address_components'][i]
+            //         ['short_name']);
+            //   });
+            // }
+          }
+        }
+        if (jsonResponse['results'][j]['types'][0] == "route") {
+          List r = jsonResponse['results'][j]['address_components'];
+          for (int i = 0; i < r.length; i++) {
+            if (jsonResponse['results'][j]['address_components'][i]['types']
+                    [0] ==
+                "route") {
+              setState(() {
+                route = (jsonResponse['results'][j]['address_components'][i]
+                    ['short_name']);
               });
             }
           }
+          // setState(() {
+          //   route = (jsonResponse['results'][j]['address_components'][0]
+          //       ['short_name']);
+          // });
         }
       }
-      final response_rc = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',),);
-      var jsonResponse_rc = json.decode(response_rc.body);
+
+      final responseRc = await http.get(Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}'));
+      var jsonresponseRc = json.decode(responseRc.body);
       setState(() {
-        maxSqm1 = jsonResponse_rc['residential'][0]['Max_Value'].toString();
-        minSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
-        maxSqm2 = jsonResponse_rc['commercial'][0]['Max_Value'].toString();
-        minSqm2 = jsonResponse_rc['commercial'][0]['Min_Value'].toString();
+        maxSqm1 = jsonresponseRc['residential'][0]['Max_Value'].toString();
+        minSqm1 = jsonresponseRc['residential'][0]['Min_Value'].toString();
+        maxSqm2 = jsonresponseRc['commercial'][0]['Max_Value'].toString();
+        minSqm2 = jsonresponseRc['commercial'][0]['Min_Value'].toString();
         R_avg = (double.parse(maxSqm1.toString()) +
                 double.parse(minSqm1.toString())) /
             2;
@@ -1800,6 +2363,68 @@ class _HomePageState extends State<map_cross_verbal> {
                 double.parse(minSqm2.toString())) /
             2;
       });
+      if (route != null) {
+        if (route.toString().contains('Preah Norodom Blvd') ||
+            route.toString().contains('Preah Monivong Blvd (93)') ||
+            route.toString().contains('NR1') ||
+            route.toString().contains('Yothapol Khemarak Phoumin Blvd') ||
+            route.toString().contains('Mao Tse Toung Blvd') ||
+            route.toString().contains('Monireth') ||
+            route.toString().contains('Preah Sihanouk Blvd') ||
+            route.toString().contains('Kampuchea Krom Blvd') ||
+            route.toString().contains('Russian Federation Blvd') ||
+            route.toString().contains('Hun Sen Blvd') ||
+            route.toString().contains('Street 2004') ||
+            route.toString().contains('AH11') ||
+            route.toString().contains('NR2') ||
+            route.toString().contains('Chamkar Doung Street (217)') ||
+            route.toString().contains('Samdach Sothearos Blvd (3)') ||
+            route.toString().contains('Jawaharlal Nehru Blvd (215)') ||
+            route.toString().contains('Charles de Gaulle Blvd (217)') ||
+            route.toString().contains('Veng Sreng Blvd') ||
+            route
+                .toString()
+                .contains('Phnom Penh Hanoi Friendship Blvd (1019)') ||
+            route.toString().contains('Samdach Penn Nouth St. (289)') ||
+            route.toString().contains('Street 273') ||
+            route.toString().contains('Street 355') ||
+            route.toString().contains('Oknha Mong Reththy St. (1928)') ||
+            route.toString().contains('NR5') ||
+            route.toString().contains('Oknha Kleang Moeung St. (70)') ||
+            route.toString().contains('Trung Morn St') ||
+            route.toString().contains('មហាវិថី​ សហព័ន្ធរុស្ស៊ី') ||
+            route.toString().contains('NR4') ||
+            route.toString().contains('NR3') ||
+            route.toString().contains('Oknha Tep Phan St. (182)') ||
+            route.toString().contains('Northbridge St. (1019)') ||
+            route.toString().contains('ផ្លូវ​ទំនប់​កប់ស្រូវ') ||
+            route.toString().contains('Street 337') ||
+            route.toString().contains('Saint 315') ||
+            route.toString().contains('St 566') ||
+            route.toString().contains('Street 598') ||
+            route.toString().contains('Angkor Blvd') ||
+            route.toString().contains('Preah Sisowath Quay') ||
+            route.toString().contains('Sola Street (371)') ||
+            route.toString().contains('Street 369') ||
+            route.toString().contains('NR21B') ||
+            route.toString().contains('NR6') ||
+            route.toString().contains('Keo Chenda St') ||
+            route.toString().contains('Tonle Sap St') ||
+            route.toString().contains('Street 2011') ||
+            route.toString().contains('Street 105K') ||
+            route.toString().contains('ផ្លូវទំនប់ថ្មី (៣៧១)') ||
+            route.toString().contains('NR20') ||
+            route.toString().contains('Prey Sa') ||
+            route.toString().contains('ផ្លូវ ៦០ម៉ែត្រ')) {
+          setState(() {
+            adding_price /= int.parse(requestModel.num.toString());
+            var price = (adding_price + (R_avg + C_avg)) / 2;
+            min = price - (0.03 * price);
+            max = price + (0.02 * price);
+            avg = price;
+          });
+        }
+      }
     } else {
       print(response.statusCode);
     }
