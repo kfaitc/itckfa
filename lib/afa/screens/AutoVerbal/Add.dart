@@ -42,8 +42,11 @@ import '../../../screen/components/map_all/map_in_list_search.dart';
 import '../../components/property.dart';
 
 class Menu_Add_verbal extends StatefulWidget {
-  const Menu_Add_verbal(
-      {super.key, required this.id, required this.id_control_user,});
+  const Menu_Add_verbal({
+    super.key,
+    required this.id,
+    required this.id_control_user,
+  });
   final String id;
   final String id_control_user;
   @override
@@ -100,8 +103,9 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                      blurRadius: 15,
-                      color: ui.Color.fromARGB(255, 191, 197, 186),)
+                    blurRadius: 15,
+                    color: ui.Color.fromARGB(255, 191, 197, 186),
+                  )
                 ],
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(250),
@@ -153,22 +157,23 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
                       );
                     },
                     child: Container(
-                        height: 50,
-                        margin: EdgeInsets.only(left: 50),
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.indigo[900],
-                          borderRadius:
-                              BorderRadius.only(topLeft: Radius.circular(90)),
-                          boxShadow: [
-                            BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
-                          ],
-                        ),
-                        child: Text(
-                          "Cross check price",
-                          style: colorizeTextStyle,
-                        ),),
+                      height: 50,
+                      margin: EdgeInsets.only(left: 50),
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.indigo[900],
+                        borderRadius:
+                            BorderRadius.only(topLeft: Radius.circular(90)),
+                        boxShadow: [
+                          BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
+                        ],
+                      ),
+                      child: Text(
+                        "Cross check price",
+                        style: colorizeTextStyle,
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 50,
@@ -185,41 +190,46 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
                       );
                     },
                     child: Container(
-                        height: 50,
-                        margin: EdgeInsets.only(left: 50),
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.indigo[900],
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                              topLeft: Radius.circular(10),),
-                          boxShadow: [
-                            BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
-                          ],
+                      height: 50,
+                      margin: EdgeInsets.only(left: 50),
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.indigo[900],
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          topLeft: Radius.circular(10),
                         ),
-                        child: Text(
-                          "List Auto Verbal",
-                          style: colorizeTextStyle,
-                        ),),
+                        boxShadow: [
+                          BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
+                        ],
+                      ),
+                      child: Text(
+                        "List Auto Verbal",
+                        style: colorizeTextStyle,
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: 50,
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
                           builder: (context) => Map_List_search(
-                                get_commune: (value) {},
-                                get_district: (value) {},
-                                get_lat: (value) {},
-                                get_log: (value) {},
-                                get_max1: (value) {},
-                                get_max2: (value) {},
-                                get_min1: (value) {},
-                                get_min2: (value) {},
-                                get_province: (value) {},
-                              ),),);
+                            get_commune: (value) {},
+                            get_district: (value) {},
+                            get_lat: (value) {},
+                            get_log: (value) {},
+                            get_max1: (value) {},
+                            get_max2: (value) {},
+                            get_min1: (value) {},
+                            get_min2: (value) {},
+                            get_province: (value) {},
+                          ),
+                        ),
+                      );
                     },
                     child: Container(
                       height: 50,
@@ -227,13 +237,14 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
                       width: double.infinity,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: Colors.indigo[900],
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(90),
-                          ),
-                          boxShadow: [
-                            BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
-                          ],),
+                        color: Colors.indigo[900],
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(90),
+                        ),
+                        boxShadow: [
+                          BoxShadow(blurRadius: 5, color: Colors.yellowAccent)
+                        ],
+                      ),
                       child: AnimatedTextKit(
                         animatedTexts: [
                           ColorizeAnimatedText(
@@ -247,18 +258,21 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
                         isRepeatingAnimation: true,
                         repeatForever: true,
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
                               builder: (context) => Map_List_search(
-                                    get_commune: (value) {},
-                                    get_district: (value) {},
-                                    get_lat: (value) {},
-                                    get_log: (value) {},
-                                    get_max1: (value) {},
-                                    get_max2: (value) {},
-                                    get_min1: (value) {},
-                                    get_min2: (value) {},
-                                    get_province: (value) {},
-                                  ),),);
+                                get_commune: (value) {},
+                                get_district: (value) {},
+                                get_lat: (value) {},
+                                get_log: (value) {},
+                                get_max1: (value) {},
+                                get_max2: (value) {},
+                                get_min1: (value) {},
+                                get_min2: (value) {},
+                                get_province: (value) {},
+                              ),
+                            ),
+                          );
                         },
                       ),
                     ),
@@ -270,20 +284,24 @@ class _Menu_Add_verbalState extends State<Menu_Add_verbal> {
               bottom: -10,
               right: 1,
               child: SizedBox(
-                  height: 90, child: Image.asset("assets/images/KFA_CRM.png"),),
+                height: 90,
+                child: Image.asset("assets/images/KFA_CRM.png"),
+              ),
             ),
             Positioned(
-                top: 1,
-                left: 1,
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      Icons.chevron_left_outlined,
-                      size: 35,
-                      color: Colors.white,
-                    ),),),
+              top: 1,
+              left: 1,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.chevron_left_outlined,
+                  size: 35,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -364,8 +382,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   int? number;
   String? control_user;
   Future get_control_user(String id) async {
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${id}',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
 
@@ -382,8 +403,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
     setState(() {
       control_user = widget.id_control_user;
     });
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -400,7 +424,8 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
     };
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0',),
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0',
+      ),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -408,35 +433,39 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
     );
     if (response.statusCode == 200) {
       AwesomeDialog(
-          context: context,
-          animType: AnimType.leftSlide,
-          headerAnimationLoop: false,
-          dialogType: DialogType.success,
-          showCloseIcon: false,
-          // title: value.message,
-          autoHide: Duration(seconds: 10),
-          body: Center(
-            child: Text("Do you want to save photo"),
-          ),
-          btnOkOnPress: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => save_image_after_add_verbal(
-                      set_data_verbal: code.toString(),
-                    ),),);
-          },
-          btnCancelOnPress: () {
-            Navigator.pop(context);
-          },
-          onDismissCallback: (type) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => List_Auto(
-                  verbal_id: widget.id,
-                  id_control_user: widget.id_control_user,
-                ),
+        context: context,
+        animType: AnimType.leftSlide,
+        headerAnimationLoop: false,
+        dialogType: DialogType.success,
+        showCloseIcon: false,
+        // title: value.message,
+        autoHide: Duration(seconds: 10),
+        body: Center(
+          child: Text("Do you want to save photo"),
+        ),
+        btnOkOnPress: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => save_image_after_add_verbal(
+                set_data_verbal: code.toString(),
               ),
-            );
-          },).show();
+            ),
+          );
+        },
+        btnCancelOnPress: () {
+          Navigator.pop(context);
+        },
+        onDismissCallback: (type) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => List_Auto(
+                verbal_id: widget.id,
+                id_control_user: widget.id_control_user,
+              ),
+            ),
+          );
+        },
+      ).show();
     }
   }
 
@@ -471,10 +500,12 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
     offsetAnimation = Tween<Offset>(
       begin: Offset(0, 0),
       end: const Offset(0, -0.3),
-    ).animate(CurvedAnimation(
-      parent: controller,
-      curve: Curves.easeInOutBack,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeInOutBack,
+      ),
+    );
     lb;
 
     super.initState();
@@ -612,18 +643,27 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                               [
                                 verbal_id.toString(),
                                 int.parse(jsonList[i]['verbal_land_dp']),
-                                (jsonList[i]['verbal_land_type'].toString() ?? "0"),
-                                (jsonList[i]['verbal_land_des'].toString() ?? "0"),
+                                (jsonList[i]['verbal_land_type'].toString() ??
+                                    "0"),
+                                (jsonList[i]['verbal_land_des'].toString() ??
+                                    "0"),
                                 double.parse(
-                                    jsonList[i]['verbal_land_area'].toString(),),
-                                double.parse(jsonList[i]['verbal_land_minsqm']
-                                    .toString(),),
-                                double.parse(jsonList[i]['verbal_land_maxsqm']
-                                    .toString(),),
-                                double.parse(jsonList[i]['verbal_land_minvalue']
-                                    .toString(),),
-                                double.parse(jsonList[i]['verbal_land_maxvalue']
-                                    .toString(),),
+                                  jsonList[i]['verbal_land_area'].toString(),
+                                ),
+                                double.parse(
+                                  jsonList[i]['verbal_land_minsqm'].toString(),
+                                ),
+                                double.parse(
+                                  jsonList[i]['verbal_land_maxsqm'].toString(),
+                                ),
+                                double.parse(
+                                  jsonList[i]['verbal_land_minvalue']
+                                      .toString(),
+                                ),
+                                double.parse(
+                                  jsonList[i]['verbal_land_maxvalue']
+                                      .toString(),
+                                ),
                                 (jsonList[i]['address'].toString() ?? "0")
                               ]);
                         }
@@ -705,13 +745,13 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                                 // debugPrint('Dialog Dissmiss from callback $type');
 
                                 Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProtectDataCrossCheck(
-                                        id_user: widget.id_control_user,
-                                      ),
-                                    ),);
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProtectDataCrossCheck(
+                                      id_user: widget.id_control_user,
+                                    ),
+                                  ),
+                                );
                               },
                             ).show();
                           } else if (lb == 0 && vb == 1) {
@@ -801,11 +841,14 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                 ),
                 child: AnimatedTextKit(
                   animatedTexts: [
-                    WavyAnimatedText('Auto Verbal',
-                        textAlign: TextAlign.center,
-                        textStyle: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            fontSize: 20,),),
+                    WavyAnimatedText(
+                      'Auto Verbal',
+                      textAlign: TextAlign.center,
+                      textStyle: TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        fontSize: 20,
+                      ),
+                    ),
                   ],
                   pause: const Duration(milliseconds: 900),
                   isRepeatingAnimation: true,
@@ -857,9 +900,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                             height: 15,
                             width: 15,
                             decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage("assets/images/v.png"),
-                                    fit: BoxFit.cover,),),
+                              image: DecorationImage(
+                                image: AssetImage("assets/images/v.png"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -881,19 +926,20 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
           )
         : Scaffold(
             body: Container(
-            decoration: BoxDecoration(
-              color: Color.fromARGB(235, 7, 9, 145),
-              image: DecorationImage(
-                image: AssetImage("assets/images/KFA_CRM.png"),
-                opacity: 0.5,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(235, 7, 9, 145),
+                image: DecorationImage(
+                  image: AssetImage("assets/images/KFA_CRM.png"),
+                  opacity: 0.5,
+                ),
+              ),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
               ),
             ),
-            child: Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
-            ),
-          ),);
+          );
   }
 
   Widget addVerbal(BuildContext context) {
@@ -984,8 +1030,9 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
               height: 37,
               margin: EdgeInsets.fromLTRB(30, 5, 30, 0),
               decoration: BoxDecoration(
-                  color: Colors.lightBlueAccent[700],
-                  borderRadius: BorderRadius.circular(10),),
+                color: Colors.lightBlueAccent[700],
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -1094,9 +1141,10 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                             Text(
                               '${lb[i].address} ',
                               style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,),
+                                color: Colors.grey,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1159,10 +1207,9 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                                     SizedBox(height: 2),
                                     Text(
                                       ':   ' +
-                                          (formatter.format(lb[i]
-                                                  .verbal_land_area
-                                                  .toInt(),))
-                                              .toString() +
+                                          (formatter.format(
+                                            lb[i].verbal_land_area.toInt(),
+                                          )).toString() +
                                           'm' +
                                           '\u00B2',
                                       style: Name(),
@@ -1187,8 +1234,8 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                                     Text(
                                       ':   ' +
                                           (formatter.format(
-                                                  lb[i].verbal_land_minvalue,))
-                                              .toString() +
+                                            lb[i].verbal_land_minvalue,
+                                          )).toString() +
                                           '\$',
                                       style: Name(),
                                     ),
@@ -1196,8 +1243,9 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                                     Text(
                                       ':   ' +
                                           (formatter
-                                                  .format(lb[i]
-                                                      .verbal_land_maxvalue,)
+                                                  .format(
+                                                    lb[i].verbal_land_maxvalue,
+                                                  )
                                                   .toString() +
                                               '\$'),
                                       style: Name(),
@@ -1251,26 +1299,28 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                     ),
                     // padding: EdgeInsets.only(left: 30, right: 30),
                     child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.map_sharp,
-                              color: kImageColor,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Icon(
+                            Icons.map_sharp,
+                            color: kImageColor,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            (imagepath == "")
+                                ? 'Choose Photo'
+                                : 'choosed Photo',
+                            style: TextStyle(
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
                             ),
-                            SizedBox(width: 10),
-                            Text(
-                              (imagepath == "")
-                                  ? 'Choose Photo'
-                                  : 'choosed Photo',
-                              style: TextStyle(
-                                  color: kPrimaryColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,),
-                            ),
-                          ],
-                        ),),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -1434,7 +1484,9 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   }
 
   Future<File> convertImageByteToFile(
-      Uint8List imageBytes, String fileName,) async {
+    Uint8List imageBytes,
+    String fileName,
+  ) async {
     final directory = await getApplicationDocumentsDirectory();
     final path = directory.path;
     File file = File('$path/$fileName');
@@ -1445,26 +1497,42 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   Random random = new Random();
   Future<dynamic> uploadt_image_map() async {
     var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_image_map',),);
+      'POST',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_image_map',
+      ),
+    );
     request.fields['cid'] = code.toString();
     if (lat1 == null) {
-      final response1 = await http.get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/staticmap?center=${lat},${log}&zoom=20&size=720x720&maptype=hybrid&markers=color:red%7C%7C${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+      final response1 = await http.get(
+        Uri.parse(
+          'https://maps.googleapis.com/maps/api/staticmap?center=${lat},${log}&zoom=20&size=720x720&maptype=hybrid&markers=color:red%7C%7C${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+        ),
+      );
       final byte = response1.bodyBytes;
       Uint8List get_image_byte1 = Uint8List.fromList(byte);
-      request.files.add(await http.MultipartFile.fromBytes(
-          'image', get_image_byte1,
-          filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',),);
+      request.files.add(
+        await http.MultipartFile.fromBytes(
+          'image',
+          get_image_byte1,
+          filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',
+        ),
+      );
     } else {
-      final response2 = await http.get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/staticmap?center=${lat1},${log2}&zoom=20&size=720x720&maptype=hybrid&markers=color:red%7C%7C${lat1},${log2}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+      final response2 = await http.get(
+        Uri.parse(
+          'https://maps.googleapis.com/maps/api/staticmap?center=${lat1},${log2}&zoom=20&size=720x720&maptype=hybrid&markers=color:red%7C%7C${lat1},${log2}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+        ),
+      );
       final byte = response2.bodyBytes;
       Uint8List get_image_byte2 = Uint8List.fromList(byte);
-      request.files.add(await http.MultipartFile.fromBytes(
-          'image', get_image_byte2,
-          filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',),);
+      request.files.add(
+        await http.MultipartFile.fromBytes(
+          'image',
+          get_image_byte2,
+          filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',
+        ),
+      );
     }
 
     var res = await request.send();
@@ -1489,9 +1557,10 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
           sourcePath: pickedFile.path,
           uiSettings: [
             AndroidUiSettings(
-                lockAspectRatio: false,
-                backgroundColor: Colors.blue,
-                initAspectRatio: CropAspectRatioPreset.original,)
+              lockAspectRatio: false,
+              backgroundColor: Colors.blue,
+              initAspectRatio: CropAspectRatioPreset.original,
+            )
           ],
           aspectRatioPresets: [
             CropAspectRatioPreset.original,
@@ -1523,7 +1592,8 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
     var request = await http.MultipartRequest(
       "POST",
       Uri.parse(
-          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_image",),
+        "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_image",
+      ),
     );
     Map<String, String> headers = {
       "content-type": "application/json",
@@ -1547,8 +1617,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   //get khan
   void Load_khan(String district) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=${district}',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=${district}',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -1562,8 +1635,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   List<dynamic> list_sangkat = [];
   void Load_sangkat(String id) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=${id}',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=${id}',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -1624,12 +1700,18 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
 
   TextStyle Name() {
     return TextStyle(
-        color: kImageColor, fontSize: 14, fontWeight: FontWeight.bold,);
+      color: kImageColor,
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+    );
   }
 
   TextStyle NameProperty() {
     return TextStyle(
-        color: kImageColor, fontSize: 11, fontWeight: FontWeight.bold,);
+      color: kImageColor,
+      fontSize: 11,
+      fontWeight: FontWeight.bold,
+    );
   }
 
   double? lat;
@@ -1646,7 +1728,8 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services',),
+            'Location services are disabled. Please enable the services',
+          ),
         ),
       );
       return false;
@@ -1656,14 +1739,19 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')),);
+          const SnackBar(content: Text('Location permissions are denied')),
+        );
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.',),),);
+            'Location permissions are permanently denied, we cannot request permissions.',
+          ),
+        ),
+      );
       return false;
     }
     return true;
@@ -1671,7 +1759,8 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
 
   Future<void> _getCurrentPosition() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     setState(() {
       lat = position.latitude;
@@ -1679,8 +1768,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
       requestModelAuto.lat = lat.toString();
       requestModelAuto.lng = log.toString();
     });
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
 
     if (response.statusCode == 200) {
       // Successful response
@@ -1722,8 +1814,11 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
 
 // ===========================          List_Auto       =====================
 class List_Auto extends StatefulWidget {
-  const List_Auto(
-      {super.key, required this.verbal_id, required this.id_control_user,});
+  const List_Auto({
+    super.key,
+    required this.verbal_id,
+    required this.id_control_user,
+  });
   final String verbal_id;
   final String id_control_user;
   @override
@@ -1735,8 +1830,11 @@ class _List_AutoState extends State<List_Auto> {
   bool check_data1 = false, check_data2 = false;
   void get_by_user_autoverbal() async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/list_new?verbal_user=${widget.id_control_user}',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/list_new?verbal_user=${widget.id_control_user}',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
 
@@ -1774,10 +1872,11 @@ class _List_AutoState extends State<List_Auto> {
         appBar: AppBar(
           backgroundColor: Colors.indigo[900],
           leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back_ios),),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios),
+          ),
           centerTitle: true,
           title: Text(
             "Auto Verbal List",
@@ -1789,9 +1888,9 @@ class _List_AutoState extends State<List_Auto> {
           height: MediaQuery.of(context).size.height * 1,
           child: CustomPaint(
             size: Size(
-                5,
-                (5 * 0.5833333333333334)
-                    .toDouble(),), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+              5,
+              (5 * 0.5833333333333334).toDouble(),
+            ), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
             painter: RPSCustomPainter(),
             child: ListView(
               children: [
@@ -1800,8 +1899,9 @@ class _List_AutoState extends State<List_Auto> {
                       EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                   padding: EdgeInsets.all(0),
                   decoration: BoxDecoration(
-                      color: Colors.blue[50],
-                      borderRadius: BorderRadius.circular(20),),
+                    color: Colors.blue[50],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -1839,452 +1939,505 @@ class _List_AutoState extends State<List_Auto> {
                   Container(
                     height: MediaQuery.of(context).size.height * 0.8,
                     child: Visibility(
-                        visible: check_data1,
-                        replacement: const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
+                      visible: check_data1,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
                         ),
-                        child: ListView.builder(
-                          itemBuilder: (context, i) {
-                            return Container(
-                              height: 220,
-                              margin: EdgeInsets.all(10),
-                              padding: EdgeInsets.only(left: 10),
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(217, 255, 255, 255),
-                                  // border: Border.all(
-                                  //     width: 1,
-                                  //     color: Color.fromRGBO(67, 160, 71, 1)),
-                                  borderRadius: BorderRadius.circular(5),),
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 100,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Verbal ID\t\t:\t\t',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .textScaleFactor *
-                                                          10,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                        color: Color.fromARGB(
-                                                            255, 16, 22, 192,),
-                                                        blurRadius: 3,
-                                                        offset:
-                                                            Offset(-0.2, -1),)
-                                                  ],),
+                      ),
+                      child: ListView.builder(
+                        itemBuilder: (context, i) {
+                          return Container(
+                            height: 220,
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(217, 255, 255, 255),
+                              // border: Border.all(
+                              //     width: 1,
+                              //     color: Color.fromRGBO(67, 160, 71, 1)),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 100,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Verbal ID\t\t:\t\t',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: MediaQuery.of(context)
+                                                      .textScaleFactor *
+                                                  10,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Color.fromARGB(
+                                                    255,
+                                                    16,
+                                                    22,
+                                                    192,
+                                                  ),
+                                                  blurRadius: 3,
+                                                  offset: Offset(-0.2, -1),
+                                                )
+                                              ],
                                             ),
-                                            Text(
-                                              "${list1[i]['verbal_id']}",
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .textScaleFactor *
-                                                          9,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                        color: Color.fromARGB(
-                                                            255, 16, 22, 192,),
-                                                        blurRadius: 3,
-                                                        offset:
-                                                            Offset(-0.2, -1),)
-                                                  ],),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Bank\t\t\t:\t\t',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .textScaleFactor *
-                                                          10,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                        color: Color.fromARGB(
-                                                            255, 16, 22, 192,),
-                                                        blurRadius: 3,
-                                                        offset:
-                                                            Offset(-0.2, -1),)
-                                                  ],),
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.7,
-                                              child: Text(
-                                                "${list1[i]['bank_name']}",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: MediaQuery.of(
-                                                                context,)
-                                                            .textScaleFactor *
-                                                        9,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    shadows: [
-                                                      BoxShadow(
-                                                          color: Color.fromARGB(
-                                                              255, 16, 22, 192,),
-                                                          blurRadius: 3,
-                                                          offset:
-                                                              Offset(-0.2, -1),)
-                                                    ],),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Bank Branch\t\t\t:\t\t',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .textScaleFactor *
-                                                          10,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                        color: Color.fromARGB(
-                                                            255, 16, 22, 192,),
-                                                        blurRadius: 3,
-                                                        offset:
-                                                            Offset(-0.2, -1),)
-                                                  ],),
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.5,
-                                              child: Text(
-                                                "${list1[i]['bank_branch_name'] ?? ""}",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: MediaQuery.of(
-                                                                context,)
-                                                            .textScaleFactor *
-                                                        9,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    shadows: [
-                                                      BoxShadow(
-                                                          color: Color.fromARGB(
-                                                              255, 16, 22, 192,),
-                                                          blurRadius: 3,
-                                                          offset:
-                                                              Offset(-0.2, -1),)
-                                                    ],),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Property Type\t\t\t:\t\t',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .textScaleFactor *
-                                                          10,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                        color: Color.fromARGB(
-                                                            255, 16, 22, 192,),
-                                                        blurRadius: 3,
-                                                        offset:
-                                                            Offset(-0.2, -1),)
-                                                  ],),
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.5,
-                                              child: Text(
-                                                "${list1[i]['property_type_name']}",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: MediaQuery.of(
-                                                                context,)
-                                                            .textScaleFactor *
-                                                        9,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    shadows: [
-                                                      BoxShadow(
-                                                          color: Color.fromARGB(
-                                                              255, 16, 22, 192,),
-                                                          blurRadius: 3,
-                                                          offset:
-                                                              Offset(-0.2, -1),)
-                                                    ],),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Date :\t\t\t:\t\t',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .textScaleFactor *
-                                                          10,
-                                                  shadows: [
-                                                    BoxShadow(
-                                                        color: Color.fromARGB(
-                                                            255, 16, 22, 192,),
-                                                        blurRadius: 3,
-                                                        offset:
-                                                            Offset(-0.2, -1),)
-                                                  ],),
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.5,
-                                              child: Text(
-                                                "${list1[i]['verbal_date']}",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: MediaQuery.of(
-                                                                context,)
-                                                            .textScaleFactor *
-                                                        9,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    shadows: [
-                                                      BoxShadow(
-                                                          color: Color.fromARGB(
-                                                              255, 16, 22, 192,),
-                                                          blurRadius: 3,
-                                                          offset:
-                                                              Offset(-0.2, -1),)
-                                                    ],),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 100,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        SizedBox(
-                                          height: 90,
-                                          width: 90,
-                                          child: FadeInImage.assetNetwork(
-                                            fit: BoxFit.cover,
-                                            placeholderFit: BoxFit.contain,
-                                            placeholder: 'assets/earth.gif',
-                                            image:
-                                                "https://maps.googleapis.com/maps/api/staticmap?center=${list1[i]["latlong_log"]},${list1[i]["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list1[i]["latlong_log"]},${list1[i]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI",
                                           ),
-                                        ),
-                                        SizedBox(width: 5),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            GFButton(
-                                              onPressed: () {
-                                                // var data = verbalModel(
-                                                //   verbalId:
-                                                //       '${list1[i]["verbal_id"] ?? ''}',
-                                                //   bank_branch_name:
-                                                //       '${list1[i]["bank_branch_name"] ?? ''}',
-                                                //   bank_name:
-                                                //       '${list1[i]["bank_name"] ?? ''}',
-                                                //   property_type_name:
-                                                //       '${list1[i]["property_type_name"] ?? ''}',
-                                                //   tel_num:
-                                                //       '${list1[i]["tel_num"] ?? ''}',
-                                                //   username:
-                                                //       '${list1[i]["username"] ?? ''}',
-                                                //   verbal_address:
-                                                //       '${list1[i]["verbal_address"] ?? ''}',
-                                                //   verbal_contact:
-                                                //       '${list1[i]["verbal_contact"] ?? ''}',
-                                                //   verbal_date:
-                                                //       '${list1[i]["verbal_date"] ?? ''}',
-                                                //   verbal_owner:
-                                                //       '${list1[i]["verbal_owner"] ?? ''}',
-                                                // );
-
-                                                // await PeopleController()
-                                                //     .insertverbal(data);
-                                                showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    barrierLabel:
-                                                        MaterialLocalizations
-                                                                .of(context)
-                                                            .modalBarrierDismissLabel,
-                                                    barrierColor:
-                                                        ui.Color.fromARGB(
-                                                            0, 0, 0, 0,),
-                                                    builder: (context) {
-                                                      return Container(
-                                                        height: MediaQuery.of(
-                                                                    context,)
-                                                                .size
-                                                                .height *
-                                                            0.6,
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child:
-                                                            SingleChildScrollView(
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Container(
-                                                                height: MediaQuery.of(
-                                                                            context,)
-                                                                        .size
-                                                                        .height *
-                                                                    0.8,
-                                                                color: ui.Color
-                                                                    .fromARGB(
-                                                                        97,
-                                                                        0,
-                                                                        0,
-                                                                        0,),
-                                                                child:
-                                                                    convert_data_verbal_to_image(
-                                                                  set_data_verbal:
-                                                                      list1[i][
-                                                                          "verbal_id"],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },);
-                                              },
-                                              text: "\tSave\t",
-                                              size: GFSize.MEDIUM,
-                                              icon: Icon(
-                                                Icons.note_alt_outlined,
-                                                color: Colors.white,
-                                                size: 20,
+                                          Text(
+                                            "${list1[i]['verbal_id']}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: MediaQuery.of(context)
+                                                      .textScaleFactor *
+                                                  9,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Color.fromARGB(
+                                                    255,
+                                                    16,
+                                                    22,
+                                                    192,
+                                                  ),
+                                                  blurRadius: 3,
+                                                  offset: Offset(-0.2, -1),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Bank\t\t\t:\t\t',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: MediaQuery.of(context)
+                                                      .textScaleFactor *
+                                                  10,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Color.fromARGB(
+                                                    255,
+                                                    16,
+                                                    22,
+                                                    192,
+                                                  ),
+                                                  blurRadius: 3,
+                                                  offset: Offset(-0.2, -1),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.7,
+                                            child: Text(
+                                              "${list1[i]['bank_name']}",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: MediaQuery.of(
+                                                      context,
+                                                    ).textScaleFactor *
+                                                    9,
+                                                overflow: TextOverflow.ellipsis,
                                                 shadows: [
-                                                  Shadow(
-                                                      color: Colors.black,
-                                                      blurRadius: 5,
-                                                      offset: Offset(1, 0.5),)
+                                                  BoxShadow(
+                                                    color: Color.fromARGB(
+                                                      255,
+                                                      16,
+                                                      22,
+                                                      192,
+                                                    ),
+                                                    blurRadius: 3,
+                                                    offset: Offset(-0.2, -1),
+                                                  )
                                                 ],
                                               ),
                                             ),
-                                            Row(
-                                              children: [
-                                                GFButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                save_image_after_add_verbal(
-                                                                  set_data_verbal:
-                                                                      list1[i][
-                                                                          "verbal_id"],
-                                                                ),),);
-                                                  },
-                                                  text: "Get Image",
-                                                  color: Colors.green,
-                                                  icon: Icon(
-                                                      Icons
-                                                          .photo_library_outlined,
-                                                      color: Colors.white,
-                                                      shadows: [
-                                                        Shadow(
-                                                            color: Colors.black,
-                                                            blurRadius: 5,
-                                                            offset:
-                                                                Offset(1, 0.5),)
-                                                      ],
-                                                      size: 20,),
-                                                ),
-                                                SizedBox(width: 10),
-                                                GFButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                detail_verbal(
-                                                                  set_data_verbal:
-                                                                      list1[i][
-                                                                          "verbal_id"],
-                                                                ),),);
-                                                  },
-                                                  text: "Get PDF",
-                                                  color: Color.fromRGBO(
-                                                      229, 57, 53, 1,),
-                                                  icon: Icon(
-                                                    Icons.picture_as_pdf,
-                                                    size: 20,
-                                                    shadows: [
-                                                      Shadow(
-                                                          color: Colors.black,
-                                                          blurRadius: 5,
-                                                          offset:
-                                                              Offset(1, 0.5),)
-                                                    ],
-                                                    color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Bank Branch\t\t\t:\t\t',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: MediaQuery.of(context)
+                                                      .textScaleFactor *
+                                                  10,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Color.fromARGB(
+                                                    255,
+                                                    16,
+                                                    22,
+                                                    192,
                                                   ),
-                                                ),
+                                                  blurRadius: 3,
+                                                  offset: Offset(-0.2, -1),
+                                                )
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                          ),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            child: Text(
+                                              "${list1[i]['bank_branch_name'] ?? ""}",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: MediaQuery.of(
+                                                      context,
+                                                    ).textScaleFactor *
+                                                    9,
+                                                overflow: TextOverflow.ellipsis,
+                                                shadows: [
+                                                  BoxShadow(
+                                                    color: Color.fromARGB(
+                                                      255,
+                                                      16,
+                                                      22,
+                                                      192,
+                                                    ),
+                                                    blurRadius: 3,
+                                                    offset: Offset(-0.2, -1),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Property Type\t\t\t:\t\t',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: MediaQuery.of(context)
+                                                      .textScaleFactor *
+                                                  10,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Color.fromARGB(
+                                                    255,
+                                                    16,
+                                                    22,
+                                                    192,
+                                                  ),
+                                                  blurRadius: 3,
+                                                  offset: Offset(-0.2, -1),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            child: Text(
+                                              "${list1[i]['property_type_name']}",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: MediaQuery.of(
+                                                      context,
+                                                    ).textScaleFactor *
+                                                    9,
+                                                overflow: TextOverflow.ellipsis,
+                                                shadows: [
+                                                  BoxShadow(
+                                                    color: Color.fromARGB(
+                                                      255,
+                                                      16,
+                                                      22,
+                                                      192,
+                                                    ),
+                                                    blurRadius: 3,
+                                                    offset: Offset(-0.2, -1),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Date :\t\t\t:\t\t',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: MediaQuery.of(context)
+                                                      .textScaleFactor *
+                                                  10,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Color.fromARGB(
+                                                    255,
+                                                    16,
+                                                    22,
+                                                    192,
+                                                  ),
+                                                  blurRadius: 3,
+                                                  offset: Offset(-0.2, -1),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            child: Text(
+                                              "${list1[i]['verbal_date']}",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: MediaQuery.of(
+                                                      context,
+                                                    ).textScaleFactor *
+                                                    9,
+                                                overflow: TextOverflow.ellipsis,
+                                                shadows: [
+                                                  BoxShadow(
+                                                    color: Color.fromARGB(
+                                                      255,
+                                                      16,
+                                                      22,
+                                                      192,
+                                                    ),
+                                                    blurRadius: 3,
+                                                    offset: Offset(-0.2, -1),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                          itemCount: list1.length,
-                        ),),
+                                ),
+                                SizedBox(
+                                  height: 100,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      SizedBox(
+                                        height: 90,
+                                        width: 90,
+                                        child: FadeInImage.assetNetwork(
+                                          fit: BoxFit.cover,
+                                          placeholderFit: BoxFit.contain,
+                                          placeholder: 'assets/earth.gif',
+                                          image:
+                                              "https://maps.googleapis.com/maps/api/staticmap?center=${list1[i]["latlong_log"]},${list1[i]["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list1[i]["latlong_log"]},${list1[i]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI",
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          GFButton(
+                                            onPressed: () {
+                                              // var data = verbalModel(
+                                              //   verbalId:
+                                              //       '${list1[i]["verbal_id"] ?? ''}',
+                                              //   bank_branch_name:
+                                              //       '${list1[i]["bank_branch_name"] ?? ''}',
+                                              //   bank_name:
+                                              //       '${list1[i]["bank_name"] ?? ''}',
+                                              //   property_type_name:
+                                              //       '${list1[i]["property_type_name"] ?? ''}',
+                                              //   tel_num:
+                                              //       '${list1[i]["tel_num"] ?? ''}',
+                                              //   username:
+                                              //       '${list1[i]["username"] ?? ''}',
+                                              //   verbal_address:
+                                              //       '${list1[i]["verbal_address"] ?? ''}',
+                                              //   verbal_contact:
+                                              //       '${list1[i]["verbal_contact"] ?? ''}',
+                                              //   verbal_date:
+                                              //       '${list1[i]["verbal_date"] ?? ''}',
+                                              //   verbal_owner:
+                                              //       '${list1[i]["verbal_owner"] ?? ''}',
+                                              // );
+
+                                              // await PeopleController()
+                                              //     .insertverbal(data);
+                                              showDialog(
+                                                context: context,
+                                                barrierDismissible: false,
+                                                barrierLabel:
+                                                    MaterialLocalizations.of(
+                                                            context)
+                                                        .modalBarrierDismissLabel,
+                                                barrierColor: ui.Color.fromARGB(
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                ),
+                                                builder: (context) {
+                                                  return Container(
+                                                    height: MediaQuery.of(
+                                                          context,
+                                                        ).size.height *
+                                                        0.6,
+                                                    alignment: Alignment.center,
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Container(
+                                                            height: MediaQuery
+                                                                    .of(
+                                                                  context,
+                                                                ).size.height *
+                                                                0.8,
+                                                            color: ui.Color
+                                                                .fromARGB(
+                                                              97,
+                                                              0,
+                                                              0,
+                                                              0,
+                                                            ),
+                                                            child:
+                                                                convert_data_verbal_to_image(
+                                                              set_data_verbal:
+                                                                  list1[i][
+                                                                      "verbal_id"],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            text: "\tSave\t",
+                                            size: GFSize.MEDIUM,
+                                            icon: Icon(
+                                              Icons.note_alt_outlined,
+                                              color: Colors.white,
+                                              size: 20,
+                                              shadows: [
+                                                Shadow(
+                                                  color: Colors.black,
+                                                  blurRadius: 5,
+                                                  offset: Offset(1, 0.5),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              GFButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          save_image_after_add_verbal(
+                                                        set_data_verbal:
+                                                            list1[i]
+                                                                ["verbal_id"],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                text: "Get Image",
+                                                color: Colors.green,
+                                                icon: Icon(
+                                                  Icons.photo_library_outlined,
+                                                  color: Colors.white,
+                                                  shadows: [
+                                                    Shadow(
+                                                      color: Colors.black,
+                                                      blurRadius: 5,
+                                                      offset: Offset(1, 0.5),
+                                                    )
+                                                  ],
+                                                  size: 20,
+                                                ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              GFButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          detail_verbal(
+                                                        set_data_verbal:
+                                                            list1[i]
+                                                                ["verbal_id"],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                text: "Get PDF",
+                                                color: Color.fromRGBO(
+                                                  229,
+                                                  57,
+                                                  53,
+                                                  1,
+                                                ),
+                                                icon: Icon(
+                                                  Icons.picture_as_pdf,
+                                                  size: 20,
+                                                  shadows: [
+                                                    Shadow(
+                                                      color: Colors.black,
+                                                      blurRadius: 5,
+                                                      offset: Offset(1, 0.5),
+                                                    )
+                                                  ],
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        itemCount: list1.length,
+                      ),
+                    ),
                   )
                 else
                   Container(
@@ -2300,199 +2453,222 @@ class _List_AutoState extends State<List_Auto> {
                                 return InkWell(
                                   onTap: () {
                                     showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Container(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.5,
-                                            alignment: Alignment.center,
-                                            margin: EdgeInsets.only(
-                                                left: 40,
-                                                right: 40,
-                                                bottom: 100,
-                                                top: 90,),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                            ),
-                                            child: Scaffold(
-                                              body: Container(
-                                                alignment: Alignment.center,
-                                                child: Stack(
-                                                  alignment: Alignment.topRight,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 50,),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Expanded(
-                                                            flex: 3,
-                                                            child: Image.memory(
-                                                              base64Decode(
-                                                                stuone[
-                                                                    "verbal_image"],
-                                                              ),
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.5,
+                                          alignment: Alignment.center,
+                                          margin: EdgeInsets.only(
+                                            left: 40,
+                                            right: 40,
+                                            bottom: 100,
+                                            top: 90,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                          ),
+                                          child: Scaffold(
+                                            body: Container(
+                                              alignment: Alignment.center,
+                                              child: Stack(
+                                                alignment: Alignment.topRight,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      top: 50,
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Expanded(
+                                                          flex: 3,
+                                                          child: Image.memory(
+                                                            base64Decode(
+                                                              stuone[
+                                                                  "verbal_image"],
                                                             ),
                                                           ),
-                                                          Expanded(
-                                                              flex: 1,
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceAround,
-                                                                children: [
-                                                                  GFButton(
-                                                                    onPressed:
-                                                                        () async {
-                                                                      await mydb
-                                                                          .open_offline();
-                                                                      int b = await mydb
-                                                                          .db
-                                                                          .rawDelete(
-                                                                              "DELETE FROM verbal_models_offline WHERE verbal_id = ?",
-                                                                              [
-                                                                            stuone["verbal_id"]
-                                                                          ]);
-                                                                      if (b ==
-                                                                          1) {
-                                                                        const snackBar =
-                                                                            SnackBar(
-                                                                          content:
-                                                                              Text('Data Deleted!...'),
-                                                                          duration:
-                                                                              Duration(seconds: 2),
-                                                                        );
+                                                        ),
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              GFButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  await mydb
+                                                                      .open_offline();
+                                                                  int b = await mydb
+                                                                      .db
+                                                                      .rawDelete(
+                                                                          "DELETE FROM verbal_models_offline WHERE verbal_id = ?",
+                                                                          [
+                                                                        stuone[
+                                                                            "verbal_id"]
+                                                                      ]);
+                                                                  if (b == 1) {
+                                                                    const snackBar =
+                                                                        SnackBar(
+                                                                      content: Text(
+                                                                          'Data Deleted!...'),
+                                                                      duration: Duration(
+                                                                          seconds:
+                                                                              2),
+                                                                    );
 
-                                                                        ScaffoldMessenger.of(context)
-                                                                            .showSnackBar(snackBar);
+                                                                    ScaffoldMessenger.of(
+                                                                            context)
+                                                                        .showSnackBar(
+                                                                            snackBar);
 
-                                                                        Navigator.pop(
-                                                                            context,);
-                                                                        setState(
-                                                                            () {
-                                                                          b1 =
-                                                                              true;
-                                                                          b2 =
-                                                                              false;
-                                                                        });
-                                                                      } else {
-                                                                        const snackBar =
-                                                                            SnackBar(
-                                                                          content:
-                                                                              Text('Data Deleted felse!...'),
-                                                                          duration:
-                                                                              Duration(seconds: 2),
-                                                                        );
+                                                                    Navigator
+                                                                        .pop(
+                                                                      context,
+                                                                    );
+                                                                    setState(
+                                                                        () {
+                                                                      b1 = true;
+                                                                      b2 =
+                                                                          false;
+                                                                    });
+                                                                  } else {
+                                                                    const snackBar =
+                                                                        SnackBar(
+                                                                      content: Text(
+                                                                          'Data Deleted felse!...'),
+                                                                      duration: Duration(
+                                                                          seconds:
+                                                                              2),
+                                                                    );
 
-                                                                        ScaffoldMessenger.of(context)
-                                                                            .showSnackBar(snackBar);
+                                                                    ScaffoldMessenger.of(
+                                                                            context)
+                                                                        .showSnackBar(
+                                                                            snackBar);
 
-                                                                        Navigator.pop(
-                                                                            context,);
-                                                                      }
-                                                                    },
-                                                                    text:
-                                                                        "Delete\t\t",
-                                                                    color: const ui
-                                                                            .Color.fromRGBO(
-                                                                        255,
-                                                                        23,
-                                                                        68,
-                                                                        1,),
-                                                                    type: GFButtonType
-                                                                        .outline2x,
-                                                                    icon: Icon(
-                                                                      Icons
-                                                                          .delete_outline_rounded,
-                                                                      color: const ui
-                                                                              .Color.fromRGBO(
-                                                                          255,
-                                                                          23,
-                                                                          68,
-                                                                          1,),
-                                                                    ),
+                                                                    Navigator
+                                                                        .pop(
+                                                                      context,
+                                                                    );
+                                                                  }
+                                                                },
+                                                                text:
+                                                                    "Delete\t\t",
+                                                                color: const ui
+                                                                    .Color.fromRGBO(
+                                                                  255,
+                                                                  23,
+                                                                  68,
+                                                                  1,
+                                                                ),
+                                                                type: GFButtonType
+                                                                    .outline2x,
+                                                                icon: Icon(
+                                                                  Icons
+                                                                      .delete_outline_rounded,
+                                                                  color: const ui
+                                                                      .Color.fromRGBO(
+                                                                    255,
+                                                                    23,
+                                                                    68,
+                                                                    1,
                                                                   ),
-                                                                  GFButton(
-                                                                    onPressed:
-                                                                        () async {
-                                                                      final result =
-                                                                          await ImageGallerySaver.saveImage(
-                                                                              base64Decode(stuone["verbal_image"]),);
-                                                                      const snackBar =
-                                                                          SnackBar(
-                                                                        content:
-                                                                            Text('Data Saved!'),
-                                                                        duration:
-                                                                            Duration(seconds: 2),
-                                                                      );
+                                                                ),
+                                                              ),
+                                                              GFButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  final result =
+                                                                      await ImageGallerySaver
+                                                                          .saveImage(
+                                                                    base64Decode(
+                                                                        stuone[
+                                                                            "verbal_image"]),
+                                                                  );
+                                                                  const snackBar =
+                                                                      SnackBar(
+                                                                    content: Text(
+                                                                        'Data Saved!'),
+                                                                    duration: Duration(
+                                                                        seconds:
+                                                                            2),
+                                                                  );
 
-                                                                      // ignore: use_build_context_synchronously
-                                                                      ScaffoldMessenger.of(
-                                                                              context,)
-                                                                          .showSnackBar(
-                                                                              snackBar,);
-                                                                      // ignore: use_build_context_synchronously
-                                                                      Navigator.pop(
-                                                                          context,);
-                                                                      setState(
-                                                                          () {
-                                                                        b1 =
-                                                                            true;
-                                                                        b2 =
-                                                                            false;
-                                                                      });
-                                                                    },
-                                                                    text:
-                                                                        "download",
-                                                                    icon: Icon(
-                                                                        Icons
-                                                                            .download,
-                                                                        color: ui.Color.fromARGB(
-                                                                            255,
-                                                                            23,
-                                                                            65,
-                                                                            255,),),
-                                                                    type: GFButtonType
-                                                                        .outline2x,
-                                                                    color: ui
-                                                                            .Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            23,
-                                                                            65,
-                                                                            255,),
+                                                                  // ignore: use_build_context_synchronously
+                                                                  ScaffoldMessenger
+                                                                      .of(
+                                                                    context,
+                                                                  ).showSnackBar(
+                                                                    snackBar,
+                                                                  );
+                                                                  // ignore: use_build_context_synchronously
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                  );
+                                                                  setState(() {
+                                                                    b1 = true;
+                                                                    b2 = false;
+                                                                  });
+                                                                },
+                                                                text:
+                                                                    "download",
+                                                                icon: Icon(
+                                                                  Icons
+                                                                      .download,
+                                                                  color: ui
+                                                                          .Color
+                                                                      .fromARGB(
+                                                                    255,
+                                                                    23,
+                                                                    65,
+                                                                    255,
                                                                   ),
-                                                                ],
-                                                              ),),
-                                                        ],
-                                                      ),
+                                                                ),
+                                                                type: GFButtonType
+                                                                    .outline2x,
+                                                                color: ui.Color
+                                                                    .fromARGB(
+                                                                  255,
+                                                                  23,
+                                                                  65,
+                                                                  255,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: CircleAvatar(
-                                                        backgroundColor: Colors
-                                                            .redAccent[400],
-                                                        child:
-                                                            Icon(Icons.close),
-                                                      ),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.redAccent[400],
+                                                      child: Icon(Icons.close),
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          );
-                                        },);
+                                          ),
+                                        );
+                                      },
+                                    );
                                   },
                                   child: Container(
                                     height: MediaQuery.of(context).size.height *
@@ -2503,15 +2679,21 @@ class _List_AutoState extends State<List_Auto> {
                                       borderRadius: BorderRadius.circular(10),
                                       boxShadow: [
                                         BoxShadow(
-                                            blurRadius: 5, color: Colors.grey,)
+                                          blurRadius: 5,
+                                          color: Colors.grey,
+                                        )
                                       ],
                                     ),
                                     child: Column(
                                       children: [
                                         Expanded(
-                                            flex: 1,
-                                            child: Image.memory(base64Decode(
-                                                stuone["verbal_image"],),),)
+                                          flex: 1,
+                                          child: Image.memory(
+                                            base64Decode(
+                                              stuone["verbal_image"],
+                                            ),
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),
@@ -2537,31 +2719,38 @@ class RPSCustomPainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..strokeWidth = 1;
     paint0.shader = ui.Gradient.linear(
-        Offset(size.width * 0.50, 0),
-        Offset(size.width * 0.50, size.height * 1.00),
-        [Color(0xff5bf03d), Color(0xff11376e)],
-        [0.00, 1.00],);
+      Offset(size.width * 0.50, 0),
+      Offset(size.width * 0.50, size.height * 1.00),
+      [Color(0xff5bf03d), Color(0xff11376e)],
+      [0.00, 1.00],
+    );
 
     Path path0 = Path();
     path0.moveTo(0, 0);
     path0.lineTo(size.width * 0.5000000, size.height * 0.9985714);
     path0.lineTo(size.width, 0);
-    path0.quadraticBezierTo(size.width, size.height * 0.1564286, size.width,
-        size.height * 0.2085714,);
+    path0.quadraticBezierTo(
+      size.width,
+      size.height * 0.1564286,
+      size.width,
+      size.height * 0.2085714,
+    );
     path0.cubicTo(
-        size.width * 0.8331250,
-        size.height * 0.5014286,
-        size.width * 0.5835417,
-        size.height * 0.4285714,
-        size.width * 0.4991667,
-        size.height * 0.7857143,);
+      size.width * 0.8331250,
+      size.height * 0.5014286,
+      size.width * 0.5835417,
+      size.height * 0.4285714,
+      size.width * 0.4991667,
+      size.height * 0.7857143,
+    );
     path0.cubicTo(
-        size.width * 0.4160417,
-        size.height * 0.4267857,
-        size.width * 0.1647917,
-        size.height * 0.4975000,
-        0,
-        size.height * 0.2128571,);
+      size.width * 0.4160417,
+      size.height * 0.4267857,
+      size.width * 0.1647917,
+      size.height * 0.4975000,
+      0,
+      size.height * 0.2128571,
+    );
     path0.quadraticBezierTo(0, size.height * 0.1596429, 0, 0);
     path0.close();
 
@@ -2576,8 +2765,11 @@ class RPSCustomPainter extends CustomPainter {
 
 // ===========================          Add_Auto_by new map       =====================
 class Add_with_property extends StatefulWidget {
-  const Add_with_property(
-      {super.key, required this.id, required this.id_control_user,});
+  const Add_with_property({
+    super.key,
+    required this.id,
+    required this.id_control_user,
+  });
   final String id;
   final String id_control_user;
   @override
@@ -2656,10 +2848,16 @@ class _Add_with_propertyState extends State<Add_with_property>
     setState(() {
       control_user = widget.id_control_user;
     });
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}',),);
-    var rs_ios = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}',
+      ),
+    );
+    var rs_ios = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       var jsonData_ios = jsonDecode(rs_ios.body);
@@ -2678,7 +2876,8 @@ class _Add_with_propertyState extends State<Add_with_property>
     };
     final response = await http.post(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0',),
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0',
+      ),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -2686,35 +2885,39 @@ class _Add_with_propertyState extends State<Add_with_property>
     );
     if (response.statusCode == 200) {
       AwesomeDialog(
-          context: context,
-          animType: AnimType.leftSlide,
-          headerAnimationLoop: false,
-          dialogType: DialogType.question,
-          showCloseIcon: false,
-          // title: value.message,
-          autoHide: Duration(seconds: 10),
-          body: Center(
-            child: Text("Do you want to save photo"),
-          ),
-          btnOkOnPress: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => save_image_after_add_verbal(
-                      set_data_verbal: verbal_id,
-                    ),),);
-          },
-          btnCancelOnPress: () {
-            Navigator.pop(context);
-          },
-          onDismissCallback: (type) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => List_Auto(
-                  verbal_id: widget.id,
-                  id_control_user: widget.id_control_user,
-                ),
+        context: context,
+        animType: AnimType.leftSlide,
+        headerAnimationLoop: false,
+        dialogType: DialogType.question,
+        showCloseIcon: false,
+        // title: value.message,
+        autoHide: Duration(seconds: 10),
+        body: Center(
+          child: Text("Do you want to save photo"),
+        ),
+        btnOkOnPress: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => save_image_after_add_verbal(
+                set_data_verbal: verbal_id,
               ),
-            );
-          },).show();
+            ),
+          );
+        },
+        btnCancelOnPress: () {
+          Navigator.pop(context);
+        },
+        onDismissCallback: (type) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => List_Auto(
+                verbal_id: widget.id,
+                id_control_user: widget.id_control_user,
+              ),
+            ),
+          );
+        },
+      ).show();
     }
   }
 
@@ -2750,10 +2953,12 @@ class _Add_with_propertyState extends State<Add_with_property>
     offsetAnimation = Tween<Offset>(
       begin: Offset(0, 0),
       end: const Offset(0, -0.3),
-    ).animate(CurvedAnimation(
-      parent: controller,
-      curve: Curves.easeIn,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeIn,
+      ),
+    );
     lb;
 
     super.initState();
@@ -2904,18 +3109,27 @@ class _Add_with_propertyState extends State<Add_with_property>
                               [
                                 verbal_id.toString(),
                                 int.parse(jsonList[i]['verbal_land_dp']),
-                                (jsonList[i]['verbal_land_type'].toString() ?? "0"),
-                                (jsonList[i]['verbal_land_des'].toString() ?? "0"),
+                                (jsonList[i]['verbal_land_type'].toString() ??
+                                    "0"),
+                                (jsonList[i]['verbal_land_des'].toString() ??
+                                    "0"),
                                 double.parse(
-                                    jsonList[i]['verbal_land_area'].toString(),),
-                                double.parse(jsonList[i]['verbal_land_minsqm']
-                                    .toString(),),
-                                double.parse(jsonList[i]['verbal_land_maxsqm']
-                                    .toString(),),
-                                double.parse(jsonList[i]['verbal_land_minvalue']
-                                    .toString(),),
-                                double.parse(jsonList[i]['verbal_land_maxvalue']
-                                    .toString(),),
+                                  jsonList[i]['verbal_land_area'].toString(),
+                                ),
+                                double.parse(
+                                  jsonList[i]['verbal_land_minsqm'].toString(),
+                                ),
+                                double.parse(
+                                  jsonList[i]['verbal_land_maxsqm'].toString(),
+                                ),
+                                double.parse(
+                                  jsonList[i]['verbal_land_minvalue']
+                                      .toString(),
+                                ),
+                                double.parse(
+                                  jsonList[i]['verbal_land_maxvalue']
+                                      .toString(),
+                                ),
                                 (jsonList[i]['address'].toString() ?? "0")
                               ]);
                         }
@@ -2984,11 +3198,13 @@ class _Add_with_propertyState extends State<Add_with_property>
                         }
                         List<Map>? vb, lb;
                         lb = await mydb_lb.db.rawQuery(
-                            "SELECT * FROM comverbal_land_models WHERE verbal_landid = ? ",
-                            [verbal_id.toString()],);
+                          "SELECT * FROM comverbal_land_models WHERE verbal_landid = ? ",
+                          [verbal_id.toString()],
+                        );
                         vb = await mydb_vb.db.rawQuery(
-                            "SELECT * FROM verbal_models  WHERE verbal_id = ?",
-                            [verbal_id.toString()],);
+                          "SELECT * FROM verbal_models  WHERE verbal_id = ?",
+                          [verbal_id.toString()],
+                        );
                         setState(() {
                           if (vb!.length == 1 && lb!.length == 1) {
                             AwesomeDialog(
@@ -3004,7 +3220,8 @@ class _Add_with_propertyState extends State<Add_with_property>
                                 // debugPrint('Dialog Dissmiss from callback $type');
                                 setState(() {
                                   print(
-                                      "object: ${list_user![0].toString()}\n",);
+                                    "object: ${list_user![0].toString()}\n",
+                                  );
                                 });
 
                                 if (Platform.isAndroid || check_ios_pay == 1) {
@@ -3133,9 +3350,13 @@ class _Add_with_propertyState extends State<Add_with_property>
                   ),
                 ),
               ],
-              title: Text('property check',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255), fontSize: 18,),),
+              title: Text(
+                'property check',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontSize: 18,
+                ),
+              ),
               toolbarHeight: 80,
             ),
             backgroundColor: Color.fromARGB(235, 7, 9, 145),
@@ -3180,9 +3401,11 @@ class _Add_with_propertyState extends State<Add_with_property>
                             height: 15,
                             width: 15,
                             decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage("assets/images/v.png"),
-                                    fit: BoxFit.cover,),),
+                              image: DecorationImage(
+                                image: AssetImage("assets/images/v.png"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -3204,19 +3427,20 @@ class _Add_with_propertyState extends State<Add_with_property>
           )
         : Scaffold(
             body: Container(
-            decoration: BoxDecoration(
-              color: Color.fromARGB(235, 7, 9, 145),
-              image: DecorationImage(
-                image: AssetImage("assets/images/KFA_CRM.png"),
-                opacity: 0.5,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(235, 7, 9, 145),
+                image: DecorationImage(
+                  image: AssetImage("assets/images/KFA_CRM.png"),
+                  opacity: 0.5,
+                ),
+              ),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
               ),
             ),
-            child: Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
-            ),
-          ),);
+          );
   }
 
   Widget addVerbal(BuildContext context) {
@@ -3310,8 +3534,9 @@ class _Add_with_propertyState extends State<Add_with_property>
               height: 37,
               margin: EdgeInsets.fromLTRB(30, 5, 30, 0),
               decoration: BoxDecoration(
-                  color: Colors.lightBlueAccent[700],
-                  borderRadius: BorderRadius.circular(10),),
+                color: Colors.lightBlueAccent[700],
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -3420,9 +3645,10 @@ class _Add_with_propertyState extends State<Add_with_property>
                           Text(
                             '${lb[i].address} ',
                             style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,),
+                              color: Colors.grey,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -3486,8 +3712,8 @@ class _Add_with_propertyState extends State<Add_with_property>
                                   Text(
                                     ':   ' +
                                         (formatter.format(
-                                                lb[i].verbal_land_area.toInt(),))
-                                            .toString() +
+                                          lb[i].verbal_land_area.toInt(),
+                                        )).toString() +
                                         'm' +
                                         '\u00B2',
                                     style: Name(),
@@ -3512,8 +3738,8 @@ class _Add_with_propertyState extends State<Add_with_property>
                                   Text(
                                     ':   ' +
                                         (formatter.format(
-                                                lb[i].verbal_land_minvalue,))
-                                            .toString() +
+                                          lb[i].verbal_land_minvalue,
+                                        )).toString() +
                                         '\$',
                                     style: Name(),
                                   ),
@@ -3522,7 +3748,8 @@ class _Add_with_propertyState extends State<Add_with_property>
                                     ':   ' +
                                         (formatter
                                                 .format(
-                                                    lb[i].verbal_land_maxvalue,)
+                                                  lb[i].verbal_land_maxvalue,
+                                                )
                                                 .toString() +
                                             '\$'),
                                     style: Name(),
@@ -3576,26 +3803,28 @@ class _Add_with_propertyState extends State<Add_with_property>
                     ),
                     // padding: EdgeInsets.only(left: 30, right: 30),
                     child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(
-                              Icons.map_sharp,
-                              color: kImageColor,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Icon(
+                            Icons.map_sharp,
+                            color: kImageColor,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            (imagepath == "")
+                                ? 'Choose Photo'
+                                : 'choosed Photo',
+                            style: TextStyle(
+                              color: kPrimaryColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
                             ),
-                            SizedBox(width: 10),
-                            Text(
-                              (imagepath == "")
-                                  ? 'Choose Photo'
-                                  : 'choosed Photo',
-                              style: TextStyle(
-                                  color: kPrimaryColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,),
-                            ),
-                          ],
-                        ),),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -3737,14 +3966,14 @@ class _Add_with_propertyState extends State<Add_with_property>
           get_commune: (value) {
             setState(() {
               commune = value;
-              print("commune : $commune\n\n");
+
               Load_sangkat(value);
             });
           },
           get_district: (value) {
             setState(() {
               district = value;
-              print("commune : $district \n\n");
+
               Load_khan(district);
             });
           },
@@ -3774,7 +4003,9 @@ class _Add_with_propertyState extends State<Add_with_property>
   }
 
   Future<File> convertImageByteToFile(
-      Uint8List imageBytes, String fileName,) async {
+    Uint8List imageBytes,
+    String fileName,
+  ) async {
     final directory = await getApplicationDocumentsDirectory();
     final path = directory.path;
     File file = File('$path/$fileName');
@@ -3785,26 +4016,42 @@ class _Add_with_propertyState extends State<Add_with_property>
   Random random = new Random();
   Future<dynamic> uploadt_image_map() async {
     var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_image_map',),);
+      'POST',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_image_map',
+      ),
+    );
     request.fields['cid'] = code.toString();
     if (lat1 == null) {
-      final response1 = await http.get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/staticmap?center=${lat},${log}&zoom=20&size=720x720&maptype=hybrid&markers=color:red%7C%7C${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+      final response1 = await http.get(
+        Uri.parse(
+          'https://maps.googleapis.com/maps/api/staticmap?center=${lat},${log}&zoom=20&size=720x720&maptype=hybrid&markers=color:red%7C%7C${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+        ),
+      );
       final byte = response1.bodyBytes;
       Uint8List get_image_byte1 = Uint8List.fromList(byte);
-      request.files.add(await http.MultipartFile.fromBytes(
-          'image', get_image_byte1,
-          filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',),);
+      request.files.add(
+        await http.MultipartFile.fromBytes(
+          'image',
+          get_image_byte1,
+          filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',
+        ),
+      );
     } else {
-      final response2 = await http.get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/staticmap?center=${lat1},${log2}&zoom=20&size=720x720&maptype=hybrid&markers=color:red%7C%7C${lat1},${log2}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+      final response2 = await http.get(
+        Uri.parse(
+          'https://maps.googleapis.com/maps/api/staticmap?center=${lat1},${log2}&zoom=20&size=720x720&maptype=hybrid&markers=color:red%7C%7C${lat1},${log2}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+        ),
+      );
       final byte = response2.bodyBytes;
       Uint8List get_image_byte2 = Uint8List.fromList(byte);
-      request.files.add(await http.MultipartFile.fromBytes(
-          'image', get_image_byte2,
-          filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',),);
+      request.files.add(
+        await http.MultipartFile.fromBytes(
+          'image',
+          get_image_byte2,
+          filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',
+        ),
+      );
     }
 
     var res = await request.send();
@@ -3829,9 +4076,10 @@ class _Add_with_propertyState extends State<Add_with_property>
           sourcePath: pickedFile.path,
           uiSettings: [
             AndroidUiSettings(
-                lockAspectRatio: false,
-                backgroundColor: Colors.blue,
-                initAspectRatio: CropAspectRatioPreset.original,)
+              lockAspectRatio: false,
+              backgroundColor: Colors.blue,
+              initAspectRatio: CropAspectRatioPreset.original,
+            )
           ],
           aspectRatioPresets: [
             CropAspectRatioPreset.original,
@@ -3863,7 +4111,8 @@ class _Add_with_propertyState extends State<Add_with_property>
     var request = await http.MultipartRequest(
       "POST",
       Uri.parse(
-          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_image",),
+        "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_image",
+      ),
     );
     Map<String, String> headers = {
       "content-type": "application/json",
@@ -3873,8 +4122,13 @@ class _Add_with_propertyState extends State<Add_with_property>
     request.headers.addAll(headers);
     // request.files.add(picture);
     request.fields['cid'] = code.toString();
-    request.files.add(await http.MultipartFile.fromBytes('image', imagebytes!,
-        filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',),);
+    request.files.add(
+      await http.MultipartFile.fromBytes(
+        'image',
+        imagebytes!,
+        filename: 'k${random.nextInt(999)}f${random.nextInt(99)}a.png',
+      ),
+    );
     var response = await request.send();
     var responseData = await response.stream.toBytes();
     var result = String.fromCharCodes(responseData);
@@ -3884,8 +4138,11 @@ class _Add_with_propertyState extends State<Add_with_property>
   //get khan
   void Load_khan(String district) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=${district}',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=${district}',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -3899,8 +4156,11 @@ class _Add_with_propertyState extends State<Add_with_property>
   List<dynamic> list_sangkat = [];
   void Load_sangkat(String id) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=${id}',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=${id}',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -3962,12 +4222,18 @@ class _Add_with_propertyState extends State<Add_with_property>
 
   TextStyle Name() {
     return TextStyle(
-        color: kImageColor, fontSize: 14, fontWeight: FontWeight.bold,);
+      color: kImageColor,
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+    );
   }
 
   TextStyle NameProperty() {
     return TextStyle(
-        color: kImageColor, fontSize: 11, fontWeight: FontWeight.bold,);
+      color: kImageColor,
+      fontSize: 11,
+      fontWeight: FontWeight.bold,
+    );
   }
 
   double? lat;
@@ -3984,7 +4250,8 @@ class _Add_with_propertyState extends State<Add_with_property>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services',),
+            'Location services are disabled. Please enable the services',
+          ),
         ),
       );
       return false;
@@ -3994,14 +4261,19 @@ class _Add_with_propertyState extends State<Add_with_property>
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')),);
+          const SnackBar(content: Text('Location permissions are denied')),
+        );
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.',),),);
+            'Location permissions are permanently denied, we cannot request permissions.',
+          ),
+        ),
+      );
       return false;
     }
     return true;
@@ -4009,7 +4281,8 @@ class _Add_with_propertyState extends State<Add_with_property>
 
   Future<void> _getCurrentPosition() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     setState(() {
       lat = position.latitude;
@@ -4017,8 +4290,11 @@ class _Add_with_propertyState extends State<Add_with_property>
       requestModelAuto.lat = lat.toString();
       requestModelAuto.lng = log.toString();
     });
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${log}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
 
     if (response.statusCode == 200) {
       // Successful response

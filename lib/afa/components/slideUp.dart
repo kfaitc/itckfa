@@ -1642,7 +1642,8 @@ class _HomePageState extends State<map_cross_verbal> {
     if (!route.toString().contains('Preah Norodom Blvd') &&
         !route.toString().contains('Preah Monivong Blvd (93)') &&
         !route.toString().contains('NR1') &&
-        !route.toString().contains('Yothapol Khemarak Phoumin Blvd') &&
+        !route.toString().contains('Yuthapol Khmemarak Phoumin Blvd') &&
+        !route.toString().contains('Yothapol Khemarak Phoumin Blvd (271)') &&
         !route.toString().contains('Mao Tse Toung Blvd') &&
         !route.toString().contains('Monireth') &&
         !route.toString().contains('Preah Sihanouk Blvd') &&
@@ -2367,7 +2368,8 @@ class _HomePageState extends State<map_cross_verbal> {
         if (route.toString().contains('Preah Norodom Blvd') ||
             route.toString().contains('Preah Monivong Blvd (93)') ||
             route.toString().contains('NR1') ||
-            route.toString().contains('Yothapol Khemarak Phoumin Blvd') ||
+            route.toString().contains('Yuthapol Khmemarak Phoumin Blvd') ||
+            route.toString().contains('Yothapol Khemarak Phoumin Blvd (271)') ||
             route.toString().contains('Mao Tse Toung Blvd') ||
             route.toString().contains('Monireth') ||
             route.toString().contains('Preah Sihanouk Blvd') ||
