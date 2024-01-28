@@ -60,13 +60,20 @@ void main() async {
 
   //======|One signal |======
   //Remove this method to stop OneSignal Debugging
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  // OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
 
-  OneSignal.initialize("d3025f03-32f5-444a-8100-7f7637a7f631");
+  // OneSignal.initialize("d3025f03-32f5-444a-8100-7f7637a7f631");
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-  OneSignal.Notifications.requestPermission(true);
+  // OneSignal.Notifications.requestPermission(true);
   //======|One signal |======
   // handleIncomingLinks();
+// virak test
+  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+  await OneSignal.shared.setAppId("d3025f03-32f5-444a-8100-7f7637a7f631");
+  // OneSignal.shared.disablePush(false);
+  // bool userProvidedPrivacyConsent =
+  //     await OneSignal.shared.userProvidedPrivacyConsent();
   runApp(const MyApp());
 }
 
@@ -123,10 +130,10 @@ class _MyAppState extends State<MyApp> {
       //   permissionGranted = false;
       // });
     }
-    OneSignal.Notifications.addPermissionObserver((state) {
-      // print("Has permission $state");
-    });
-    OneSignal.Debug.setAlertLevel(OSLogLevel.none);
+    // OneSignal.Notifications.addPermissionObserver((state) {
+    //   // print("Has permission $state");
+    // });
+    // OneSignal.Debug.setAlertLevel(OSLogLevel.none);
   }
 
   // String link = 'https://kfaapp.page.link/service';

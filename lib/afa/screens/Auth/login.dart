@@ -62,45 +62,7 @@ class _LoginState extends State<Login> {
   static bool status = false;
   late TextEditingController Email;
   late TextEditingController Password;
-
-  // selectPeople() async {
-  //   // list = await PeopleController().selectPeople();
-  //   // if (list.isEmpty) {
-  //   //   setState(() {
-  //   //     status = false;
-  //   //   });
-  //   // } else {
-  //   //   setState(() {
-  //   //     int i = list.length - 1;
-  //   //     status = true;
-  //   //     Email = TextEditingController(text: list[i].name);
-  //   //     Password = TextEditingController(text: list[i].password);
-  //   //   });
-  //   // }
-
-  //   slist = await mydb.db.rawQuery('SELECT * FROM user');
-  //   slist.map((e) {
-  //     setState(() {
-  //       datatest = e;
-  //       // print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
-  //     });
-  //   });
-  //   if (slist.isEmpty) {
-  //     setState(() {
-  //       status = false;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       int i = slideList.length - 1;
-  //       status = true;
-  //       // print("\n\n\n\n\n\n kokokoko =  ${datatest!['email']}\n\n\n\n\n\n");
-  //       // Email = TextEditingController(text: list[i].name);
-  //       // Password = TextEditingController(text: list[i].password);
-  //     });
-  //   }
-  // }
-
-  getdata() {
+  Future getdata() async {
     Future.delayed(Duration(milliseconds: 500), () async {
       await mydb.open_user();
       slist = await mydb.db.rawQuery('SELECT * FROM user');
@@ -114,24 +76,7 @@ class _LoginState extends State<Login> {
           print("objects: $id");
           Email = TextEditingController(text: slist[i]['email']);
           Password = TextEditingController(text: slist[i]['password']);
-
-          // OneSignal.logout();
-          OneSignalPushSubscription().optIn().then((value) {});
-          OneSignal.login(control_user);
-          OneSignal.User.addAlias("fb_id", "$control_user");
-          OneSignal.User.addEmail(slist[i]['email'].toString());
-          // OneSignal.User.addAlias("fb_id", "kfa123");
-          // OneSignal.User.addAliases({"fb_id": "11525-52442"});
-          // OneSignal.login(slist[i]['username'].toString());
-          // OneSignal.User.addAlias(
-          //   "fb_id$id",
-          //   slist[i]['username'].toString(),
-          // );
-
-          print(OneSignal.Notifications.toString());
-        } else {
-          // print("\n\n\n\nkakakaka" + slist.toString() + "\n\n\n\nkakakak");
-        }
+        } else {}
       });
     });
   }

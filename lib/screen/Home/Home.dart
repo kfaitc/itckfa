@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage1> {
           int i;
           if (slist.isNotEmpty) {
             i = slist.length - 1;
-            user = '${slist[i]['first_name']} ${slist[0]['last_name']}';
+            user = '${slist[i]['first_name']}${slist[0]['last_name']}';
             first_name = slist[i]['first_name'];
             last_name = slist[i]['last_name'];
             email = slist[i]['email'];
@@ -109,15 +109,14 @@ class _HomePageState extends State<HomePage1> {
             control_user = slist[i]['username'];
             password = slist[i]['password'];
 
-            // OneSignal.login(slist[i]['username'].toString());
+            // OneSignal.login("$control_user");
             // OneSignal.User.addAlias(
-            //   "fb_id$id",
-            //   slist[i]['username'].toString(),
+            //   "$user",
+            //   "$control_user",
             // );
             // OneSignal.User.addTagWithKey(
             //     "fb_id$id", slist[i]['username'].toString(),);
             // OneSignal.User.addTags({'fb_id$id': '${slist[i]['username']}'});
-            print("pushSubscription ${OneSignal.User.pushSubscription}");
           }
         });
         setState(() {

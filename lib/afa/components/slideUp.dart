@@ -557,6 +557,7 @@ class _HomePageState extends State<map_cross_verbal> {
 
   List data_adding_correct = [];
   double? min, max;
+  Map? map;
   Future<void> Show(SearchRequestModel requestModel) async {
     // var rs = await http
     //     .get(Uri.parse('https://kfahrm.cc/laravel/public/api/comparable/list?page=100'));
@@ -575,7 +576,6 @@ class _HomePageState extends State<map_cross_verbal> {
         };
       } else {
         Jsondata = {
-          "property_type_id": "15",
           "num": requestModel.num,
           "lat": requestModel.lat,
           "lng": requestModel.lng,
@@ -592,9 +592,13 @@ class _HomePageState extends State<map_cross_verbal> {
         var jsonData = jsonDecode(rs.body);
         setState(() {
           list = jsonData['autoverbal'];
+          map = list.asMap();
         });
       }
-      Map map = list.asMap();
+      await Find_by_piont(
+        double.parse(requestModel.lat),
+        double.parse(requestModel.lng),
+      );
       if (requestModel.lat.isEmpty || requestModel.lng.isEmpty) {
         setState(() {
           isApiCallProcess = false;
@@ -612,10 +616,8 @@ class _HomePageState extends State<map_cross_verbal> {
       } else {
         setState(() {
           isApiCallProcess = false;
-          max = 0;
-          min = 0;
         });
-        if (map.isEmpty) {
+        if (map!.isEmpty) {
           markers.clear();
           AwesomeDialog(
             context: context,
@@ -629,1005 +631,987 @@ class _HomePageState extends State<map_cross_verbal> {
             btnOkColor: Colors.blue,
           ).show();
         } else {
-          int index = 0;
-          for (var i = 0; i < map.length; i++) {
-            if (i == 0) {
-              if (map[i]['comparable_adding_price'] == '') {
-                map[i]['comparable_adding_price'] = '0';
-                adding_price +=
-                    double.parse(map[i]['comparable_adding_price']) /
-                        map.length;
-                // print(map[i]['comparable_adding_price']);
-              } else if (map[i]['comparable_adding_price'].contains(',')) {
-                adding_price += double.parse(
-                      map[i]['comparable_adding_price'].replaceAll(",", ""),
-                    ) /
-                    map.length;
-                // print(map[i]['comparable_adding_price']);
-                //print(map[i]['comparable_adding_price'].split(",")[0]);
-              } else {
-                adding_price +=
-                    (double.parse(map[i]['comparable_adding_price'])) /
-                        map.length;
-              }
-              setState(() {
-                data_adding_correct.add(map[i]);
-                // widget.asking_price(adding_price);
-              });
-            } else if (i > 0) {
-              if ((data_adding_correct.length == int.parse(requestModel.num)) ||
-                  (i == map.length - 1)) {
-                break;
-              } else {
-                if ((map[i]['latlong_log'] != map[i - 1]['latlong_log']) &&
-                    (map[i]['comparable_adding_price'] !=
-                        map[i - 1]['comparable_adding_price'])) {
-                  if (map[i]['comparable_adding_price'] == '') {
-                    map[i]['comparable_adding_price'] = '0';
-                    adding_price +=
-                        double.parse(map[i]['comparable_adding_price']) /
-                            int.parse(requestModel.num);
-                  } else if (map[i]['comparable_adding_price'].contains(',')) {
-                    // print(map[i]['comparable_adding_price'].replaceAll(",", ""));
-                    adding_price += double.parse(
-                          map[i]['comparable_adding_price'].replaceAll(",", ""),
-                        ) /
-                        int.parse(requestModel.num);
-                  } else {
-                    adding_price +=
-                        (double.parse(map[i]['comparable_adding_price'])) /
-                            int.parse(requestModel.num);
+          setState(() {
+            int index = 0;
+            for (var i = 1; i < map!.length; i++) {
+              if (double.parse(map![i]['comparable_adding_price']) <=
+                  (R_avg + (R_avg * 0.50))) {
+                print(
+                    "\ncomparable_adding_price $i:${map![i]['comparable_adding_price']} ${R_avg + (R_avg * 0.50)}");
+
+                if ((data_adding_correct.length ==
+                        int.parse(requestModel.num)) ||
+                    (i == map!.length - 1)) {
+                  break;
+                } else {
+                  if ((map![i]['latlong_log'] != map![i - 1]['latlong_log']) &&
+                      (map![i]['comparable_adding_price'] !=
+                          map![i - 1]['comparable_adding_price'])) {
+                    if (map![i]['comparable_adding_price'] == '') {
+                      map![i]['comparable_adding_price'] = '0';
+                      adding_price +=
+                          double.parse(map![i]['comparable_adding_price']);
+                    } else if (map![i]['comparable_adding_price']
+                        .contains(',')) {
+                      // print(map[i]['comparable_adding_price'].replaceAll(",", ""));
+                      adding_price += double.parse(map![i]
+                              ['comparable_adding_price']
+                          .replaceAll(",", ""));
+                    } else {
+                      adding_price +=
+                          (double.parse(map![i]['comparable_adding_price']));
+                    }
+                    setState(() {
+                      data_adding_correct.add(map![i]);
+                    });
                   }
-                  setState(() {
-                    data_adding_correct.add(map[i]);
-                  });
                 }
+                // }
               }
             }
+          });
+        }
+      }
+      if (data_adding_correct.length == 5) {
+        for (int i = 0; i < data_adding_correct.length; i++) {
+          if (data_adding_correct[i]['comparable_property_id'] == 15) {
+            MarkerId markerId = MarkerId(i.toString());
+            Marker marker = Marker(
+              markerId: markerId,
+              position: LatLng(
+                double.parse(data_adding_correct[i]['latlong_log'].toString()),
+                double.parse(data_adding_correct[i]['latlong_la'].toString()),
+              ),
+              icon: await BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(50, 50)),
+                'assets/icons/l.png',
+              ),
+              onTap: () {
+                setState(() {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      title: Text(
+                        "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      content: SizedBox(
+                        height: 150,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ID\'s property',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text('Owner', style: TextStyle(fontSize: 12)),
+                                Text(
+                                  'Land-Width',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Length',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Total',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['comparable_id']
+                                          .toString(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_adding_price'] +
+                                      '\$',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['agenttype_name'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_width'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_length'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      formatter.format(
+                                        double.parse(
+                                          data_adding_correct[i]
+                                                  ['comparable_land_total']
+                                              .replaceAll(",", "")
+                                              .toString(),
+                                        ),
+                                      ),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                // Text('  :   ' + map[i]['comparable_survey_date']),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              },
+            );
+            setState(() {
+              isApiCallProcess = false;
+              listMarkerIds.add(marker);
+            });
+          } else if (data_adding_correct[i]['comparable_property_id'] == 10) {
+            MarkerId markerId = MarkerId(i.toString());
+            Marker marker = Marker(
+              markerId: markerId,
+              position: LatLng(
+                double.parse(data_adding_correct[i]['latlong_log'].toString()),
+                double.parse(data_adding_correct[i]['latlong_la'].toString()),
+              ),
+              icon: await BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(50, 50)),
+                'assets/icons/f.png',
+              ),
+              onTap: () {
+                setState(() {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      title: Text(
+                        "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      content: SizedBox(
+                        height: 150,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ID\'s property',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text('Owner', style: TextStyle(fontSize: 12)),
+                                Text(
+                                  'Land-Width',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Length',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Total',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['comparable_id']
+                                          .toString(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_adding_price'] +
+                                      '\$',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['agenttype_name'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_width'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_length'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      formatter.format(
+                                        double.parse(
+                                          data_adding_correct[i]
+                                                  ['comparable_land_total']
+                                              .replaceAll(",", "")
+                                              .toString(),
+                                        ),
+                                      ),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                // Text('  :   ' + map[i]['comparable_survey_date']),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              },
+            );
+            setState(() {
+              isApiCallProcess = false;
+              listMarkerIds.add(marker);
+            });
+          } else if (data_adding_correct[i]['comparable_property_id'] == 33) {
+            MarkerId markerId = MarkerId(i.toString());
+            Marker marker = Marker(
+              markerId: markerId,
+              position: LatLng(
+                double.parse(data_adding_correct[i]['latlong_log'].toString()),
+                double.parse(data_adding_correct[i]['latlong_la'].toString()),
+              ),
+              icon: await BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(50, 50)),
+                'assets/icons/v.png',
+              ),
+              onTap: () {
+                setState(() {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      title: Text(
+                        "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      content: SizedBox(
+                        height: 150,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ID\'s property',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text('Owner', style: TextStyle(fontSize: 12)),
+                                Text(
+                                  'Land-Width',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Length',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Total',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['comparable_id']
+                                          .toString(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_adding_price'] +
+                                      '\$',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['agenttype_name'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_width'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_length'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      formatter.format(
+                                        double.parse(
+                                          data_adding_correct[i]
+                                                  ['comparable_land_total']
+                                              .replaceAll(",", "")
+                                              .toString(),
+                                        ),
+                                      ),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                // Text('  :   ' + map[i]['comparable_survey_date']),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              },
+            );
+            setState(() {
+              isApiCallProcess = false;
+              listMarkerIds.add(marker);
+            });
+          } else if (data_adding_correct[i]['comparable_property_id'] == 14) {
+            MarkerId markerId = MarkerId(i.toString());
+            Marker marker = Marker(
+              markerId: markerId,
+              position: LatLng(
+                double.parse(data_adding_correct[i]['latlong_log'].toString()),
+                double.parse(data_adding_correct[i]['latlong_la'].toString()),
+              ),
+              icon: await BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(50, 50)),
+                'assets/icons/h.png',
+              ),
+              onTap: () {
+                setState(() {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      title: Text(
+                        "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      content: SizedBox(
+                        height: 150,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ID\'s property',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text('Owner', style: TextStyle(fontSize: 12)),
+                                Text(
+                                  'Land-Width',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Length',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Total',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['comparable_id']
+                                          .toString(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_adding_price'] +
+                                      '\$',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['agenttype_name'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_width'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_length'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      formatter.format(
+                                        double.parse(
+                                          data_adding_correct[i]
+                                                  ['comparable_land_total']
+                                              .replaceAll(",", "")
+                                              .toString(),
+                                        ),
+                                      ),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                // Text('  :   ' + map[i]['comparable_survey_date']),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              },
+            );
+            setState(() {
+              isApiCallProcess = false;
+              listMarkerIds.add(marker);
+            });
+          } else if (data_adding_correct[i]['comparable_property_id'] == 4) {
+            MarkerId markerId = MarkerId(i.toString());
+            Marker marker = Marker(
+              markerId: markerId,
+              position: LatLng(
+                double.parse(data_adding_correct[i]['latlong_log'].toString()),
+                double.parse(data_adding_correct[i]['latlong_la'].toString()),
+              ),
+              icon: await BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(50, 50)),
+                'assets/icons/b.png',
+              ),
+              onTap: () {
+                setState(() {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      title: Text(
+                        "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      content: SizedBox(
+                        height: 150,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ID\'s property',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text('Owner', style: TextStyle(fontSize: 12)),
+                                Text(
+                                  'Land-Width',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Length',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Total',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['comparable_id']
+                                          .toString(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_adding_price'] +
+                                      '\$',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['agenttype_name'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_width'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_length'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      formatter.format(
+                                        double.parse(
+                                          data_adding_correct[i]
+                                                  ['comparable_land_total']
+                                              .replaceAll(",", "")
+                                              .toString(),
+                                        ),
+                                      ),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                // Text('  :   ' + map[i]['comparable_survey_date']),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              },
+            );
+            setState(() {
+              isApiCallProcess = false;
+              listMarkerIds.add(marker);
+            });
+          } else if (data_adding_correct[i]['comparable_property_id'] == 29) {
+            MarkerId markerId = MarkerId(i.toString());
+            Marker marker = Marker(
+              markerId: markerId,
+              position: LatLng(
+                double.parse(data_adding_correct[i]['latlong_log'].toString()),
+                double.parse(data_adding_correct[i]['latlong_la'].toString()),
+              ),
+              icon: await BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(50, 50)),
+                'assets/icons/v.png',
+              ),
+              onTap: () {
+                setState(() {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      title: Text(
+                        "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      content: SizedBox(
+                        height: 150,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ID\'s property',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text('Owner', style: TextStyle(fontSize: 12)),
+                                Text(
+                                  'Land-Width',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Length',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Total',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['comparable_id']
+                                          .toString(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_adding_price'] +
+                                      '\$',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['agenttype_name'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_width'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_length'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      formatter.format(
+                                        double.parse(
+                                          data_adding_correct[i]
+                                                  ['comparable_land_total']
+                                              .replaceAll(",", "")
+                                              .toString(),
+                                        ),
+                                      ),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                // Text('  :   ' + map[i]['comparable_survey_date']),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              },
+            );
+            setState(() {
+              isApiCallProcess = false;
+              listMarkerIds.add(marker);
+            });
+          } else {
+            MarkerId markerId = MarkerId(i.toString());
+            Marker marker = Marker(
+              markerId: markerId,
+              position: LatLng(
+                double.parse(data_adding_correct[i]['latlong_log'].toString()),
+                double.parse(data_adding_correct[i]['latlong_la'].toString()),
+              ),
+              icon: await BitmapDescriptor.fromAssetImage(
+                ImageConfiguration(size: Size(50, 50)),
+                'assets/icons/a.png',
+              ),
+              onTap: () {
+                setState(() {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      title: Text(
+                        "Property: ${i + 1} ${data_adding_correct[i]['property_type_name']}",
+                        style: TextStyle(
+                          color: kPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      content: SizedBox(
+                        height: 150,
+                        child: Row(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'ID\'s property',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Price',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text('Owner', style: TextStyle(fontSize: 12)),
+                                Text(
+                                  'Land-Width',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Length',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  'Land-Total',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['comparable_id']
+                                          .toString(),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_adding_price'] +
+                                      '\$',
+                                  style: TextStyle(
+                                    color: kImageColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]['agenttype_name'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_width'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      data_adding_correct[i]
+                                          ['comparable_land_length'],
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '  :   ' +
+                                      formatter.format(
+                                        double.parse(
+                                          data_adding_correct[i]
+                                                  ['comparable_land_total']
+                                              .replaceAll(",", "")
+                                              .toString(),
+                                        ),
+                                      ),
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                // Text('  :   ' + map[i]['comparable_survey_date']),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              },
+            );
+            setState(() {
+              isApiCallProcess = false;
+              listMarkerIds.add(marker);
+            });
           }
+        }
+      }
 
-          // print("\n\n\n\n\nkoko ${listMarkerIds.length}  \n\n\n\n\n");
-        }
+      if (data_adding_correct.length == 5) {
+        await Dialog(context);
       }
-      for (int i = 0; i < data_adding_correct.length; i++) {
-        if (data_adding_correct[i]['comparable_property_id'] == 15) {
-          MarkerId markerId = MarkerId(i.toString());
-          Marker marker = Marker(
-            markerId: markerId,
-            position: LatLng(
-              double.parse(data_adding_correct[i]['latlong_log'].toString()),
-              double.parse(data_adding_correct[i]['latlong_la'].toString()),
-            ),
-            icon: await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(50, 50)),
-              'assets/icons/l.png',
-            ),
-            onTap: () {
-              setState(() {
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    title: Text(
-                      "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    content: SizedBox(
-                      height: 150,
-                      child: Row(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'ID\'s property',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text(
-                                'Land-Width',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Length',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Total',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['comparable_id']
-                                        .toString(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_adding_price'] +
-                                    '\$',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['agenttype_name'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_width'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_length'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    formatter.format(
-                                      double.parse(
-                                        data_adding_correct[i]
-                                                ['comparable_land_total']
-                                            .replaceAll(",", "")
-                                            .toString(),
-                                      ),
-                                    ),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              // Text('  :   ' + map[i]['comparable_survey_date']),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              });
-            },
-          );
-          setState(() {
-            isApiCallProcess = false;
-            listMarkerIds.add(marker);
-          });
-        } else if (data_adding_correct[i]['comparable_property_id'] == 10) {
-          MarkerId markerId = MarkerId(i.toString());
-          Marker marker = Marker(
-            markerId: markerId,
-            position: LatLng(
-              double.parse(data_adding_correct[i]['latlong_log'].toString()),
-              double.parse(data_adding_correct[i]['latlong_la'].toString()),
-            ),
-            icon: await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(50, 50)),
-              'assets/icons/f.png',
-            ),
-            onTap: () {
-              setState(() {
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    title: Text(
-                      "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    content: SizedBox(
-                      height: 150,
-                      child: Row(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'ID\'s property',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text(
-                                'Land-Width',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Length',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Total',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['comparable_id']
-                                        .toString(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_adding_price'] +
-                                    '\$',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['agenttype_name'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_width'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_length'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    formatter.format(
-                                      double.parse(
-                                        data_adding_correct[i]
-                                                ['comparable_land_total']
-                                            .replaceAll(",", "")
-                                            .toString(),
-                                      ),
-                                    ),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              // Text('  :   ' + map[i]['comparable_survey_date']),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              });
-            },
-          );
-          setState(() {
-            isApiCallProcess = false;
-            listMarkerIds.add(marker);
-          });
-        } else if (data_adding_correct[i]['comparable_property_id'] == 33) {
-          MarkerId markerId = MarkerId(i.toString());
-          Marker marker = Marker(
-            markerId: markerId,
-            position: LatLng(
-              double.parse(data_adding_correct[i]['latlong_log'].toString()),
-              double.parse(data_adding_correct[i]['latlong_la'].toString()),
-            ),
-            icon: await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(50, 50)),
-              'assets/icons/v.png',
-            ),
-            onTap: () {
-              setState(() {
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    title: Text(
-                      "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    content: SizedBox(
-                      height: 150,
-                      child: Row(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'ID\'s property',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text(
-                                'Land-Width',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Length',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Total',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['comparable_id']
-                                        .toString(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_adding_price'] +
-                                    '\$',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['agenttype_name'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_width'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_length'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    formatter.format(
-                                      double.parse(
-                                        data_adding_correct[i]
-                                                ['comparable_land_total']
-                                            .replaceAll(",", "")
-                                            .toString(),
-                                      ),
-                                    ),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              // Text('  :   ' + map[i]['comparable_survey_date']),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              });
-            },
-          );
-          setState(() {
-            isApiCallProcess = false;
-            listMarkerIds.add(marker);
-          });
-        } else if (data_adding_correct[i]['comparable_property_id'] == 14) {
-          MarkerId markerId = MarkerId(i.toString());
-          Marker marker = Marker(
-            markerId: markerId,
-            position: LatLng(
-              double.parse(data_adding_correct[i]['latlong_log'].toString()),
-              double.parse(data_adding_correct[i]['latlong_la'].toString()),
-            ),
-            icon: await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(50, 50)),
-              'assets/icons/h.png',
-            ),
-            onTap: () {
-              setState(() {
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    title: Text(
-                      "Property{${i + 1}} ${data_adding_correct[i]['property_type_name']}",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    content: SizedBox(
-                      height: 150,
-                      child: Row(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'ID\'s property',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text(
-                                'Land-Width',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Length',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Total',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['comparable_id']
-                                        .toString(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_adding_price'] +
-                                    '\$',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['agenttype_name'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_width'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_length'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    formatter.format(
-                                      double.parse(
-                                        data_adding_correct[i]
-                                                ['comparable_land_total']
-                                            .replaceAll(",", "")
-                                            .toString(),
-                                      ),
-                                    ),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              // Text('  :   ' + map[i]['comparable_survey_date']),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              });
-            },
-          );
-          setState(() {
-            isApiCallProcess = false;
-            listMarkerIds.add(marker);
-          });
-        } else if (data_adding_correct[i]['comparable_property_id'] == 4) {
-          MarkerId markerId = MarkerId(i.toString());
-          Marker marker = Marker(
-            markerId: markerId,
-            position: LatLng(
-              double.parse(data_adding_correct[i]['latlong_log'].toString()),
-              double.parse(data_adding_correct[i]['latlong_la'].toString()),
-            ),
-            icon: await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(50, 50)),
-              'assets/icons/b.png',
-            ),
-            onTap: () {
-              setState(() {
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    title: Text(
-                      "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    content: SizedBox(
-                      height: 150,
-                      child: Row(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'ID\'s property',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text(
-                                'Land-Width',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Length',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Total',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['comparable_id']
-                                        .toString(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_adding_price'] +
-                                    '\$',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['agenttype_name'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_width'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_length'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    formatter.format(
-                                      double.parse(
-                                        data_adding_correct[i]
-                                                ['comparable_land_total']
-                                            .replaceAll(",", "")
-                                            .toString(),
-                                      ),
-                                    ),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              // Text('  :   ' + map[i]['comparable_survey_date']),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              });
-            },
-          );
-          setState(() {
-            isApiCallProcess = false;
-            listMarkerIds.add(marker);
-          });
-        } else if (data_adding_correct[i]['comparable_property_id'] == 29) {
-          MarkerId markerId = MarkerId(i.toString());
-          Marker marker = Marker(
-            markerId: markerId,
-            position: LatLng(
-              double.parse(data_adding_correct[i]['latlong_log'].toString()),
-              double.parse(data_adding_correct[i]['latlong_la'].toString()),
-            ),
-            icon: await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(50, 50)),
-              'assets/icons/v.png',
-            ),
-            onTap: () {
-              setState(() {
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    title: Text(
-                      "Property : ${i + 1} ${data_adding_correct[i]['property_type_name']}",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    content: SizedBox(
-                      height: 150,
-                      child: Row(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'ID\'s property',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text(
-                                'Land-Width',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Length',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Total',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['comparable_id']
-                                        .toString(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_adding_price'] +
-                                    '\$',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['agenttype_name'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_width'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_length'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    formatter.format(
-                                      double.parse(
-                                        data_adding_correct[i]
-                                                ['comparable_land_total']
-                                            .replaceAll(",", "")
-                                            .toString(),
-                                      ),
-                                    ),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              // Text('  :   ' + map[i]['comparable_survey_date']),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              });
-            },
-          );
-          setState(() {
-            isApiCallProcess = false;
-            listMarkerIds.add(marker);
-          });
-        } else {
-          MarkerId markerId = MarkerId(i.toString());
-          Marker marker = Marker(
-            markerId: markerId,
-            position: LatLng(
-              double.parse(data_adding_correct[i]['latlong_log'].toString()),
-              double.parse(data_adding_correct[i]['latlong_la'].toString()),
-            ),
-            icon: await BitmapDescriptor.fromAssetImage(
-              ImageConfiguration(size: Size(50, 50)),
-              'assets/icons/a.png',
-            ),
-            onTap: () {
-              setState(() {
-                showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    title: Text(
-                      "Property: ${i + 1} ${data_adding_correct[i]['property_type_name']}",
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    content: SizedBox(
-                      height: 150,
-                      child: Row(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'ID\'s property',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text('Owner', style: TextStyle(fontSize: 12)),
-                              Text(
-                                'Land-Width',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Length',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                'Land-Total',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['comparable_id']
-                                        .toString(),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_adding_price'] +
-                                    '\$',
-                                style: TextStyle(
-                                  color: kImageColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]['agenttype_name'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_width'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    data_adding_correct[i]
-                                        ['comparable_land_length'],
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '  :   ' +
-                                    formatter.format(
-                                      double.parse(
-                                        data_adding_correct[i]
-                                                ['comparable_land_total']
-                                            .replaceAll(",", "")
-                                            .toString(),
-                                      ),
-                                    ),
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              // Text('  :   ' + map[i]['comparable_survey_date']),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              });
-            },
-          );
-          setState(() {
-            isApiCallProcess = false;
-            listMarkerIds.add(marker);
-          });
-        }
-      }
-      await Find_by_piont(
-        double.parse(requestModel.lat),
-        double.parse(requestModel.lng),
-      );
-      await Dialog(context);
     } else {
       await Find_by_piont(
         double.parse(requestModel.lat),
@@ -1691,10 +1675,13 @@ class _HomePageState extends State<map_cross_verbal> {
         !route.toString().contains('NR20') &&
         !route.toString().contains('Prey Sa') &&
         !route.toString().contains('ផ្លូវ ៦០ម៉ែត្រ')) {
-      // adding_price /= int.parse(requestModel.num.toString());
-      min = adding_price - (0.03 * adding_price);
-      max = adding_price + (0.02 * adding_price);
-      avg = (min!.toDouble() + max!.toDouble()) / 2;
+      setState(() {
+        adding_price /= int.parse(requestModel.num.toString());
+        var price = (adding_price + R_avg) / 2;
+        min = price - (0.03 * price);
+        max = price + (0.02 * price);
+        avg = price;
+      });
       return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -1709,88 +1696,7 @@ class _HomePageState extends State<map_cross_verbal> {
           insetPadding: EdgeInsets.all(0),
           content: SizedBox(
             height: MediaQuery.of(context).size.height * 0.55,
-            width: MediaQuery.of(context).size.width * 1,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text(
-                      "Price of ${requestModel.num} comparable : ${formatter.format(adding_price)}\$",
-                      style: const TextStyle(
-                        fontSize: 15,
-                        decorationStyle: TextDecorationStyle.dashed,
-                        decoration: TextDecoration.underline,
-                      )),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                          "minimum : ${formatter.format(adding_price - (0.01 * adding_price))}\$",
-                          style: const TextStyle(
-                            fontSize: 15,
-                            decorationStyle: TextDecorationStyle.dashed,
-                            decoration: TextDecoration.underline,
-                          )),
-                      Text(
-                          "maximum : ${formatter.format(adding_price + (0.03 * adding_price))}\$",
-                          style: const TextStyle(
-                            fontSize: 15,
-                            decorationStyle: TextDecorationStyle.dashed,
-                            decoration: TextDecoration.underline,
-                          )),
-                    ],
-                  ),
-                  for (int i = 0; i < data_adding_correct.length; i++)
-                    Card(
-                      elevation: 10,
-                      child: ListTile(
-                        title: Text(
-                            "comparable id : ${data_adding_correct[i]['comparable_id']}",
-                            style: const TextStyle(fontSize: 15)),
-                        subtitle: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                "property : ${data_adding_correct[i]['property_type_name']}",
-                                style: const TextStyle(fontSize: 15)),
-                            Text(
-                                "Owner : ${data_adding_correct[i]['agenttype_name']}",
-                                style: const TextStyle(fontSize: 15)),
-                            Text(
-                                "adding price : ${formatter.format(double.parse(data_adding_correct[i]['comparable_adding_price'].replaceAll(",", "").toString()))}\$",
-                                style: const TextStyle(fontSize: 15)),
-                            Text(
-                                "Date : ${data_adding_correct[i]['comparable_survey_date']}",
-                                style: const TextStyle(fontSize: 15)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    } else {
-      return showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          actions: [
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
-          insetPadding: EdgeInsets.all(0),
-          content: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.55,
-            width: MediaQuery.of(context).size.width * 0.9,
+            width: MediaQuery.of(context).size.width * 0.8,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -2052,7 +1958,384 @@ class _HomePageState extends State<map_cross_verbal> {
                     "$commune /  $district / Route : ${route.toString()}",
                     style: const TextStyle(
                         fontStyle: FontStyle.italic,
-                        fontSize: 8,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (data_adding_correct.length == 5)
+                    Text(
+                        "\n(${data_adding_correct[0]['comparable_adding_price']}+${data_adding_correct[1]['comparable_adding_price']}+${data_adding_correct[2]['comparable_adding_price']}+${data_adding_correct[3]['comparable_adding_price']}+${data_adding_correct[4]['comparable_adding_price']})/${requestModel.num}=${formatter.format(adding_price)}\$",
+                        style: const TextStyle(fontSize: 10)),
+                  Text(
+                      "+50% of AVG Residential = ${formatter.format(R_avg + (R_avg * 0.50))} \$",
+                      style: const TextStyle(fontSize: 10)),
+                  Text(
+                      "( ${formatter.format(R_avg)}\$ + ${formatter.format(adding_price)}\$ ) / 2 = ${formatter.format(avg)}\$",
+                      style: const TextStyle(fontSize: 10)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      // return showDialog(
+      //   context: context,
+      //   builder: (context) => AlertDialog(
+      //     actions: [
+      //       TextButton(
+      //         child: const Text('Close'),
+      //         onPressed: () {
+      //           Navigator.pop(context);
+      //         },
+      //       )
+      //     ],
+      //     insetPadding: EdgeInsets.all(0),
+      //     content: SizedBox(
+      //       height: MediaQuery.of(context).size.height * 0.55,
+      //       width: MediaQuery.of(context).size.width * 1,
+      //       child: SingleChildScrollView(
+      //         child: Column(
+      //           children: [
+      //             Text(
+      //                 "Price of ${requestModel.num} comparable : ${formatter.format(adding_price)}\$",
+      //                 style: const TextStyle(
+      //                   fontSize: 15,
+      //                   decorationStyle: TextDecorationStyle.dashed,
+      //                   decoration: TextDecoration.underline,
+      //                 )),
+      //             Row(
+      //               mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //               children: [
+      //                 Text(
+      //                     "minimum : ${formatter.format(adding_price - (0.01 * adding_price))}\$",
+      //                     style: const TextStyle(
+      //                       fontSize: 15,
+      //                       decorationStyle: TextDecorationStyle.dashed,
+      //                       decoration: TextDecoration.underline,
+      //                     )),
+      //                 Text(
+      //                     "maximum : ${formatter.format(adding_price + (0.03 * adding_price))}\$",
+      //                     style: const TextStyle(
+      //                       fontSize: 15,
+      //                       decorationStyle: TextDecorationStyle.dashed,
+      //                       decoration: TextDecoration.underline,
+      //                     )),
+      //               ],
+      //             ),
+      //             for (int i = 0; i < data_adding_correct.length; i++)
+      //               Card(
+      //                 elevation: 10,
+      //                 child: ListTile(
+      //                   title: Text(
+      //                       "comparable id : ${data_adding_correct[i]['comparable_id']}",
+      //                       style: const TextStyle(fontSize: 15)),
+      //                   subtitle: Column(
+      //                     mainAxisAlignment: MainAxisAlignment.start,
+      //                     crossAxisAlignment: CrossAxisAlignment.start,
+      //                     children: [
+      //                       Text(
+      //                           "property : ${data_adding_correct[i]['property_type_name']}",
+      //                           style: const TextStyle(fontSize: 15)),
+      //                       Text(
+      //                           "Owner : ${data_adding_correct[i]['agenttype_name']}",
+      //                           style: const TextStyle(fontSize: 15)),
+      //                       Text(
+      //                           "adding price : ${formatter.format(double.parse(data_adding_correct[i]['comparable_adding_price'].replaceAll(",", "").toString()))}\$",
+      //                           style: const TextStyle(fontSize: 15)),
+      //                       Text(
+      //                           "Date : ${data_adding_correct[i]['comparable_survey_date']}",
+      //                           style: const TextStyle(fontSize: 15)),
+      //                     ],
+      //                   ),
+      //                 ),
+      //               ),
+      //             const SizedBox(
+      //               height: 20,
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // );
+    } else {
+      return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          actions: [
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          insetPadding: EdgeInsets.all(0),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.55,
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Text(
+                    "Compareble price",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 220, 221, 223),
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 1, color: Colors.grey)
+                      ],
+                      border: Border.all(
+                        width: 0.2,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Avg = ",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text("${formatter.format(adding_price)}\$",
+                                style: const TextStyle(
+                                    color: Color.fromARGB(255, 242, 11, 134)))
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              children: [
+                                const Text("Min = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text(
+                                    "${formatter.format(adding_price - (0.01 * adding_price))}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text("Max = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text(
+                                    "${formatter.format(adding_price + (0.01 * adding_price))}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Residential",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 220, 221, 223),
+                          boxShadow: const [
+                            BoxShadow(blurRadius: 1, color: Colors.grey)
+                          ],
+                          border: Border.all(
+                            width: 0.2,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Avg = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text("${formatter.format(R_avg)}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text("Min = ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        "${formatter.format(double.parse(minSqm1))}\$",
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 242, 11, 134)))
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Text("Max = ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        "${formatter.format(double.parse(maxSqm1))}\$",
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 242, 11, 134)))
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        "Commercial",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 220, 221, 223),
+                          border: Border.all(
+                            width: 0.2,
+                          ),
+                          boxShadow: const [
+                            BoxShadow(blurRadius: 1, color: Colors.grey)
+                          ],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Avg = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text("${formatter.format(C_avg)}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text("Min = ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        "${formatter.format(double.parse(minSqm2))}\$",
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 242, 11, 134)))
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Text("Max = ",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
+                                    Text(
+                                        "${formatter.format(double.parse(maxSqm2))}\$",
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 242, 11, 134)))
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text(
+                    "Calculator Compareble and Land_price",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 220, 221, 223),
+                      border: Border.all(
+                        width: 0.2,
+                      ),
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 1, color: Colors.grey)
+                      ],
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Avg = ",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text("${formatter.format(avg)}\$",
+                                style: const TextStyle(
+                                    color: Color.fromARGB(255, 242, 11, 134)))
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              children: [
+                                const Text("Min = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text("${formatter.format(min)}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text("Max = ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                Text("${formatter.format(max)}\$",
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 242, 11, 134)))
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    "$commune /  $district / Route : ${route.toString()}",
+                    style: const TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                   ),

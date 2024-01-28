@@ -26,10 +26,10 @@ import 'package:itckfa/screen/Home/Customs/titleBar.dart';
 import 'package:itckfa/screen/Property/Home_Screen_property.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
-
-// import '../../afa/components/slideUp.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import '../../models/autoVerbal.dart';
 
 // import 'Customs/googlemapkfa/detailmap.dart';
@@ -325,6 +325,30 @@ class _BodyState extends State<Body> {
     });
   }
 
+  void _handleSetExternalUserId() {
+    print("Setting external user ID");
+
+    if (widget.control_user == null) return;
+    // var externalUserIdAuthHash = generateHmacSha256(
+    //     "dxD3JNMgQ_W_Jmr6NfFqm3:APA91bHErrR0Imjb0QZ_2ZyALddZIPQnrk6T8RPd23GE88FiuYDzSKEUmq2Nz1G7aOyU6y1puUmo0ykMyP77icgx37gQnk381Ccju_QNG34qZiLpjFpOKdEy0qc13ZGZD9Eiqrf9rQ0c",
+    //     "NjUxOTVjMTEtOWI2MS00OGFiLThiOTYtYWFmMDhhNTEwZWFl");
+    // OneSignal.shared.setEmail(
+    //     email: widget.email, emailAuthHashToken: externalUserIdAuthHash);
+    // OneSignal.shared.setExternalUserId(widget.control_user.toString());
+
+    // OneSignal.shared.sendTag("${widget.first_name}", widget.control_user);
+  }
+
+  String generateHmacSha256(String data, String key) {
+    List<int> keyBytes = utf8.encode(key);
+    List<int> dataBytes = utf8.encode(data);
+
+    Hmac hmacSha256 = Hmac(sha256, keyBytes); // HMAC-SHA256
+    Digest digest = hmacSha256.convert(dataBytes);
+
+    return base64.encode(digest.bytes);
+  }
+
   var lat;
   var log;
   var district;
@@ -338,6 +362,7 @@ class _BodyState extends State<Body> {
   Offset position = Offset(300.4, 340.9);
   @override
   Widget build(BuildContext context) {
+    // _handleSetExternalUserId();
     var w = MediaQuery.of(context).size.width;
     if (w < 600) {
       wth = w * 0.6;
