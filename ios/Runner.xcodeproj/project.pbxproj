@@ -218,9 +218,9 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				5C36B380C383CD1F597BE118 /* [CP] Embed Pods Frameworks */,
 				5BC218A12AE577AE00928536 /* Embed Foundation Extensions */,
-				09A9210EAF82531A26D236A4 /* [CP] Copy Pods Resources */,
+				65B2AB0EE421AC42D56A2E04 /* [CP] Embed Pods Frameworks */,
+				238409EA05EC5C9523A135C1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -228,8 +228,6 @@
 				5BC2189B2AE577AE00928536 /* PBXTargetDependency */,
 			);
 			name = Runner;
-			packageProductDependencies = (
-			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
@@ -262,8 +260,6 @@
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
-			packageReferences = (
-			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -296,7 +292,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		09A9210EAF82531A26D236A4 /* [CP] Copy Pods Resources */ = {
+		238409EA05EC5C9523A135C1 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -351,7 +347,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5C36B380C383CD1F597BE118 /* [CP] Embed Pods Frameworks */ = {
+		65B2AB0EE421AC42D56A2E04 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

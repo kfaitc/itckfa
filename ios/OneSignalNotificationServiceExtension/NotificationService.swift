@@ -1,6 +1,6 @@
 import UserNotifications
-
-import OneSignalFramework
+import OneSignal
+//import OneSignalFramework
 
 
 class NotificationService: UNNotificationServiceExtension {
