@@ -322,6 +322,7 @@ class _BodyState extends State<Body> {
     );
     Future.delayed(const Duration(seconds: 1), () {
       check_v_point();
+      // _handleSetExternalUserId();
     });
   }
 
@@ -362,7 +363,6 @@ class _BodyState extends State<Body> {
   Offset position = Offset(300.4, 340.9);
   @override
   Widget build(BuildContext context) {
-    // _handleSetExternalUserId();
     var w = MediaQuery.of(context).size.width;
     if (w < 600) {
       wth = w * 0.6;

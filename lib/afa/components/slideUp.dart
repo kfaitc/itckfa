@@ -147,9 +147,9 @@ class _HomePageState extends State<map_cross_verbal> {
   @override
   void initState() {
     _handleLocationPermission();
-    Future.delayed(const Duration(seconds: 3), () async {
-      await _getCurrentLocation();
-    });
+    // Future.delayed(const Duration(seconds: 3), () async {
+    //   await _getCurrentLocation();
+    // });
 
     // getAddress(latLng);
     // ignore: unnecessary_new
@@ -509,7 +509,6 @@ class _HomePageState extends State<map_cross_verbal> {
               ),
             );
             setState(() {
-              adding_price = 0;
               listMarkerIds.clear();
               data_adding_correct.clear();
 
@@ -634,11 +633,100 @@ class _HomePageState extends State<map_cross_verbal> {
           setState(() {
             int index = 0;
             for (var i = 1; i < map!.length; i++) {
-              if (double.parse(map![i]['comparable_adding_price']) <=
-                  (R_avg + (R_avg * 0.50))) {
-                print(
-                    "\ncomparable_adding_price $i:${map![i]['comparable_adding_price']} ${R_avg + (R_avg * 0.50)}");
+              if (!route.toString().contains('Preah Norodom Blvd') &&
+                  !route.toString().contains('Preah Monivong Blvd (93)') &&
+                  !route.toString().contains('NR1') &&
+                  !route.toString().contains('AH1') &&
+                  !route
+                      .toString()
+                      .contains('Yuthapol Khmemarak Phoumin Blvd') &&
+                  !route
+                      .toString()
+                      .contains('Yothapol Khemarak Phoumin Blvd (271)') &&
+                  !route.toString().contains('Mao Tse Toung Blvd') &&
+                  !route.toString().contains('Monireth') &&
+                  !route.toString().contains('Preah Sihanouk Blvd') &&
+                  !route.toString().contains('Kampuchea Krom Blvd') &&
+                  !route.toString().contains('Russian Federation Blvd') &&
+                  !route.toString().contains('Hun Sen Blvd') &&
+                  !route.toString().contains('Street 2004') &&
+                  !route.toString().contains('AH11') &&
+                  !route.toString().contains('NR2') &&
+                  !route.toString().contains('Chamkar Doung Street (217)') &&
+                  !route.toString().contains('Samdach Sothearos Blvd (3)') &&
+                  !route.toString().contains('Jawaharlal Nehru Blvd (215)') &&
+                  !route.toString().contains('Charles de Gaulle Blvd (217)') &&
+                  !route.toString().contains('Veng Sreng Blvd') &&
+                  !route
+                      .toString()
+                      .contains('Phnom Penh Hanoi Friendship Blvd (1019)') &&
+                  !route.toString().contains('Samdach Penn Nouth St. (289)') &&
+                  !route.toString().contains('Street 273') &&
+                  !route.toString().contains('Street 355') &&
+                  !route.toString().contains('Oknha Mong Reththy St. (1928)') &&
+                  !route.toString().contains('NR5') &&
+                  !route.toString().contains('Oknha Kleang Moeung St. (70)') &&
+                  !route.toString().contains('Trung Morn St') &&
+                  !route.toString().contains('មហាវិថី​ សហព័ន្ធរុស្ស៊ី') &&
+                  !route.toString().contains('NR4') &&
+                  !route.toString().contains('NR3') &&
+                  !route.toString().contains('Oknha Tep Phan St. (182)') &&
+                  !route.toString().contains('Northbridge St. (1019)') &&
+                  !route.toString().contains('ផ្លូវ​ទំនប់​កប់ស្រូវ') &&
+                  !route.toString().contains('Street 337') &&
+                  !route.toString().contains('Saint 315') &&
+                  !route.toString().contains('St 566') &&
+                  !route.toString().contains('Street 598') &&
+                  !route.toString().contains('Angkor Blvd') &&
+                  !route.toString().contains('Preah Sisowath Quay') &&
+                  !route.toString().contains('Sola Street (371)') &&
+                  !route.toString().contains('Street 369') &&
+                  !route.toString().contains('NR21B') &&
+                  !route.toString().contains('NR6') &&
+                  !route.toString().contains('Keo Chenda St') &&
+                  !route.toString().contains('Tonle Sap St') &&
+                  !route.toString().contains('Street 2011') &&
+                  !route.toString().contains('Street 105K') &&
+                  !route.toString().contains('ផ្លូវទំនប់ថ្មី (៣៧១)') &&
+                  !route.toString().contains('NR20') &&
+                  !route.toString().contains('Prey Sa') &&
+                  !route.toString().contains('ផ្លូវ ៦០ម៉ែត្រ')) {
+                if (double.parse(map![i]['comparable_adding_price']) <=
+                    (R_avg + (R_avg * 0.50))) {
+                  print(
+                      "\ncomparable_adding_price $i:${map![i]['comparable_adding_price']} ${R_avg + (R_avg * 0.50)}");
 
+                  if ((data_adding_correct.length ==
+                          int.parse(requestModel.num)) ||
+                      (i == map!.length - 1)) {
+                    break;
+                  } else {
+                    if ((map![i]['latlong_log'] !=
+                            map![i - 1]['latlong_log']) &&
+                        (map![i]['comparable_adding_price'] !=
+                            map![i - 1]['comparable_adding_price'])) {
+                      if (map![i]['comparable_adding_price'] == '') {
+                        map![i]['comparable_adding_price'] = '0';
+                        adding_price +=
+                            double.parse(map![i]['comparable_adding_price']);
+                      } else if (map![i]['comparable_adding_price']
+                          .contains(',')) {
+                        // print(map[i]['comparable_adding_price'].replaceAll(",", ""));
+                        adding_price += double.parse(map![i]
+                                ['comparable_adding_price']
+                            .replaceAll(",", ""));
+                      } else {
+                        adding_price +=
+                            (double.parse(map![i]['comparable_adding_price']));
+                      }
+                      setState(() {
+                        data_adding_correct.add(map![i]);
+                      });
+                    }
+                  }
+                  // }
+                }
+              } else {
                 if ((data_adding_correct.length ==
                         int.parse(requestModel.num)) ||
                     (i == map!.length - 1)) {
@@ -666,7 +754,6 @@ class _HomePageState extends State<map_cross_verbal> {
                     });
                   }
                 }
-                // }
               }
             }
           });
@@ -1676,6 +1763,17 @@ class _HomePageState extends State<map_cross_verbal> {
         !route.toString().contains('Prey Sa') &&
         !route.toString().contains('ផ្លូវ ៦០ម៉ែត្រ')) {
       setState(() {
+        var number_price = double.parse(
+                data_adding_correct[0]['comparable_adding_price'].toString()) +
+            double.parse(
+                data_adding_correct[1]['comparable_adding_price'].toString()) +
+            double.parse(
+                data_adding_correct[2]['comparable_adding_price'].toString()) +
+            double.parse(
+                data_adding_correct[3]['comparable_adding_price'].toString()) +
+            double.parse(
+                data_adding_correct[4]['comparable_adding_price'].toString());
+        adding_price = number_price;
         adding_price /= int.parse(requestModel.num.toString());
         var price = (adding_price + R_avg) / 2;
         min = price - (0.03 * price);
@@ -2059,6 +2157,24 @@ class _HomePageState extends State<map_cross_verbal> {
       //   ),
       // );
     } else {
+      setState(() {
+        var number_price = double.parse(
+                data_adding_correct[0]['comparable_adding_price'].toString()) +
+            double.parse(
+                data_adding_correct[1]['comparable_adding_price'].toString()) +
+            double.parse(
+                data_adding_correct[2]['comparable_adding_price'].toString()) +
+            double.parse(
+                data_adding_correct[3]['comparable_adding_price'].toString()) +
+            double.parse(
+                data_adding_correct[4]['comparable_adding_price'].toString());
+        adding_price = number_price;
+        adding_price /= int.parse(requestModel.num.toString());
+        var price = (adding_price + (R_avg + C_avg)) / 2;
+        min = price - (0.03 * price);
+        max = price + (0.02 * price);
+        avg = price;
+      });
       return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -2339,6 +2455,9 @@ class _HomePageState extends State<map_cross_verbal> {
                         fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                   ),
+                  Text(
+                      "\n(${data_adding_correct[0]['comparable_adding_price']}+${data_adding_correct[1]['comparable_adding_price']}+${data_adding_correct[2]['comparable_adding_price']}+${data_adding_correct[3]['comparable_adding_price']}+${data_adding_correct[4]['comparable_adding_price']})/${requestModel.num}=${formatter.format(adding_price)}\$",
+                      style: const TextStyle(fontSize: 10)),
                 ],
               ),
             ),
@@ -2702,15 +2821,7 @@ class _HomePageState extends State<map_cross_verbal> {
             route.toString().contains('ផ្លូវទំនប់ថ្មី (៣៧១)') ||
             route.toString().contains('NR20') ||
             route.toString().contains('Prey Sa') ||
-            route.toString().contains('ផ្លូវ ៦០ម៉ែត្រ')) {
-          setState(() {
-            adding_price /= int.parse(requestModel.num.toString());
-            var price = (adding_price + (R_avg + C_avg)) / 2;
-            min = price - (0.03 * price);
-            max = price + (0.02 * price);
-            avg = price;
-          });
-        }
+            route.toString().contains('ផ្លូវ ៦០ម៉ែត្រ')) {}
       }
     } else {
       print(response.statusCode);
