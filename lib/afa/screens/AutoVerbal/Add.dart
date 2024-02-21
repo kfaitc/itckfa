@@ -2243,12 +2243,12 @@ class _List_AutoState extends State<List_Auto> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 100,
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: SizedBox(
                                         height: 90,
                                         width: 90,
                                         child: FadeInImage.assetNetwork(
@@ -2259,177 +2259,256 @@ class _List_AutoState extends State<List_Auto> {
                                               "https://maps.googleapis.com/maps/api/staticmap?center=${list1[i]["latlong_log"]},${list1[i]["latlong_la"]}&zoom=20&size=1080x920&maptype=hybrid&markers=color:red%7C%7C${list1[i]["latlong_log"]},${list1[i]["latlong_la"]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI",
                                         ),
                                       ),
-                                      SizedBox(width: 5),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          GFButton(
-                                            onPressed: () {
-                                              // var data = verbalModel(
-                                              //   verbalId:
-                                              //       '${list1[i]["verbal_id"] ?? ''}',
-                                              //   bank_branch_name:
-                                              //       '${list1[i]["bank_branch_name"] ?? ''}',
-                                              //   bank_name:
-                                              //       '${list1[i]["bank_name"] ?? ''}',
-                                              //   property_type_name:
-                                              //       '${list1[i]["property_type_name"] ?? ''}',
-                                              //   tel_num:
-                                              //       '${list1[i]["tel_num"] ?? ''}',
-                                              //   username:
-                                              //       '${list1[i]["username"] ?? ''}',
-                                              //   verbal_address:
-                                              //       '${list1[i]["verbal_address"] ?? ''}',
-                                              //   verbal_contact:
-                                              //       '${list1[i]["verbal_contact"] ?? ''}',
-                                              //   verbal_date:
-                                              //       '${list1[i]["verbal_date"] ?? ''}',
-                                              //   verbal_owner:
-                                              //       '${list1[i]["verbal_owner"] ?? ''}',
-                                              // );
-
-                                              // await PeopleController()
-                                              //     .insertverbal(data);
-                                              showDialog(
-                                                context: context,
-                                                barrierDismissible: false,
-                                                barrierLabel:
-                                                    MaterialLocalizations.of(
-                                                            context)
-                                                        .modalBarrierDismissLabel,
-                                                barrierColor: ui.Color.fromARGB(
-                                                  0,
-                                                  0,
-                                                  0,
-                                                  0,
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                GFButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            save_image_after_add_verbal(
+                                                          set_data_verbal:
+                                                              list1[i]
+                                                                  ["verbal_id"],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  text: "Get Image",
+                                                  color: Colors.green,
+                                                  icon: Icon(
+                                                    Icons
+                                                        .photo_library_outlined,
+                                                    color: Colors.white,
+                                                    shadows: [
+                                                      Shadow(
+                                                        color: Colors.black,
+                                                        blurRadius: 5,
+                                                        offset: Offset(1, 0.5),
+                                                      )
+                                                    ],
+                                                    size: 20,
+                                                  ),
                                                 ),
-                                                builder: (context) {
-                                                  return Container(
-                                                    height: MediaQuery.of(
-                                                          context,
-                                                        ).size.height *
-                                                        0.6,
-                                                    alignment: Alignment.center,
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Container(
-                                                            height: MediaQuery
-                                                                    .of(
-                                                                  context,
-                                                                ).size.height *
-                                                                0.8,
-                                                            color: ui.Color
-                                                                .fromARGB(
-                                                              97,
-                                                              0,
-                                                              0,
-                                                              0,
-                                                            ),
-                                                            child:
-                                                                convert_data_verbal_to_image(
-                                                              set_data_verbal:
-                                                                  list1[i][
-                                                                      "verbal_id"],
+                                                SizedBox(width: 10),
+                                                GFButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            detail_verbal(
+                                                          set_data_verbal:
+                                                              list1[i]
+                                                                  ["verbal_id"],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  text: " Get PDF ",
+                                                  color: Color.fromRGBO(
+                                                    229,
+                                                    57,
+                                                    53,
+                                                    1,
+                                                  ),
+                                                  icon: Icon(
+                                                    Icons.picture_as_pdf,
+                                                    size: 20,
+                                                    shadows: [
+                                                      Shadow(
+                                                        color: Colors.black,
+                                                        blurRadius: 5,
+                                                        offset: Offset(1, 0.5),
+                                                      )
+                                                    ],
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  child: Icon(Icons.share),
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      barrierDismissible: false,
+                                                      barrierLabel:
+                                                          MaterialLocalizations
+                                                                  .of(context)
+                                                              .modalBarrierDismissLabel,
+                                                      barrierColor:
+                                                          ui.Color.fromARGB(
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                      ),
+                                                      builder: (context) {
+                                                        return Container(
+                                                          height: MediaQuery.of(
+                                                                context,
+                                                              ).size.height *
+                                                              0.6,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child:
+                                                              SingleChildScrollView(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Container(
+                                                                  height: MediaQuery
+                                                                          .of(
+                                                                        context,
+                                                                      ).size.height *
+                                                                      0.8,
+                                                                  color: ui
+                                                                          .Color
+                                                                      .fromARGB(
+                                                                    97,
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                  ),
+                                                                  child:
+                                                                      convert_data_verbal_to_image(
+                                                                    set_data_verbal:
+                                                                        list1[i]
+                                                                            [
+                                                                            "verbal_id"],
+                                                                    sh_in_list:
+                                                                        true,
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            text: "\tSave\t",
-                                            size: GFSize.MEDIUM,
-                                            icon: Icon(
-                                              Icons.note_alt_outlined,
-                                              color: Colors.white,
-                                              size: 20,
-                                              shadows: [
-                                                Shadow(
-                                                  color: Colors.black,
-                                                  blurRadius: 5,
-                                                  offset: Offset(1, 0.5),
-                                                )
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                ),
                                               ],
                                             ),
-                                          ),
-                                          Row(
-                                            children: [
-                                              GFButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          save_image_after_add_verbal(
-                                                        set_data_verbal:
-                                                            list1[i]
-                                                                ["verbal_id"],
+                                            GFButton(
+                                              onPressed: () {
+                                                // var data = verbalModel(
+                                                //   verbalId:
+                                                //       '${list1[i]["verbal_id"] ?? ''}',
+                                                //   bank_branch_name:
+                                                //       '${list1[i]["bank_branch_name"] ?? ''}',
+                                                //   bank_name:
+                                                //       '${list1[i]["bank_name"] ?? ''}',
+                                                //   property_type_name:
+                                                //       '${list1[i]["property_type_name"] ?? ''}',
+                                                //   tel_num:
+                                                //       '${list1[i]["tel_num"] ?? ''}',
+                                                //   username:
+                                                //       '${list1[i]["username"] ?? ''}',
+                                                //   verbal_address:
+                                                //       '${list1[i]["verbal_address"] ?? ''}',
+                                                //   verbal_contact:
+                                                //       '${list1[i]["verbal_contact"] ?? ''}',
+                                                //   verbal_date:
+                                                //       '${list1[i]["verbal_date"] ?? ''}',
+                                                //   verbal_owner:
+                                                //       '${list1[i]["verbal_owner"] ?? ''}',
+                                                // );
+
+                                                // await PeopleController()
+                                                //     .insertverbal(data);
+                                                showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  barrierLabel:
+                                                      MaterialLocalizations.of(
+                                                              context)
+                                                          .modalBarrierDismissLabel,
+                                                  barrierColor:
+                                                      ui.Color.fromARGB(
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                  ),
+                                                  builder: (context) {
+                                                    return Container(
+                                                      height: MediaQuery.of(
+                                                            context,
+                                                          ).size.height *
+                                                          0.6,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child:
+                                                          SingleChildScrollView(
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Container(
+                                                              height: MediaQuery
+                                                                          .of(
+                                                                    context,
+                                                                  )
+                                                                      .size
+                                                                      .height *
+                                                                  0.8,
+                                                              color: ui.Color
+                                                                  .fromARGB(
+                                                                97,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                              ),
+                                                              child:
+                                                                  convert_data_verbal_to_image(
+                                                                set_data_verbal:
+                                                                    list1[i][
+                                                                        "verbal_id"],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  );
-                                                },
-                                                text: "Get Image",
-                                                color: Colors.green,
-                                                icon: Icon(
-                                                  Icons.photo_library_outlined,
-                                                  color: Colors.white,
-                                                  shadows: [
-                                                    Shadow(
-                                                      color: Colors.black,
-                                                      blurRadius: 5,
-                                                      offset: Offset(1, 0.5),
-                                                    )
-                                                  ],
-                                                  size: 20,
-                                                ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              text: "\tSave for offline\t",
+                                              size: GFSize.MEDIUM,
+                                              icon: Icon(
+                                                Icons.note_alt_outlined,
+                                                color: Colors.white,
+                                                size: 20,
+                                                shadows: [
+                                                  Shadow(
+                                                    color: Colors.black,
+                                                    blurRadius: 5,
+                                                    offset: Offset(1, 0.5),
+                                                  )
+                                                ],
                                               ),
-                                              SizedBox(width: 10),
-                                              GFButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          detail_verbal(
-                                                        set_data_verbal:
-                                                            list1[i]
-                                                                ["verbal_id"],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                text: "Get PDF",
-                                                color: Color.fromRGBO(
-                                                  229,
-                                                  57,
-                                                  53,
-                                                  1,
-                                                ),
-                                                icon: Icon(
-                                                  Icons.picture_as_pdf,
-                                                  size: 20,
-                                                  shadows: [
-                                                    Shadow(
-                                                      color: Colors.black,
-                                                      blurRadius: 5,
-                                                      offset: Offset(1, 0.5),
-                                                    )
-                                                  ],
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

@@ -30,12 +30,13 @@ import 'package:uni_links/uni_links.dart';
 // }
 
 void main() async {
-  if (Platform.isIOS) {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
+  // if (Platform.isIOS) {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    name: "KFA CRM Map",
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // }
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   SystemChrome.setPreferredOrientations(
