@@ -33,7 +33,6 @@ void main() async {
   // if (Platform.isIOS) {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    name: "KFA CRM Map",
     options: DefaultFirebaseOptions.currentPlatform,
   );
   // }

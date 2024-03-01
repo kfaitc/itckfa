@@ -1,4 +1,5 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic",
-    "editor.wordWrapColumn": 150
+    "editor.wordWrapColumn": 150,
+    "cmake.configureOnOpen": true
 }

@@ -20,6 +20,7 @@ import 'package:itckfa/api/api_service.dart';
 import 'package:itckfa/models/register_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pinput/pinput.dart';
 
 import '../../../screen/Customs/responsive.dart';
 import '../../customs/formTwin.dart';
@@ -167,6 +168,26 @@ class _RegisterState extends State<Register> {
     }
   }
 
+  var otp, field_otp;
+  Future<void> getOTP() async {
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/getotp/user?tel_num=${requestModel.tel_num}'));
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(await response.stream.bytesToString());
+      setState(() {
+        otp = jsonResponse['otp'].toString();
+        print("\nkokokok $otp\n");
+      });
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
   bool _isObscure = true;
   RegisterRequestModel requestModel = RegisterRequestModel(
     email: "",
@@ -178,6 +199,7 @@ class _RegisterState extends State<Register> {
     tel_num: '',
     password_confirmation: '',
     control_user: '',
+    OTP_Code: '',
   );
   bool isApiCallProcess = false;
   @override
@@ -283,35 +305,35 @@ class _RegisterState extends State<Register> {
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
-                  color: kPrimaryColor,
+                  color: kwhite_new,
                 ),
               ),
               SizedBox(
                 height: 10.0,
               ),
-              Text.rich(
-                TextSpan(
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    TextSpan(
-                      text: "ONE CLICK ",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: kImageColor,
-                      ),
-                    ),
-                    TextSpan(
-                      text: "1\$",
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: kerror,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Text.rich(
+              //   TextSpan(
+              //     // ignore: prefer_const_literals_to_create_immutables
+              //     children: [
+              //       TextSpan(
+              //         text: "ONE CLICK ",
+              //         style: TextStyle(
+              //           fontSize: 20.0,
+              //           fontWeight: FontWeight.bold,
+              //           color: kImageColor,
+              //         ),
+              //       ),
+              //       TextSpan(
+              //         text: "1\$",
+              //         style: TextStyle(
+              //           fontSize: 30.0,
+              //           fontWeight: FontWeight.bold,
+              //           color: kerror,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               InkWell(
                 onTap: () async {
                   if (get_bytes == null) {
@@ -394,7 +416,7 @@ class _RegisterState extends State<Register> {
                         style: TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
-                          color: kPrimaryColor,
+                          color: kwhite_new,
                         ),
                         // decoration: InputDecoration(
                         //   fillColor: kwhite,
@@ -423,7 +445,7 @@ class _RegisterState extends State<Register> {
                         style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
-                          color: kPrimaryColor,
+                          color: kwhite_new,
                         ),
                         // decoration: InputDecoration(
                         //   fillColor: kwhite,
@@ -591,7 +613,7 @@ class _RegisterState extends State<Register> {
                     suffixIcon: IconButton(
                       icon: Icon(
                         color: kImageColor,
-                        _isObscure ? Icons.visibility : Icons.visibility_off,
+                        _isObscure ? Icons.visibility_off : Icons.visibility,
                       ),
                       onPressed: () {
                         setState(() {
@@ -637,7 +659,7 @@ class _RegisterState extends State<Register> {
               Padding(
                 padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
                 child: TextFormField(
-                  obscureText: _isObscure,
+                  obscureText: true,
                   onChanged: (input) {
                     setState(() {
                       requestModel.password_confirmation = input;
@@ -652,17 +674,17 @@ class _RegisterState extends State<Register> {
                       Icons.key,
                       color: kImageColor,
                     ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        color: kImageColor,
-                        _isObscure ? Icons.visibility : Icons.visibility_off,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isObscure = !_isObscure;
-                        });
-                      },
-                    ),
+                    // suffixIcon: IconButton(
+                    //   icon: Icon(
+                    //     color: kImageColor,
+                    //     _isObscure ? Icons.visibility : Icons.visibility_off,
+                    //   ),
+                    //   onPressed: () {
+                    //     setState(() {
+                    //       _isObscure = !_isObscure;
+                    //     });
+                    //   },
+                    // ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
                           const BorderSide(color: kPrimaryColor, width: 2.0),
@@ -776,80 +798,152 @@ class _RegisterState extends State<Register> {
                 width: 150,
                 child: AnimatedButton(
                   text: 'Register',
-                  color: kPrimaryColor,
+                  color: kwhite_new,
                   pressEvent: () async {
                     if (validateAndSave()) {
-                      setState(() {
-                        isApiCallProcess = true;
-                        requestModel.control_user = set_id_user.toString();
-                      });
-                      if (get_bytes != null || _byesData != null) {
-                        await uploadImage();
-                      }
-                      APIservice apIservice = APIservice();
-                      apIservice.register(requestModel).then((value) async {
+                      if (otp == null || otp != field_otp) {
+                        await getOTP();
+                        // ignore: use_build_context_synchronously
+                        AwesomeDialog(
+                          context: context,
+                          animType: AnimType.scale,
+                          dialogType: DialogType.info,
+                          keyboardAware: true,
+                          body: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                  'Enter OTP Code',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                // Material(
+                                //   elevation: 0,
+                                //   color: Colors.blueGrey.withAlpha(40),
+                                //   child: TextFormField(
+                                //     autofocus: true,
+                                //     minLines: 1,
+                                //     onChanged: (value) {
+                                //       setState(() {
+                                //         field_otp = value;
+                                //         requestModel.OTP_Code = value;
+                                //         if (otp == field_otp) {
+                                //           Navigator.pop(context);
+                                //           ScaffoldMessenger.of(context)
+                                //               .showSnackBar(
+                                //             SnackBar(
+                                //                 content: Text(
+                                //               "Correct OTP",
+                                //             )),
+                                //           );
+                                //         }
+                                //       });
+                                //     },
+                                //     decoration: const InputDecoration(
+                                //       border: InputBorder.none,
+                                //     ),
+                                //   ),
+                                // ),
+                                Pinput(
+                                  length: 6,
+                                  showCursor: true,
+                                  senderPhoneNumber: requestModel.tel_num,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      field_otp = value;
+                                      requestModel.OTP_Code = value;
+                                      if (otp == field_otp) {
+                                        Navigator.pop(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                              content: Text(
+                                            "Correct OTP",
+                                          )),
+                                        );
+                                      }
+                                    });
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                AnimatedButton(
+                                  isFixedHeight: false,
+                                  text: 'Close',
+                                  pressEvent: () {
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ).show();
+                      } else if (otp == field_otp) {
                         setState(() {
-                          isApiCallProcess = false;
+                          isApiCallProcess = true;
+                          requestModel.control_user = set_id_user.toString();
                         });
-                        if (value.message == "User successfully registered") {
-                          await mydb.open_user();
-                          await mydb.db.rawInsert(
-                              "INSERT INTO user (id, first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?);",
-                              [
-                                value.user['id'],
-                                requestModel.first_name,
-                                requestModel.last_name,
-                                requestModel.control_user,
-                                requestModel.gender ?? "",
-                                requestModel.tel_num,
-                                requestModel.known_from,
-                                requestModel.email,
-                                requestModel.password,
-                              ]);
-                          // ignore: use_build_context_synchronously
-                          AwesomeDialog(
-                            context: context,
-                            animType: AnimType.leftSlide,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.success,
-                            showCloseIcon: false,
-                            title: value.message,
-                            autoHide: Duration(seconds: 3),
-                            onDismissCallback: (type) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("New User Added")),
-                              );
-                              Get.to(() => Login());
-                            },
-                          ).show();
-                        } else if (value.message ==
-                            "User unsuccessfully registered") {
-                          AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.error,
-                            animType: AnimType.rightSlide,
-                            headerAnimationLoop: false,
-                            title: 'Error',
-                            desc: "This Email is already registered",
-                            btnOkOnPress: () {},
-                            btnOkIcon: Icons.cancel,
-                            btnOkColor: Colors.red,
-                          ).show();
-                          // print(value.message);
-                        } else {
-                          AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.error,
-                            animType: AnimType.rightSlide,
-                            headerAnimationLoop: false,
-                            title: 'Error',
-                            desc: value.message,
-                            btnOkOnPress: () {},
-                            btnOkIcon: Icons.cancel,
-                            btnOkColor: Colors.red,
-                          ).show();
+                        if (get_bytes != null || _byesData != null) {
+                          await uploadImage();
                         }
-                      });
+                        APIservice apIservice = APIservice();
+                        apIservice.register(requestModel).then((value) async {
+                          setState(() {
+                            isApiCallProcess = false;
+                          });
+                          if (value.message == "User successfully registered") {
+                            await mydb.open_user();
+                            await mydb.db.rawInsert(
+                                "INSERT INTO user (id, first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?);",
+                                [
+                                  value.user['id'],
+                                  requestModel.first_name,
+                                  requestModel.last_name,
+                                  requestModel.control_user,
+                                  requestModel.gender ?? "",
+                                  requestModel.tel_num,
+                                  requestModel.known_from,
+                                  requestModel.email,
+                                  requestModel.password,
+                                ]);
+                            // ignore: use_build_context_synchronously
+                            AwesomeDialog(
+                              context: context,
+                              animType: AnimType.leftSlide,
+                              headerAnimationLoop: false,
+                              dialogType: DialogType.success,
+                              showCloseIcon: false,
+                              title: value.message,
+                              autoHide: Duration(seconds: 3),
+                              onDismissCallback: (type) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("New User Added")),
+                                );
+                                Get.to(() => Login());
+                              },
+                            ).show();
+                          } else if (value.message ==
+                              "User unsuccessfully registered") {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.error,
+                              animType: AnimType.rightSlide,
+                              headerAnimationLoop: false,
+                              title: 'Error',
+                              desc: "This Email is already registered",
+                              btnOkOnPress: () {},
+                              btnOkIcon: Icons.cancel,
+                              btnOkColor: Colors.red,
+                            ).show();
+                            // print(value.message);
+                          }
+                        });
+                      }
+
                       // await FirebaseAuth.instance.verifyPhoneNumber(
                       //   phoneNumber: '+855${requestModel.tel_num}',
                       //   timeout: const Duration(seconds: 90),

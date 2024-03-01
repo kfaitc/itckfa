@@ -89,18 +89,7 @@ class _LoginState extends State<Login> {
   late PageController _pageController;
   late List slideList;
   late int initialPage;
-  RegisterRequestModel requestModel_sql = RegisterRequestModel(
-    email: "",
-    password: "",
-    first_name: '',
-    gender: '',
-    known_from: '',
-    last_name: '',
-    tel_num: '',
-    password_confirmation: '',
-    control_user: '',
-  );
-  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   Future<void> initConnectivity() async {
@@ -108,33 +97,13 @@ class _LoginState extends State<Login> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
-      developer.log('Couldn\'t check connectivity status', error: e);
-      return;
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      return Future.value(null);
-    }
-
-    return _updateConnectionStatus(result);
-  }
-
-  bool offline = false;
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    setState(() {
-      _connectionStatus = result;
-      if ((_connectionStatus == ConnectivityResult.mobile) ||
-          (_connectionStatus == ConnectivityResult.wifi)) {
+      if ((result == ConnectivityResult.mobile) ||
+          (result == ConnectivityResult.wifi)) {
         setState(() {
           offline = true;
-          _connectivitySubscription.cancel();
           print("result = $offline\n");
         });
-      } else if (_connectionStatus == ConnectivityResult.none) {
+      } else if (result == ConnectivityResult.none) {
         setState(() {
           offline = false;
           print("result = $offline\n");
@@ -182,22 +151,34 @@ class _LoginState extends State<Login> {
             ),
           ),
         );
-        if (!offline) {
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          _connectivitySubscription.cancel();
-        }
+        setState(() {
+          if (offline == false) {
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            _connectivitySubscription.cancel();
+            dispose();
+          }
+        });
       }
-    });
+    } on PlatformException catch (e) {
+      developer.log('Couldn\'t check connectivity status', error: e);
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
   }
+
+  bool offline = false;
 
   @override
   void initState() {
     getdata();
     _pageController = PageController(initialPage: 0);
     initialPage = _pageController.initialPage;
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-    initConnectivity();
 
     super.initState();
     requestModel = LoginRequestModel(email: "", password: "");
@@ -205,7 +186,7 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
-    _connectivitySubscription.cancel();
+    // _connectivitySubscription.cancel();
     super.dispose();
   }
 
@@ -307,27 +288,43 @@ class _LoginState extends State<Login> {
               text: 'Login',
               color: kwhite_new,
               pressEvent: () async {
-                await initConnectivity();
-                if (!offline) {
-                } else {
-                  if (validateAndSave()) {
+                if (validateAndSave()) {
+                  setState(() {
+                    // final player = AudioPlayer();
+                    // player.play(AssetSource('nor.mp3'));
+                    isApiCallProcess = true;
+                  });
+                  APIservice apIservice = APIservice();
+                  apIservice.login(requestModel).then((value) async {
+                    Load(value.token);
                     setState(() {
-                      // final player = AudioPlayer();
-                      // player.play(AssetSource('nor.mp3'));
-                      isApiCallProcess = true;
+                      isApiCallProcess = false;
                     });
-                    APIservice apIservice = APIservice();
-                    apIservice.login(requestModel).then((value) async {
-                      Load(value.token);
-                      setState(() {
-                        isApiCallProcess = false;
-                      });
-                      if (value.message == "Login Successfully!") {
-                        if (slist.length == 0) {
-                          await mydb.db.rawInsert(
-                              "INSERT INTO user (id ,first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                    if (value.message == "Login Successfully!") {
+                      if (slist.length == 0) {
+                        await mydb.db.rawInsert(
+                            "INSERT INTO user (id ,first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                            [
+                              value.user['id'],
+                              value.user['first_name'],
+                              value.user['last_name'],
+                              value.user['control_user'],
+                              value.user['gender'],
+                              value.user['tel_num'],
+                              value.user['known_from'],
+                              requestModel.email,
+                              requestModel.password
+                            ]);
+                      } else {
+                        var check_Sql = await mydb.db.rawQuery(
+                          'SELECT * FROM user  WHERE  email=? AND password=?',
+                          [requestModel.email, requestModel.password],
+                        );
+                        if (check_Sql.length == 0) {
+                          mydb.db.rawInsert(
+                              "UPDATE user SET id=? ,first_name=?, last_name=?, username=?, gender=?, tel_num=?, known_from=?, email=?, password=? WHERE 1",
                               [
-                                value.user['id'],
+                                value.user!['id'],
                                 value.user['first_name'],
                                 value.user['last_name'],
                                 value.user['control_user'],
@@ -337,77 +334,56 @@ class _LoginState extends State<Login> {
                                 requestModel.email,
                                 requestModel.password
                               ]);
-                        } else {
-                          var check_Sql = await mydb.db.rawQuery(
-                            'SELECT * FROM user  WHERE  email=? AND password=?',
-                            [requestModel.email, requestModel.password],
-                          );
-                          if (check_Sql.length == 0) {
-                            mydb.db.rawInsert(
-                                "UPDATE user SET id=? ,first_name=?, last_name=?, username=?, gender=?, tel_num=?, known_from=?, email=?, password=? WHERE 1",
-                                [
-                                  value.user!['id'],
-                                  value.user['first_name'],
-                                  value.user['last_name'],
-                                  value.user['control_user'],
-                                  value.user['gender'],
-                                  value.user['tel_num'],
-                                  value.user['known_from'],
-                                  requestModel.email,
-                                  requestModel.password
-                                ]);
-                          }
                         }
-                        AwesomeDialog(
-                          btnOkOnPress: () {},
-                          context: context,
-                          animType: AnimType.leftSlide,
-                          headerAnimationLoop: false,
-                          dialogType: DialogType.success,
-                          showCloseIcon: false,
-                          title: value.message,
-                          autoHide: Duration(seconds: 3),
-                          onDismissCallback: (type) {
-                            // debugPrint('Dialog Dissmiss from callback $type');
-                            dispose();
-
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePage1(),
-                              ),
-                            );
-                          },
-                        ).show();
-                      } else if (value.message == "Login unSuccessfully!") {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.error,
-                          animType: AnimType.rightSlide,
-                          headerAnimationLoop: false,
-                          title: 'Error',
-                          body: Text("Incorrect Email or Password"),
-                          btnOkOnPress: () {},
-                          btnOkIcon: Icons.cancel,
-                          btnOkColor: Colors.red,
-                        ).show();
-                        // print(value.message);
-                      } else {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.error,
-                          animType: AnimType.rightSlide,
-                          headerAnimationLoop: false,
-                          title: 'Error',
-                          body: Text("Incorrect Email or Password"),
-                          desc: value.message,
-                          btnOkOnPress: () {},
-                          btnOkIcon: Icons.cancel,
-                          btnOkColor: Colors.red,
-                        ).show();
                       }
-                    });
-                  }
+                      AwesomeDialog(
+                        btnOkOnPress: () {},
+                        context: context,
+                        animType: AnimType.leftSlide,
+                        headerAnimationLoop: false,
+                        dialogType: DialogType.success,
+                        showCloseIcon: false,
+                        title: value.message,
+                        autoHide: Duration(seconds: 3),
+                        onDismissCallback: (type) {
+                          // debugPrint('Dialog Dissmiss from callback $type');
+
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomePage1(),
+                            ),
+                          );
+                        },
+                      ).show();
+                    } else if (value.message == "Login unSuccessfully!") {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.error,
+                        animType: AnimType.rightSlide,
+                        headerAnimationLoop: false,
+                        title: 'Error',
+                        body: Text("Incorrect Email or Password"),
+                        btnOkOnPress: () {},
+                        btnOkIcon: Icons.cancel,
+                        btnOkColor: Colors.red,
+                      ).show();
+                      // print(value.message);
+                    } else {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.error,
+                        animType: AnimType.rightSlide,
+                        headerAnimationLoop: false,
+                        title: 'Error',
+                        body: Text("Incorrect Email or Password"),
+                        desc: value.message,
+                        btnOkOnPress: () {},
+                        btnOkIcon: Icons.cancel,
+                        btnOkColor: Colors.red,
+                      ).show();
+                    }
+                  });
                 }
               },
             ),

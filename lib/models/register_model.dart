@@ -4,8 +4,11 @@ class RegisterReponseModel {
   final String message;
   final String access_token;
   final dynamic user;
-  RegisterReponseModel(
-      {required this.message, required this.access_token, required this.user,});
+  RegisterReponseModel({
+    required this.message,
+    required this.access_token,
+    required this.user,
+  });
   factory RegisterReponseModel.fromJson(Map<String, dynamic> json) {
     return RegisterReponseModel(
       message: json["message"] ?? "",
@@ -25,7 +28,7 @@ class RegisterRequestModel {
   late String password;
   late String password_confirmation;
   late String known_from;
-
+  late String OTP_Code;
   RegisterRequestModel({
     required this.email,
     required this.password,
@@ -36,6 +39,7 @@ class RegisterRequestModel {
     required this.tel_num,
     required this.control_user,
     required this.password_confirmation,
+    required this.OTP_Code,
   });
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {
@@ -48,6 +52,7 @@ class RegisterRequestModel {
       "known_from": known_from.trim(),
       "password": password.trim(),
       "password_confirmation": password_confirmation.trim(),
+      "OTP_Code": OTP_Code.toString(),
     };
     return map;
   }

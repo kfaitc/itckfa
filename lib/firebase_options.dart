@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,20 +43,41 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+    appId: '1:266399223712:web:bef4106beacb16a45edec5',
+    messagingSenderId: '266399223712',
+    projectId: 'kfa-crm-map',
+    authDomain: 'kfa-crm-map.firebaseapp.com',
+    storageBucket: 'kfa-crm-map.appspot.com',
+    measurementId: 'G-HYMVYXE6HY',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCETQR2ZImmMF-U6NG5zAChaDwY7MLQrdg',
-    appId: '1:347495688195:android:f233ed97495291b6354636',
-    messagingSenderId: '347495688195',
-    projectId: 'ioskfa',
-    storageBucket: 'ioskfa.appspot.com',
+    apiKey: 'AIzaSyB7Wk0YVMlr5A8PVWSRF05cIjTVAJTD7nE',
+    appId: '1:266399223712:android:89fde54bd8e4d1875edec5',
+    messagingSenderId: '266399223712',
+    projectId: 'kfa-crm-map',
+    storageBucket: 'kfa-crm-map.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCg0J18yVpb866Ib2_Fxsv-9qxPJYsLCRY',
-    appId: '1:347495688195:ios:a892733a09754617354636',
-    messagingSenderId: '347495688195',
-    projectId: 'ioskfa',
-    storageBucket: 'ioskfa.appspot.com',
+    apiKey: 'AIzaSyBL31Yx6bV4ASAxb_28pM_4iugKYrHymIA',
+    appId: '1:266399223712:ios:d497f7f65ace443c5edec5',
+    messagingSenderId: '266399223712',
+    projectId: 'kfa-crm-map',
+    storageBucket: 'kfa-crm-map.appspot.com',
+    androidClientId: '266399223712-2td4r2gouru0d6shvvgruv6rnp928umi.apps.googleusercontent.com',
     iosBundleId: 'com.oneclickonedollars.itckfa',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBL31Yx6bV4ASAxb_28pM_4iugKYrHymIA',
+    appId: '1:266399223712:ios:b1cb555fc6ae20f45edec5',
+    messagingSenderId: '266399223712',
+    projectId: 'kfa-crm-map',
+    storageBucket: 'kfa-crm-map.appspot.com',
+    androidClientId: '266399223712-2td4r2gouru0d6shvvgruv6rnp928umi.apps.googleusercontent.com',
+    iosBundleId: 'no',
   );
 }
