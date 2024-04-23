@@ -326,20 +326,6 @@ class _BodyState extends State<Body> {
     });
   }
 
-  void _handleSetExternalUserId() {
-    print("Setting external user ID");
-
-    if (widget.control_user == null) return;
-    // var externalUserIdAuthHash = generateHmacSha256(
-    //     "dxD3JNMgQ_W_Jmr6NfFqm3:APA91bHErrR0Imjb0QZ_2ZyALddZIPQnrk6T8RPd23GE88FiuYDzSKEUmq2Nz1G7aOyU6y1puUmo0ykMyP77icgx37gQnk381Ccju_QNG34qZiLpjFpOKdEy0qc13ZGZD9Eiqrf9rQ0c",
-    //     "NjUxOTVjMTEtOWI2MS00OGFiLThiOTYtYWFmMDhhNTEwZWFl");
-    // OneSignal.shared.setEmail(
-    //     email: widget.email, emailAuthHashToken: externalUserIdAuthHash);
-    // OneSignal.shared.setExternalUserId(widget.control_user.toString());
-
-    // OneSignal.shared.sendTag("${widget.first_name}", widget.control_user);
-  }
-
   String generateHmacSha256(String data, String key) {
     List<int> keyBytes = utf8.encode(key);
     List<int> dataBytes = utf8.encode(data);

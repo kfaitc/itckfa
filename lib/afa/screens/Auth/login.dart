@@ -435,6 +435,13 @@ class _LoginState extends State<Login> {
     );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
+      await OneSignal.shared.setAppId("d3025f03-32f5-444a-8100-7f7637a7f631");
+      OneSignal.shared
+          .promptUserForPushNotificationPermission()
+          .then((accepted) {
+        print("Accepted permission: $accepted");
+      });
+      await _handleSetExternalUserId();
       setState(() {
         id = jsonData["id"];
         username = jsonData['username'];
@@ -447,6 +454,30 @@ class _LoginState extends State<Login> {
         control_user = jsonData['control_user'];
       });
       // print(id.toString());
+    }
+  }
+
+  var subscription_id;
+  Future _handleSetExternalUserId() async {
+    final status = await OneSignal.shared.getDeviceState();
+    subscription_id = status!.userId.toString();
+    if (subscription_id != null) {
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request(
+          'POST',
+          Uri.parse(
+              'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/onesignal'));
+      request.body = json.encode(
+          {"control_user": control_user, "subscription_id": subscription_id});
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print(await response.stream.bytesToString());
+      } else {
+        print(response.reasonPhrase);
+      }
     }
   }
 

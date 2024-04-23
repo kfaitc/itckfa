@@ -70,10 +70,6 @@ void main() async {
 // virak test
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
-  await OneSignal.shared.setAppId("d3025f03-32f5-444a-8100-7f7637a7f631");
-  OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-    print("Accepted permission: $accepted");
-  });
   // OneSignal.shared.disablePush(false);
   // bool userProvidedPrivacyConsent =
   //     await OneSignal.shared.userProvidedPrivacyConsent();

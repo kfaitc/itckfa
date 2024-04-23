@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings
+// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, unnecessary_null_comparison
 
 import 'dart:convert';
 
@@ -65,7 +65,7 @@ class _LandBuildingState extends State<LandBuilding> {
   double h = 0, l = 0;
   bool isApiCallProcess = false;
   var dropdown;
-  List<L_B> lb = [L_B('', '', '', '', '', 0, 0, 0, 0, 0)];
+  List<L_B> lb = [];
   String? options;
   var _selectedValue;
   List<String> option = [
@@ -93,8 +93,18 @@ class _LandBuildingState extends State<LandBuilding> {
         "verbal_landid": widget.landId
       });
       lb.add(
-        L_B(autoverbalType, des ?? '', dep, widget.address, widget.landId, area,
-            minSqm!, maxSqm!, totalMin!, totalMax ?? 0,),
+        L_B(
+          autoverbalType,
+          des ?? '',
+          dep,
+          widget.address,
+          widget.landId,
+          area,
+          minSqm!,
+          maxSqm!,
+          totalMin!,
+          totalMax ?? 0,
+        ),
       );
     });
     //  print(id);
@@ -293,87 +303,94 @@ class _LandBuildingState extends State<LandBuilding> {
                     SizedBox(
                       height: 5,
                     ),
-                    if (autoverbalTypeValue == '100' &&
-                        widget.asking_price == null)
-                      Column(
-                        children: [
-                          Container(
-                            height: 55,
-                            margin: EdgeInsets.only(left: 5, top: 10, right: 5),
-                            child: DropdownButtonFormField<String>(
-                              value: _selectedValue,
-                              isExpanded: true,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedValue = value;
-                                  // print(_selectedValue);
-                                });
-                              },
-                              onSaved: (value) {
-                                setState(() {
-                                  _selectedValue = value;
-                                });
-                              },
-                              items: option.map((String val) {
-                                return DropdownMenuItem(
-                                  value: val,
-                                  child: Text(
-                                    val,
-                                  ),
-                                );
-                              }).toList(),
-                              icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: kImageColor,
-                              ),
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 8),
-                                labelText: 'Option',
-                                hintText: 'Select',
-                                prefixIcon: Icon(
-                                  Icons.pix_rounded,
+                    if (widget.check_property != 0)
+                      if (autoverbalTypeValue == '100' &&
+                          widget.asking_price == null)
+                        Column(
+                          children: [
+                            Container(
+                              height: 55,
+                              margin:
+                                  EdgeInsets.only(left: 5, top: 10, right: 5),
+                              child: DropdownButtonFormField<String>(
+                                value: _selectedValue,
+                                isExpanded: true,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedValue = value;
+                                    // print(_selectedValue);
+                                  });
+                                },
+                                onSaved: (value) {
+                                  setState(() {
+                                    _selectedValue = value;
+                                  });
+                                },
+                                items: option.map((String val) {
+                                  return DropdownMenuItem(
+                                    value: val,
+                                    child: Text(
+                                      val,
+                                    ),
+                                  );
+                                }).toList(),
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
                                   color: kImageColor,
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: kPrimaryColor, width: 2.0,),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 1,
-                                    color: kPrimaryColor,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 8),
+                                  labelText: 'Option',
+                                  hintText: 'Select',
+                                  prefixIcon: Icon(
+                                    Icons.pix_rounded,
+                                    color: kImageColor,
                                   ),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 1,
-                                    color: Colors.black,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      color: kPrimaryColor,
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    width: 2,
-                                    color: Colors.black,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      width: 1,
+                                      color: kPrimaryColor,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  borderRadius: BorderRadius.circular(10.0),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      width: 1,
+                                      color: Colors.black,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      width: 2,
+                                      color: Colors.black,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                     GFButton(
                       elevation: 5,
                       type: GFButtonType.solid,
                       shape: GFButtonShape.pills,
                       fullWidthButton: true,
-                      text: "Calculator price",
+                      // ignore: unnecessary_null_comparison
+                      text: (widget.check_property != 0)
+                          ? "Calculator price"
+                          : "Get Area for checking",
                       onPressed: () {
                         if (autoverbalTypeValue == '100') {
                           setState(() {
@@ -395,7 +412,7 @@ class _LandBuildingState extends State<LandBuilding> {
                     ),
                     SizedBox(
                       width: double.infinity,
-                      height: 250,
+                      height: (widget.check_property != 0) ? 250 : 150,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
@@ -455,20 +472,24 @@ class _LandBuildingState extends State<LandBuilding> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 10, right: 10,),
+                                    left: 10,
+                                    right: 10,
+                                  ),
                                   child: Text.rich(
                                     TextSpan(
                                       children: <InlineSpan>[
                                         WidgetSpan(
-                                            child: Icon(
-                                          Icons.location_on_sharp,
-                                          color: kPrimaryColor,
-                                          size: 14,
-                                        ),),
+                                          child: Icon(
+                                            Icons.location_on_sharp,
+                                            color: kPrimaryColor,
+                                            size: 14,
+                                          ),
+                                        ),
                                         TextSpan(
-                                            style: Label(),
-                                            text:
-                                                "${list[index]["address"].toString()} ",),
+                                          style: Label(),
+                                          text:
+                                              "${list[index]["address"].toString()} ",
+                                        ),
                                       ],
                                     ),
                                     textAlign: TextAlign.left,
@@ -516,25 +537,32 @@ class _LandBuildingState extends State<LandBuilding> {
                                           style: Label(),
                                         ),
                                         SizedBox(height: 3),
-                                        Text(
-                                          'Min Value/Sqm',
-                                          style: Label(),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          'Max Value/Sqm',
-                                          style: Label(),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          'Min Value',
-                                          style: Label(),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          'Min Value',
-                                          style: Label(),
-                                        ),
+                                        if (widget.check_property != 0)
+                                          Text(
+                                            'Min Value/Sqm',
+                                            style: Label(),
+                                          ),
+                                        if (widget.check_property != 0)
+                                          SizedBox(height: 3),
+                                        if (widget.check_property != 0)
+                                          Text(
+                                            'Max Value/Sqm',
+                                            style: Label(),
+                                          ),
+                                        if (widget.check_property != 0)
+                                          SizedBox(height: 3),
+                                        if (widget.check_property != 0)
+                                          Text(
+                                            'Min Value',
+                                            style: Label(),
+                                          ),
+                                        if (widget.check_property != 0)
+                                          SizedBox(height: 3),
+                                        if (widget.check_property != 0)
+                                          Text(
+                                            'Min Value',
+                                            style: Label(),
+                                          ),
                                       ],
                                     ),
                                     SizedBox(width: 15),
@@ -555,53 +583,68 @@ class _LandBuildingState extends State<LandBuilding> {
                                         ),
                                         SizedBox(height: 3),
                                         Text(
-                                          ':   ${formatter.format(double.parse((list[index]["verbal_land_area"].toString())))} m' '\u00B2',
+                                          ':   ${formatter.format(double.parse((list[index]["verbal_land_area"].toString())))} m'
+                                          '\u00B2',
                                           style: Name(),
                                         ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          ':   ' +
-                                              (list[index]
-                                                      ["verbal_land_minsqm"])
-                                                  .toString() +
-                                              '\$',
-                                          style: Name(),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          ':   ' +
-                                              (list[index]
-                                                      ["verbal_land_maxsqm"])
-                                                  .toString() +
-                                              '\$',
-                                          style: Name(),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          ':   ' +
-                                              formatter
-                                                  .format(double.parse((list[
-                                                          index][
-                                                      "verbal_land_minvalue"]),),)
-                                                  .toString() +
-                                              '\$',
-                                          style: Name(),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          ':   ' +
-                                              // (list[index][
-                                              //             "verbal_land_maxvalue"]
-                                              //         .toString() +
-                                              //     '\$'),
-                                              formatter
-                                                  .format(double.parse((list[
-                                                          index][
-                                                      "verbal_land_maxvalue"]),),)
-                                                  .toString() +
-                                              '\$',
-                                          style: Name(),
-                                        ),
+                                        if (widget.check_property != 0)
+                                          SizedBox(height: 3),
+                                        if (widget.check_property != 0)
+                                          Text(
+                                            ':   ' +
+                                                (list[index]
+                                                        ["verbal_land_minsqm"])
+                                                    .toString() +
+                                                '\$',
+                                            style: Name(),
+                                          ),
+                                        if (widget.check_property != 0)
+                                          SizedBox(height: 3),
+                                        if (widget.check_property != 0)
+                                          Text(
+                                            ':   ' +
+                                                (list[index]
+                                                        ["verbal_land_maxsqm"])
+                                                    .toString() +
+                                                '\$',
+                                            style: Name(),
+                                          ),
+                                        if (widget.check_property != 0)
+                                          SizedBox(height: 3),
+                                        if (widget.check_property != 0)
+                                          Text(
+                                            ':   ' +
+                                                formatter
+                                                    .format(
+                                                      double.parse(
+                                                        (list[index][
+                                                            "verbal_land_minvalue"]),
+                                                      ),
+                                                    )
+                                                    .toString() +
+                                                '\$',
+                                            style: Name(),
+                                          ),
+                                        if (widget.check_property != 0)
+                                          SizedBox(height: 3),
+                                        if (widget.check_property != 0)
+                                          Text(
+                                            ':   ' +
+                                                // (list[index][
+                                                //             "verbal_land_maxvalue"]
+                                                //         .toString() +
+                                                //     '\$'),
+                                                formatter
+                                                    .format(
+                                                      double.parse(
+                                                        (list[index][
+                                                            "verbal_land_maxvalue"]),
+                                                      ),
+                                                    )
+                                                    .toString() +
+                                                '\$',
+                                            style: Name(),
+                                          ),
                                       ],
                                     ),
                                   ],
@@ -629,16 +672,22 @@ class _LandBuildingState extends State<LandBuilding> {
     var sangkatId = widget.ID_sangkat;
     setState(() async {
       if (_selectedValue == 'Commercial') {
-        var rs = await http.get(Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/commercial?Khan_ID=$khanId&Sangkat_ID=$sangkatId',),);
+        var rs = await http.get(
+          Uri.parse(
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/commercial?Khan_ID=$khanId&Sangkat_ID=$sangkatId',
+          ),
+        );
         var jsonData = jsonDecode(rs.body);
         setState(() {
           maxSqm = double.parse(jsonData[0]['Max_Value']);
           minSqm = double.parse(jsonData[0]['Min_Value']);
         });
       } else if (_selectedValue == 'Residencial') {
-        var rs = await http.get(Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/residential?Khan_ID=$khanId&Sangkat_ID=$sangkatId',),);
+        var rs = await http.get(
+          Uri.parse(
+            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/residential?Khan_ID=$khanId&Sangkat_ID=$sangkatId',
+          ),
+        );
         var jsonData = jsonDecode(rs.body);
         setState(() {
           maxSqm = double.parse(jsonData[0]['Max_Value']);
@@ -701,8 +750,11 @@ class _LandBuildingState extends State<LandBuilding> {
     setState(() {
       isApiCallProcess = true;
     });
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/type?autoverbal_id=$autoverbalTypeValue',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/type?autoverbal_id=$autoverbalTypeValue',
+      ),
+    );
 
     setState(() {
       var jsonData = jsonDecode(rs.body);
@@ -734,11 +786,17 @@ class _LandBuildingState extends State<LandBuilding> {
 
   TextStyle Name() {
     return TextStyle(
-        color: kImageColor, fontSize: 9, fontWeight: FontWeight.bold,);
+      color: kImageColor,
+      fontSize: 9,
+      fontWeight: FontWeight.bold,
+    );
   }
 
   TextStyle NameProperty() {
     return TextStyle(
-        color: kImageColor, fontSize: 10, fontWeight: FontWeight.bold,);
+      color: kImageColor,
+      fontSize: 10,
+      fontWeight: FontWeight.bold,
+    );
   }
 }

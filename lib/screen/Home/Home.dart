@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage1> {
       Future.delayed(Duration(seconds: 1), () async {
         await mydb.open_user();
         slist = await mydb.db.rawQuery('SELECT * FROM user');
+
         setState(() {
           int i;
           if (slist.isNotEmpty) {
@@ -74,11 +75,6 @@ class _HomePageState extends State<HomePage1> {
             id = slist[i]['id'];
             control_user = slist[i]['username'];
             password = slist[i]['password'];
-            // OneSignal.login(slist[i]['username'].toString());
-            // OneSignal.User.addAlias(
-            //     "fb_id$id", slist[i]['username'].toString(),);
-            // OneSignal.User.addTagWithKey(
-            //     "fb_id$id", slist[i]['username'].toString(),);
           }
         });
       });
@@ -94,6 +90,7 @@ class _HomePageState extends State<HomePage1> {
       Future.delayed(Duration(seconds: 1), () async {
         await mydb.open_user();
         slist = await mydb.db.rawQuery('SELECT * FROM user');
+
         setState(() {
           int i;
           if (slist.isNotEmpty) {

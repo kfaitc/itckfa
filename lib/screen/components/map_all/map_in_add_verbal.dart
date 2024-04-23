@@ -22,12 +22,14 @@ class Map_verbal_add extends StatefulWidget {
     required this.get_commune,
     required this.get_log,
     required this.get_lat,
+    this.show_landmarket_price,
   });
   final OnChangeCallback get_province;
   final OnChangeCallback get_district;
   final OnChangeCallback get_commune;
   final OnChangeCallback get_log;
   final OnChangeCallback get_lat;
+  final bool? show_landmarket_price;
   @override
   State<Map_verbal_add> createState() => _SearchPlacesScreenState();
 }
@@ -56,7 +58,8 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services',),
+            'Location services are disabled. Please enable the services',
+          ),
         ),
       );
       return false;
@@ -66,14 +69,19 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')),);
+          const SnackBar(content: Text('Location permissions are denied')),
+        );
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.',),),);
+            'Location permissions are permanently denied, we cannot request permissions.',
+          ),
+        ),
+      );
       return false;
     }
     return true;
@@ -84,15 +92,18 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     setState(() {
-      mapController!.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(position.latitude, position.longitude),
-          zoom: 16.0,
+      mapController!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 16.0,
+          ),
         ),
-      ),);
+      );
       lat1 = position.latitude;
       log1 = position.longitude;
       latLng = LatLng(lat1!, log1!);
@@ -105,7 +116,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
   @override
   void initState() {
     _handleLocationPermission();
-    _getCurrentLocation();
+    // _getCurrentLocation();
     super.initState();
   }
 
@@ -235,42 +246,46 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
         centerTitle: true,
         title: const Text("Property Location"),
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.system_update_tv_rounded),),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.system_update_tv_rounded),
+        ),
       ),
       body: Stack(
         children: [
           SizedBox(
-              height: 800,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(target: latLng, zoom: 12),
+            height: 800,
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(target: latLng, zoom: 12),
 
-                // markers: Set.from(_marker),
-                zoomGesturesEnabled: true,
-                zoomControlsEnabled: false,
-                markers: _marker.map((e) => e).toSet(),
+              // markers: Set.from(_marker),
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: false,
+              markers: _marker.map((e) => e).toSet(),
 
-                onMapCreated: (GoogleMapController controller) {
-                  mapController = controller;
-                },
-                onCameraMove: (CameraPosition cameraPositiona) {
-                  cameraPosition = cameraPositiona; //when map is dragging
-                },
-                mapType: style_map[index],
-                onTap: (argument) {
-                  widget.get_lat(argument.latitude.toString());
-                  widget.get_log(argument.longitude.toString());
-                  _addMarker(argument);
-                },
-              ),),
+              onMapCreated: (GoogleMapController controller) {
+                mapController = controller;
+              },
+              onCameraMove: (CameraPosition cameraPositiona) {
+                cameraPosition = cameraPositiona; //when map is dragging
+              },
+              mapType: style_map[index],
+              onTap: (argument) {
+                widget.get_lat(argument.latitude.toString());
+                widget.get_log(argument.longitude.toString());
+                _addMarker(argument);
+              },
+            ),
+          ),
           Container(
             width: wth,
             margin: const EdgeInsets.only(right: 70, top: 10),
             padding: const EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30),),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
             child: Form(
               key: check,
               child: Row(
@@ -318,93 +333,102 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
                     ),
                   ),
                   IconButton(
-                      // splashRadius: 30,
-                      hoverColor: Colors.black,
-                      onPressed: () {
-                        setState(() {
-                          name_place.clear();
-                          lg.clear();
-                          ln.clear();
+                    // splashRadius: 30,
+                    hoverColor: Colors.black,
+                    onPressed: () {
+                      setState(() {
+                        name_place.clear();
+                        lg.clear();
+                        ln.clear();
 
-                          h = 0;
-                          num = 0;
-                          Find_Lat_log(input);
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.search,
-                        size: 30,
-                      ),),
+                        h = 0;
+                        num = 0;
+                        Find_Lat_log(input);
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.search,
+                      size: 30,
+                    ),
+                  ),
                   IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _getCurrentLocation();
-                        });
-                      },
-                      icon: const Icon(Icons.person_pin_circle_outlined),)
+                    onPressed: () {
+                      setState(() {
+                        _getCurrentLocation();
+                      });
+                    },
+                    icon: const Icon(Icons.person_pin_circle_outlined),
+                  )
                 ],
               ),
             ),
           ),
           if (name_place.isNotEmpty)
             Container(
-                height: h,
-                color: Colors.white,
-                margin: const EdgeInsets.only(left: 10, right: 55, top: 60),
-                child: ListView.builder(
-                    itemCount: name_place.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: InkWell(
-                          onTap: () {
-                            Tcon;
-                            // print(name_place[index]);
-                            h = 0;
-                            Tcon;
-                            num =
-                                1; // use num for when user click on list search
-                            name_of_place != name_place[index].toString();
-                            poin_map_by_search(
-                                ln[index].toString(), lg[index].toString(),);
-                          },
-                          child: Text(
-                            name_place[index],
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      );
-                    },),),
+              height: h,
+              color: Colors.white,
+              margin: const EdgeInsets.only(left: 10, right: 55, top: 60),
+              child: ListView.builder(
+                itemCount: name_place.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: InkWell(
+                      onTap: () {
+                        Tcon;
+                        // print(name_place[index]);
+                        h = 0;
+                        Tcon;
+                        num = 1; // use num for when user click on list search
+                        name_of_place != name_place[index].toString();
+                        poin_map_by_search(
+                          ln[index].toString(),
+                          lg[index].toString(),
+                        );
+                      },
+                      child: Text(
+                        name_place[index],
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           Positioned(
-              right: 10,
-              top: 15,
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 21,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.mp_sharp,
-                    color: kImageColor,
-                    size: 25,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (index < 1) {
-                        index = index + 1;
-                      } else {
-                        index = 0;
-                      }
-                    });
-                  },
+            right: 10,
+            top: 15,
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 21,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.mp_sharp,
+                  color: kwhite_new,
+                  size: 25,
                 ),
-              ),),
+                onPressed: () {
+                  setState(() {
+                    if (index < 1) {
+                      index = index + 1;
+                    } else {
+                      index = 0;
+                    }
+                  });
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Future<void> Find_by_piont(double la, double lo) async {
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
 
     if (response.statusCode == 200) {
       // Successful response
@@ -430,8 +454,10 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
                     ['short_name']);
                 // Load_khan(district);
 
-                widget.get_district(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name'],);
+                widget.get_district(
+                  jsonResponse['results'][j]['address_components'][i]
+                      ['short_name'],
+                );
               });
             }
             if (jsonResponse['results'][j]['address_components'][i]['types']
@@ -442,15 +468,20 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
                 commune = (jsonResponse['results'][j]['address_components'][i]
                     ['short_name']);
                 // Load_sangkat(commune);
-                widget.get_commune(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name'],);
+                widget.get_commune(
+                  jsonResponse['results'][j]['address_components'][i]
+                      ['short_name'],
+                );
               });
             }
           }
         }
       }
-      final responseRc = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',),);
+      final responseRc = await http.get(
+        Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
+        ),
+      );
       var jsonresponseRc = json.decode(responseRc.body);
       setState(() {
         maxSqm1 = jsonresponseRc['residential'][0]['Max_Value'].toString();
@@ -463,141 +494,171 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
         dynamic cAvg = (double.parse(maxSqm2.toString()) +
                 double.parse(minSqm2.toString())) /
             2;
-        AwesomeDialog(
-          btnOkOnPress: () {},
-          context: context,
-          animType: AnimType.leftSlide,
-          headerAnimationLoop: false,
-          dialogType: DialogType.infoReverse,
-          showCloseIcon: false,
-          title: "Check price by KFA",
-          customHeader: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              'assets/images/New_KFA_Logo.png',
-              filterQuality: FilterQuality.high,
-              fit: BoxFit.fitWidth,
+        if (widget.show_landmarket_price == null) {
+          AwesomeDialog(
+            btnOkOnPress: () {},
+            context: context,
+            animType: AnimType.leftSlide,
+            headerAnimationLoop: false,
+            dialogType: DialogType.infoReverse,
+            showCloseIcon: false,
+            title: "Check price by KFA",
+            customHeader: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                'assets/images/New_KFA_Logo.png',
+                filterQuality: FilterQuality.high,
+                fit: BoxFit.fitWidth,
+              ),
             ),
-          ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Residential",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 220, 221, 223),
-                  boxShadow: const [
-                    BoxShadow(blurRadius: 1, color: Colors.grey)
-                  ],
-                  border: Border.all(
-                    width: 0.2,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Residential",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 220, 221, 223),
+                    boxShadow: const [
+                      BoxShadow(blurRadius: 1, color: Colors.grey)
+                    ],
+                    border: Border.all(width: 0.2),
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Avg = ",
-                            style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${formatter.format(rAvg)}\$",
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Avg = ",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "${formatter.format(rAvg)}\$",
                             style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134),),)
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          children: [
-                            const Text("Min = ",
-                                style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text("${formatter.format(double.parse(minSqm1))}\$",
+                              color: Color.fromARGB(255, 242, 11, 134),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                "Min = ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${formatter.format(double.parse(minSqm1))}\$",
                                 style: const TextStyle(
-                                    color: Color.fromARGB(255, 242, 11, 134),),)
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text("Max = ",
-                                style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text("${formatter.format(double.parse(maxSqm1))}\$",
+                                  color: Color.fromARGB(255, 242, 11, 134),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                "Max = ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${formatter.format(double.parse(maxSqm1))}\$",
                                 style: const TextStyle(
-                                    color: Color.fromARGB(255, 242, 11, 134),),)
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const Text(
-                "Commercial",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 220, 221, 223),
-                  border: Border.all(
-                    width: 0.2,
+                                  color: Color.fromARGB(255, 242, 11, 134),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  boxShadow: const [
-                    BoxShadow(blurRadius: 1, color: Colors.grey)
-                  ],
-                  borderRadius: BorderRadius.circular(5),
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Avg = ",
-                            style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${formatter.format(cAvg)}\$",
+                const Text(
+                  "Commercial",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 220, 221, 223),
+                    border: Border.all(
+                      width: 0.2,
+                    ),
+                    boxShadow: const [
+                      BoxShadow(blurRadius: 1, color: Colors.grey)
+                    ],
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Avg = ",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "${formatter.format(cAvg)}\$",
                             style: const TextStyle(
-                                color: Color.fromARGB(255, 242, 11, 134),),)
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          children: [
-                            const Text("Min = ",
-                                style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text("${formatter.format(double.parse(minSqm2))}\$",
+                              color: Color.fromARGB(255, 242, 11, 134),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                "Min = ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${formatter.format(double.parse(minSqm2))}\$",
                                 style: const TextStyle(
-                                    color: Color.fromARGB(255, 242, 11, 134),),)
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text("Max = ",
-                                style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text("${formatter.format(double.parse(maxSqm2))}\$",
+                                  color: Color.fromARGB(255, 242, 11, 134),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                "Max = ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${formatter.format(double.parse(maxSqm2))}\$",
                                 style: const TextStyle(
-                                    color: Color.fromARGB(255, 242, 11, 134),),)
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                                  color: Color.fromARGB(255, 242, 11, 134),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Text(
-                ' $commune /  $district',
-                style:
-                    const TextStyle(fontStyle: FontStyle.italic, fontSize: 10),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ).show();
+                Text(
+                  ' $commune /  $district',
+                  style: const TextStyle(
+                      fontStyle: FontStyle.italic, fontSize: 10),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ).show();
+        }
       });
     } else {
       // Error or invalid response
@@ -638,8 +699,11 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
       // print('------------------- $latitude');
       // print('------------------- $longitude');
 
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: latLng, zoom: 13),),);
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: latLng, zoom: 13),
+        ),
+      );
       List ls = jsonResponse['results'];
       List ac;
       for (int j = 0; j < ls.length; j++) {
@@ -663,8 +727,11 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
         }
       }
     } else {
-      final response = await http.get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${checkCharetor[0]},${checkCharetor[1]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+      final response = await http.get(
+        Uri.parse(
+          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${checkCharetor[0]},${checkCharetor[1]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+        ),
+      );
 
       // Successful response
       var jsonResponse = json.decode(response.body);
@@ -693,8 +760,11 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
       // print('------------------- $latitude');
       // print('------------------- $longitude');
 
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: latLng, zoom: 13),),);
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: latLng, zoom: 13),
+        ),
+      );
       List ls = jsonResponse['results'];
       List ac;
       for (int j = 0; j < ls.length; j++) {
@@ -751,8 +821,11 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
   }
 
   Future<void> poin_map_by_search(var ln, var lg) async {
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lg,$ln&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lg,$ln&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
     var jsonResponse = json.decode(response.body);
     latLng = LatLng(double.parse(lg), double.parse(ln));
     Marker newMarker = Marker(
@@ -769,8 +842,11 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
       _marker.clear();
       _marker.add(newMarker);
     });
-    mapController?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: latLng, zoom: 13),),);
+    mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: latLng, zoom: 13),
+      ),
+    );
     List ls = jsonResponse['results'];
     List ac;
     for (int j = 0; j < ls.length; j++) {

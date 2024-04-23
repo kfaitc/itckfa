@@ -75,12 +75,19 @@ class _AccountState extends State<Account> {
   Random random = Random();
   Future<void> uploadImage() async {
     var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_profile_user',),);
+      'POST',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/set_profile_user',
+      ),
+    );
     request.fields['id_user'] = set_id_user ?? '';
-    request.files.add(http.MultipartFile.fromBytes('image', imagebytes!,
-        filename: 'User ID :$set_id_user photo ${random.nextInt(999)}.jpg',),);
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'image',
+        imagebytes!,
+        filename: 'User ID :$set_id_user photo ${random.nextInt(999)}.jpg',
+      ),
+    );
 
     var res = await request.send();
   }
@@ -103,9 +110,10 @@ class _AccountState extends State<Account> {
           sourcePath: pickedFile.path,
           uiSettings: [
             AndroidUiSettings(
-                lockAspectRatio: false,
-                backgroundColor: Colors.blue,
-                initAspectRatio: CropAspectRatioPreset.original,)
+              lockAspectRatio: false,
+              backgroundColor: Colors.blue,
+              initAspectRatio: CropAspectRatioPreset.original,
+            )
           ],
           aspectRatioPresets: [
             CropAspectRatioPreset.original,
@@ -143,8 +151,11 @@ class _AccountState extends State<Account> {
 
   void get_image(String id) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user_profile/$id',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user_profile/$id',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       setState(() {
@@ -164,8 +175,11 @@ class _AccountState extends State<Account> {
       textColor: Colors.blue,
       fontSize: 20,
     );
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (context) => Login()), (route) => false,);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+      (route) => false,
+    );
   }
 
   RegisterRequestModel_update? requestModel;
@@ -203,13 +217,14 @@ class _AccountState extends State<Account> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.chevron_left,
-              size: 35,
-            ),),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.chevron_left,
+            size: 35,
+          ),
+        ),
         title: Text(
           'Account',
           style: TextStyle(
@@ -220,291 +235,295 @@ class _AccountState extends State<Account> {
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                buttonSelect(context);
-              },
-              icon: Icon(Icons.settings),),
+            onPressed: () {
+              buttonSelect(context);
+            },
+            icon: Icon(Icons.settings),
+          ),
         ],
         toolbarHeight: 70,
       ),
       body: SingleChildScrollView(
         child: Container(
-            constraints: BoxConstraints(
-              maxWidth: double.infinity,
-              maxHeight: 750,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: kwhite_new,
-                        borderRadius: kBottomBorderRadius,
+          constraints: BoxConstraints(
+            maxWidth: double.infinity,
+            maxHeight: 750,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: kwhite_new,
+                      borderRadius: kBottomBorderRadius,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 50,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 50,
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: InkWell(
-                                onTap: () async {
-                                  await openImage();
-                                  setState(() {
-                                    _file;
-                                  });
-                                },
-                                child: Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    if (url != null && _file == null)
-                                      GFAvatar(
-                                        size: 65,
-                                        backgroundImage: NetworkImage('$url'),
-                                      ),
-                                    if (_file != null)
-                                      GFAvatar(
-                                        size: 65,
-                                        backgroundImage:
-                                            MemoryImage(imagebytes!),
-                                      ),
-                                    Container(
-                                      height: 20,
-                                      width: 50,
-                                      alignment: Alignment.bottomCenter,
-                                      decoration: BoxDecoration(
-                                          color: Color.fromARGB(95, 67, 67, 67),
-                                          borderRadius:
-                                              BorderRadius.circular(5),),
-                                      child: Icon(
-                                        (url != null) ? Icons.edit : Icons.crop,
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: InkWell(
+                              onTap: () async {
+                                await openImage();
+                                setState(() {
+                                  _file;
+                                });
+                              },
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
                                 children: [
-                                  Text(
-                                    // controller: controller,
-                                    'Name : ${widget.username}',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    'ID : ${widget.control_user}',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,),
+                                  if (url != null && _file == null)
+                                    GFAvatar(
+                                      size: 65,
+                                      backgroundImage: NetworkImage('$url'),
+                                    ),
+                                  if (_file != null)
+                                    GFAvatar(
+                                      size: 65,
+                                      backgroundImage: MemoryImage(imagebytes!),
+                                    ),
+                                  Container(
+                                    height: 20,
+                                    width: 50,
+                                    alignment: Alignment.bottomCenter,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(95, 67, 67, 67),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Icon(
+                                      (url != null) ? Icons.edit : Icons.crop,
+                                      color: Colors.white,
+                                    ),
                                   )
                                 ],
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        TwinBox(
-                          labelText1: 'Firstname',
-                          labelText2: 'Lastname',
-                          fname: widget.first_name,
-                          lname: widget.last_name,
-                          get_fname: (value) {
-                            setState(() {
-                              requestModel!.first_name = value;
-                            });
-                          },
-                          get_lname: (value) {
-                            setState(() {
-                              requestModel!.last_name = value;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        //
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Dropdown(
-                              gender: widget.gender,
-                              get_gender: (value) {
-                                setState(() {
-                                  requestModel!.gender = value;
-                                });
-                              },
                             ),
-                            SizedBox(
-                              width: 6,
-                            ),
-                            // បិទសឹនបើមានការUpdate ដោយអនុញ្ញាតិអោយគេអាចធ្វើការកែប្រែបានចាំបើក​ SizedBoxខាងក្រោម ។
-                            SizedBox(
-                              height: 59,
-                              width: 140,
-                              child: DropdownButtonFormField<String>(
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    requestModel!.known_from = newValue!;
-                                  });
-                                },
-                                // validator: (String? value) {
-                                //   if (value?.isEmpty ?? true) {
-                                //     return 'Please select bank';
-                                //   }
-                                //   return null;
-                                // },
-                                value: widget.from,
-                                items: bank
-                                    .map<DropdownMenuItem<String>>(
-                                      (String value) =>
-                                          DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      ),
-                                    )
-                                    .toList(),
-                                // add extra sugar..
-                                icon: Icon(
-                                  Icons.arrow_drop_down,
-                                  color: kwhite_new,
-                                ),
-
-                                decoration: InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  labelText: 'Bank',
-                                  hintText: 'Select',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        SingleBox(
-                          phone: widget.tel,
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        Field_box(
-                          name: 'email',
-                          email: widget.email,
-                          get_email: (value) {
-                            setState(() {
-                              requestModel!.email = value;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          height: 2,
-                        ),
-                        if (Password != null)
+                          ),
                           SizedBox(
-                            height: 60,
-                            width: 280,
-                            child: TextFormField(
-                              controller: Password,
-                              // initialValue: "list[0].password",
-                              onChanged: (input) {
-                                setState(() {
-                                  requestModel!.password = input;
-                                });
-                              },
-                              obscureText: _isObscure,
-                              decoration: InputDecoration(
-                                fillColor: Color.fromARGB(255, 255, 255, 255),
-                                filled: true,
-                                labelText: 'Your Password',
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    color: Color.fromRGBO(169, 203, 56, 1),
-                                    _isObscure
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
+                            width: 10,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  // controller: controller,
+                                  'Name : ${widget.username}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isObscure = !_isObscure;
-                                    });
-                                  },
                                 ),
-                              ),
-                              validator: (input) {
-                                if (input == null || input.isEmpty) {
-                                  return 'require *';
-                                }
-                                return null;
-                              },
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'ID : ${widget.control_user}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ],
                             ),
-                          ),
-                      ],
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(60.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                kwhite_new,
-                              ),
-                            ),
-                            child: Text('Save Change'),
-                            onPressed: () async {
-                              if (_file != null) {
-                                await uploadImage();
-                              }
-                              APIservice apIservice = APIservice();
-                              await apIservice.update_user(
-                                  requestModel!, int.parse(widget.id),);
-                              logOut();
-                            },
-                          ),
-                          SizedBox(width: 15),
+                          )
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Column(
+                    children: [
+                      TwinBox(
+                        labelText1: 'Firstname',
+                        labelText2: 'Lastname',
+                        fname: widget.first_name,
+                        lname: widget.last_name,
+                        get_fname: (value) {
+                          setState(() {
+                            requestModel!.first_name = value;
+                          });
+                        },
+                        get_lname: (value) {
+                          setState(() {
+                            requestModel!.last_name = value;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      //
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Dropdown(
+                            gender: widget.gender,
+                            get_gender: (value) {
+                              setState(() {
+                                requestModel!.gender = value;
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          // បិទសឹនបើមានការUpdate ដោយអនុញ្ញាតិអោយគេអាចធ្វើការកែប្រែបានចាំបើក​ SizedBoxខាងក្រោម ។
+                          SizedBox(
+                            height: 59,
+                            width: 140,
+                            child: DropdownButtonFormField<String>(
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  requestModel!.known_from = newValue!;
+                                });
+                              },
+                              // validator: (String? value) {
+                              //   if (value?.isEmpty ?? true) {
+                              //     return 'Please select bank';
+                              //   }
+                              //   return null;
+                              // },
+                              value: widget.from,
+                              items: bank
+                                  .map<DropdownMenuItem<String>>(
+                                    (String value) => DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    ),
+                                  )
+                                  .toList(),
+                              // add extra sugar..
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: kwhite_new,
+                              ),
 
-                // Column(
-                //   children: [
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                labelText: 'Bank',
+                                hintText: 'Select',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      SingleBox(
+                        phone: widget.tel,
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Field_box(
+                        name: 'email',
+                        email: widget.email,
+                        get_email: (value) {
+                          setState(() {
+                            requestModel!.email = value;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      if (Password != null)
+                        SizedBox(
+                          height: 60,
+                          width: 280,
+                          child: TextFormField(
+                            controller: Password,
+                            // initialValue: "list[0].password",
+                            onChanged: (input) {
+                              setState(() {
+                                requestModel!.password = input;
+                              });
+                            },
+                            obscureText: _isObscure,
+                            decoration: InputDecoration(
+                              fillColor: Color.fromARGB(255, 255, 255, 255),
+                              filled: true,
+                              labelText: 'Your Password',
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  color: Color.fromRGBO(169, 203, 56, 1),
+                                  _isObscure
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isObscure = !_isObscure;
+                                  });
+                                },
+                              ),
+                            ),
+                            validator: (input) {
+                              if (input == null || input.isEmpty) {
+                                return 'require *';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                    ],
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(60.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              kwhite_new,
+                            ),
+                          ),
+                          child: Text('Save Change'),
+                          onPressed: () async {
+                            if (_file != null) {
+                              await uploadImage();
+                            }
+                            APIservice apIservice = APIservice();
+                            await apIservice.update_user(
+                              requestModel!,
+                              int.parse(widget.id),
+                            );
+                            logOut();
+                          },
+                        ),
+                        SizedBox(width: 15),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
 
-                //   ],
-                // ),
-              ],
-            ),),
+              // Column(
+              //   children: [
+
+              //   ],
+              // ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -540,7 +559,8 @@ class _AccountState extends State<Account> {
                     body: Column(
                       children: [
                         Text(
-                            "Are you sure you want to delete\nPlease enter your password",),
+                          "Are you sure you want to delete\nPlease enter your password",
+                        ),
                         TextField(
                           onChanged: (value) {
                             setState(() {
@@ -599,9 +619,11 @@ class _AccountState extends State<Account> {
 
   Future update() async {
     var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${widget.control_user}',),);
+      'POST',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/${widget.control_user}',
+      ),
+    );
 
     http.StreamedResponse response = await request.send();
 
@@ -643,9 +665,10 @@ class EditPicture extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
               )
             ],
           ),
