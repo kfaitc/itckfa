@@ -72,7 +72,9 @@ class _dropdown_shape_of_landState extends State<dropdown_shape_of_land> {
             setState(() {});
           },
           onChanged: (newValue) {
-            setState(() {});
+            setState(() {
+              print(newValue);
+            });
           },
 
           items: _list

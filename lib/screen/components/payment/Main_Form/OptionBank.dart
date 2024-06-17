@@ -98,16 +98,18 @@ class _OptionPaymentState extends State<OptionPayment> {
   ];
 
   UPAY upay = UPAY();
-  WING wing = WING();
+  // WING wing = WING();
 
   var order_reference_no;
   late Timer _timer;
   bool check_wing = false;
   Future check_traslation_wing(orderReferenceNo) async {
     var request = http.Request(
-        'GET',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/checkdone/wing?order_reference_no=$orderReferenceNo',),);
+      'GET',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/checkdone/wing?order_reference_no=$orderReferenceNo',
+      ),
+    );
 
     http.StreamedResponse response = await request.send();
 
@@ -154,10 +156,11 @@ class _OptionPaymentState extends State<OptionPayment> {
     // Navigator.pop(context);
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var url = Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token',);
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token',
+    );
     var body = {
       // 'username': 'online.mangogame',
-      // 'username': 'online.kfausd',
+      // // 'username': 'online.kfausd',
       // 'password': '914bade01fd32493a0f2efc583e1a5f6',
       // 'grant_type': 'password',
       // 'client_id': 'third_party',
@@ -199,7 +202,8 @@ class _OptionPaymentState extends State<OptionPayment> {
     // Navigator.pop(context);
     var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     var url = Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token',);
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token',
+    );
     var body = {
       // 'username': 'online.mangogame',
       // 'username': 'online.kfausd',
@@ -243,9 +247,15 @@ class _OptionPaymentState extends State<OptionPayment> {
   var deeplink_hask;
   // Has verbal_id
   Future<void> deeplinkHask_verbal_id(
-      accessToken, token, price, option, context,) async {
+    accessToken,
+    token,
+    price,
+    option,
+    context,
+  ) async {
     final url = Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask',);
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask',
+    );
     final request = http.MultipartRequest('POST', url);
 
     request.fields.addAll({
@@ -267,7 +277,8 @@ class _OptionPaymentState extends State<OptionPayment> {
 
   Future<void> deeplinkHask(accessToken, token, price, option, context) async {
     final url = Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask',);
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask',
+    );
     final request = http.MultipartRequest('POST', url);
 
     request.fields.addAll({
@@ -292,9 +303,11 @@ class _OptionPaymentState extends State<OptionPayment> {
   Future call_back_wing(BuildContext context, price) async {
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing',),);
+      'POST',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing',
+      ),
+    );
     request.body = json.encode({
       "order_reference_no": "$order_reference_no",
       "amount": "$price",
@@ -320,9 +333,11 @@ class _OptionPaymentState extends State<OptionPayment> {
   Future call_back_wing_verbal_id(BuildContext context, price) async {
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing',),);
+      'POST',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing',
+      ),
+    );
     request.body = json.encode({
       "order_reference_no": "$order_reference_no",
       "amount": "$price",
@@ -438,35 +453,42 @@ class _OptionPaymentState extends State<OptionPayment> {
                       var tranIdRef = RandomString(10);
                       if (widget.id_verbal == null) {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ABA(
-                                id_set_use: widget.set_id_user,
-                                option: widget.option,
-                                price: widget.price,
-                                tran_id: tranIdRef,
-                                set_email: widget.set_email,
-                                set_phone: widget.set_phone.toString(),
-                              ),
-                            ),);
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ABA(
+                              id_set_use: widget.set_id_user,
+                              option: widget.option,
+                              price: widget.price,
+                              tran_id: tranIdRef,
+                              set_email: widget.set_email,
+                              set_phone: widget.set_phone.toString(),
+                            ),
+                          ),
+                        );
                       } else {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ABA(
-                                id_set_use: widget.set_id_user,
-                                option: widget.option,
-                                price: widget.price,
-                                tran_id: tranIdRef,
-                                set_email: widget.set_email,
-                                set_phone: widget.set_phone.toString(),
-                                id_verbal: widget.id_verbal ?? '',
-                              ),
-                            ),);
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ABA(
+                              id_set_use: widget.set_id_user,
+                              option: widget.option,
+                              price: widget.price,
+                              tran_id: tranIdRef,
+                              set_email: widget.set_email,
+                              set_phone: widget.set_phone.toString(),
+                              id_verbal: widget.id_verbal ?? '',
+                            ),
+                          ),
+                        );
                       }
                     } else {
-                      alertDialog(context, widget.price, widget.set_email ?? "",
-                          widget.option, index,);
+                      alertDialog(
+                        context,
+                        widget.price,
+                        widget.set_email ?? "",
+                        widget.option,
+                        index,
+                      );
                     }
                   });
                 },
@@ -486,13 +508,14 @@ class _OptionPaymentState extends State<OptionPayment> {
                                 height: 40,
                                 width: 40,
                                 decoration: BoxDecoration(
-                                    // color: Colors.red,
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                        '${Qr_Image[index]['image']}',
-                                      ),
-                                    ),),
+                                  // color: Colors.red,
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                      '${Qr_Image[index]['image']}',
+                                    ),
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 15),
                               Column(
@@ -501,25 +524,37 @@ class _OptionPaymentState extends State<OptionPayment> {
                                   Text(
                                     "${text_bank[index]['bank']}",
                                     style: TextStyle(
-                                        overflow: TextOverflow.visible,
-                                        color: const Color.fromARGB(
-                                            255, 21, 21, 21,),
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: MediaQuery.textScaleFactorOf(
-                                                context,) *
-                                            14,),
+                                      overflow: TextOverflow.visible,
+                                      color: const Color.fromARGB(
+                                        255,
+                                        21,
+                                        21,
+                                        21,
+                                      ),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: MediaQuery.textScaleFactorOf(
+                                            context,
+                                          ) *
+                                          14,
+                                    ),
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
                                     "${text_bank[index]['subscrip']}",
                                     style: TextStyle(
-                                        overflow: TextOverflow.visible,
-                                        color: const Color.fromRGBO(
-                                            158, 158, 158, 1,),
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: MediaQuery.textScaleFactorOf(
-                                                context,) *
-                                            12,),
+                                      overflow: TextOverflow.visible,
+                                      color: const Color.fromRGBO(
+                                        158,
+                                        158,
+                                        158,
+                                        1,
+                                      ),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: MediaQuery.textScaleFactorOf(
+                                            context,
+                                          ) *
+                                          12,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -528,8 +563,10 @@ class _OptionPaymentState extends State<OptionPayment> {
                                 height: 25,
                                 width: 25,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: const Color.fromARGB(255, 242, 240, 240),),
+                                  borderRadius: BorderRadius.circular(5),
+                                  color:
+                                      const Color.fromARGB(255, 242, 240, 240),
+                                ),
                                 child: const Icon(
                                   Icons.arrow_forward_ios,
                                   size: 16,
@@ -559,7 +596,9 @@ class _OptionPaymentState extends State<OptionPayment> {
         width: double.infinity,
         margin: const EdgeInsets.only(bottom: 60),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(20),),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Row(
           children: [
             const CircleAvatar(
@@ -593,8 +632,13 @@ class _OptionPaymentState extends State<OptionPayment> {
     return result;
   }
 
-  Future<void> alertDialog(BuildContext context, var price, String account,
-      String option, int index,) {
+  Future<void> alertDialog(
+    BuildContext context,
+    var price,
+    String account,
+    String option,
+    int index,
+  ) {
     List<Image> setImages = [
       Image.asset(
         'assets/images/Partners/KHQR.png',
@@ -674,24 +718,35 @@ class _OptionPaymentState extends State<OptionPayment> {
                     });
                     if (index == 1) {
                       await upay.createOrder(
-                          price, widget.option, widget.set_id_user, context,);
+                        price,
+                        widget.option,
+                        widget.set_id_user,
+                        context,
+                      );
                     } else if (index == 2) {
                       setState(() {
                         if (check_wing == false) {
-                          _await(context);
-                          _timer =
-                              Timer.periodic(const Duration(seconds: 5), (timer) {
-                            check_traslation_wing(order_reference_no);
-                          });
+                          print('===> Wing1');
+                          // _await(context);
+                          // _timer = Timer.periodic(const Duration(seconds: 5),
+                          //     (timer) {
+                          //   check_traslation_wing(order_reference_no);
+                          // });
                         }
                       });
                       if (widget.id_verbal != null) {
+                        print('===> Wing2');
                         print(
-                            "\n\n\n\n\n\n\n=======> Call by ${widget.id_verbal}\n\n\n\n",);
-                        await createOrder_Wing_verbal_id(
-                            price, option, context,);
+                          "\n\n\n\n\n\n\n=======> Call by ${widget.id_verbal}\n\n\n\n",
+                        );
+                        // await createOrder_Wing_verbal_id(
+                        //   price,
+                        //   option,
+                        //   context,
+                        // );
                         print(" \n\n\n\n\n\n\n\nvirak \n\n\n\n\n\n\n\n");
                       } else {
+                        print('===> Wing3');
                         await createOrder_Wing(price, option, context);
                       }
                     }
@@ -715,11 +770,12 @@ class _OptionPaymentState extends State<OptionPayment> {
                         Text(
                           "Tap to pay with ${setSubtitle.elementAt(index)} Bank",
                           style: TextStyle(
-                              overflow: TextOverflow.visible,
-                              color: const Color.fromRGBO(158, 158, 158, 1),
-                              fontWeight: FontWeight.w500,
-                              fontSize:
-                                  MediaQuery.textScaleFactorOf(context) * 10,),
+                            overflow: TextOverflow.visible,
+                            color: const Color.fromRGBO(158, 158, 158, 1),
+                            fontWeight: FontWeight.w500,
+                            fontSize:
+                                MediaQuery.textScaleFactorOf(context) * 10,
+                          ),
                         ),
                       ],
                     ),
@@ -732,26 +788,28 @@ class _OptionPaymentState extends State<OptionPayment> {
                       //     'price = $price || account = $account || set_phone = ${widget.set_phone} || option = $option || id_user = ${widget.id_user} || set_id_user = ${getVpoint.set_id_user} ');
                       await Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => Qr_Wing(
-                                  price: price,
-                                  accont: account,
-                                  phone: widget.set_phone!,
-                                  option: option,
-                                  id: widget.id_user ?? 'set',
-                                  control_user: widget.set_id_user,
-                                ),),
+                          builder: (context) => Qr_Wing(
+                            price: price,
+                            accont: account,
+                            phone: widget.set_phone!,
+                            option: option,
+                            id: widget.id_user ?? 'set',
+                            control_user: widget.set_id_user,
+                          ),
+                        ),
                       );
                     } else if (index == 1) {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => Qr_UPay(
-                                  price: price,
-                                  accont: account,
-                                  phone: widget.set_phone!,
-                                  option: option,
-                                  id: widget.set_id_user ?? 'set',
-                                  control_user: widget.set_id_user,
-                                ),),
+                          builder: (context) => Qr_UPay(
+                            price: price,
+                            accont: account,
+                            phone: widget.set_phone!,
+                            option: option,
+                            id: widget.set_id_user ?? 'set',
+                            control_user: widget.set_id_user,
+                          ),
+                        ),
                       );
                     }
 
@@ -769,11 +827,13 @@ class _OptionPaymentState extends State<OptionPayment> {
                                 height: 50,
                                 width: 60,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          '${qrImage[index]['image']}',),
-                                    ),),
+                                  borderRadius: BorderRadius.circular(5),
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                      '${qrImage[index]['image']}',
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                             const Text(
@@ -789,23 +849,23 @@ class _OptionPaymentState extends State<OptionPayment> {
                             Text(
                               "${textBank[index]['bank']}",
                               style: TextStyle(
-                                  overflow: TextOverflow.visible,
-                                  color: const Color.fromARGB(255, 21, 21, 21),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize:
-                                      MediaQuery.textScaleFactorOf(context) *
-                                          14,),
+                                overflow: TextOverflow.visible,
+                                color: const Color.fromARGB(255, 21, 21, 21),
+                                fontWeight: FontWeight.w500,
+                                fontSize:
+                                    MediaQuery.textScaleFactorOf(context) * 14,
+                              ),
                             ),
                             const SizedBox(height: 5),
                             Text(
                               "${textBank[index]['subscrip']}",
                               style: TextStyle(
-                                  overflow: TextOverflow.visible,
-                                  color: const Color.fromRGBO(158, 158, 158, 1),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize:
-                                      MediaQuery.textScaleFactorOf(context) *
-                                          9,),
+                                overflow: TextOverflow.visible,
+                                color: const Color.fromRGBO(158, 158, 158, 1),
+                                fontWeight: FontWeight.w500,
+                                fontSize:
+                                    MediaQuery.textScaleFactorOf(context) * 9,
+                              ),
                             ),
                           ],
                         ),
