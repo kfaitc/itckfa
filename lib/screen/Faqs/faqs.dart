@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/Option/components/contants.dart';
 
 import 'package:getwidget/getwidget.dart';
 

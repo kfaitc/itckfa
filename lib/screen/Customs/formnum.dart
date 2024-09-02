@@ -2,7 +2,7 @@
 
 import 'package:flutter/services.dart';
 
-import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/Option/components/contants.dart';
 import 'package:flutter/material.dart';
 
 class FormN extends StatelessWidget {

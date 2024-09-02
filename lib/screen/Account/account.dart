@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:dio/dio.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,8 +16,8 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:itckfa/Memory_local/database.dart';
-import 'package:itckfa/afa/components/contants.dart';
-import 'package:itckfa/afa/screens/Auth/login.dart';
+import 'package:itckfa/Option/components/contants.dart';
+import 'package:itckfa/Option/screens/Auth/login.dart';
 import 'package:itckfa/api/api_service.dart';
 import 'package:itckfa/contants.dart';
 import 'package:itckfa/models/register_model.dart';
@@ -205,6 +206,7 @@ class _AccountState extends State<Account> {
     super.initState();
   }
 
+  List listtUser = [];
   @override
   Widget build(BuildContext context) {
     //controller to update dataInfo
@@ -245,287 +247,309 @@ class _AccountState extends State<Account> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          constraints: BoxConstraints(
-            maxWidth: double.infinity,
-            maxHeight: 750,
-          ),
+          // constraints:
+          //     BoxConstraints(maxWidth: double.infinity, maxHeight: 750),
           decoration: BoxDecoration(
             color: Colors.white,
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: kwhite_new,
-                      borderRadius: kBottomBorderRadius,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 50,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: InkWell(
-                              onTap: () async {
-                                await openImage();
-                                setState(() {
-                                  _file;
-                                });
-                              },
-                              child: Stack(
+              Container(
+                width: double.infinity,
+                height: 130,
+                decoration: BoxDecoration(
+                  color: kwhite_new,
+                  borderRadius: kBottomBorderRadius,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 50),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: InkWell(
+                          onTap: () async {
+                            await openImage();
+                            setState(() {
+                              _file;
+                            });
+                          },
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              if (url != null && _file == null)
+                                GFAvatar(
+                                  size: 65,
+                                  backgroundImage: NetworkImage('$url'),
+                                ),
+                              if (_file != null)
+                                GFAvatar(
+                                  size: 65,
+                                  backgroundImage: MemoryImage(imagebytes!),
+                                ),
+                              Container(
+                                height: 20,
+                                width: 50,
                                 alignment: Alignment.bottomCenter,
-                                children: [
-                                  if (url != null && _file == null)
-                                    GFAvatar(
-                                      size: 65,
-                                      backgroundImage: NetworkImage('$url'),
-                                    ),
-                                  if (_file != null)
-                                    GFAvatar(
-                                      size: 65,
-                                      backgroundImage: MemoryImage(imagebytes!),
-                                    ),
-                                  Container(
-                                    height: 20,
-                                    width: 50,
-                                    alignment: Alignment.bottomCenter,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromARGB(95, 67, 67, 67),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Icon(
-                                      (url != null) ? Icons.edit : Icons.crop,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(95, 67, 67, 67),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Icon(
+                                  (url != null) ? Icons.edit : Icons.crop,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
                               children: [
-                                Text(
-                                  // controller: controller,
-                                  'Name : ${widget.username}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      // controller: controller,
+                                      'Name',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'ID',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: 10,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      // controller: controller,
+                                      ' :  ${widget.username}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      ' :  ${widget.control_user}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                Text(
-                                  'ID : ${widget.control_user}',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      TwinBox(
-                        labelText1: 'Firstname',
-                        labelText2: 'Lastname',
-                        fname: widget.first_name,
-                        lname: widget.last_name,
-                        get_fname: (value) {
-                          setState(() {
-                            requestModel!.first_name = value;
-                          });
-                        },
-                        get_lname: (value) {
-                          setState(() {
-                            requestModel!.last_name = value;
-                          });
-                        },
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      //
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Dropdown(
-                            gender: widget.gender,
-                            get_gender: (value) {
-                              setState(() {
-                                requestModel!.gender = value;
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          // បិទសឹនបើមានការUpdate ដោយអនុញ្ញាតិអោយគេអាចធ្វើការកែប្រែបានចាំបើក​ SizedBoxខាងក្រោម ។
-                          SizedBox(
-                            height: 59,
-                            width: 140,
-                            child: DropdownButtonFormField<String>(
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  requestModel!.known_from = newValue!;
-                                });
-                              },
-                              // validator: (String? value) {
-                              //   if (value?.isEmpty ?? true) {
-                              //     return 'Please select bank';
-                              //   }
-                              //   return null;
-                              // },
-                              value: widget.from,
-                              items: bank
-                                  .map<DropdownMenuItem<String>>(
-                                    (String value) => DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    ),
-                                  )
-                                  .toList(),
-                              // add extra sugar..
-                              icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: kwhite_new,
-                              ),
-
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                labelText: 'Bank',
-                                hintText: 'Select',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      SingleBox(
-                        phone: widget.tel,
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Field_box(
-                        name: 'email',
-                        email: widget.email,
-                        get_email: (value) {
-                          setState(() {
-                            requestModel!.email = value;
-                          });
-                        },
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      if (Password != null)
-                        SizedBox(
-                          height: 60,
-                          width: 280,
-                          child: TextFormField(
-                            controller: Password,
-                            // initialValue: "list[0].password",
-                            onChanged: (input) {
-                              setState(() {
-                                requestModel!.password = input;
-                              });
-                            },
-                            obscureText: _isObscure,
-                            decoration: InputDecoration(
-                              fillColor: Color.fromARGB(255, 255, 255, 255),
-                              filled: true,
-                              labelText: 'Your Password',
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  color: Color.fromRGBO(169, 203, 56, 1),
-                                  _isObscure
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isObscure = !_isObscure;
-                                  });
-                                },
-                              ),
-                            ),
-                            validator: (input) {
-                              if (input == null || input.isEmpty) {
-                                return 'require *';
-                              }
-                              return null;
-                            },
-                          ),
+                          ],
                         ),
+                      )
                     ],
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.all(60.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              kwhite_new,
-                            ),
-                          ),
-                          child: Text('Save Change'),
-                          onPressed: () async {
-                            if (_file != null) {
-                              await uploadImage();
-                            }
-                            APIservice apIservice = APIservice();
-                            await apIservice.update_user(
-                              requestModel!,
-                              int.parse(widget.id),
-                            );
-                            logOut();
-                          },
-                        ),
-                        SizedBox(width: 15),
-                      ],
-                    ),
+                ),
+              ),
+              Column(
+                children: [
+                  TwinBox(
+                    labelText1: 'Firstname',
+                    labelText2: 'Lastname',
+                    fname: widget.first_name,
+                    lname: widget.last_name,
+                    get_fname: (value) {
+                      setState(() {
+                        requestModel!.first_name = value;
+                      });
+                    },
+                    get_lname: (value) {
+                      setState(() {
+                        requestModel!.last_name = value;
+                      });
+                    },
                   ),
+                  SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Dropdown(
+                        gender: widget.gender,
+                        get_gender: (value) {
+                          setState(() {
+                            requestModel!.gender = value;
+                          });
+                        },
+                      ),
+                      SizedBox(width: 6),
+                      SizedBox(
+                        height: 59,
+                        width: 140,
+                        child: DropdownButtonFormField<String>(
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              requestModel!.known_from = newValue!;
+                            });
+                          },
+                          value: widget.from,
+                          items: bank
+                              .map<DropdownMenuItem<String>>(
+                                (String value) => DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value.toString()),
+                                ),
+                              )
+                              .toList(),
+                          icon: Icon(Icons.arrow_drop_down, color: kwhite_new),
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            labelText: 'Bank',
+                            hintText: 'Select',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  SingleBox(
+                    phone: widget.tel,
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Field_box(
+                    name: 'email',
+                    email: widget.email,
+                    get_email: (value) {
+                      setState(() {
+                        requestModel!.email = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 2),
+                  if (Password != null)
+                    SizedBox(
+                      height: 60,
+                      width: 280,
+                      child: TextFormField(
+                        controller: Password,
+                        // initialValue: "list[0].password",
+                        onChanged: (input) {
+                          setState(() {
+                            requestModel!.password = input;
+                          });
+                        },
+                        obscureText: _isObscure,
+                        decoration: InputDecoration(
+                          fillColor: Color.fromARGB(255, 255, 255, 255),
+                          filled: true,
+                          labelText: 'Your Password',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              color: Color.fromRGBO(169, 203, 56, 1),
+                              _isObscure
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isObscure = !_isObscure;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: (input) {
+                          if (input == null || input.isEmpty) {
+                            return 'require *';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
                 ],
               ),
+              Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(60.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          kwhite_new,
+                        ),
+                      ),
+                      child: Text('Save Change'),
+                      onPressed: () async {
+                        if (_file != null) {
+                          await uploadImage();
+                        }
+                        updateUsers();
+                        print('Update Users');
 
-              // Column(
-              //   children: [
-
-              //   ],
-              // ),
+                        logOut();
+                      },
+                    ),
+                    SizedBox(width: 15),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> updateUsers() async {
+    print("===> ${requestModel!.password} || ID User : ${widget.id}");
+    var headers = {'Content-Type': 'application/json'};
+    var data = json.encode({
+      "first_name": requestModel!.first_name,
+      "last_name": requestModel!.last_name,
+      "gender": requestModel!.gender,
+      "tel_num": requestModel!.tel_num,
+      "email": requestModel!.email,
+      "password": requestModel!.password,
+      "known_from": requestModel!.known_from
+    });
+    var dio = Dio();
+    var response = await dio.request(
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/user/edit/211',
+      options: Options(
+        method: 'POST',
+        headers: headers,
+      ),
+      data: data,
+    );
+
+    if (response.statusCode == 200) {
+      print(json.encode(response.data));
+    } else {
+      print(response.statusMessage);
+    }
   }
 
   Future buttonSelect(BuildContext context) {
@@ -586,7 +610,7 @@ class _AccountState extends State<Account> {
                           await mydb.db.rawDelete("DELETE FROM user WHERE 1");
                           await update();
                           // print("Data Deleted");
-                          Get.to(() => Login());
+                          // Get.to(() => Login());
                         }
                       },
                     ),

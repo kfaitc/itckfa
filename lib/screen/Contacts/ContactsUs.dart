@@ -8,7 +8,7 @@ import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../afa/components/contants.dart';
+import '../../Option/components/contants.dart';
 
 class Contacts extends StatefulWidget {
   const Contacts({Key? key}) : super(key: key);
@@ -141,7 +141,9 @@ class _ContactsState extends State<Contacts> {
                       Text(
                         "KFA Head Office",
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold,),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(
                         height: 10,
@@ -193,7 +195,11 @@ class _ContactsState extends State<Contacts> {
                       Container(
                         alignment: Alignment.center,
                         padding: EdgeInsets.only(
-                            top: 10, right: 40, left: 40, bottom: 10,),
+                          top: 10,
+                          right: 40,
+                          left: 40,
+                          bottom: 10,
+                        ),
                         child: ElevatedButton(
                           child: Row(
                             //crossAxisAlignment: CrossAxisAlignment.center,
@@ -239,7 +245,9 @@ class _ContactsState extends State<Contacts> {
                       Text(
                         "Hotlines:",
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold,),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Hotline(
                         onPress: () => setState(() {
@@ -282,7 +290,9 @@ class _ContactsState extends State<Contacts> {
                       Text(
                         "Find out more about KFA:",
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold,),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       SizedBox(
                         height: 15,
@@ -290,44 +300,47 @@ class _ContactsState extends State<Contacts> {
                       Wrap(
                         children: [
                           appIcons(
-                              press: () async {
-                                final String url =
-                                    "https://www.facebook.com/kfa.com.kh/";
-                                await launch(
-                                  url,
-                                  forceSafariVC: false,
-                                  forceWebView: false,
-                                );
-                                // OpenDialog();
-                              },
-                              img: 'assets/images/Facebook_Logo.png',),
+                            press: () async {
+                              final String url =
+                                  "https://www.facebook.com/kfa.com.kh/";
+                              await launch(
+                                url,
+                                forceSafariVC: false,
+                                forceWebView: false,
+                              );
+                              // OpenDialog();
+                            },
+                            img: 'assets/images/Facebook_Logo.png',
+                          ),
                           appIcons(
-                              press: () async {
-                                final url = "https://twitter.com/KFA_Cambodia";
-                                await launch(
-                                  url,
-                                  forceSafariVC: false,
-                                  forceWebView: false,
-                                );
-                              },
-                              img: 'assets/images/twitter-logo.png',),
+                            press: () async {
+                              final url = "https://twitter.com/KFA_Cambodia";
+                              await launch(
+                                url,
+                                forceSafariVC: false,
+                                forceWebView: false,
+                              );
+                            },
+                            img: 'assets/images/twitter-logo.png',
+                          ),
                           appIcons(
-                              press: () async {
-                                final url =
-                                    "https://www.linkedin.com/company/khmerfoundationappraisal/";
-                                await launch(
-                                  url,
-                                  forceSafariVC: false,
-                                  forceWebView: false,
-                                );
-                                print("okay");
-                              },
-                              img:
-                                  'assets/images/LinkedIn_icon_circle.svg.png',),
+                            press: () async {
+                              final url =
+                                  "https://www.linkedin.com/company/khmerfoundationappraisal/";
+                              await launch(
+                                url,
+                                forceSafariVC: false,
+                                forceWebView: false,
+                              );
+                              print("okay");
+                            },
+                            img: 'assets/images/LinkedIn_icon_circle.svg.png',
+                          ),
                           appIcons(
-                              press: () {},
-                              img:
-                                  'assets/images/YouTube_full-color_icon_(2017).svg.webp',),
+                            press: () {},
+                            img:
+                                'assets/images/YouTube_full-color_icon_(2017).svg.webp',
+                          ),
                         ],
                       ),
                     ],
@@ -388,9 +401,10 @@ class Hotline extends StatelessWidget {
       ),
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-            minimumSize: Size.fromHeight(50),
-            // minimumSize: Size.fromRadius(40),
-            side: BorderSide(color: Colors.black12, width: 0.5),),
+          minimumSize: Size.fromHeight(50),
+          // minimumSize: Size.fromRadius(40),
+          side: BorderSide(color: Colors.black12, width: 0.5),
+        ),
         onPressed: onPress,
         child: Row(
           //crossAxisAlignment: CrossAxisAlignment.center,

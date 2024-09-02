@@ -11,10 +11,12 @@ class MyDb {
     // print(
     //     path); //output /data/user/0/com.testapp.flutter.testapp/databases/demo.db
 
-    db = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      // When creating the db, create the table
-      await db.execute('''
+    db = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) async {
+        // When creating the db, create the table
+        await db.execute('''
                     CREATE TABLE IF NOT EXISTS user( 
                         id primary key,
                         first_name varchar(255)  not null,
@@ -27,15 +29,34 @@ class MyDb {
                         password varchar(255)  not null
                       );
                   ''');
-    },);
+      },
+    );
+  }
+
+  Future mainRoad() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'mapModel1.db');
+    db = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
+          CREATE TABLE IF NOT EXISTS mainRaodTable(
+              name_road varchar(255)  not null,
+          );
+        ''');
+      },
+    );
   }
 
   Future open_land_verbal() async {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'demo1.db');
-    db = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute('''
+    db = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
           CREATE TABLE IF NOT EXISTS comverbal_land_models(
                                     
                                     verbal_landid varchar(255)  not null,
@@ -51,15 +72,18 @@ class MyDb {
                                     local_offline default 0
                                 );
                   ''');
-    },);
+      },
+    );
   }
 
   Future open_verbal() async {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'demo2.db');
-    db = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute('''
+    db = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
           CREATE TABLE IF NOT EXISTS verbal_models(
                           id_v primary key,
                           verbal_id varchar(255)  not null,
@@ -87,21 +111,25 @@ class MyDb {
                           local_offline default 0
                       );
                   ''');
-    },);
+      },
+    );
   }
 
   Future open_offline() async {
     var databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'demo3.db');
-    db = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute('''
+    db = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (Database db, int version) async {
+        await db.execute('''
           CREATE TABLE IF NOT EXISTS verbal_models_offline(
                           id_v primary key,
                           verbal_id varchar(255)  DEFAULT null,
                           verbal_image BLOB  DEFAULT null
                       );
                   ''');
-    },);
+      },
+    );
   }
 }

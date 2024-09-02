@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../afa/components/contants.dart';
+import '../../../Option/components/contants.dart';
 
 class Feed_back extends StatefulWidget {
   const Feed_back({super.key});
@@ -154,9 +154,10 @@ class _FeedbackState extends State<Feed_back> {
                     child: Text(
                       ' Your Gmail/Yahoo and Other will \t\t\tgenerate Auto',
                       style: TextStyle(
-                          fontSize: MediaQuery.of(context).textScaleFactor * 12,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          overflow: TextOverflow.fade,),
+                        fontSize: MediaQuery.of(context).textScaleFactor * 12,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        overflow: TextOverflow.fade,
+                      ),
                     ),
                   ),
                 ],
@@ -168,8 +169,9 @@ class _FeedbackState extends State<Feed_back> {
                 height: 250,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color.fromARGB(255, 236, 234, 221),),
+                  borderRadius: BorderRadius.circular(10),
+                  color: Color.fromARGB(255, 236, 234, 221),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(

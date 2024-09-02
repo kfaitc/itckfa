@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, import_of_legacy_library_into_null_safe, use_build_context_synchronously, non_constant_identifier_names, unused_import, deprecated_member_use
-
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
@@ -10,10 +9,10 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/Memory_local/database.dart';
-import 'package:itckfa/afa/components/contants.dart';
-import 'package:itckfa/afa/screens/Auth/login.dart';
-import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
-import 'package:itckfa/afa/screens/walletscreen.dart';
+import 'package:itckfa/Option/components/contants.dart';
+import 'package:itckfa/Option/screens/Auth/login.dart';
+import 'package:itckfa/Option/screens/AutoVerbal/Verbal/Add.dart';
+import 'package:itckfa/Option/screens/walletscreen.dart';
 import 'package:itckfa/screen/Abouts/Abouts.dart';
 import 'package:itckfa/screen/Abouts/aboutSideBar.dart';
 import 'package:itckfa/screen/Account/account.dart';
@@ -31,6 +30,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import '../../Option/screens/AutoVerbal/Verbal/menu_add.dart';
 import 'Customs/Feed_back.dart';
 
 class HomePage1 extends StatefulWidget {
@@ -183,6 +183,7 @@ class _HomePageState extends State<HomePage1> {
   @override
   void initState() {
     getdata();
+
     super.initState();
   }
 
@@ -333,9 +334,7 @@ class _HomePageState extends State<HomePage1> {
                   );
                 },
               ),
-              SizedBox(
-                height: 40,
-              ),
+              SizedBox(height: 40),
               Divider(
                 color: Colors.blueAccent,
               ),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -5,18 +7,19 @@ import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/payment/ABA/Aba.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../afa/components/contants.dart';
+import '../../../../Option/components/contants.dart';
 import '../UPAY/UPay_qr.dart';
 import '../WING/Wing_qr.dart';
 import '../UPAY/UPAY.dart';
-import '../WING/WING.dart';
 
 class OptionPayment extends StatefulWidget {
   OptionPayment({
     super.key,
     this.set_phone,
+    required this.playerID,
     this.up_point,
     this.id_user,
     this.price,
@@ -33,6 +36,7 @@ class OptionPayment extends StatefulWidget {
   var option;
   var set_id_user;
   final String? id_verbal;
+  final String playerID;
   @override
   State<OptionPayment> createState() => _OptionPaymentState();
 }
@@ -329,6 +333,49 @@ class _OptionPaymentState extends State<OptionPayment> {
     }
   }
 
+  // int vpoint = 0;
+  // int vpointSecond = 0;
+  // Future<void> getCount() async {
+  //   final response = await http.get(
+  //     Uri.parse(
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=209K105F209A',
+  //     ),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   );
+  //   if (response.statusCode == 200) {
+  //     var jsonData = jsonDecode(response.body);
+  //     setState(() {
+  //       if (vpointSecond == 0) {
+  //         vpoint = vpointSecond = int.parse(jsonData['vpoint'].toString());
+  //       } else {
+  //         vpoint = int.parse(jsonData['vpoint'].toString());
+  //       }
+  //     });
+  //   }
+  // }
+
+  int count = 0;
+  // void main() async {
+  //   _timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) async {
+  //     await getCount();
+  //     setState(() {
+  //       count++;
+
+  //       if (vpoint > vpointSecond) {
+  //         Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(builder: (context) => const HomePage1()),
+  //         );
+  //       }
+  //     });
+  //     if (count >= 300) {
+  //       _timer.cancel();
+  //     }
+  //   });
+  // }
+
 // Has verbal_id
   Future call_back_wing_verbal_id(BuildContext context, price) async {
     var headers = {'Content-Type': 'application/json'};
@@ -410,6 +457,7 @@ class _OptionPaymentState extends State<OptionPayment> {
   @override
   void initState() {
     super.initState();
+    // main();
   }
 
   @override
@@ -746,7 +794,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                         // );
                         print(" \n\n\n\n\n\n\n\nvirak \n\n\n\n\n\n\n\n");
                       } else {
-                        print('===> Wing3');
+                        print('===> Wing : $option');
                         await createOrder_Wing(price, option, context);
                       }
                     }
@@ -784,11 +832,13 @@ class _OptionPaymentState extends State<OptionPayment> {
                 InkWell(
                   onTap: () async {
                     if (index == 2) {
+                      // print("Wing QR");
                       // print(
-                      //     'price = $price || account = $account || set_phone = ${widget.set_phone} || option = $option || id_user = ${widget.id_user} || set_id_user = ${getVpoint.set_id_user} ');
+                      //     'price = $price || account = $account || set_phone = ${widget.set_phone} || option = $option || id_user = ${widget.id_user} || set_id_user = ${widget.set_id_user} ');
                       await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => Qr_Wing(
+                            playerID: widget.playerID,
                             price: price,
                             accont: account,
                             phone: widget.set_phone!,
@@ -802,6 +852,7 @@ class _OptionPaymentState extends State<OptionPayment> {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => Qr_UPay(
+                            playerID: widget.playerID,
                             price: price,
                             accont: account,
                             phone: widget.set_phone!,

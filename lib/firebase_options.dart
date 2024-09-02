@@ -43,9 +43,12 @@ class DefaultFirebaseOptions {
     }
   }
 
+  String projectNumber = "390050660817";
+  String webAPIKey = "AIzaSyAEHE_tC8re0HgCUv5G-csJO6uX4z1jYB8";
+  String appID = "1:390050660817:android:de97801037ab42491f20f0";
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
-    appId: '1:266399223712:web:bef4106beacb16a45edec5',
+    apiKey: 'AIzaSyAEHE_tC8re0HgCUv5G-csJO6uX4z1jYB8',
+    appId: "1:390050660817:android:de97801037ab42491f20f0",
     messagingSenderId: '266399223712',
     projectId: 'kfa-crm-map',
     authDomain: 'kfa-crm-map.firebaseapp.com',
@@ -54,30 +57,32 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB7Wk0YVMlr5A8PVWSRF05cIjTVAJTD7nE',
-    appId: '1:266399223712:android:89fde54bd8e4d1875edec5',
+    apiKey: 'AIzaSyAEHE_tC8re0HgCUv5G-csJO6uX4z1jYB8',
+    appId: '1:390050660817:android:de97801037ab42491f20f0',
     messagingSenderId: '266399223712',
     projectId: 'kfa-crm-map',
     storageBucket: 'kfa-crm-map.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBL31Yx6bV4ASAxb_28pM_4iugKYrHymIA',
-    appId: '1:266399223712:ios:d497f7f65ace443c5edec5',
+    apiKey: 'AIzaSyAEHE_tC8re0HgCUv5G-csJO6uX4z1jYB8',
+    appId: '1:390050660817:android:de97801037ab42491f20f0',
     messagingSenderId: '266399223712',
     projectId: 'kfa-crm-map',
     storageBucket: 'kfa-crm-map.appspot.com',
-    androidClientId: '266399223712-2td4r2gouru0d6shvvgruv6rnp928umi.apps.googleusercontent.com',
+    androidClientId:
+        '266399223712-2td4r2gouru0d6shvvgruv6rnp928umi.apps.googleusercontent.com',
     iosBundleId: 'com.oneclickonedollars.itckfa',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBL31Yx6bV4ASAxb_28pM_4iugKYrHymIA',
+    apiKey: 'AIzaSyAEHE_tC8re0HgCUv5G-csJO6uX4z1jYB8',
     appId: '1:266399223712:ios:b1cb555fc6ae20f45edec5',
     messagingSenderId: '266399223712',
     projectId: 'kfa-crm-map',
     storageBucket: 'kfa-crm-map.appspot.com',
-    androidClientId: '266399223712-2td4r2gouru0d6shvvgruv6rnp928umi.apps.googleusercontent.com',
+    androidClientId:
+        '266399223712-2td4r2gouru0d6shvvgruv6rnp928umi.apps.googleusercontent.com',
     iosBundleId: 'no',
   );
 }

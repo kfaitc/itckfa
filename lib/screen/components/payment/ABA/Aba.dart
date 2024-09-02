@@ -123,7 +123,8 @@ class _ABAState extends State<ABA> {
       "amount": widget.price,
       "payment_option": "abapay_khqr_deeplink",
       "return_url":
-          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/$thierPlan?amount=${widget.price}&orderId=${widget.tran_id}"
+          // "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/${widget.price}/$thierPlan?amount=${widget.price}&orderId=${widget.tran_id}"
+          "https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6467/${widget.id_set_use}/1.00/$thierPlan?amount=1.00&orderId=${widget.tran_id}"
     });
     request.headers.addAll(headers);
 

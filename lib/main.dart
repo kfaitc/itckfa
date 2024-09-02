@@ -2,105 +2,48 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/size/gf_size.dart';
 import 'package:getwidget/types/gf_button_type.dart';
-import 'package:itckfa/afa/screens/Auth/login.dart';
-import 'package:itckfa/afa/screens/AutoVerbal/search/Edit.dart';
-import 'package:itckfa/firebase_options.dart';
+import 'package:itckfa/Option/screens/AutoVerbal/search/Edit.dart';
 import 'package:itckfa/screen/Home/Home.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
-
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uni_links/uni_links.dart';
-
-// @pragma('vm:entry-point')
-// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   // If you're going to use other Firebase services in the background, such as Firestore,
-//   // make sure you call `initializeApp` before using other Firebase services.
-//   await Firebase.initializeApp();
-
-//   print("Handling a background message: ${message.messageId}");
-// }
+import 'Option/components/slideUp.dart';
+import 'Option/screens/Auth/login.dart';
 
 void main() async {
   // if (Platform.isIOS) {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+          // options: DefaultFirebaseOptions.currentPlatform,
+          )
+      .then((value) => debugPrint('==> Connection OK'));
+  WidgetsFlutterBinding.ensureInitialized();
   // }
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  SystemChrome.setPreferredOrientations(
-    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
-  );
-  // final ImagePickerPlatform imagePickerImplementation =
-  //     ImagePickerPlatform.instance;
-  // if (imagePickerImplementation is ImagePickerAndroid) {
-  //   imagePickerImplementation.useAndroidPhotoPicker = true;
-  // }
-  WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  // SystemChrome.setPreferredOrientations(
+  //   [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+  // );
 
-  // Check if you received the link via `getInitialLink` first
-  // final PendingDynamicLinkData? initialLink =
-  //     await FirebaseDynamicLinks.instance.getInitialLink();
 
-  // if (initialLink != null) {
-  //   final Uri deepLink = initialLink.link;
-  //   // Example of using the dynamic link to push the user to a different screen
-  // }
 
-  //======|One signal |======
-  //Remove this method to stop OneSignal Debugging
-  // OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  // String? playerId;
+  // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  // OneSignal.shared.getDeviceState().then((deviceState) {
+  //   if (deviceState != null) {
+  //     playerId = deviceState.userId;
+  //     // print("OneSignal Player ID: $playerId");
+  //   }
+  // });
 
-  // OneSignal.initialize("d3025f03-32f5-444a-8100-7f7637a7f631");
-// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-  // OneSignal.Notifications.requestPermission(true);
-  //======|One signal |======
-  // handleIncomingLinks();
-// virak test
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-
-  // OneSignal.shared.disablePush(false);
-  // bool userProvidedPrivacyConsent =
-  //     await OneSignal.shared.userProvidedPrivacyConsent();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
-
-// Future<void> handleIncomingLinks() async {
-//   // Get the initial link when the app is launched
-//   String? initialLink = await getInitialLink();
-//   if (initialLink != null) {
-//     // Handle the initial link, e.g., parse and navigate
-//     print('\n\nInitial link received: $initialLink\n\n');
-//     var data = initialLink.toString().split('/');
-//     var value = data[1].toString();
-//     if (value.toString() == "app") {
-//       HomePage1();
-//     }
-//   }
-
-//   // Listen for incoming links
-//   // ignore: deprecated_member_use
-//   getLinksStream().listen((String? link) {
-//     if (link != null) {
-//       // Handle the link, e.g., parse and navigate
-//       print('\n\nLink received: $link\n\n');
-//       var data = link.toString().split('/');
-//       var value = data[1].toString();
-//       if (value.toString() == "app") {
-//         HomePage1();
-//       }
-//     }
-//   });
-// }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -133,16 +76,12 @@ class _MyAppState extends State<MyApp> {
     // OneSignal.Debug.setAlertLevel(OSLogLevel.none);
   }
 
-  // String link = 'https://kfaapp.page.link/service';
-
-  // final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
-  // This widget is the root of your application.
-
   late StreamSubscription streamSubscription;
 
   @override
   void initState() {
     // incomingLinkHandler();
+
     super.initState();
     _getInstallPermission();
   }
@@ -226,7 +165,16 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       // home: ThankYouPage(title: "aba"),
       routes: {
+        // '/': (context) => map_cross_verbal(
+        //       get_province: (value) {},
+        //       get_district: (value) {},
+        //       get_commune: (value) {},
+        //       get_log: (value) {},
+        //       get_lat: (value) {},
+        //       asking_price: (value) {},
+        //     ),
         '/': (context) => const Login(),
+        // '/': (p0) => ListController_Approvel(),
         "/aba": (context) => const ThankYouPage(title: "aba"),
         "/wing": (context) => const ThankYouPage(title: "wing"),
         '/Edit': (context) => const ThankYouPage(title: "varbal"),

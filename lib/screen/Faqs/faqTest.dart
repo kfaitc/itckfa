@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../afa/components/contants.dart';
+import '../../Option/components/contants.dart';
 
 class Faqs2 extends StatefulWidget {
   const Faqs2({Key? key}) : super(key: key);
@@ -25,23 +25,24 @@ class _Faqs2State extends State<Faqs2> {
       },
       children: _data.map<ExpansionPanel>((Item item) {
         return ExpansionPanel(
-            headerBuilder: (BuildContext context, bool isExpanded) {
-              return ListTile(
-                title: Text(item.headerValue),
-              );
+          headerBuilder: (BuildContext context, bool isExpanded) {
+            return ListTile(
+              title: Text(item.headerValue),
+            );
+          },
+          body: ListTile(
+            title: Text(item.expandedValue),
+            subtitle: Text('Useful Answer'),
+            trailing: Icon(Icons.delete),
+            onTap: () {
+              setState(() {
+                //_data.removeWhere((curretItem) => item == curretItem);
+                //_data.add((curretItem) => item == curretItem);
+              });
             },
-            body: ListTile(
-              title: Text(item.expandedValue),
-              subtitle: Text('Useful Answer'),
-              trailing: Icon(Icons.delete),
-              onTap: () {
-                setState(() {
-                  //_data.removeWhere((curretItem) => item == curretItem);
-                  //_data.add((curretItem) => item == curretItem);
-                });
-              },
-            ),
-            isExpanded: item.isExpanded,);
+          ),
+          isExpanded: item.isExpanded,
+        );
       }).toList(),
     );
   }
@@ -102,16 +103,18 @@ class Item {
   late String headerValue;
   late bool isExpanded;
 
-  Item(
-      {required this.expandedValue,
-      required this.headerValue,
-      this.isExpanded = false,});
+  Item({
+    required this.expandedValue,
+    required this.headerValue,
+    this.isExpanded = false,
+  });
 }
 
 List<Item> generateItems(int numberOfItem) {
   return List.generate(numberOfItem, (index) {
     return Item(
-        headerValue: 'Question $index',
-        expandedValue: 'This is question number $index',);
+      headerValue: 'Question $index',
+      expandedValue: 'This is question number $index',
+    );
   });
 }

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/Option/components/contants.dart';
 
 class FormTwin extends StatefulWidget {
   final String Label1;

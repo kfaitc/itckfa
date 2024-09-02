@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_typing_uninitialized_variables, non_constant_identifier_names, camel_case_types, avoid_print, unused_field, prefer_final_fields, prefer_interpolation_to_compose_strings, unnecessary_brace_in_string_interps, equal_keys_in_map, unrelated_type_equality_checks, body_might_complete_normally_nullable, unused_element, await_only_futures, unnecessary_string_interpolations, unnecessary_cast, prefer_const_constructors_in_immutables, avoid_unnecessary_containers, sized_box_for_whitespace, prefer_is_empty, unnecessary_null_comparison, unused_local_variable, unused_catch_clause, depend_on_referenced_packages, use_build_context_synchronously, unused_import
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -8,7 +6,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/shimmer/gf_shimmer.dart';
 import 'package:getwidget/types/gf_button_type.dart';
-import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +16,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:ui' as ui;
-
 import '../../../contants.dart';
-import '../../../afa/components/building.dart';
+import '../../../Option/components/building.dart';
 import '../Getx_api/vetbal_controller.dart';
-
 import '../Map/map_in_add_verbal.dart';
 import '../Model/Autho_verbal.dart';
 

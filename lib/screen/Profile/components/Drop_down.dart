@@ -1,14 +1,13 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 
-import '../../../afa/components/contants.dart';
+import '../../../Option/components/contants.dart';
 
 typedef OnChangeCallback = void Function(dynamic value);
 
 class Dropdown extends StatefulWidget {
   final String gender;
   final OnChangeCallback get_gender;
+
   const Dropdown({Key? key, required this.gender, required this.get_gender})
       : super(key: key);
 
@@ -17,12 +16,20 @@ class Dropdown extends StatefulWidget {
 }
 
 class _DropdownState extends State<Dropdown> {
-  String bankvalue = 'Male';
-  var gender = [
-    'Male',
-    'Female',
-    'Other',
-  ];
+  late String bankvalue;
+  final List<String> gender = ['Male', 'Female', 'Other'];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.gender == " " || widget.gender == "null") {
+      bankvalue = "Other";
+    } else {
+      bankvalue = widget.gender;
+    }
+    // Initialize bankvalue with the passed gender
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -35,26 +42,18 @@ class _DropdownState extends State<Dropdown> {
             widget.get_gender(newValue);
           });
         },
-        // validator: (String? value) {
-        //   if (value?.isEmpty ?? true) {
-        //     return 'Please select bank';
-        //   }
-        //   return null;
-        // },
-        value: widget.gender,
-        items: gender
-            .map<DropdownMenuItem<String>>(
-              (String value) => DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              ),
-            )
-            .toList(),
-        icon: Icon(
+        value: bankvalue, // Use bankvalue for the value
+        items: gender.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        icon: const Icon(
           Icons.arrow_drop_down,
           color: kwhite_new,
         ),
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           fillColor: Colors.white,
           filled: true,
           labelText: 'Gender',

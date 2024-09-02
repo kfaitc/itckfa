@@ -10,11 +10,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/Memory_local/database.dart';
-import 'package:itckfa/afa/components/contants.dart';
-import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
-import 'package:itckfa/afa/screens/AutoVerbal/List.dart';
-import 'package:itckfa/afa/screens/AutoVerbal/search/protect.dart';
-import 'package:itckfa/afa/screens/walletscreen.dart';
+import 'package:itckfa/Option/components/contants.dart';
+import 'package:itckfa/Option/screens/AutoVerbal/Verbal/Add.dart';
+import 'package:itckfa/Option/screens/AutoVerbal/List.dart';
+import 'package:itckfa/Option/screens/AutoVerbal/search/protect.dart';
+import 'package:itckfa/Option/screens/walletscreen.dart';
 import 'package:itckfa/screen/Home/Customs/Model-responsive.dart';
 import 'package:itckfa/screen/Promotion/membership_real.dart';
 import 'package:itckfa/screen/Promotion/partnerList_real.dart';
@@ -26,10 +26,10 @@ import 'package:itckfa/screen/Home/Customs/titleBar.dart';
 import 'package:itckfa/screen/Property/Home_Screen_property.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_up.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import '../../Option/screens/AutoVerbal/Verbal/add_PropertyPrce.dart';
+import '../../Option/screens/AutoVerbal/Verbal/menu_add.dart';
 import '../../models/autoVerbal.dart';
 
 // import 'Customs/googlemapkfa/detailmap.dart';
@@ -1327,19 +1327,44 @@ class _BodyState extends State<Body> {
                                                 ),
                                                 Expanded(
                                                   flex: 1,
-                                                  child: Text(
-                                                    (number_of_vpoint != null)
-                                                        ? "$number_of_vpoint V Point"
-                                                        : "0 V Point",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white,
-                                                      fontSize: MediaQuery.of(
-                                                            context,
-                                                          ).textScaleFactor *
-                                                          10,
-                                                    ),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        (number_of_vpoint !=
+                                                                null)
+                                                            ? "$number_of_vpoint"
+                                                            : "0",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.red,
+                                                          fontSize: MediaQuery
+                                                                  .of(
+                                                                context,
+                                                              ).textScaleFactor *
+                                                              14,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "  VPoint",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                          fontSize: MediaQuery
+                                                                  .of(
+                                                                context,
+                                                              ).textScaleFactor *
+                                                              11,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Image.asset(
+                                                        "assets/images/v.png",
+                                                        height: 25,
+                                                        width: 25,
+                                                      )
+                                                    ],
                                                   ),
                                                 ),
                                               ],

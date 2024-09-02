@@ -8,28 +8,31 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/Option/components/contants.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/OptionBank.dart';
 import 'package:crypto/crypto.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'Transtoin_history.dart';
 
 class TopUp extends StatefulWidget {
-  const TopUp(
-      {super.key,
-      this.set_phone,
-      this.up_point,
-      this.id_user,
-      this.set_id_user,
-      this.set_email,
-      this.id_verbal,});
+  const TopUp({
+    super.key,
+    this.set_phone,
+    this.up_point,
+    this.id_user,
+    this.set_id_user,
+    this.set_email,
+    this.id_verbal,
+  });
   final String? set_phone;
   final String? up_point;
   final String? id_user;
   final String? set_id_user;
   final String? set_email;
   final String? id_verbal;
+
   @override
   State<TopUp> createState() => _TopUpState();
 }
@@ -42,7 +45,8 @@ class _TopUpState extends State<TopUp> {
   Future<void> get_count() async {
     final response = await http.get(
       Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=${widget.set_id_user}',),
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=${widget.set_id_user}',
+      ),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -62,8 +66,21 @@ class _TopUpState extends State<TopUp> {
   // C
   @override
   void initState() {
+    mainPlayerID();
     super.initState();
     check();
+  }
+
+  String playerId = '';
+  void mainPlayerID() {
+    OneSignal.shared.getDeviceState().then((deviceState) {
+      if (deviceState != null) {
+        setState(() {
+          playerId = deviceState.userId!;
+        });
+        // print("OneSignal Player ID: $playerId");
+      }
+    });
   }
 
   @override
@@ -119,15 +136,17 @@ class _TopUpState extends State<TopUp> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.178,
                 decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      tileMode: TileMode.mirror,
-                      colors: [kwhite_new, kwhite_new, Colors.blue],
-                    ),
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),),),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    tileMode: TileMode.mirror,
+                    colors: [kwhite_new, kwhite_new, Colors.blue],
+                  ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -141,9 +160,11 @@ class _TopUpState extends State<TopUp> {
                             height: 30,
                             width: 30,
                             decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage("assets/images/v.png"),
-                                    fit: BoxFit.cover,),),
+                              image: DecorationImage(
+                                image: AssetImage("assets/images/v.png"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                           const SizedBox(width: 10),
                           Text(
@@ -184,18 +205,23 @@ class _TopUpState extends State<TopUp> {
                             padding: const EdgeInsets.only(right: 15),
                             child: GFButton(
                               onPressed: () async {
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return Transtoin_History(
-                                      id: widget.set_id_user,
-                                    );
-                                  },
-                                ),);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return Transtoin_History(
+                                        id: widget.set_id_user,
+                                      );
+                                    },
+                                  ),
+                                );
                               },
                               text: "Transaction history",
                               textColor: Colors.white,
                               textStyle: const TextStyle(
-                                  fontSize: 10, color: Colors.white,),
+                                fontSize: 10,
+                                color: Colors.white,
+                              ),
                               type: GFButtonType.outline,
                               shape: GFButtonShape.pills,
                             ),
@@ -238,16 +264,18 @@ class _TopUpState extends State<TopUp> {
                                 Text(
                                   "Tariff Plans for ",
                                   style: TextStyle(
-                                      fontSize: 16, color: Colors.white,),
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 Text(
                                   "ONE DAY",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue,
-                                      decorationStyle:
-                                          TextDecorationStyle.dashed,
-                                      decoration: TextDecoration.underline,),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                    decorationStyle: TextDecorationStyle.dashed,
+                                    decoration: TextDecoration.underline,
+                                  ),
                                 )
                               ],
                             ),
@@ -258,19 +286,21 @@ class _TopUpState extends State<TopUp> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => OptionPayment(
-                                            id_user: widget.id_user,
-                                            set_email: widget.set_email ?? "",
-                                            set_phone: widget.set_phone,
-                                            option: '1  V / Day',
-                                            price: '1.00',
-                                            up_point: widget.up_point,
-                                            set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal,
-                                          ),
-                                        ),);
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OptionPayment(
+                                          playerID: playerId,
+                                          id_user: widget.id_user,
+                                          set_email: widget.set_email ?? "",
+                                          set_phone: widget.set_phone,
+                                          option: '1  V / Day',
+                                          price: '0.01',
+                                          up_point: widget.up_point,
+                                          set_id_user: widget.set_id_user,
+                                          id_verbal: widget.id_verbal,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -283,9 +313,10 @@ class _TopUpState extends State<TopUp> {
                                       borderRadius: BorderRadius.circular(80),
                                       boxShadow: const [
                                         BoxShadow(
-                                            color: Colors.grey,
-                                            blurRadius: 7,
-                                            offset: Offset(1.0, 7.0),)
+                                          color: Colors.grey,
+                                          blurRadius: 7,
+                                          offset: Offset(1.0, 7.0),
+                                        )
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -301,10 +332,12 @@ class _TopUpState extends State<TopUp> {
                                               MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
-                                                width: 15,
-                                                height: 15,
-                                                child: Image.asset(
-                                                    "assets/images/v.png",),),
+                                              width: 15,
+                                              height: 15,
+                                              child: Image.asset(
+                                                "assets/images/v.png",
+                                              ),
+                                            ),
                                             Text(
                                               "1",
                                               style: TextStyle(
@@ -317,13 +350,18 @@ class _TopUpState extends State<TopUp> {
                                         const Text(
                                           "\$1.0",
                                           style: TextStyle(
-                                              fontSize: 17,
-                                              color: Color.fromARGB(
-                                                  255, 242, 11, 134,),
-                                              decorationStyle:
-                                                  TextDecorationStyle.solid,
-                                              decoration:
-                                                  TextDecoration.underline,),
+                                            fontSize: 17,
+                                            color: Color.fromARGB(
+                                              255,
+                                              242,
+                                              11,
+                                              134,
+                                            ),
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
                                         )
                                       ],
                                     ),
@@ -332,19 +370,21 @@ class _TopUpState extends State<TopUp> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => OptionPayment(
-                                            id_user: widget.id_user,
-                                            set_email: widget.set_email ?? "",
-                                            set_phone: widget.set_phone,
-                                            option: '3  V / Day',
-                                            price: '2.50',
-                                            up_point: widget.up_point,
-                                            set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal,
-                                          ),
-                                        ),);
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OptionPayment(
+                                          playerID: playerId,
+                                          id_user: widget.id_user,
+                                          set_email: widget.set_email ?? "",
+                                          set_phone: widget.set_phone,
+                                          option: '3  V / Day',
+                                          price: '2.50',
+                                          up_point: widget.up_point,
+                                          set_id_user: widget.set_id_user,
+                                          id_verbal: widget.id_verbal,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -357,9 +397,10 @@ class _TopUpState extends State<TopUp> {
                                       borderRadius: BorderRadius.circular(80),
                                       boxShadow: const [
                                         BoxShadow(
-                                            color: Colors.grey,
-                                            blurRadius: 7,
-                                            offset: Offset(1.0, 7.0),)
+                                          color: Colors.grey,
+                                          blurRadius: 7,
+                                          offset: Offset(1.0, 7.0),
+                                        )
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -375,10 +416,12 @@ class _TopUpState extends State<TopUp> {
                                               MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
-                                                width: 15,
-                                                height: 15,
-                                                child: Image.asset(
-                                                    "assets/images/v.png",),),
+                                              width: 15,
+                                              height: 15,
+                                              child: Image.asset(
+                                                "assets/images/v.png",
+                                              ),
+                                            ),
                                             Text(
                                               "3",
                                               style: TextStyle(
@@ -391,13 +434,18 @@ class _TopUpState extends State<TopUp> {
                                         const Text(
                                           "\$2.5",
                                           style: TextStyle(
-                                              fontSize: 17,
-                                              color: Color.fromARGB(
-                                                  255, 242, 11, 134,),
-                                              decorationStyle:
-                                                  TextDecorationStyle.solid,
-                                              decoration:
-                                                  TextDecoration.underline,),
+                                            fontSize: 17,
+                                            color: Color.fromARGB(
+                                              255,
+                                              242,
+                                              11,
+                                              134,
+                                            ),
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
                                         )
                                       ],
                                     ),
@@ -406,19 +454,21 @@ class _TopUpState extends State<TopUp> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => OptionPayment(
-                                            id_user: widget.id_user,
-                                            set_email: widget.set_email ?? "",
-                                            set_phone: widget.set_phone,
-                                            option: '5  V / Day',
-                                            price: '3.00',
-                                            up_point: widget.up_point,
-                                            set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal,
-                                          ),
-                                        ),);
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OptionPayment(
+                                          playerID: playerId,
+                                          id_user: widget.id_user,
+                                          set_email: widget.set_email ?? "",
+                                          set_phone: widget.set_phone,
+                                          option: '5  V / Day',
+                                          price: '3.00',
+                                          up_point: widget.up_point,
+                                          set_id_user: widget.set_id_user,
+                                          id_verbal: widget.id_verbal,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -431,9 +481,10 @@ class _TopUpState extends State<TopUp> {
                                       borderRadius: BorderRadius.circular(80),
                                       boxShadow: const [
                                         BoxShadow(
-                                            color: Colors.grey,
-                                            blurRadius: 7,
-                                            offset: Offset(1.0, 7.0),)
+                                          color: Colors.grey,
+                                          blurRadius: 7,
+                                          offset: Offset(1.0, 7.0),
+                                        )
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -449,10 +500,12 @@ class _TopUpState extends State<TopUp> {
                                               MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
-                                                width: 15,
-                                                height: 15,
-                                                child: Image.asset(
-                                                    "assets/images/v.png",),),
+                                              width: 15,
+                                              height: 15,
+                                              child: Image.asset(
+                                                "assets/images/v.png",
+                                              ),
+                                            ),
                                             Text(
                                               "5",
                                               style: TextStyle(
@@ -465,13 +518,18 @@ class _TopUpState extends State<TopUp> {
                                         const Text(
                                           "\$3.0",
                                           style: TextStyle(
-                                              fontSize: 17,
-                                              color: Color.fromARGB(
-                                                  255, 242, 11, 134,),
-                                              decorationStyle:
-                                                  TextDecorationStyle.solid,
-                                              decoration:
-                                                  TextDecoration.underline,),
+                                            fontSize: 17,
+                                            color: Color.fromARGB(
+                                              255,
+                                              242,
+                                              11,
+                                              134,
+                                            ),
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
                                         )
                                       ],
                                     ),
@@ -486,19 +544,21 @@ class _TopUpState extends State<TopUp> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => OptionPayment(
-                                            id_user: widget.id_user,
-                                            set_email: widget.set_email ?? "",
-                                            set_phone: widget.set_phone,
-                                            option: '6  V / Day',
-                                            price: '5.00',
-                                            up_point: widget.up_point,
-                                            set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal,
-                                          ),
-                                        ),);
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OptionPayment(
+                                          playerID: playerId,
+                                          id_user: widget.id_user,
+                                          set_email: widget.set_email ?? "",
+                                          set_phone: widget.set_phone,
+                                          option: '6  V / Day',
+                                          price: '5.00',
+                                          up_point: widget.up_point,
+                                          set_id_user: widget.set_id_user,
+                                          id_verbal: widget.id_verbal,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -511,9 +571,10 @@ class _TopUpState extends State<TopUp> {
                                       borderRadius: BorderRadius.circular(80),
                                       boxShadow: const [
                                         BoxShadow(
-                                            color: Colors.grey,
-                                            blurRadius: 7,
-                                            offset: Offset(1.0, 7.0),)
+                                          color: Colors.grey,
+                                          blurRadius: 7,
+                                          offset: Offset(1.0, 7.0),
+                                        )
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -529,10 +590,12 @@ class _TopUpState extends State<TopUp> {
                                               MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
-                                                width: 15,
-                                                height: 15,
-                                                child: Image.asset(
-                                                    "assets/images/v.png",),),
+                                              width: 15,
+                                              height: 15,
+                                              child: Image.asset(
+                                                "assets/images/v.png",
+                                              ),
+                                            ),
                                             Text(
                                               "6",
                                               style: TextStyle(
@@ -545,13 +608,18 @@ class _TopUpState extends State<TopUp> {
                                         const Text(
                                           "\$5.0",
                                           style: TextStyle(
-                                              fontSize: 17,
-                                              color: Color.fromARGB(
-                                                  255, 242, 11, 134,),
-                                              decorationStyle:
-                                                  TextDecorationStyle.solid,
-                                              decoration:
-                                                  TextDecoration.underline,),
+                                            fontSize: 17,
+                                            color: Color.fromARGB(
+                                              255,
+                                              242,
+                                              11,
+                                              134,
+                                            ),
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
                                         )
                                       ],
                                     ),
@@ -560,19 +628,21 @@ class _TopUpState extends State<TopUp> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => OptionPayment(
-                                            id_user: widget.id_user,
-                                            set_email: widget.set_email ?? "",
-                                            set_phone: widget.set_phone,
-                                            option: '8  V / Day',
-                                            price: '6.50',
-                                            up_point: widget.up_point,
-                                            set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal,
-                                          ),
-                                        ),);
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OptionPayment(
+                                          playerID: playerId,
+                                          id_user: widget.id_user,
+                                          set_email: widget.set_email ?? "",
+                                          set_phone: widget.set_phone,
+                                          option: '8  V / Day',
+                                          price: '6.50',
+                                          up_point: widget.up_point,
+                                          set_id_user: widget.set_id_user,
+                                          id_verbal: widget.id_verbal,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -585,9 +655,10 @@ class _TopUpState extends State<TopUp> {
                                       borderRadius: BorderRadius.circular(80),
                                       boxShadow: const [
                                         BoxShadow(
-                                            color: Colors.grey,
-                                            blurRadius: 7,
-                                            offset: Offset(1.0, 7.0),)
+                                          color: Colors.grey,
+                                          blurRadius: 7,
+                                          offset: Offset(1.0, 7.0),
+                                        )
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -603,10 +674,12 @@ class _TopUpState extends State<TopUp> {
                                               MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
-                                                width: 15,
-                                                height: 15,
-                                                child: Image.asset(
-                                                    "assets/images/v.png",),),
+                                              width: 15,
+                                              height: 15,
+                                              child: Image.asset(
+                                                "assets/images/v.png",
+                                              ),
+                                            ),
                                             Text(
                                               "8",
                                               style: TextStyle(
@@ -619,13 +692,18 @@ class _TopUpState extends State<TopUp> {
                                         const Text(
                                           "\$6.5",
                                           style: TextStyle(
-                                              fontSize: 17,
-                                              color: Color.fromARGB(
-                                                  255, 242, 11, 134,),
-                                              decorationStyle:
-                                                  TextDecorationStyle.solid,
-                                              decoration:
-                                                  TextDecoration.underline,),
+                                            fontSize: 17,
+                                            color: Color.fromARGB(
+                                              255,
+                                              242,
+                                              11,
+                                              134,
+                                            ),
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
                                         )
                                       ],
                                     ),
@@ -634,19 +712,21 @@ class _TopUpState extends State<TopUp> {
                                 InkWell(
                                   onTap: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => OptionPayment(
-                                            id_user: widget.id_user,
-                                            set_email: widget.set_email ?? "",
-                                            set_phone: widget.set_phone,
-                                            option: '10  V / Day',
-                                            price: '8.00',
-                                            up_point: widget.up_point,
-                                            set_id_user: widget.set_id_user,
-                                            id_verbal: widget.id_verbal,
-                                          ),
-                                        ),);
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OptionPayment(
+                                          playerID: playerId,
+                                          id_user: widget.id_user,
+                                          set_email: widget.set_email ?? "",
+                                          set_phone: widget.set_phone,
+                                          option: '10  V / Day',
+                                          price: '8.00',
+                                          up_point: widget.up_point,
+                                          set_id_user: widget.set_id_user,
+                                          id_verbal: widget.id_verbal,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(6),
@@ -659,9 +739,10 @@ class _TopUpState extends State<TopUp> {
                                       borderRadius: BorderRadius.circular(80),
                                       boxShadow: const [
                                         BoxShadow(
-                                            color: Colors.grey,
-                                            blurRadius: 7,
-                                            offset: Offset(1.0, 7.0),)
+                                          color: Colors.grey,
+                                          blurRadius: 7,
+                                          offset: Offset(1.0, 7.0),
+                                        )
                                       ],
                                       border: Border.all(
                                         width: 1,
@@ -677,10 +758,12 @@ class _TopUpState extends State<TopUp> {
                                               MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
-                                                width: 15,
-                                                height: 15,
-                                                child: Image.asset(
-                                                    "assets/images/v.png",),),
+                                              width: 15,
+                                              height: 15,
+                                              child: Image.asset(
+                                                "assets/images/v.png",
+                                              ),
+                                            ),
                                             Text(
                                               "10",
                                               style: TextStyle(
@@ -693,13 +776,18 @@ class _TopUpState extends State<TopUp> {
                                         const Text(
                                           "\$8.0",
                                           style: TextStyle(
-                                              fontSize: 17,
-                                              color: Color.fromARGB(
-                                                  255, 242, 11, 134,),
-                                              decorationStyle:
-                                                  TextDecorationStyle.solid,
-                                              decoration:
-                                                  TextDecoration.underline,),
+                                            fontSize: 17,
+                                            color: Color.fromARGB(
+                                              255,
+                                              242,
+                                              11,
+                                              134,
+                                            ),
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
                                         )
                                       ],
                                     ),
@@ -747,41 +835,48 @@ class _TopUpState extends State<TopUp> {
                                 Text(
                                   "Tariff Plans for",
                                   style: TextStyle(
-                                      fontSize: 16, color: Colors.white,),
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 SizedBox(
-                                    height: 25,
-                                    child: Row(
-                                      children: [
-                                        Text("Week&Month",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.blue,
-                                                decorationStyle:
-                                                    TextDecorationStyle.dashed,
-                                                decoration:
-                                                    TextDecoration.underline,),),
-                                      ],
-                                    ),),
+                                  height: 25,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Week&Month",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                          decorationStyle:
+                                              TextDecorationStyle.dashed,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 SizedBox(width: 0),
                               ],
                             ),
                             InkWell(
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => OptionPayment(
-                                        id_user: widget.id_user,
-                                        set_email: widget.set_email ?? "",
-                                        set_phone: widget.set_phone,
-                                        option: '5  V / Week',
-                                        price: '10.00',
-                                        up_point: widget.up_point,
-                                        set_id_user: widget.set_id_user,
-                                        id_verbal: widget.id_verbal,
-                                      ),
-                                    ),);
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OptionPayment(
+                                      playerID: playerId,
+                                      id_user: widget.id_user,
+                                      set_email: widget.set_email ?? "",
+                                      set_phone: widget.set_phone,
+                                      option: '5  V / Week',
+                                      price: '10.00',
+                                      up_point: widget.up_point,
+                                      set_id_user: widget.set_id_user,
+                                      id_verbal: widget.id_verbal,
+                                    ),
+                                  ),
+                                );
                               },
                               child: const Card(
                                 color: Colors.white,
@@ -794,34 +889,38 @@ class _TopUpState extends State<TopUp> {
                                       Text(
                                         "Use ",
                                         style: TextStyle(
-                                            fontSize: 13, color: Colors.black,),
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                       Text(
                                         "5 VERBAL CKECK",
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue,
-                                            fontSize: 13,
-                                            decorationStyle:
-                                                TextDecorationStyle.dotted,
-                                            decoration:
-                                                TextDecoration.underline,),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                          fontSize: 13,
+                                          decorationStyle:
+                                              TextDecorationStyle.dotted,
+                                          decoration: TextDecoration.underline,
+                                        ),
                                       ),
                                       Text(
                                         " for ",
                                         style: TextStyle(
-                                            fontSize: 13, color: Colors.black,),
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                       Text(
                                         "1 week",
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.red,
-                                            fontSize: 13,
-                                            decorationStyle:
-                                                TextDecorationStyle.dashed,
-                                            decoration:
-                                                TextDecoration.underline,),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red,
+                                          fontSize: 13,
+                                          decorationStyle:
+                                              TextDecorationStyle.dashed,
+                                          decoration: TextDecoration.underline,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -832,19 +931,21 @@ class _TopUpState extends State<TopUp> {
                             InkWell(
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => OptionPayment(
-                                        id_user: widget.id_user,
-                                        set_email: widget.set_email ?? "",
-                                        set_phone: widget.set_phone,
-                                        option: '40  V / Mount',
-                                        price: '30.00',
-                                        up_point: widget.up_point,
-                                        set_id_user: widget.set_id_user,
-                                        id_verbal: widget.id_verbal,
-                                      ),
-                                    ),);
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OptionPayment(
+                                      playerID: playerId,
+                                      id_user: widget.id_user,
+                                      set_email: widget.set_email ?? "",
+                                      set_phone: widget.set_phone,
+                                      option: '40  V / Mount',
+                                      price: '30.00',
+                                      up_point: widget.up_point,
+                                      set_id_user: widget.set_id_user,
+                                      id_verbal: widget.id_verbal,
+                                    ),
+                                  ),
+                                );
                               },
                               child: const Card(
                                 color: Colors.white,
@@ -857,34 +958,38 @@ class _TopUpState extends State<TopUp> {
                                       Text(
                                         "Use ",
                                         style: TextStyle(
-                                            fontSize: 13, color: Colors.black,),
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                       Text(
                                         "40 VERBAL CKECK",
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.blue,
-                                            fontSize: 13,
-                                            decorationStyle:
-                                                TextDecorationStyle.dotted,
-                                            decoration:
-                                                TextDecoration.underline,),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                          fontSize: 13,
+                                          decorationStyle:
+                                              TextDecorationStyle.dotted,
+                                          decoration: TextDecoration.underline,
+                                        ),
                                       ),
                                       Text(
                                         " for ",
                                         style: TextStyle(
-                                            fontSize: 13, color: Colors.black,),
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                       Text(
                                         "1 month",
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.red,
-                                            fontSize: 13,
-                                            decorationStyle:
-                                                TextDecorationStyle.dashed,
-                                            decoration:
-                                                TextDecoration.underline,),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red,
+                                          fontSize: 13,
+                                          decorationStyle:
+                                              TextDecorationStyle.dashed,
+                                          decoration: TextDecoration.underline,
+                                        ),
                                       ),
                                     ],
                                   ),

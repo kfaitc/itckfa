@@ -10,7 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:itckfa/afa/components/ToFromDate_ForSale.dart';
+import 'package:itckfa/Option/components/ToFromDate_ForSale.dart';
 
 import '../Detail_Screen/Detail_all_list_Screen.dart';
 
@@ -69,7 +69,8 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-              'Location services are disabled. Please enable the services',),
+            'Location services are disabled. Please enable the services',
+          ),
         ),
       );
       return false;
@@ -79,14 +80,19 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')),);
+          const SnackBar(content: Text('Location permissions are denied')),
+        );
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.',),),);
+            'Location permissions are permanently denied, we cannot request permissions.',
+          ),
+        ),
+      );
       return false;
     }
     return true;
@@ -97,15 +103,18 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,);
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     setState(() {
-      mapController!.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(position.latitude, position.longitude),
-          zoom: 16.0,
+      mapController!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 16.0,
+          ),
         ),
-      ),);
+      );
       lat1 = position.latitude;
       log1 = position.longitude;
       latLng = LatLng(lat1!, log1!);
@@ -206,28 +215,38 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
   }
 
   var formatter = NumberFormat("##,###,###,##0.00", "en_US");
-  Future<void> _addMarker_by_datavelbal(LatLng latLng, String price, String bed,
-      String Type, String bath, String vebal, List list_winget,) async {
+  Future<void> _addMarker_by_datavelbal(
+    LatLng latLng,
+    String price,
+    String bed,
+    String Type,
+    String bath,
+    String vebal,
+    List list_winget,
+  ) async {
     Marker newMarker = Marker(
       draggable: true,
       markerId: MarkerId(latLng.toString()),
       position: latLng,
       icon: await BitmapDescriptor.fromAssetImage(
-          ImageConfiguration(size: Size(50, 50)), 'assets/images/pin.png',),
+        ImageConfiguration(size: Size(50, 50)),
+        'assets/images/pin.png',
+      ),
       infoWindow: InfoWindow(
-          snippet: "${Type} More ...",
-          onTap: () {
-            // print('Ok');
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => Detail_property_sale_all(
-                  list_get_sale: list_winget,
-                  verbal_ID: vebal,
-                ),
+        snippet: "${Type} More ...",
+        onTap: () {
+          // print('Ok');
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => Detail_property_sale_all(
+                list_get_sale: list_winget,
+                verbal_ID: vebal,
               ),
-            );
-          },
-          title: 'Price:${price}\$ ~ bath:$bath ~ bed:$bed',),
+            ),
+          );
+        },
+        title: 'Price:${price}\$ ~ bath:$bath ~ bed:$bed',
+      ),
     );
     setState(() {
       _marker.add(newMarker);
@@ -240,8 +259,11 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
   List data_of_price = [];
   Future<void> Get_data_verbal_sale() async {
     if (choose_2 == 'For Sale' && choose_2 != 'For Rent') {
-      final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property_sale_map/$lat_verbal/$log_verbal?start=$start&end=$end',),);
+      final response = await http.get(
+        Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property_sale_map/$lat_verbal/$log_verbal?start=$start&end=$end',
+        ),
+      );
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body)['data'];
         setState(() {
@@ -251,21 +273,25 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
           // print('data = ${data_of_verbal}');
           for (int i = 0; i < data_of_verbal.length; i++) {
             _addMarker_by_datavelbal(
-                LatLng(data_of_verbal[i]['lat'], data_of_verbal[i]['log']),
-                data_of_verbal[i]['price'].toString(),
-                data_of_verbal[i]['land'].toString(),
-                data_of_verbal[i]['hometype'].toString(),
-                data_of_verbal[i]['bath'].toString(),
-                data_of_verbal[i]['id_ptys'].toString(),
-                data_of_verbal,);
+              LatLng(data_of_verbal[i]['lat'], data_of_verbal[i]['log']),
+              data_of_verbal[i]['price'].toString(),
+              data_of_verbal[i]['land'].toString(),
+              data_of_verbal[i]['hometype'].toString(),
+              data_of_verbal[i]['bath'].toString(),
+              data_of_verbal[i]['id_ptys'].toString(),
+              data_of_verbal,
+            );
           }
         });
       }
     } else {
       // print('For Rent');
 
-      final response = await http.get(Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property_sale_map_rent/$lat_verbal/$log_verbal?start=$start&end=$end',),);
+      final response = await http.get(
+        Uri.parse(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property_sale_map_rent/$lat_verbal/$log_verbal?start=$start&end=$end',
+        ),
+      );
 
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body)['data'];
@@ -275,13 +301,14 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
           // print('latlog Rent = ${data_of_verbal.toString()}');
           for (int i = 0; i < data_of_verbal.length; i++) {
             _addMarker_by_datavelbal(
-                LatLng(data_of_verbal[i]['lat'], data_of_verbal[i]['log']),
-                data_of_verbal[i]['price'].toString(),
-                data_of_verbal[i]['land'].toString(),
-                data_of_verbal[i]['hometype'].toString(),
-                data_of_verbal[i]['bath'].toString(),
-                data_of_verbal[i]['id_ptys'].toString(),
-                data_of_verbal,);
+              LatLng(data_of_verbal[i]['lat'], data_of_verbal[i]['log']),
+              data_of_verbal[i]['price'].toString(),
+              data_of_verbal[i]['land'].toString(),
+              data_of_verbal[i]['hometype'].toString(),
+              data_of_verbal[i]['bath'].toString(),
+              data_of_verbal[i]['id_ptys'].toString(),
+              data_of_verbal,
+            );
           }
         });
       }
@@ -356,32 +383,33 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           children: [
             SizedBox(
-                child: GoogleMap(
-              initialCameraPosition: CameraPosition(target: latLng, zoom: 12),
-              polygons: _Find_polygons,
-              // markers: Set.from(_marker),
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: false,
-              markers: _marker.map((e) => e).toSet(),
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(target: latLng, zoom: 12),
+                polygons: _Find_polygons,
+                // markers: Set.from(_marker),
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: false,
+                markers: _marker.map((e) => e).toSet(),
 
-              onMapCreated: (GoogleMapController controller) {
-                mapController = controller;
-              },
-              onCameraMove: (CameraPosition cameraPositiona) {
-                cameraPosition = cameraPositiona; //when map is dragging
-              },
-              mapType: style_map[index],
-              onTap: (argument) {
-                setState(() {
-                  _marker.clear();
-                  lat_verbal = argument.latitude;
-                  log_verbal = argument.longitude;
-                  widget.get_lat(argument.latitude.toString());
-                  widget.get_log(argument.longitude.toString());
-                  _addMarker(argument);
-                });
-              },
-            ),),
+                onMapCreated: (GoogleMapController controller) {
+                  mapController = controller;
+                },
+                onCameraMove: (CameraPosition cameraPositiona) {
+                  cameraPosition = cameraPositiona; //when map is dragging
+                },
+                mapType: style_map[index],
+                onTap: (argument) {
+                  setState(() {
+                    _marker.clear();
+                    lat_verbal = argument.latitude;
+                    log_verbal = argument.longitude;
+                    widget.get_lat(argument.latitude.toString());
+                    widget.get_log(argument.longitude.toString());
+                    _addMarker(argument);
+                  });
+                },
+              ),
+            ),
             Container(
               width: wth,
               margin: EdgeInsets.only(
@@ -390,7 +418,9 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
               ),
               padding: EdgeInsets.only(left: 10),
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(30),),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+              ),
               child: Form(
                 key: check,
                 child: Row(
@@ -438,30 +468,32 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
                       ),
                     ),
                     IconButton(
-                        // splashRadius: 30,
-                        hoverColor: Colors.black,
-                        onPressed: () {
-                          setState(() {
-                            name_place.clear();
-                            lg.clear();
-                            ln.clear();
+                      // splashRadius: 30,
+                      hoverColor: Colors.black,
+                      onPressed: () {
+                        setState(() {
+                          name_place.clear();
+                          lg.clear();
+                          ln.clear();
 
-                            h = 0;
-                            num = 0;
-                            Find_Lat_log(input);
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.search,
-                          size: 30,
-                        ),),
+                          h = 0;
+                          num = 0;
+                          Find_Lat_log(input);
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.search,
+                        size: 30,
+                      ),
+                    ),
                     IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _getCurrentLocation();
-                          });
-                        },
-                        icon: Icon(Icons.person_pin_circle_outlined),)
+                      onPressed: () {
+                        setState(() {
+                          _getCurrentLocation();
+                        });
+                      },
+                      icon: Icon(Icons.person_pin_circle_outlined),
+                    )
                   ],
                 ),
               ),
@@ -484,7 +516,9 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
                           num = 1; // use num for when user click on list search
                           name_of_place != name_place[index].toString();
                           poin_map_by_search(
-                              ln[index].toString(), lg[index].toString(),);
+                            ln[index].toString(),
+                            lg[index].toString(),
+                          );
                         },
                         child: Text(
                           name_place[index],
@@ -552,8 +586,11 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
 
   int? index_map;
   Future<void> Find_by_piont(double la, double lo) async {
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${la},${lo}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${la},${lo}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
 
     if (response.statusCode == 200) {
       // Successful response
@@ -581,8 +618,10 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
                     ['short_name']);
                 // Load_khan(district);
 
-                widget.get_district(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name'],);
+                widget.get_district(
+                  jsonResponse['results'][j]['address_components'][i]
+                      ['short_name'],
+                );
               });
             }
             if (jsonResponse['results'][j]['address_components'][i]['types']
@@ -593,8 +632,10 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
                 commune = (jsonResponse['results'][j]['address_components'][i]
                     ['short_name']);
                 // Load_sangkat(commune);
-                widget.get_commune(jsonResponse['results'][j]
-                    ['address_components'][i]['short_name'],);
+                widget.get_commune(
+                  jsonResponse['results'][j]['address_components'][i]
+                      ['short_name'],
+                );
               });
             }
           }
@@ -639,8 +680,11 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
       // print('------------------- $latitude');
       // print('------------------- $longitude');
 
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: latLng, zoom: 13),),);
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: latLng, zoom: 13),
+        ),
+      );
       List ls = jsonResponse['results'];
       List ac;
       for (int j = 0; j < ls.length; j++) {
@@ -664,8 +708,11 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
         }
       }
     } else {
-      final response = await http.get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${check_charetor[0]},${check_charetor[1]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+      final response = await http.get(
+        Uri.parse(
+          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${check_charetor[0]},${check_charetor[1]}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+        ),
+      );
 
       // Successful response
       var jsonResponse = json.decode(response.body);
@@ -694,8 +741,11 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
       // print('------------------- $latitude');
       // print('------------------- $longitude');
 
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: latLng, zoom: 13),),);
+      mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: latLng, zoom: 13),
+        ),
+      );
       List ls = jsonResponse['results'];
       List ac;
       for (int j = 0; j < ls.length; j++) {
@@ -752,8 +802,11 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
   }
 
   Future<void> poin_map_by_search(var ln, var lg) async {
-    final response = await http.get(Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lg},${ln}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',),);
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${lg},${ln}&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
+      ),
+    );
     var jsonResponse = json.decode(response.body);
     latLng = LatLng(double.parse(lg), double.parse(ln));
     Marker newMarker = Marker(
@@ -772,8 +825,11 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
       log_verbal = latLng.longitude;
       _marker.add(newMarker);
     });
-    mapController?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: latLng, zoom: 13),),);
+    mapController?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: latLng, zoom: 13),
+      ),
+    );
     List ls = jsonResponse['results'];
     List ac;
     for (int j = 0; j < ls.length; j++) {
@@ -792,18 +848,24 @@ class _SearchPlacesScreenState extends State<Map_List_search> {
   }
 
   Future<dynamic> maker_of_verbal_in_map(
-      List data_latlog, List values_min, List values_max,) async {
+    List data_latlog,
+    List values_min,
+    List values_max,
+  ) async {
     for (int i = 0; i < data_latlog.length; i++) {
       Marker newMarker = Marker(
         draggable: true,
         markerId: MarkerId(i.toString()),
         icon: await BitmapDescriptor.fromAssetImage(
-            ImageConfiguration(size: Size(80, 80)), 'assets/images/pin.png',),
+          ImageConfiguration(size: Size(80, 80)),
+          'assets/images/pin.png',
+        ),
         position:
             LatLng(data_latlog[i]['latlong_log'], data_latlog[i]['latlong_la']),
         infoWindow: InfoWindow(
-            title:
-                '${values_min[i].toString()}\$ ~ ${values_max[i].toString()}\$',),
+          title:
+              '${values_min[i].toString()}\$ ~ ${values_max[i].toString()}\$',
+        ),
       );
       setState(() {
         _marker.add(newMarker);

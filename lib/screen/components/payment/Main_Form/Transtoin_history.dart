@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/Option/components/contants.dart';
 
 class Transtoin_History extends StatefulWidget {
   Transtoin_History({super.key, required this.id});
@@ -65,22 +65,23 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
                       child: Text(
                         "By ABA",
                         style: TextStyle(
-                            decorationStyle: TextDecorationStyle.solid,
-                            decoration:
-                                (btn_aba) ? TextDecoration.underline : null,
-                            decorationThickness: 3,
-                            decorationColor: Color.fromARGB(153, 23, 255, 73),
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic,
-                            fontSize:
-                                MediaQuery.of(context).textScaleFactor * 14,
-                            shadows: [
-                              Shadow(
-                                  blurRadius: 2,
-                                  color: Colors.grey,
-                                  offset: Offset(-2, 1),)
-                            ],
-                            fontWeight: FontWeight.bold,),
+                          decorationStyle: TextDecorationStyle.solid,
+                          decoration:
+                              (btn_aba) ? TextDecoration.underline : null,
+                          decorationThickness: 3,
+                          decorationColor: Color.fromARGB(153, 23, 255, 73),
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic,
+                          fontSize: MediaQuery.of(context).textScaleFactor * 14,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 2,
+                              color: Colors.grey,
+                              offset: Offset(-2, 1),
+                            )
+                          ],
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     InkWell(
@@ -96,22 +97,23 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
                       child: Text(
                         "By UPAY",
                         style: TextStyle(
-                            decorationStyle: TextDecorationStyle.solid,
-                            decoration:
-                                (btn_upay) ? TextDecoration.underline : null,
-                            decorationThickness: 3,
-                            decorationColor: Color.fromARGB(153, 23, 255, 73),
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic,
-                            fontSize:
-                                MediaQuery.of(context).textScaleFactor * 14,
-                            shadows: [
-                              Shadow(
-                                  blurRadius: 2,
-                                  color: Colors.grey,
-                                  offset: Offset(-2, 1),)
-                            ],
-                            fontWeight: FontWeight.bold,),
+                          decorationStyle: TextDecorationStyle.solid,
+                          decoration:
+                              (btn_upay) ? TextDecoration.underline : null,
+                          decorationThickness: 3,
+                          decorationColor: Color.fromARGB(153, 23, 255, 73),
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic,
+                          fontSize: MediaQuery.of(context).textScaleFactor * 14,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 2,
+                              color: Colors.grey,
+                              offset: Offset(-2, 1),
+                            )
+                          ],
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     InkWell(
@@ -128,22 +130,23 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
                       child: Text(
                         "By WING",
                         style: TextStyle(
-                            decorationStyle: TextDecorationStyle.solid,
-                            decoration:
-                                (btn_wing) ? TextDecoration.underline : null,
-                            decorationThickness: 3,
-                            decorationColor: Color.fromARGB(153, 23, 255, 73),
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic,
-                            fontSize:
-                                MediaQuery.of(context).textScaleFactor * 14,
-                            shadows: [
-                              Shadow(
-                                  blurRadius: 2,
-                                  color: Colors.grey,
-                                  offset: Offset(-2, 1),)
-                            ],
-                            fontWeight: FontWeight.bold,),
+                          decorationStyle: TextDecorationStyle.solid,
+                          decoration:
+                              (btn_wing) ? TextDecoration.underline : null,
+                          decorationThickness: 3,
+                          decorationColor: Color.fromARGB(153, 23, 255, 73),
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic,
+                          fontSize: MediaQuery.of(context).textScaleFactor * 14,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 2,
+                              color: Colors.grey,
+                              offset: Offset(-2, 1),
+                            )
+                          ],
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -158,27 +161,33 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
                 return (btn_aba)
                     ? Card(
                         child: ListTile(
-                        title: Text('orderId: ${aba[index]['orderId']}'),
-                        subtitle:
-                            Text("Date Order: ${aba[index]['createTime']}"),
-                        trailing: Text("${aba[index]['money']}\$"),
-                      ),)
+                          title: Text('orderId: ${aba[index]['orderId']}'),
+                          subtitle:
+                              Text("Date Order: ${aba[index]['createTime']}"),
+                          trailing: Text("${aba[index]['money']}\$"),
+                        ),
+                      )
                     : (btn_upay)
                         ? Card(
                             child: ListTile(
-                            title: Text('orderId: ${upay[index]['orderId']}'),
-                            subtitle: Text(
-                                "Date Order: ${upay[index]['createTime']}",),
-                            trailing: Text("${upay[index]['money']}\$"),
-                          ),)
+                              title: Text('orderId: ${upay[index]['orderId']}'),
+                              subtitle: Text(
+                                "Date Order: ${upay[index]['createTime']}",
+                              ),
+                              trailing: Text("${upay[index]['money']}\$"),
+                            ),
+                          )
                         : Card(
                             child: ListTile(
-                            title: Text(
-                                'orderId: ${wing[index]['order_reference_no']}',),
-                            subtitle: Text(
-                                "Date Order: ${wing[index]['transaction_date']}",),
-                            trailing: Text("${wing[index]['amount']}\$"),
-                          ),);
+                              title: Text(
+                                'orderId: ${wing[index]['order_reference_no']}',
+                              ),
+                              subtitle: Text(
+                                "Date Order: ${wing[index]['transaction_date']}",
+                              ),
+                              trailing: Text("${wing[index]['amount']}\$"),
+                            ),
+                          );
               },
               childCount: (btn_aba)
                   ? aba.length
@@ -199,9 +208,11 @@ class _Transtoin_HistoryState extends State<Transtoin_History> {
   List aba = [];
   Future<void> Check_Transtoin(id) async {
     var request = http.Request(
-        'GET',
-        Uri.parse(
-            'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/history/per/user?id_user_control=$id',),);
+      'GET',
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/history/per/user?id_user_control=$id',
+      ),
+    );
 
     http.StreamedResponse response = await request.send();
 

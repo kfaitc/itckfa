@@ -1,10 +1,16 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:screenshot/screenshot.dart';
+
+import '../../../Home/Home.dart';
 
 class Qr_Wing extends StatefulWidget {
   const Qr_Wing({
@@ -15,12 +21,14 @@ class Qr_Wing extends StatefulWidget {
     required this.option,
     required this.id,
     required this.control_user,
+    required this.playerID,
   });
   final String price;
   final String accont;
   final String phone;
   final String option;
   final String id;
+  final String playerID;
   final String control_user;
   @override
   State<Qr_Wing> createState() => _Qr_WingState();
@@ -89,6 +97,7 @@ class _Qr_WingState extends State<Qr_Wing> {
       final responseBody = json.decode(response.body);
       setState(() {
         url_qr = responseBody['body']['qr_code_url'];
+        main();
       });
     } else {
       // Failed to create invoice
@@ -168,6 +177,82 @@ class _Qr_WingState extends State<Qr_Wing> {
   //     });
   //   }
   // }
+  Future<void> getCount() async {
+    print("User Id : ${widget.control_user}");
+    final response = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=${widget.control_user}',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      var jsonData = jsonDecode(response.body);
+      setState(() {
+        if (vpointSecond == 0) {
+          vpoint = vpointSecond = int.parse(jsonData['vpoint'].toString());
+        } else {
+          vpoint = int.parse(jsonData['vpoint'].toString());
+        }
+      });
+    }
+  }
+
+  int vpoint = 0;
+  int vpointSecond = 0;
+  late Timer _timer;
+  int count = 0;
+  void main() async {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
+      await getCount();
+      setState(() {
+        count++;
+
+        if (vpoint > vpointSecond) {
+          notification();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage1()),
+          );
+        }
+      });
+      if (count >= 300) {
+        _timer.cancel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  Future<void> notification() async {
+    var headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cookie':
+          '__cf_bm=Tz0b2VzsEGdqRwABVHE9.d1MJ75lrLCUpGpFioEzZ2c-1711944598-1.0.1.1-1JSGW9GW6AxAwmFIBjF6UfpSo84Xb1b.dsB7Z0PiGRbaOMlul3B8F2hgZ9yMnBHuAIvohTpEebcHmDD.F4Noqw; __cf_bm=JyLnwxo0CFbi7c4EUDCxEybwa47B6IM0RMBEt2awf6Q-1719595913-1.0.1.1-QKP1lqbqfEJZGhL51ETlMQ5eZWr9OrPYpgxBQAXZQ4d2OEGfG4QGFZgT2nBL9WXmUmFxFB08EuhT..OBcVBKmA'
+    };
+    var data =
+        '''{\r\n    "app_id": "d3025f03-32f5-444a-8100-7f7637a7f631",\r\n    "name": {"en": "Khmer Fundation appraisal"},    \r\n    "headings": {"en": "KFA"}, \r\n    "contents": {"en": "Your payment succesfuly for up VPoint"},\r\n    "include_player_ids": ["${widget.playerID}"],\r\n    \n    "large_icon": "https://www.oneclickonedollar.com/laravel_kfa_2023/public/data_imgs_kfa/images/New_KFA_Logo.png"\r\n    \n    \n}\r\n''';
+    var dio = Dio();
+    var response = await dio.request(
+      'https://onesignal.com/api/v1/notifications',
+      options: Options(
+        method: 'POST',
+        headers: headers,
+      ),
+      data: data,
+    );
+
+    if (response.statusCode == 200) {
+      print(json.encode(response.data));
+    } else {
+      print(response.statusMessage);
+    }
+  }
 
   bool isChecked = false;
   Future _saved(image, BuildContext context) async {
@@ -176,9 +261,11 @@ class _Qr_WingState extends State<Qr_Wing> {
   }
 
   TextEditingController roll_id = TextEditingController();
-  int count = 0;
+
   @override
   void initState() {
+    super.initState();
+
     order_reference_no =
         '${random.nextInt(999).toString()}k${random.nextInt(9999).toString()}f${random.nextInt(9999).toString()}';
     String state =
@@ -225,7 +312,7 @@ class _Qr_WingState extends State<Qr_Wing> {
           ),
         ),
         title: Text(
-          "Scan for payments",
+          "Scan for payments($count)",
           style: TextStyle(
             color: const Color.fromRGBO(49, 27, 146, 1),
             fontSize: MediaQuery.textScaleFactorOf(context) * 18,

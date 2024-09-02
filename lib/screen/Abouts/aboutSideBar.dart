@@ -2,7 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/Option/components/contants.dart';
 
 import 'package:readmore/readmore.dart';
 
@@ -124,13 +124,17 @@ class _AboutSidebarState extends State<AboutSidebar> {
                         enlargeCenterPage: true,
                       ),
                       items: items.map((item) {
-                        return Builder(builder: (BuildContext context) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 0,),
-                            child: Image.asset(item),
-                          );
-                        },);
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 0,
+                                vertical: 0,
+                              ),
+                              child: Image.asset(item),
+                            );
+                          },
+                        );
                       }).toList(),
                     ),
                     SizedBox(
@@ -248,11 +252,15 @@ class _AboutSidebarState extends State<AboutSidebar> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: const [
                     Image(
-                        image: AssetImage(
-                            'assets/images/Company-Profile-Cover2020_1.png',),),
+                      image: AssetImage(
+                        'assets/images/Company-Profile-Cover2020_1.png',
+                      ),
+                    ),
                     Image(
-                        image: AssetImage(
-                            'assets/images/Bank-Panel-for-web-icon.png',),),
+                      image: AssetImage(
+                        'assets/images/Bank-Panel-for-web-icon.png',
+                      ),
+                    ),
                   ],
                 ),
               ],

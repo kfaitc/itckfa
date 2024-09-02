@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-import 'package:itckfa/afa/screens/AutoVerbal/Add.dart';
-import 'package:itckfa/afa/screens/AutoVerbal/List.dart';
+import 'package:itckfa/Option/screens/AutoVerbal/Verbal/Add.dart';
+import 'package:itckfa/Option/screens/AutoVerbal/List.dart';
 import 'package:itckfa/contants.dart';
 import 'package:itckfa/screen/Account/account.dart';
 import 'package:itckfa/screen/Customs/responsive.dart';

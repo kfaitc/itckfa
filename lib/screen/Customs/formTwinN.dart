@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/Option/components/contants.dart';
 
 class FormTwinN extends StatefulWidget {
   final String Label1;
@@ -66,13 +66,16 @@ class _FormTwinNState extends State<FormTwinN> {
                         filled: true,
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         labelStyle: TextStyle(
-                            color: kPrimaryColor,
-                            overflow: TextOverflow.ellipsis,),
+                          color: kPrimaryColor,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                         labelText: widget.Label1,
                         prefixIcon: widget.icon1,
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                              color: kPrimaryColor, width: 2.0,),
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -103,7 +106,9 @@ class _FormTwinNState extends State<FormTwinN> {
                         prefixIcon: widget.icon1,
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                              color: kPrimaryColor, width: 2.0,),
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -150,7 +155,9 @@ class _FormTwinNState extends State<FormTwinN> {
                         prefixIcon: widget.icon2,
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                              color: kPrimaryColor, width: 2.0,),
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -188,7 +195,9 @@ class _FormTwinNState extends State<FormTwinN> {
                         prefixIcon: widget.icon2,
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
-                              color: kPrimaryColor, width: 2.0,),
+                            color: kPrimaryColor,
+                            width: 2.0,
+                          ),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         enabledBorder: OutlineInputBorder(

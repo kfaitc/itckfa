@@ -9,7 +9,7 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import 'package:http/http.dart' as http;
-import '../../../../afa/components/contants.dart';
+import '../../../../Option/components/contants.dart';
 import '../../../Home/Home.dart';
 
 const _baseUrl =

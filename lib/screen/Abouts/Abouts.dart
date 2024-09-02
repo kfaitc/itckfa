@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:kfa_project/screen/Abouts/HomeListView.dart';
 import 'package:readmore/readmore.dart';
 
-import '../../afa/components/contants.dart';
+import '../../Option/components/contants.dart';
 
 class Abouts extends StatefulWidget {
   const Abouts({Key? key}) : super(key: key);
@@ -169,13 +169,17 @@ class _AboutsState extends State<Abouts> {
                         enlargeCenterPage: true,
                       ),
                       items: items.map((item) {
-                        return Builder(builder: (BuildContext context) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 0,),
-                            child: Image.asset(item),
-                          );
-                        },);
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 0,
+                                vertical: 0,
+                              ),
+                              child: Image.asset(item),
+                            );
+                          },
+                        );
                       }).toList(),
                     ),
                     SizedBox(
@@ -231,9 +235,10 @@ class _AboutsState extends State<Abouts> {
                   height: 10,
                 ),
                 Image(
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.center,
-                    image: AssetImage('assets/images/message-banner3.jpg'),),
+                  fit: BoxFit.fitWidth,
+                  alignment: Alignment.center,
+                  image: AssetImage('assets/images/message-banner3.jpg'),
+                ),
 
                 ReadMore(text: message),
                 SizedBox(
@@ -305,14 +310,18 @@ class _AboutsState extends State<Abouts> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: const [
                     Image(
-                        image: AssetImage(
-                            'assets/images/Company-Profile-Cover2020_1.png',),),
+                      image: AssetImage(
+                        'assets/images/Company-Profile-Cover2020_1.png',
+                      ),
+                    ),
                     SizedBox(
                       width: 15,
                     ),
                     Image(
-                        image: AssetImage(
-                            'assets/images/Bank-Panel-for-web-icon.png',),),
+                      image: AssetImage(
+                        'assets/images/Bank-Panel-for-web-icon.png',
+                      ),
+                    ),
                   ],
                 ),
               ],

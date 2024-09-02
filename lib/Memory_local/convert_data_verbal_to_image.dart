@@ -15,7 +15,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:itckfa/Memory_local/database.dart';
-import 'package:itckfa/afa/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
+import 'package:itckfa/Option/screens/AutoVerbal/printer/save_image_for_Autoverbal.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:barcode_widget/barcode_widget.dart';

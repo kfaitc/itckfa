@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types, deprecated_member_use, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:itckfa/afa/components/contants.dart';
+import 'package:itckfa/Option/components/contants.dart';
 import 'package:itckfa/screen/Promotion/membership_real.dart';
 import 'package:url_launcher/url_launcher.dart';
 
