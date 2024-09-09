@@ -25,6 +25,7 @@ class FormSh extends StatelessWidget {
           fillColor: kwhite,
           filled: true,
           labelText: label,
+          labelStyle: TextStyle(fontSize: 12),
           contentPadding: EdgeInsets.symmetric(vertical: 8),
           prefixIcon: iconname,
           focusedBorder: OutlineInputBorder(

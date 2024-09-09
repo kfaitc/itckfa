@@ -38,26 +38,18 @@ class _PropertyDropdownState extends State<PropertyDropdown> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 45,
+      height: 40,
       // margin: EdgeInsets.only(bottom: 10),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
         child: DropdownButtonFormField<String>(
           isExpanded: true,
-          //value: genderValue,
-          // onTap: () {
-          //   setState(() {
-          //     widget.check_onclick!(true);
-          //   });
-          // },
+
           onChanged: (newValue) {
             setState(() {
               propertyValue = newValue as String;
               widget.name(propertyValue.split(",")[1]);
               widget.id(propertyValue.split(",")[0]);
-              // ignore: avoid_print
-              // print(newValue.split(" ")[0]);
-              // print(newValue.split(" ")[1]);
             });
           },
 
@@ -86,7 +78,7 @@ class _PropertyDropdownState extends State<PropertyDropdown> {
             fillColor: Colors.white,
             labelText: ((widget.pro == null) ? 'Property' : widget.pro),
             hintText: 'Select one',
-            labelStyle: const TextStyle(color: kPrimaryColor),
+            labelStyle: const TextStyle(color: kPrimaryColor, fontSize: 12),
             prefixIcon: const Icon(
               Icons.business_outlined,
               color: kImageColor,

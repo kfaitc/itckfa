@@ -531,6 +531,8 @@ class _EditState extends State<Edit> with SingleTickerProviderStateMixin {
             // List<L_B> lb;
             // .
             requestModelAuto = AutoVerbalRequestModel(
+              borey: "0",
+              road: "",
               property_type_id: list[0]["verbal_property_id"],
               lat: list[0]["latlong_log"],
               lng: list[0]["latlong_la"],

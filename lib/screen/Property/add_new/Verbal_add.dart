@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+// import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../contants.dart';
 import '../../../Option/components/building.dart';
@@ -2207,34 +2207,34 @@ class _Add_verbal_saleState extends State<Add_verbal_property> {
   }
 
   List<File> _images = [];
-  Future<void> pickImages() async {
-    List<Asset> resultList = [];
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 2,
-        enableCamera: true,
-      );
-    } on Exception catch (e) {
-      // Handle exception
-    }
-    // setState(() {
-    //   _images;
-    // });
+  // Future<void> pickImages() async {
+  //   List<Asset> resultList = [];
+  //   try {
+  //     resultList = await MultiImagePicker.pickImages(
+  //       maxImages: 2,
+  //       enableCamera: true,
+  //     );
+  //   } on Exception catch (e) {
+  //     // Handle exception
+  //   }
+  //   // setState(() {
+  //   //   _images;
+  //   // });
 
-    List<File> files = [];
-    for (var asset in resultList) {
-      ByteData byteData = await asset.getByteData();
-      final tempDir = await getTemporaryDirectory();
+  //   List<File> files = [];
+  //   for (var asset in resultList) {
+  //     ByteData byteData = await asset.getByteData();
+  //     final tempDir = await getTemporaryDirectory();
 
-      final file = File('${tempDir.path}/${asset.name}');
-      await file.writeAsBytes(byteData.buffer.asUint8List());
-      files.add(file);
-    }
+  //     final file = File('${tempDir.path}/${asset.name}');
+  //     await file.writeAsBytes(byteData.buffer.asUint8List());
+  //     files.add(file);
+  //   }
 
-    setState(() {
-      _images = files;
-    });
-  }
+  //   setState(() {
+  //     _images = files;
+  //   });
+  // }
 
   double? lat = 0, log = 0;
   File? _compressedImage;

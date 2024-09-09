@@ -27,7 +27,7 @@ class FormS extends StatelessWidget {
             filled: true,
             labelText: label,
             contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-            labelStyle: TextStyle(color: Colors.grey),
+            labelStyle: TextStyle(color: Colors.grey, fontSize: 12),
             prefixIcon: iconname,
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),

@@ -51,7 +51,7 @@ class _FormTwinNState extends State<FormTwinN> {
         (widget.Label1_e != null)
             ? Expanded(
                 child: SizedBox(
-                  height: 58,
+                  height: 40,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                     child: TextFormField(
@@ -66,6 +66,7 @@ class _FormTwinNState extends State<FormTwinN> {
                         filled: true,
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         labelStyle: TextStyle(
+                          fontSize: 12,
                           color: kPrimaryColor,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -76,14 +77,14 @@ class _FormTwinNState extends State<FormTwinN> {
                             color: kPrimaryColor,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             width: 1,
                             color: kPrimaryColor,
                           ),
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),
@@ -92,14 +93,15 @@ class _FormTwinNState extends State<FormTwinN> {
               )
             : Expanded(
                 child: SizedBox(
-                  height: 55,
+                  height: 40,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                     child: TextFormField(
                       onChanged: widget.onSaved1,
                       decoration: InputDecoration(
                         fillColor: kwhite,
-                        labelStyle: TextStyle(color: kPrimaryColor),
+                        labelStyle:
+                            TextStyle(fontSize: 12, color: kPrimaryColor),
                         filled: true,
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         labelText: widget.Label1,
@@ -109,36 +111,32 @@ class _FormTwinNState extends State<FormTwinN> {
                             color: kPrimaryColor,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             width: 1,
                             color: kPrimaryColor,
                           ),
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-        SizedBox(
-          width: 10.0,
-        ),
+        SizedBox(width: 10.0),
         (widget.Label1_e != null)
             ? Expanded(
                 child: SizedBox(
-                  height: 58,
+                  height: 40,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
                     child: TextFormField(
                       controller: Contect,
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
-                        // for below version 2 use this
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        // for version 2 and greater youcan also use this
                         FilteringTextInputFormatter.digitsOnly
                       ],
                       onChanged: (value) {
@@ -150,7 +148,8 @@ class _FormTwinNState extends State<FormTwinN> {
                         fillColor: kwhite,
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         filled: true,
-                        labelStyle: TextStyle(color: kPrimaryColor),
+                        labelStyle:
+                            TextStyle(fontSize: 12, color: kPrimaryColor),
                         labelText: widget.Label2,
                         prefixIcon: widget.icon2,
                         focusedBorder: OutlineInputBorder(
@@ -158,14 +157,14 @@ class _FormTwinNState extends State<FormTwinN> {
                             color: kPrimaryColor,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             width: 1,
                             color: kPrimaryColor,
                           ),
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),
@@ -174,7 +173,7 @@ class _FormTwinNState extends State<FormTwinN> {
               )
             : Expanded(
                 child: SizedBox(
-                  height: 55,
+                  height: 40,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
                     child: TextFormField(
@@ -191,21 +190,22 @@ class _FormTwinNState extends State<FormTwinN> {
                         filled: true,
                         contentPadding: EdgeInsets.symmetric(vertical: 8),
                         labelText: widget.Label2,
-                        labelStyle: TextStyle(color: kPrimaryColor),
+                        labelStyle:
+                            TextStyle(fontSize: 12, color: kPrimaryColor),
                         prefixIcon: widget.icon2,
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
                             color: kPrimaryColor,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             width: 1,
                             color: kPrimaryColor,
                           ),
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),

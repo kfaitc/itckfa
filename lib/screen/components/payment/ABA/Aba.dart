@@ -13,6 +13,8 @@ import 'package:screenshot/screenshot.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../Getx/Auto_Verbal/autu_verbal.dart';
+
 class ABA extends StatefulWidget {
   const ABA({
     super.key,
@@ -62,15 +64,6 @@ class _ABAState extends State<ABA> {
   String _formatTime(int seconds) {
     int minutes = seconds ~/ 60;
     int remainingSeconds = seconds % 60;
-
-    // if (minutes % 2 == 0) {
-    //   const snackBar = SnackBar(
-    //     content: Text('Please process your payment'),
-    //     duration: Duration(seconds: 4),
-    //   );
-    //   // ignore: use_build_context_synchronously
-    //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    // }
     return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
@@ -157,11 +150,11 @@ class _ABAState extends State<ABA> {
       thierPlan = 30;
     }
     var headers = {'Content-Type': 'application/json'};
-    setState(() {
-      print(
-        " \n\n\n\n koko ${widget.id_verbal} \nkakak ${widget.id_set_use}\n",
-      );
-    });
+    // setState(() {
+    //   print(
+    //     " \n\n\n\n koko ${widget.id_verbal} \nkakak ${widget.id_set_use}\n",
+    //   );
+    // });
     var request = http.Request(
       'POST',
       Uri.parse(
@@ -188,7 +181,7 @@ class _ABAState extends State<ABA> {
       final jsonResponse = jsonDecode(await response.stream.bytesToString());
       setState(() {
         url_qr = jsonResponse['checkout_qr_url'];
-        print("\n\tran_id = ${widget.tran_id}\n\n\n$jsonResponse\n");
+        // print("\n\tran_id = ${widget.tran_id}\n\n\n$jsonResponse\n");
       });
       if (url_qr != null) {
         await openDeepLink(jsonResponse['abapay_deeplink']);
@@ -198,7 +191,9 @@ class _ABAState extends State<ABA> {
     }
   }
 
+  final AuthVerbal authVerbal = Get.find<AuthVerbal>();
   Future check_traslation_aba() async {
+    // print("reqTime : $reqTime || tran_id : ${widget.tran_id}");
     var headers = {'Content-Type': 'application/json'};
     var data = json.encode({"req_time": "$reqTime", "tran_id": widget.tran_id});
     var dio = Dio();
@@ -215,12 +210,16 @@ class _ABAState extends State<ABA> {
       var data = response.data['status'];
       if (data.toString() == "0") {
         _showCustomSnackbar("Payment Success");
-        // ignore: use_build_context_synchronously
-        Get.to(() => const HomePage1(pf: true));
+
+        // Get.to(() => const HomePage1(pf: true));
+        await authVerbal.checkVpoint(widget.id_set_use);
+        print("===> No.1 ${widget.id_set_use}");
+        // Get.to(() => const HomePage1());
         dispose();
-      } else {
-        print("\n\n\n\nDelayed code executed!\n\n\n\n");
       }
+      // else {
+      //   print("\n\n\n\nDelayed code executed!\n\n\n\n");
+      // }
     } else {
       print(response.statusMessage);
     }
@@ -267,8 +266,8 @@ class _ABAState extends State<ABA> {
         Navigator.pop(context);
       } else {
         await _showCustomSnackbar("Payment successfully");
-        // ignore: use_build_context_synchronously
-        Get.to(() => const HomePage1(pf: true));
+        print("===> No.2");
+        // Get.to(() => const HomePage1());
         dispose();
       }
     } else {
@@ -345,11 +344,11 @@ class _ABAState extends State<ABA> {
     super.initState();
     if (widget.id_verbal != null) {
       traslation_aba_AutoVerbal();
-      setState(() {
-        print(
-          " \n\n\n\n koko455465 ${widget.id_verbal} \nkakak ${widget.id_set_use}\n",
-        );
-      });
+      // setState(() {
+      //   print(
+      //     " \n\n\n\n koko455465 ${widget.id_verbal} \nkakak ${widget.id_set_use}\n",
+      //   );
+      // });
     } else {
       traslation_aba();
     }

@@ -9,13 +9,13 @@ import '../../../contants.dart';
 typedef OnChangeCallback = void Function(dynamic value);
 
 class BankDropdown extends StatefulWidget {
-  const BankDropdown(
-      {Key? key,
-      required this.bank,
-      required this.bankbranch,
-      this.bn,
-      this.brn,})
-      : super(key: key);
+  const BankDropdown({
+    Key? key,
+    required this.bank,
+    required this.bankbranch,
+    this.bn,
+    this.brn,
+  }) : super(key: key);
   final OnChangeCallback bank;
   final OnChangeCallback bankbranch;
   final String? bn;
@@ -48,7 +48,7 @@ class _BankDropdownState extends State<BankDropdown> {
     return Column(
       children: [
         Container(
-          height: 57,
+          height: 40,
           padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
           margin: EdgeInsets.only(bottom: 10),
           child: DropdownButtonFormField<String>(
@@ -75,9 +75,7 @@ class _BankDropdownState extends State<BankDropdown> {
                     child: Text(
                       value["bank_name"],
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 13,
-                          height: 1,),
+                      style: TextStyle(fontSize: 12, height: 1),
                     ),
                   ),
                 )
@@ -94,35 +92,36 @@ class _BankDropdownState extends State<BankDropdown> {
               filled: true,
               labelText: ((widget.bn == null) ? 'Bank' : widget.bn),
               hintText: 'Select',
-              labelStyle: TextStyle(color: kPrimaryColor),
+              hintStyle: TextStyle(fontSize: 12),
+              labelStyle: TextStyle(color: kPrimaryColor, fontSize: 12),
               prefixIcon: Icon(
                 Icons.home_work,
                 color: kImageColor,
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: kPrimaryColor, width: 2.0),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5),
               ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 1,
                   color: kPrimaryColor,
                 ),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5),
               ),
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 1,
                   color: kerror,
                 ),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   width: 2,
                   color: kerror,
                 ),
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(5),
               ),
               //   decoration: InputDecoration(
               //       labelText: 'From',
@@ -132,7 +131,7 @@ class _BankDropdownState extends State<BankDropdown> {
         ),
         if (_branch.isNotEmpty)
           Container(
-            height: 57,
+            height: 40,
             padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
             child: DropdownButtonFormField<String>(
               isExpanded: true,
@@ -176,14 +175,14 @@ class _BankDropdownState extends State<BankDropdown> {
                 focusedBorder: OutlineInputBorder(
                   borderSide:
                       const BorderSide(color: kPrimaryColor, width: 2.0),
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     width: 1,
                     color: kPrimaryColor,
                   ),
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(5),
                 ),
                 //   decoration: InputDecoration(
                 //       labelText: 'From',
@@ -197,8 +196,11 @@ class _BankDropdownState extends State<BankDropdown> {
 
   void Load() async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank',),);
+    var rs = await http.get(
+      Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bank',
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body);
       // print(jsonData);
@@ -212,9 +214,12 @@ class _BankDropdownState extends State<BankDropdown> {
 
   void branch(String value) async {
     setState(() {});
-    var rs = await http.get(Uri.parse(
+    var rs = await http.get(
+      Uri.parse(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/bankbranch?bank_branch_details_id=' +
-            value,),);
+            value,
+      ),
+    );
     if (rs.statusCode == 200) {
       var jsonData = jsonDecode(rs.body.toString());
       // print(jsonData);

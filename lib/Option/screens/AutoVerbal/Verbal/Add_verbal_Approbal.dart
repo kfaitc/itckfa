@@ -241,6 +241,8 @@ class _Add_with_ApprovalState extends State<Add_with_Approval>
     super.initState();
 
     requestModelAuto = AutoVerbalRequestModel(
+      road: "",
+      borey: "",
       property_type_id: "",
       lat: "",
       lng: "",
@@ -1195,6 +1197,8 @@ class _Add_with_ApprovalState extends State<Add_with_Approval>
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => Map_verbal_add(
+          iduser: widget.id_control_user,
+          updateNew: 0,
           show_landmarket_price: false,
           get_commune: (value) {
             setState(() {

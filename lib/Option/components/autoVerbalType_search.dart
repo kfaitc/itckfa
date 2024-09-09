@@ -2,28 +2,30 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+
 import '../../contants.dart';
 import '../../screen/Profile/components/Drop.dart';
 import 'colors.dart';
 
-class PropertySearch extends StatefulWidget {
+class ApprovebyAndVerifybySearch extends StatefulWidget {
   final OnChangeCallback name;
   final OnChangeCallback id;
-  final OnChangeCallback checkOnclick;
+  Map<String, dynamic>? defaultValue;
+
   final String? pro;
-  const PropertySearch(
-      {Key? key,
-      required this.name,
-      required this.id,
-      this.pro,
-      required this.checkOnclick})
-      : super(key: key);
+  ApprovebyAndVerifybySearch({
+    Key? key,
+    required this.name,
+    required this.id,
+    this.defaultValue,
+    this.pro,
+  }) : super(key: key);
 
   @override
-  State<PropertySearch> createState() => _PropertySearchState();
+  State<ApprovebyAndVerifybySearch> createState() => _PropertySearchState();
 }
 
-class _PropertySearchState extends State<PropertySearch> {
+class _PropertySearchState extends State<ApprovebyAndVerifybySearch> {
   List<Map<dynamic, dynamic>> listProperty = [];
   late String bankvalue;
   @override
@@ -41,11 +43,11 @@ class _PropertySearchState extends State<PropertySearch> {
           height: 35,
           // decoration: BoxDecoration(
           //     border: Border.all(width: 1, color: kPrimaryColor),
-          //     borderRadius: BorderRadius.circular(5)),
+          //     borderRadius: BorderRadius.circular(10)),
           child: DropdownSearch<Map<dynamic, dynamic>>(
             items: listProperty,
             compareFn: (item1, item2) {
-              return item1['property_type_name'] == item2['property_type_name'];
+              return item1['type'] == item2['type'];
             },
             popupProps: PopupProps.menu(
               isFilterOnline: true,
@@ -53,33 +55,30 @@ class _PropertySearchState extends State<PropertySearch> {
               showSelectedItems: true,
               itemBuilder: (context, item, isSelected) {
                 return ListTile(
-                  title: Text(item['property_type_name'] ?? ''),
+                  title: Text(item['type'] ?? ''),
                   selected: isSelected,
-                  titleTextStyle: TextStyle(fontSize: 12, color: greyColor),
                 );
               },
               searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Search a Property',
-                    hintStyle: TextStyle(fontSize: 12)),
+                  border: OutlineInputBorder(),
+                  hintText: 'Search a Type',
+                ),
               ),
             ),
             onChanged: (value) {
               setState(() {
-                widget.id(value?['property_type_id'].toString());
-                widget.name(value?['property_type_name'].toString());
-
-                // print(value?['property_type_id'].toString());
+                widget.id(value?['autoverbal_id'].toString());
+                widget.name(value?['type'].toString());
               });
             },
-            selectedItem: const {"title": "A"},
+            selectedItem: widget.defaultValue ?? const {"type": "LS"},
             dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 hintText: 'Select one',
-                labelText: 'Property',
+                labelText: 'Type',
                 labelStyle: TextStyle(
-                  color: greyColorNolot,
+                  color: greyColorNolots,
                   fontSize: 17,
                 ),
                 prefixIcon:
@@ -88,7 +87,8 @@ class _PropertySearchState extends State<PropertySearch> {
                 contentPadding: const EdgeInsets.symmetric(vertical: 8),
                 fillColor: Colors.white,
                 focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: kPrimaryColor, width: 1),
+                  borderSide:
+                      const BorderSide(color: kPrimaryColor, width: 2.0),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -110,12 +110,12 @@ class _PropertySearchState extends State<PropertySearch> {
               ),
             ),
             filterFn: (item, filter) {
-              return item['property_type_name']
+              return item['type']
                       ?.toLowerCase()
                       .contains(filter.toLowerCase()) ??
                   false;
             },
-            itemAsString: (item) => item['property_type_name'] ?? '',
+            itemAsString: (item) => item['type'] ?? '',
           ),
         ),
       ],
@@ -126,7 +126,7 @@ class _PropertySearchState extends State<PropertySearch> {
   Future<void> load() async {
     var dio = Dio();
     var response = await dio.request(
-      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/property',
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/type',
       options: Options(
         method: 'GET',
       ),
@@ -134,14 +134,18 @@ class _PropertySearchState extends State<PropertySearch> {
 
     if (response.statusCode == 200) {
       setState(() {
-        list = jsonDecode(json.encode(response.data))['property'];
+        list = jsonDecode(json.encode(response.data));
         for (int i = 0; i < list.length; i++) {
           listProperty.add(list[i]);
         }
+        // Set default values after loading
+        if (widget.defaultValue != null) {
+          widget.id(widget.defaultValue?['autoverbal_id'].toString());
+          widget.name(widget.defaultValue?['type'].toString());
+        }
       });
+    } else {
+      print(response.statusMessage);
     }
-    //  else {
-    //   print(response.statusMessage);
-    // }
   }
 }

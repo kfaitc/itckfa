@@ -49,14 +49,13 @@ class _CommentAndOptionState extends State<CommentAndOption> {
               Expanded(
                 flex: 3,
                 child: Container(
-                  height: 60,
+                  height: 40,
                   padding: EdgeInsets.only(left: 30),
                   child: DropdownButtonFormField<String>(
                     isExpanded: true,
                     onChanged: (String? newValue) {
                       setState(() {
                         Value = newValue!;
-
                         widget.value(newValue.split(" ")[0].toString());
                         widget.id(newValue.split(" ")[1].toString());
                         // print(newValue);
@@ -84,10 +83,15 @@ class _CommentAndOptionState extends State<CommentAndOption> {
                       fillColor: kwhite,
                       filled: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 8),
-                      labelText: (widget.option != null)
-                          ? widget.option
-                          : 'OptionType',
+                      // labelText: (widget.option != null)
+                      //     ? widget.option
+                      //     : 'OptionType',
                       hintText: 'Select one',
+                      labelStyle: TextStyle(fontSize: 12),
+                      label: (widget.option != null)
+                          ? Text(widget.option.toString())
+                          : Text('OptionType'),
+
                       prefixIcon: Icon(
                         Icons.my_library_books_rounded,
                         color: kImageColor,
@@ -112,7 +116,7 @@ class _CommentAndOptionState extends State<CommentAndOption> {
               Expanded(
                 flex: 3,
                 child: Container(
-                  height: 60,
+                  height: 40,
                   padding: EdgeInsets.only(right: 30),
                   child: FormSh(
                     label: (widget.comment1 != null)
@@ -144,20 +148,6 @@ class _CommentAndOptionState extends State<CommentAndOption> {
       setState(() {
         _list = jsonData;
 
-        // print(_list);
-      });
-    }
-  }
-
-  void Load2(id) async {
-    setState(() {});
-    var rs = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/options?opt_id=$id',
-      ),
-    );
-    if (rs.statusCode == 200) {
-      setState(() {
         // print(_list);
       });
     }

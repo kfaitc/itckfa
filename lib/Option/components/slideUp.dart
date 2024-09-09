@@ -1,6 +1,9 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
@@ -8,6 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/Option/components/property.dart';
 import 'package:itckfa/Option/components/property35.dart';
+import 'package:itckfa/Option/components/property35_search.dart';
 import 'package:itckfa/models/search_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
 import 'package:location_geocoder/location_geocoder.dart';
@@ -16,10 +20,13 @@ import 'package:search_map_location/widget/search_widget.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import '../../Getx/GoogleMap/GoogMap.dart';
 import '../../Memory_local/database.dart';
+import '../Customs/formnum.dart';
 import '../screens/AutoVerbal/dailog.dart';
 import '../screens/AutoVerbal/local_Map/api/service.dart';
 import '../screens/AutoVerbal/local_Map/data/MyDB.dart';
+import 'autoVerbalType_search.dart';
 import 'colors.dart';
 import 'contants.dart';
 import 'numDisplay.dart';
@@ -27,7 +34,7 @@ import 'numDisplay.dart';
 typedef OnChangeCallback = void Function(dynamic value);
 
 class map_cross_verbal extends StatefulWidget {
-  const map_cross_verbal({
+  map_cross_verbal({
     super.key,
     required this.get_province,
     required this.get_district,
@@ -35,6 +42,11 @@ class map_cross_verbal extends StatefulWidget {
     required this.get_log,
     required this.get_lat,
     required this.asking_price,
+    required this.updateNew,
+    required this.iduser,
+    required this.verbID,
+    required this.listBuilding,
+    required this.listBuildings,
   });
   final OnChangeCallback get_province;
   final OnChangeCallback get_district;
@@ -42,6 +54,11 @@ class map_cross_verbal extends StatefulWidget {
   final OnChangeCallback get_log;
   final OnChangeCallback get_lat;
   final OnChangeCallback asking_price;
+  final OnChangeCallback listBuilding;
+  late int updateNew;
+  final String iduser;
+  final String verbID;
+  final List listBuildings;
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -117,276 +134,6 @@ class _HomePageState extends State<map_cross_verbal> {
   }
 
   bool checkFunction = false;
-  List listMainRoute = [];
-  List listRaod = [];
-  List listPriceR = [];
-  List listPriceC = [];
-  List listKhanP = [];
-  List listsang = [];
-  List listOption = [];
-  List listdropdown = [];
-  Future<void> watingGoogleMap() async {
-    setState(() {
-      checkFunction = true;
-    });
-    await Future.wait([
-      mainRaod(),
-      roadModel(),
-      checkPriceListR(),
-      checkPriceListC(),
-      khanModel(),
-      sangkatIDModel(),
-      optionFetch(),
-      dropdown()
-    ]);
-    setState(() {
-      checkFunction = false;
-    });
-  }
-
-  Future<void> mainRaod() async {
-    await myDBmap.createMainRaodT();
-    listMainRoute = await myDBmap.db.rawQuery('SELECT * FROM mainRaod_Table');
-    // print("No.1");
-    if (listMainRoute.isEmpty) {
-      // print("No.2");
-
-      var headers = {'Content-Type': 'application/json'};
-      var dio = Dio();
-      var response = await dio.get(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/get/raods',
-        options: Options(
-          headers: headers,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        listMainRoute = response.data;
-        for (var value in listMainRoute) {
-          await myDBmap.db.rawInsert(
-            "INSERT INTO mainRaod_Table(name_road) VALUES (?);",
-            [value['name_road'].toString()],
-          );
-        }
-      }
-    }
-  }
-
-  Future<void> roadModel() async {
-    await myDBmap.createRoadT();
-    listRaod = await myDBmap.db.rawQuery('SELECT * FROM roads_Table');
-    // print("No.1");
-    if (listRaod.isEmpty) {
-      // print("No.2");
-
-      var headers = {'Content-Type': 'application/json'};
-      var dio = Dio();
-      var response = await dio.get(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/road',
-        options: Options(
-          headers: headers,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        listRaod = response.data['roads'];
-        for (var value in listRaod) {
-          await myDBmap.db.rawInsert(
-            "INSERT INTO roads_Table(road_id,road_name) VALUES (?,?);",
-            [value['road_id'], value['road_name'].toString()],
-          );
-        }
-      }
-    }
-  }
-
-  bool checkpoint = false;
-  Future<void> checkPriceListR() async {
-    await myDBmap.createlistRT();
-    listPriceR = await myDBmap.db.rawQuery('SELECT * FROM listR_Table');
-    // print("No.1");
-    if (listPriceR.isEmpty) {
-      // print("No.2");
-
-      var headers = {'Content-Type': 'application/json'};
-      var dio = Dio();
-      var response = await dio.get(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price/listR',
-        options: Options(
-          headers: headers,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        listPriceR = response.data['r'];
-        for (var value in listPriceR) {
-          await myDBmap.db.rawInsert(
-            "INSERT INTO listR_Table(Min_Value,Max_Value,Khan_ID,Sangkat_ID) VALUES (?,?,?,?);",
-            [
-              value['Min_Value'].toString(),
-              value['Max_Value'].toString(),
-              value['Khan_ID'],
-              value['Sangkat_ID']
-            ],
-          );
-        }
-      }
-    }
-  }
-
-  Future<void> checkPriceListC() async {
-    await myDBmap.createlistCT();
-    listPriceC = await myDBmap.db.rawQuery('SELECT * FROM listC_Table');
-    // print("No.1");
-    if (listPriceC.isEmpty) {
-      // print("No.2");
-
-      var headers = {'Content-Type': 'application/json'};
-      var dio = Dio();
-      var response = await dio.get(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price/listC',
-        options: Options(
-          headers: headers,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        listPriceC = response.data['c'];
-        for (var value in listPriceC) {
-          await myDBmap.db.rawInsert(
-            "INSERT INTO listC_Table(Min_Value,Max_Value,Khan_ID,Sangkat_ID) VALUES (?,?,?,?);",
-            [
-              value['Min_Value'].toString(),
-              value['Max_Value'].toString(),
-              value['Khan_ID'],
-              value['Sangkat_ID']
-            ],
-          );
-        }
-      }
-    }
-  }
-
-  Future<void> khanModel() async {
-    await myDBmap.createKhanT();
-    listKhanP = await myDBmap.db.rawQuery('SELECT * FROM Khan_Table');
-    // print("No.1");
-    if (listKhanP.isEmpty) {
-      // print("No.2");
-
-      var headers = {'Content-Type': 'application/json'};
-      var dio = Dio();
-      var response = await dio.get(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan/list',
-        options: Options(
-          headers: headers,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        listKhanP = response.data;
-        for (var value in listKhanP) {
-          await myDBmap.db.rawInsert(
-            "INSERT INTO Khan_Table(Khan_ID,province,Khan_Name) VALUES (?,?,?);",
-            [
-              value['Khan_ID'],
-              value['province'].toString(),
-              value['Khan_Name'].toString()
-            ],
-          );
-        }
-      }
-    }
-  }
-
-  Future<void> sangkatIDModel() async {
-    await myDBmap.createsangkatT();
-    listsang = await myDBmap.db.rawQuery('SELECT * FROM sangkat_Table');
-    // print("No.1");
-    if (listsang.isEmpty) {
-      // print("No.2");
-
-      var headers = {'Content-Type': 'application/json'};
-      var dio = Dio();
-      var response = await dio.get(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat/list',
-        options: Options(
-          headers: headers,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        listsang = response.data;
-        for (var value in listsang) {
-          await myDBmap.db.rawInsert(
-            "INSERT INTO sangkat_Table(Sangkat_ID,Sangkat_Name) VALUES (?,?);",
-            [value['Sangkat_ID'], value['Sangkat_Name'].toString()],
-          );
-        }
-      }
-    }
-  }
-
-  Future<void> optionFetch() async {
-    await myDBmap.createoptionT();
-    listOption = await myDBmap.db.rawQuery('SELECT * FROM option_Table');
-    // print("No.1");
-    if (listOption.isEmpty) {
-      // print("No.2");
-
-      var headers = {'Content-Type': 'application/json'};
-      var dio = Dio();
-      var response = await dio.get(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/options',
-        options: Options(
-          headers: headers,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        listOption = response.data;
-        for (var value in listOption) {
-          await myDBmap.db.rawInsert(
-            "INSERT INTO option_Table(opt_id,opt_des,opt_value) VALUES (?,?,?);",
-            [value['opt_id'], value['opt_des'].toString(), value['opt_value']],
-          );
-        }
-      }
-    }
-  }
-
-  Future<void> dropdown() async {
-    await myDBmap.createdropdownT();
-    listdropdown = await myDBmap.db.rawQuery('SELECT * FROM dropdown_Table');
-    // print("No.1");
-    if (listdropdown.isEmpty) {
-      // print("No.2");
-
-      var headers = {'Content-Type': 'application/json'};
-      var dio = Dio();
-      var response = await dio.get(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/compare/dropdown',
-        options: Options(
-          headers: headers,
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        listdropdown = response.data;
-        for (var value in listdropdown) {
-          await myDBmap.db.rawInsert(
-            "INSERT INTO dropdown_Table(id,title,name,type) VALUES (?,?,?,?);",
-            [
-              value['id'],
-              value['title'].toString(),
-              value['name'].toString(),
-              value['type'].toString()
-            ],
-          );
-        }
-      }
-    }
-  }
 
   Future<void> _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition(
@@ -420,8 +167,8 @@ class _HomePageState extends State<map_cross_verbal> {
   @override
   void initState() {
     distanceController.text = '5';
+    listBuilding = widget.listBuildings;
     _handleLocationPermission();
-    watingGoogleMap();
     requestModel = SearchRequestModel(
       property_type_id: "",
       num: "5",
@@ -433,7 +180,38 @@ class _HomePageState extends State<map_cross_verbal> {
       fromDate: "",
       toDate: "",
     );
+    waitingFuction();
     super.initState();
+  }
+
+  ControllerMap controller = ControllerMap();
+  Future<void> waitingFuction() async {
+    setState(() {
+      checkFunction = true;
+    });
+    await Future.wait([
+      _loadStringList(),
+    ]);
+    setState(() {
+      checkFunction = false;
+    });
+  }
+
+  Future<void> _loadStringList() async {
+    await controller.mainAPI(widget.updateNew);
+    // await controller.roadAPI(widget.updateNew);
+    await controller.checkPriceListRAPI(widget.updateNew);
+    await controller.checkPriceListCAPI(widget.updateNew);
+    await controller.khanAPI(widget.updateNew);
+    await controller.songkatAPI(widget.updateNew);
+    await controller.optionAPI(widget.updateNew);
+    await controller.comparaCRAPI(widget.updateNew);
+
+    if (widget.updateNew != 0) {
+      //  await controller.comparaCRAPI(widget.updateNew);
+      widget.updateNew = 0;
+      await controller.checkGoogle(widget.iduser);
+    }
   }
 
   @override
@@ -456,8 +234,8 @@ class _HomePageState extends State<map_cross_verbal> {
   Widget _uiSteup(BuildContext context) {
     // TextEditingController search = TextEditingController();
     _panelHeightOpen = (groupValue == 0)
-        ? MediaQuery.of(context).size.height * 0.35
-        : MediaQuery.of(context).size.height * 0.15;
+        ? MediaQuery.of(context).size.height * 0.8
+        : MediaQuery.of(context).size.height * 0.25;
     return Scaffold(
       appBar: AppBar(
         title: Text("$haveValue"),
@@ -472,13 +250,14 @@ class _HomePageState extends State<map_cross_verbal> {
                 widget.asking_price(adding_price ?? 0);
                 widget.get_lat(requestModel.lat);
                 widget.get_log(requestModel.lng);
+                widget.listBuilding(listBuilding);
               } else {
                 widget.asking_price(0);
               }
             });
             Navigator.pop(context);
           },
-          icon: Icon(Icons.save_alt_outlined),
+          icon: const Icon(Icons.arrow_back),
         ),
         actions: [
           InkWell(
@@ -555,6 +334,8 @@ class _HomePageState extends State<map_cross_verbal> {
     });
   }
 
+  bool check = false;
+  bool checkpoint = false;
   bool clickMap = false;
   BitmapDescriptor? customIcon;
   Future<void> addManyMarkers(LatLng latLng) async {
@@ -594,6 +375,16 @@ class _HomePageState extends State<map_cross_verbal> {
     }
   }
 
+  List listassetImage = [
+    {"image": "assets/icons/Approved.png"},
+    {"image": "assets/icons/house.png"},
+    {"image": "assets/icons/Comparable.png"},
+    {"image": "assets/icons/land.png"},
+    {"image": "assets/icons/area.png"},
+    {"image": "assets/icons/condo.png"},
+    {"image": "assets/icons/Appraiser.png"},
+    {"image": "assets/icons/locations.png"},
+  ];
   LatLng _calculatePolygonCentroid(List<LatLng> points) {
     double centroidLat = 0.0;
     double centroidLng = 0.0;
@@ -616,192 +407,633 @@ class _HomePageState extends State<map_cross_verbal> {
     return MediaQuery.removePadding(
       context: context,
       removeTop: true,
-      child: ListView(
-        controller: sc,
-        children: <Widget>[
-          const SizedBox(height: 12.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 30,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: const BorderRadius.all(Radius.circular(12.0)),
-                ),
-              ),
-            ],
-          ),
-          // SizedBox(
-          //   height: 18.0,
-          // ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "More Option",
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 20.0,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 15),
-          // RoadDropdown(
-          //   onChanged: (value) {
-          //     // requestModel.comparable_road = value;
-          //     //  print(requestModel.comparable_road);
-          //   },
-          // ),
-
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 20, right: 20),
-          //   child: ToFromDate(
-          //     fromDate: (value) {
-          //       requestModel.fromDate = value;
-          //       print(requestModel.fromDate);
-          //     },
-          //     toDate: (value) {
-          //       requestModel.toDate = value;
-          //       // print(requestModel.toDate);
-          //     },
-          //   ),
-          // ),
-          Row(
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GFRadio(
-                      type: GFRadioType.square,
-                      size: 25,
-                      value: 0,
-                      groupValue: groupValue,
-                      onChanged: (value) {
-                        setState(() {
-                          groupValue = value;
-                        });
-                      },
-                      inactiveIcon: null,
-                      activeBorderColor: const Color.fromARGB(255, 39, 39, 39),
-                      radioColor: GFColors.PRIMARY,
-                    ),
-                    const Text("By Compereble", style: TextStyle(fontSize: 12))
-                  ],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GFRadio(
-                      type: GFRadioType.square,
-                      size: 25,
-                      value: 1,
-                      groupValue: groupValue,
-                      onChanged: (value) {
-                        setState(() {
-                          groupValue = value;
-                        });
-                      },
-                      inactiveIcon: null,
-                      activeBorderColor: const Color.fromARGB(255, 39, 39, 39),
-                      radioColor: GFColors.PRIMARY,
-                    ),
-                    const Text("By Market price",
-                        style: TextStyle(fontSize: 12))
-                  ],
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 10.0),
-          // LandSize(
-          //   land_min: (value) {
-          //     setState(() {
-          //       requestModel.land_min = value;
-          //       print(requestModel.fromDate);
-          //     });
-          //   },
-          //   land_max: (value) {
-          //     setState(() {
-          //       requestModel.land_max = value;
-          //       print(requestModel.toDate);
-          //     });
-          //   },
-          // ),
-          const SizedBox(height: 10.0),
-          if (groupValue == 0)
-            NumDisplay(
-              onSaved: (newValue) => setState(() {
-                requestModel.num = newValue!;
-              }),
-            ),
-          const SizedBox(height: 10.0),
-          if (groupValue == 0)
+      child: SizedBox(
+        child: ListView(
+          controller: sc,
+          children: <Widget>[
+            const SizedBox(height: 12.0),
             Row(
-              children: [
-                SizedBox(
-                  width: (isChecked == true)
-                      ? MediaQuery.of(context).size.width * 0.65
-                      : MediaQuery.of(context).size.width * 1,
-                  child: PropertyDropdown(
-                    name: (value) {
-                      // propertyType = value;
-                    },
-                    check_onclick: (value) {
-                      setState(() {
-                        isChecked = value;
-                        isChecked_all = false;
-                      });
-                    },
-                    id: (value) {
-                      pty = value;
-                    },
-                    // pro: list[0]['property_type_name'],
-                  ),
-                ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
                 Container(
-                  width: (isChecked == true)
-                      ? MediaQuery.of(context).size.width * 0.35
-                      : 0,
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    children: [
-                      GFCheckbox(
-                        size: 25,
-                        activeBgColor: GFColors.PRIMARY,
-                        onChanged: (value) {
-                          setState(() {
-                            isChecked_all = value;
-                            isChecked = false;
-                            pty = null;
-                          });
-                        },
-                        value: isChecked_all,
-                        inactiveIcon: null,
-                      ),
-                      const Text("Show All", style: TextStyle(fontSize: 12))
-                    ],
+                  width: 30,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: const BorderRadius.all(Radius.circular(12.0)),
                   ),
                 ),
               ],
             ),
-          // Distance(
-          //     onSaved: (input) => setState(() {
-          //           requestModel.distance = input!;
-          //         })),
-          addPaddingWhenKeyboardAppears(),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Option & Add (Land/Building)",
+                  style: TextStyle(color: greyColor, fontSize: 17),
+                )
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GFRadio(
+                        type: GFRadioType.square,
+                        size: 25,
+                        value: 0,
+                        groupValue: groupValue,
+                        onChanged: (value) {
+                          setState(() {
+                            groupValue = value;
+                          });
+                        },
+                        inactiveIcon: null,
+                        activeBorderColor:
+                            const Color.fromARGB(255, 39, 39, 39),
+                        radioColor: GFColors.PRIMARY,
+                      ),
+                      const Text(" By Compereble",
+                          style: TextStyle(fontSize: 11))
+                    ],
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GFRadio(
+                        type: GFRadioType.square,
+                        size: 25,
+                        value: 1,
+                        groupValue: groupValue,
+                        onChanged: (value) {
+                          setState(() {
+                            groupValue = value;
+                          });
+                        },
+                        inactiveIcon: null,
+                        activeBorderColor:
+                            const Color.fromARGB(255, 39, 39, 39),
+                        radioColor: GFColors.PRIMARY,
+                      ),
+                      const Text(" By Market price",
+                          style: TextStyle(fontSize: 11))
+                    ],
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(height: 10.0),
+            // LandSize(
+            //   land_min: (value) {
+            //     setState(() {
+            //       requestModel.land_min = value;
+            //       print(requestModel.fromDate);
+            //     });
+            //   },
+            //   land_max: (value) {
+            //     setState(() {
+            //       requestModel.land_max = value;
+            //       print(requestModel.toDate);
+            //     });
+            //   },
+            // ),
+            // const SizedBox(height: 10.0),
+            // if (groupValue == 0)
+            //   NumDisplay(
+            //     onSaved: (newValue) => setState(() {
+            //       requestModel.num = newValue!;
+            //     }),
+            //   ),
+            Padding(
+              padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      height: 35,
+                      child: DropdownButtonFormField<String>(
+                        //value: genderValue,
+
+                        value: searchlatlog.text.isNotEmpty
+                            ? searchlatlog.text
+                            : null,
+                        isExpanded: true,
+                        onChanged: (newValue) {
+                          setState(() {
+                            searchlatlog.text = newValue ?? "";
+                            if (newValue == 'N') {
+                              comparedropdown = '';
+                            } else {
+                              comparedropdown = newValue!;
+                              comparedropdown2 = 'P';
+                            }
+
+                            // print('==> $comparedropdown');
+                          });
+                        },
+
+                        items: controller.listdropdown
+                            .map<DropdownMenuItem<String>>(
+                              (value) => DropdownMenuItem<String>(
+                                value: value["type"].toString(),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 7),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          flex: 1,
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 5),
+                                            child: SizedBox(
+                                                height: 70,
+                                                // radius: 15,
+                                                // backgroundColor: Colors.white,
+                                                child: (value['id'] == 1)
+                                                    ? Image.asset(
+                                                        listassetImage[0]
+                                                                ['image']
+                                                            .toString(),
+                                                      )
+                                                    : (value['id'] == 2)
+                                                        ? Image.asset(
+                                                            listassetImage[1]
+                                                                    ['image']
+                                                                .toString())
+                                                        : (value['id'] == 3)
+                                                            ? Image.asset(
+                                                                listassetImage[2][
+                                                                        'image']
+                                                                    .toString())
+                                                            : (value['id'] == 4)
+                                                                ? Image.asset(
+                                                                    listassetImage[3]['image']
+                                                                        .toString())
+                                                                : (value['id'] ==
+                                                                        5)
+                                                                    ? Image.asset(
+                                                                        listassetImage[4]['image']
+                                                                            .toString())
+                                                                    : (value['id'] ==
+                                                                            6)
+                                                                        ? Image.asset(
+                                                                            listassetImage[5]['image'].toString())
+                                                                        : (value['id'] == 7)
+                                                                            ? Image.asset(listassetImage[6]['image'].toString())
+                                                                            : Image.asset(listassetImage[7]['image'].toString())),
+                                          )),
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(value["title"].toString(),
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 11)),
+                                      ),
+                                      Expanded(
+                                          flex: 4,
+                                          child: Text(value["name"],
+                                              style: const TextStyle(
+                                                  fontSize: 11))),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        // add extra sugar..
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: kImageColor,
+                        ),
+
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 0),
+                          fillColor: Colors.white,
+                          filled: true,
+                          labelText: 'Special Option',
+                          labelStyle: TextStyle(fontSize: 12),
+                          hintText: 'Select one',
+                          prefixIcon: const Icon(
+                            Icons.home_outlined,
+                            color: kImageColor,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: kPrimaryColor,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              width: 1,
+                              color: kPrimaryColor,
+                            ),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: SizedBox(
+                  //     height: 35,
+                  //     child: DropdownButtonFormField<String>(
+                  //       isExpanded: true,
+
+                  //       onChanged: (newValue) {
+                  //         setState(() {
+                  //           if (newValue == "2024") {
+                  //             id_route = null;
+                  //           } else {
+                  //             roadType = true;
+                  //             id_route = newValue;
+                  //           }
+                  //           print("===> $id_route");
+                  //         });
+                  //       },
+
+                  //       items: controller.listRaod
+                  //           .map<DropdownMenuItem<String>>(
+                  //             (value) =>
+                  //                 DropdownMenuItem<String>(
+                  //               value: value["road_id"]
+                  //                   .toString(),
+                  //               child: Text(value["road_name"]
+                  //                   .toString()),
+                  //               // child: Text(
+                  //               //   value["name"],
+
+                  //               //   style: TextStyle(
+                  //               //       fontWeight: FontWeight.bold,
+                  //               //       color: Colors.red),
+                  //               // ),
+                  //             ),
+                  //           )
+                  //           .toList(),
+                  //       // add extra sugar..
+                  //       icon: const Icon(
+                  //         Icons.arrow_drop_down,
+                  //         color: kImageColor,
+                  //       ),
+
+                  //       decoration: InputDecoration(
+                  //         contentPadding:
+                  //             const EdgeInsets.symmetric(
+                  //                 vertical: 0, horizontal: 0),
+                  //         fillColor: Colors.white,
+                  //         filled: true,
+                  //         labelText: (searchraod.text == "")
+                  //             ? 'Road'
+                  //             : searchraod.text,
+                  //         hintStyle: TextStyle(
+                  //             color: blackColor,
+                  //             fontWeight: FontWeight.bold,
+                  //             fontSize: 15),
+                  //         hintText: 'Select one',
+                  //         prefixIcon: const Icon(
+                  //           Icons.edit_road_outlined,
+                  //           color: kImageColor,
+                  //         ),
+                  //         focusedBorder: OutlineInputBorder(
+                  //           borderSide: const BorderSide(
+                  //               color: kPrimaryColor,
+                  //               width: 2.0),
+                  //           borderRadius:
+                  //               BorderRadius.circular(5),
+                  //         ),
+                  //         enabledBorder: OutlineInputBorder(
+                  //           borderSide: const BorderSide(
+                  //             width: 1,
+                  //             color: kPrimaryColor,
+                  //           ),
+                  //           borderRadius:
+                  //               BorderRadius.circular(5),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            if (groupValue == 0)
+              Padding(
+                padding: const EdgeInsets.only(right: 10, left: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: SizedBox(
+                        // width: double.infinity,
+                        child: PropertySearch(
+                          // pro: "Land",
+                          name: (value) {
+                            // propertyType = value;
+                          },
+                          checkOnclick: (value) {
+                            setState(() {
+                              isChecked = value;
+                              isChecked_all = false;
+                            });
+                          },
+                          id: (value) {
+                            setState(() {
+                              if (value == '37') {
+                                pty = null;
+                                // showAll = true;
+                              } else {
+                                pty = value;
+                                // showAll = true;
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            // if (groupValue == 0)
+            //   Row(
+            //     children: [
+            //       SizedBox(
+            //         width: (isChecked == true)
+            //             ? MediaQuery.of(context).size.width * 0.65
+            //             : MediaQuery.of(context).size.width * 1,
+            //         child: PropertyDropdown(
+            //           name: (value) {
+            //             // propertyType = value;
+            //           },
+            //           check_onclick: (value) {
+            //             setState(() {
+            //               isChecked = value;
+            //               isChecked_all = false;
+            //             });
+            //           },
+            //           id: (value) {
+            //             pty = value;
+            //           },
+            //           // pro: list[0]['property_type_name'],
+            //         ),
+            //       ),
+            //       Container(
+            //         width: (isChecked == true)
+            //             ? MediaQuery.of(context).size.width * 0.35
+            //             : 0,
+            //         alignment: Alignment.centerLeft,
+            //         padding: const EdgeInsets.symmetric(vertical: 8),
+            //         child: Row(
+            //           children: [
+            //             GFCheckbox(
+            //               size: 25,
+            //               activeBgColor: GFColors.PRIMARY,
+            //               onChanged: (value) {
+            //                 setState(() {
+            //                   isChecked_all = value;
+            //                   isChecked = false;
+            //                   pty = null;
+            //                 });
+            //               },
+            //               value: isChecked_all,
+            //               inactiveIcon: null,
+            //             ),
+            //             const Text("Show All", style: TextStyle(fontSize: 12))
+            //           ],
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Divider(
+                thickness: 1,
+                color: greyColor,
+              ),
+            ),
+            if (adding_price > 0)
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(width: 10),
+                  Text(
+                    "Add (Land / Building)",
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            if (adding_price > 0) addLandBuilding(),
+
+            if (listBuilding.isNotEmpty && adding_price > 0)
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: 260,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: listBuilding.length,
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Container(
+                      width: 230,
+                      //height: 210,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 233, 239, 243),
+                            offset: Offset(8, 10),
+                            blurRadius: 6.0,
+                          ),
+                        ],
+                        border: Border.all(width: 1, color: kPrimaryColor),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5)),
+                      ),
+
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      '${listBuilding[index]['verbal_landid']}',
+                                      style: NameProperty(),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            check = true;
+                                            listBuilding.removeAt(index);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            '${listBuilding[index]['address'] ?? ""} ',
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 60, 59, 59),
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 3.0),
+                          const Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: kPrimaryColor,
+                          ),
+                          const SizedBox(height: 3.0),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Depreciation",
+                                    style: Label(),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  if (listBuilding[index]['verbal_land_des'] !=
+                                      "LS")
+                                    Text(
+                                      "Floor",
+                                      style: Label(),
+                                    ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    "Area",
+                                    style: Label(),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    'Max Value/Sqm',
+                                    style: Label(),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    'Min Value/Sqm',
+                                    style: Label(),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    'Max Value',
+                                    style: Label(),
+                                  ),
+                                  const SizedBox(height: 3),
+                                  Text(
+                                    'Min Value',
+                                    style: Label(),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 15),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    ' : ${listBuilding[index]['verbal_land_des'] ?? ""}',
+                                    style: Name(),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  if (listBuilding[index]['verbal_land_des'] !=
+                                      "LS")
+                                    Text(
+                                      ' : ${listBuilding[index]['verbal_land_dp'] ?? ""}',
+                                      style: Name(),
+                                    ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    // ':   ' +
+                                    //     (formatter.format(lb[i]
+                                    //             .verbal_land_area
+                                    //             .toInt()))
+                                    //         .toString() +
+                                    ' : ${listBuilding[index]['verbal_land_area'] ?? ""}m\u00B2',
+                                    // area + 'm' + '\u00B2',
+                                    style: Name(),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    ' : ${listBuilding[index]['verbal_land_minsqm'] ?? ""}\$',
+                                    style: Name(),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    ' : ${listBuilding[index]['verbal_land_maxsqm'] ?? ""}\$',
+                                    style: Name(),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    ' : ${listBuilding[index]['verbal_land_minvalue'] ?? ""}\$',
+                                    style: Name(),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    ' : ${listBuilding[index]['verbal_land_maxvalue'] ?? ""}\$',
+                                    style: Name(),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+            // Distance(
+            //     onSaved: (input) => setState(() {
+            //           requestModel.distance = input!;
+            //         })),
+            addPaddingWhenKeyboardAppears(),
+          ],
+        ),
       ),
     );
   }
@@ -942,8 +1174,9 @@ class _HomePageState extends State<map_cross_verbal> {
       String priceAndLatLogKey = "${item[priceKey]}_${item[lat]}_${item[log]}";
       String latLogKey = "${item[lat]}_${item[log]}";
 
-      if (!seenPriceAndLatLog.contains(priceAndLatLogKey) &&
-          !seenLatLog.contains(latLogKey)) {
+      if (list.length == 5 ||
+          (!seenPriceAndLatLog.contains(priceAndLatLogKey) &&
+              !seenLatLog.contains(latLogKey))) {
         seenPriceAndLatLog.add(priceAndLatLogKey);
         seenLatLog.add(latLogKey);
         uniqueList.add(item);
@@ -1179,7 +1412,7 @@ class _HomePageState extends State<map_cross_verbal> {
                               });
                             },
 
-                            items: listRaod
+                            items: controller.listRaod
                                 .map<DropdownMenuItem<String>>(
                                   (value) => DropdownMenuItem<String>(
                                     value: value["road_id"].toString() +
@@ -1390,6 +1623,588 @@ class _HomePageState extends State<map_cross_verbal> {
     });
   }
 
+  String opionTypeID = '0';
+  double areas = 0;
+  double? minSqm, maxSqm, totalMin, totalMax, totalArea;
+  void calLs() {
+    setState(() {
+      if (haveValue == true) {
+        if (areas <= 300) {
+          double avgmin = caculateCom(0.85);
+          double avgmax = caculateCom(0.80);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 301 && areas <= 1000) {
+          double avgmin = caculateCom(0.8);
+          double avgmax = caculateCom(0.75);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 1001 && areas <= 3000) {
+          double avgmin = caculateCom(0.75);
+          double avgmax = caculateCom(0.7);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 3000) {
+          double avgmin = caculateCom(0.7);
+          double avgmax = caculateCom(0.65);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        }
+      } else {
+        if (areas <= 300) {
+          double avgmin = caculateRen(0.85);
+          double avgmax = caculateRen(0.80);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 301 && areas <= 1000) {
+          double avgmin = caculateRen(0.8);
+          double avgmax = caculateRen(0.75);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 1001 && areas <= 3000) {
+          double avgmin = caculateRen(0.75);
+          double avgmax = caculateRen(0.7);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 3000) {
+          double avgmin = caculateRen(0.7);
+          double avgmax = caculateRen(0.65);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        }
+      }
+      totalMin = (minSqm! * areas);
+      totalMax = (maxSqm! * areas);
+      addItemToList();
+    });
+  }
+
+  double h = 0;
+  String dep = "0";
+  List listBuilding = [];
+  void addItemToList() {
+    setState(() {
+      listBuilding.add({
+        "verbal_land_type": "",
+        "verbal_land_des": controllerDS.text,
+        "verbal_land_dp": dep,
+        "verbal_land_area": areas,
+        "verbal_land_minsqm": minSqm!.toStringAsFixed(0),
+        "verbal_land_maxsqm": maxSqm!.toStringAsFixed(0),
+        "verbal_land_minvalue": totalMin!.toStringAsFixed(0),
+        "verbal_land_maxvalue": totalMax!.toStringAsFixed(0),
+        "address": '$commune / $district',
+        "verbal_landid": widget.verbID
+      });
+    });
+    print("listBuilding : $listBuilding");
+  }
+
+  double caculateCom(double p) {
+    double avgCaculate =
+        (((addingPriceSimple * p) + addingPriceVerbal) / 5 + (R_avg + C_avg)) /
+            2;
+    return avgCaculate;
+  }
+
+  double caculateRen(double p) {
+    double avgCaculate = ((addingPriceSimple * p) + addingPriceVerbal) / 5;
+    return avgCaculate;
+  }
+
+  Future<void> calElse(double area, String autoverbalTypeValue) async {
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/type?autoverbal_id=$autoverbalTypeValue'));
+
+    setState(() {
+      var jsonData = jsonDecode(rs.body);
+
+      maxSqm = double.parse(jsonData[0]['max'].toString());
+      minSqm = double.parse(jsonData[0]['min'].toString());
+      // ignore: unnecessary_null_comparison
+      if (opionTypeID != null) {
+        totalMin =
+            ((minSqm! * area) + (double.parse(opionTypeID.toString()) / 100)) +
+                (minSqm! * area);
+        totalMax =
+            ((maxSqm! * area) + (double.parse(opionTypeID.toString()) / 100)) +
+                (maxSqm! * area);
+
+        addItemToList();
+      } else {
+        totalMin = minSqm! * area;
+        totalMax = maxSqm! * area;
+        addItemToList();
+      }
+    });
+    //  }
+  }
+
+  int optionValue = 0;
+  double hL = 0, lL = 0;
+  bool checkmap = true;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool checkMap = false;
+  bool checkHlandbuilding = false;
+  late String autoverbalTypeValue = '';
+  Widget addLandBuilding() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(
+              width: 2,
+              color: greyColorNolots,
+            )),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: whiteColor),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                height: 290,
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            !checkmap
+                                ? const Text(
+                                    'Please Find Price on Map',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 240, 24, 9),
+                                    ),
+                                  )
+                                : const SizedBox(),
+                            const Spacer(),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (validateAndSave()) {
+                                    // print(adding_price.toString());
+                                    if (adding_price > 0) {
+                                      if (checkHlandbuilding == false) {
+                                        // hscreen = hscreen + 280;
+                                      }
+                                      checkMap = true;
+                                      if (autoverbalTypeValue == '100') {
+                                        calLs();
+                                      } else {
+                                        calElse(areas, autoverbalTypeValue);
+                                      }
+                                      checkHlandbuilding = true;
+                                      checkmap = true;
+                                    } else {
+                                      checkmap = false;
+                                    }
+                                  }
+                                });
+                              },
+                              child: const Text(
+                                "Calculator price",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+
+                        Text(
+                          'Land / Building',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: greyColor,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: SizedBox(
+                                height: 35,
+                                width: double.infinity,
+                                child: ApprovebyAndVerifybySearch(
+                                  name: (value) {
+                                    setState(() {
+                                      controllerDS.text = value;
+                                    });
+                                  },
+                                  id: (value) {
+                                    setState(() {
+                                      autoverbalTypeValue = value;
+                                      // print(autoverbalTypeValue);
+                                    });
+                                  },
+                                  defaultValue: const {
+                                    'type': 'LS',
+                                    'autoverbal_id': '100'
+                                  },
+                                ),
+                              ),
+                            ),
+                            if (autoverbalTypeValue != "100")
+                              const SizedBox(width: 10),
+                            if (autoverbalTypeValue != "100")
+                              Expanded(
+                                flex: 1,
+                                child: SizedBox(
+                                  height: 35,
+                                  child: FormN(
+                                    label: "Floors",
+                                    iconname: const Icon(
+                                      Icons.calendar_month_outlined,
+                                      color: kImageColor,
+                                    ),
+                                    onSaved: (newValue) {
+                                      setState(() {
+                                        dep = newValue!;
+
+                                        if (totalArea != null) {
+                                          totalArea =
+                                              totalArea! * double.parse(dep);
+                                        }
+                                        totalArea;
+                                        areas = totalArea!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              )
+                          ],
+                        ),
+
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: SizedBox(
+                                height: 35,
+                                child: FormN(
+                                  label: "Head",
+                                  iconname: const Icon(
+                                    Icons.h_plus_mobiledata_outlined,
+                                    color: kImageColor,
+                                  ),
+                                  onSaved: (newValue) {
+                                    setState(() {
+                                      if (newValue == "") {
+                                        controllerArea.clear();
+                                      }
+                                      h = double.parse(newValue!);
+                                      if (lL != 0) {
+                                        totalArea = h * lL;
+                                        areas = totalArea!;
+                                      } else {
+                                        totalArea = h;
+                                      }
+                                      controllerArea.text = areas.toString();
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              flex: 1,
+                              child: SizedBox(
+                                height: 35,
+                                child: FormN(
+                                  label: "Length",
+                                  iconname: const Icon(
+                                    Icons.blur_linear_outlined,
+                                    color: kImageColor,
+                                  ),
+                                  onSaved: (newValue) {
+                                    setState(() {
+                                      if (newValue == "") {
+                                        controllerArea.clear();
+                                      }
+                                      lL = double.parse(newValue!);
+
+                                      if (h != 0) {
+                                        totalArea = h * lL;
+                                        areas = totalArea!;
+                                      } else {
+                                        totalArea = lL;
+                                      }
+                                      controllerArea.text = areas.toString();
+                                      // controllerArea.text = totalArea!.toString();
+                                      // if (controllerArea == null ||
+                                      //     controllerArea.text == "") {
+                                      //   controllerArea.clear();
+                                      // }
+                                    });
+                                  },
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // if (autoverbalTypeValue != '100')
+                        // SizedBox(
+                        //   height: 35,
+                        //   child: FormN(
+                        //     label: "Depreciation(Age)",
+                        //     iconname: const Icon(Icons.calendar_month_outlined,
+                        //         color: kImageColor),
+                        //     onSaved: (newValue) {
+                        //       setState(() {
+                        //         dep = newValue!;
+                        //       });
+                        //     },
+                        //   ),
+                        // ),
+                        // const SizedBox(height: 10),
+
+                        SizedBox(
+                            height: 35,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: TextFormField(
+                                  controller: controllerArea,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]'),
+                                    ),
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      areas = double.parse(value);
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    fillColor: const Color.fromARGB(
+                                        255, 255, 255, 255),
+                                    filled: true,
+                                    labelText: "Area (m\u00B2)",
+                                    labelStyle: const TextStyle(fontSize: 12),
+                                    prefixIcon: const Icon(
+                                      Icons.layers,
+                                      color: kImageColor,
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        color: Color.fromRGBO(0, 126, 250, 1),
+                                        width: 2.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        width: 1,
+                                        color: Color.fromRGBO(0, 126, 250, 1),
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        width: 2,
+                                        color: Color.fromARGB(255, 249, 0, 0),
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                        width: 1,
+                                        color: Color.fromARGB(255, 249, 0, 0),
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    errorStyle: const TextStyle(
+                                        height: 0), // Hide error text
+                                  ),
+                                  validator: (input) {
+                                    if (input == null || input.isEmpty) {
+                                      return ''; // Return empty string to trigger error state
+                                    }
+                                    return null;
+                                  },
+                                )),
+                                // Expanded(
+                                //   flex: 1,
+                                //   child: FormValidateN(
+                                //       // label: "Area",
+                                //       label: ((totalArea != 0)
+                                //           ? "Area (m\u00B2): ${formatter.format(totalArea ?? 0)}"
+                                //           : "Area"),
+                                //       iconname:
+                                //           const Icon(Icons.layers, color: kImageColor),
+                                //       onSaved: (newValue) {
+                                //         setState(() {
+                                //           areas = double.parse(newValue!);
+                                //         });
+                                //       }),
+                                // ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  flex: 1,
+                                  child: SizedBox(
+                                    height: 35,
+                                    child: DropdownButtonFormField<String>(
+                                      isExpanded: true,
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          opionTypeID = newValue!
+                                              .split(" ")[0]
+                                              .toString();
+                                          optionValue = int.parse(newValue
+                                              .split(" ")[1]
+                                              .toString());
+                                        });
+                                      },
+                                      items: controller.listOption
+                                          .map<DropdownMenuItem<String>>(
+                                            (value) => DropdownMenuItem<String>(
+                                              value:
+                                                  "${value["opt_value"]} ${value["opt_id"]}",
+                                              child: Text(value["opt_des"]),
+                                              onTap: () {
+                                                setState(() {
+                                                  opionTypeID =
+                                                      value["opt_value"]
+                                                          .toString();
+                                                });
+                                              },
+                                            ),
+                                          )
+                                          .toList(),
+                                      icon: const Icon(Icons.arrow_drop_down,
+                                          color: kImageColor),
+                                      decoration: InputDecoration(
+                                        fillColor: kwhite,
+                                        filled: true,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 8),
+                                        labelText: 'OptionType',
+                                        labelStyle:
+                                            const TextStyle(fontSize: 12),
+                                        hintText: 'Select one',
+                                        prefixIcon: const Icon(
+                                            Icons.my_library_books_rounded,
+                                            color: kImageColor),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: kPrimaryColor, width: 2.0),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              width: 1, color: kPrimaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Expanded(
+                                //   flex: 1,
+                                //   child: CommentAndOption(
+                                //     value: (value) {
+                                //       setState(() {
+                                //         // opt = int.parse(value);
+                                //       });
+                                //     },
+                                //     comment1: (opt != null) ? opt.toString() : null,
+                                //     id: (value) {
+                                //       setState(() {
+                                //         optionValue = int.parse(value.toString());
+                                //       });
+                                //     },
+                                //     comment: (newValue) {
+                                //       setState(() {
+                                //         // comment = newValue!.toString();
+                                //       });
+                                //     },
+                                //     opt_type_id: (value) {
+                                //       setState(() {
+                                //         opionTypeID = value.toString();
+                                //       });
+                                //     },
+                                //   ),
+                                // ),
+                              ],
+                            )),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 35,
+                          child: TextFormField(
+                            readOnly: true,
+                            controller: controllerDS,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              fillColor: kwhite,
+                              filled: true,
+                              labelText: "Description",
+                              labelStyle: const TextStyle(fontSize: 14),
+                              prefixIcon: const Icon(
+                                Icons.description,
+                                color: kImageColor,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: kPrimaryColor, width: 2.0),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    width: 1, color: kPrimaryColor),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Add(
+            //     checkMap: checkMap,
+            //     addressController: addressController,
+            //     lat: (requestModel.lat == "") ? "" : requestModel.lat,
+            //     lng: (requestModel.lng == "") ? "" : requestModel.lng,
+            //     verbalID: verbalID,
+            //     hscreen: hscreen,
+            //     listLandBuilding: listBuilding,
+            //     backvalue: (value) {
+            //       setState(() {
+            //         widget.type(100);
+            //         if (value == 100) {
+            //           widget.addNew(31);
+            //         }
+            //       });
+            //     },
+            //     email: widget.listUser[0]['email'].toString(),
+            //     id_control_user: widget.listUser[0]['control_user'].toString(),
+            //     listUser: widget.listUser,
+            //     device: "m")
+          ],
+        ),
+      ),
+    );
+  }
+
   String comparedropdown2 = '';
   int checkborey = 0;
   var id_route;
@@ -1398,18 +2213,20 @@ class _HomePageState extends State<map_cross_verbal> {
   double? min, max;
   Map? map;
   bool haveValue = false;
+  double addingPriceVerbal = 0;
+  double addingPriceSimple = 0;
   Future<void> Show(SearchRequestModel requestModel) async {
     try {
       if (groupValue == 0) {
         setState(() {
           isApiCallProcess = true;
         });
-        print("==> No.0 Route : $route");
+        // print("==> No.0 Route : $route");
         if (route != null) {
-          for (int i = 0; i < listMainRoute.length; i++) {
-            if (route
-                    .toString()
-                    .contains(listMainRoute[i]['name_road'].toString()) ||
+          for (int i = 0; i < controller.listMainRoute.length; i++) {
+            if (route.toString().contains(
+                      controller.listMainRoute[i]['name_road'].toString(),
+                    ) ||
                 comparedropdown == "C") {
               setState(() {
                 // print("No.1 Route : ${listMainRoute[i]['name_road']}");
@@ -1458,20 +2275,24 @@ class _HomePageState extends State<map_cross_verbal> {
             doneORudone = false;
             list = jsonDecode(json.encode(response.data))['autoverbal'];
             print("list => ${list.length}");
-            if (list.length >= 5) {
-              if (comparedropdown2 == "" && haveValue == true) {
-                searchraod.text = listRaod.first['road_name']!;
-                searchlatlog.text = listdropdown.first['type']!;
-              } else if (comparedropdown2 == "" && haveValue == false) {
-                searchraod.text = listRaod[1]['road_name']!;
-                searchlatlog.text = listdropdown[1]['type']!;
-              }
-            }
+            // if (list.length >= 5) {
+            //   if (comparedropdown2 == "" && haveValue == true) {
+            //     searchraod.text = controller.listRaod.first['road_name']!;
+            //     searchlatlog.text = controller.listdropdown.first['type']!;
+            //   } else if (comparedropdown2 == "" && haveValue == false) {
+            //     searchraod.text = controller.listRaod[1]['road_name']!;
+            //     searchlatlog.text = controller.listdropdown[1]['type']!;
+            //   }
+            // }
           });
         }
         if (list.length >= 5) {
           List<dynamic> filteredList = filterDuplicates(
-              list, "comparable_adding_price", "latlong_la", "latlong_log");
+            list,
+            "comparable_adding_price",
+            "latlong_la",
+            "latlong_log",
+          );
 
           setState(() {
             isApiCallProcess = false;
@@ -1480,110 +2301,111 @@ class _HomePageState extends State<map_cross_verbal> {
 
           setState(() {
             for (var i = 0; i < map!.length; i++) {
-              if (i > 0) {
-                if ((data_adding_correct.length ==
-                        int.parse(requestModel.num)) ||
-                    (i == map!.length - 1)) {
-                  // print(
-                  //     'ComID : ${map![i]['comparable_id']}\nPropertyID : ${map![i]['comparable_property_id']}');
-                  break;
-                } else {
-                  if (checkborey == 1) {
-                    if (map![i]['borey'] == 1) {
-                      if (map![i]['comparable_adding_price'] == '') {
-                        map![i]['comparable_adding_price'] = '0';
-                        adding_price +=
-                            double.parse(map![i]['comparable_adding_price']);
-                      } else if (map![i]['comparable_adding_price']
-                          .contains(',')) {
-                        adding_price += double.parse(map![i]
-                                ['comparable_adding_price']
-                            .replaceAll(",", ""));
-                      } else {
-                        adding_price +=
-                            (double.parse(map![i]['comparable_adding_price']));
-                      }
-                      setState(() {
-                        data_adding_correct.add(map![i]);
-                      });
-                    }
+              // if (checkborey == 1) {
+              if (map![i]['borey'] == 1) {
+                if (map![i]['type_value'] == "V") {
+                  if (map![i]['comparable_adding_price'] == '') {
+                    map![i]['comparable_adding_price'] = '0';
+                    addingPriceVerbal +=
+                        double.parse(map![i]['comparable_adding_price']);
+                  } else if (map![i]['comparable_adding_price'].contains(',')) {
+                    addingPriceVerbal += double.parse(
+                      map![i]['comparable_adding_price'].replaceAll(",", ""),
+                    );
                   } else {
+                    addingPriceVerbal +=
+                        (double.parse(map![i]['comparable_adding_price']));
+                  }
+                } else {
+                  {
                     if (map![i]['comparable_adding_price'] == '') {
                       map![i]['comparable_adding_price'] = '0';
-                      adding_price +=
+                      addingPriceSimple +=
                           double.parse(map![i]['comparable_adding_price']);
                     } else if (map![i]['comparable_adding_price']
                         .contains(',')) {
-                      adding_price += double.parse(map![i]
-                              ['comparable_adding_price']
-                          .replaceAll(",", ""));
+                      addingPriceSimple += double.parse(
+                        map![i]['comparable_adding_price'].replaceAll(",", ""),
+                      );
                     } else {
-                      adding_price +=
+                      addingPriceSimple +=
                           (double.parse(map![i]['comparable_adding_price']));
                     }
-                    setState(() {
-                      data_adding_correct.add(map![i]);
-                    });
                   }
                 }
+                setState(() {
+                  data_adding_correct.add(map![i]);
+                });
+              }
+              if (map![i]['type_value'] == "V") {
+                if (map![i]['comparable_adding_price'] == '') {
+                  map![i]['comparable_adding_price'] = '0';
+                  addingPriceVerbal +=
+                      double.parse(map![i]['comparable_adding_price']);
+                } else if (map![i]['comparable_adding_price'].contains(',')) {
+                  addingPriceVerbal += double.parse(
+                    map![i]['comparable_adding_price'].replaceAll(",", ""),
+                  );
+                } else {
+                  addingPriceVerbal +=
+                      (double.parse(map![i]['comparable_adding_price']));
+                }
               } else {
-                print("===> Else Check Borey");
-                if (
-                    // (map![i]['latlong_log'] != map![i + 1]['latlong_log']) &&
-                    (map![i]['comparable_adding_price'] !=
-                        map![i + 1]['comparable_adding_price'])) {
+                {
                   if (map![i]['comparable_adding_price'] == '') {
                     map![i]['comparable_adding_price'] = '0';
-                    adding_price +=
+                    addingPriceSimple +=
                         double.parse(map![i]['comparable_adding_price']);
                   } else if (map![i]['comparable_adding_price'].contains(',')) {
-                    adding_price += double.parse(
-                        map![i]['comparable_adding_price'].replaceAll(",", ""));
+                    addingPriceSimple += double.parse(
+                      map![i]['comparable_adding_price'].replaceAll(",", ""),
+                    );
                   } else {
-                    adding_price +=
+                    addingPriceSimple +=
                         (double.parse(map![i]['comparable_adding_price']));
                   }
-                  setState(() {
-                    data_adding_correct.add(map![i]);
-                  });
                 }
               }
+              setState(() {
+                data_adding_correct.add(map![i]);
+              });
+              // }
             }
           });
-
-          if (data_adding_correct.isNotEmpty) {
-            for (int i = 0; i < data_adding_correct.length; i++) {
-              print(
-                  "No.${data_adding_correct[i]['comparable_id']} : ${data_adding_correct[i]['comparable_property_id']}\n");
-              if (data_adding_correct[i]['comparable_property_id'].toString() ==
-                  '15') {
-                markerType(i, 'l.png');
-              } else if (data_adding_correct[i]['comparable_property_id']
-                      .toString() ==
-                  '10') {
-                markerType(i, 'f.png');
-              } else if (data_adding_correct[i]['comparable_property_id']
-                      .toString() ==
-                  '33') {
-                markerType(i, 'v.png');
-              } else if (data_adding_correct[i]['comparable_property_id']
-                      .toString() ==
-                  '14') {
-                markerType(i, 'h.png');
-              } else if (data_adding_correct[i]['comparable_property_id']
-                      .toString() ==
-                  '4') {
-                markerType(i, 'b.png');
-              } else if (data_adding_correct[i]['comparable_property_id']
-                      .toString() ==
-                  '29') {
-                markerType(i, 'v.png');
-              } else {
-                markerType(i, 'a.png');
+          if (!clickdone) {
+            if (data_adding_correct.isNotEmpty) {
+              for (int i = 0; i < data_adding_correct.length; i++) {
+                if (data_adding_correct[i]['comparable_property_id']
+                        .toString() ==
+                    '15') {
+                  markerType(i, 'l.png');
+                } else if (data_adding_correct[i]['comparable_property_id']
+                        .toString() ==
+                    '10') {
+                  markerType(i, 'f.png');
+                } else if (data_adding_correct[i]['comparable_property_id']
+                        .toString() ==
+                    '33') {
+                  markerType(i, 'v.png');
+                } else if (data_adding_correct[i]['comparable_property_id']
+                        .toString() ==
+                    '14') {
+                  markerType(i, 'h.png');
+                } else if (data_adding_correct[i]['comparable_property_id']
+                        .toString() ==
+                    '4') {
+                  markerType(i, 'b.png');
+                } else if (data_adding_correct[i]['comparable_property_id']
+                        .toString() ==
+                    '29') {
+                  markerType(i, 'v.png');
+                } else {
+                  markerType(i, 'a.png');
+                }
               }
             }
           }
-
+          print("No.2 : ${data_adding_correct.length}");
           if (data_adding_correct.isNotEmpty) {
             if (data_adding_correct.length < 5) {
               setState(() {
@@ -1637,42 +2459,45 @@ class _HomePageState extends State<map_cross_verbal> {
     );
   }
 
+  bool clickdone = false;
   String priceCm = '';
   var route, avg;
-  Future Dialog(BuildContext context) {
+  Future? Dialog(BuildContext context) {
     if (haveValue == true) {
       setState(() {
+        // print("addingPriceSimple : $addingPriceSimple");
+        // print("addingPriceVerbal : $addingPriceVerbal");
         var numberPrice = 0.0;
         for (int i = 0; i < data_adding_correct.length; i++) {
           numberPrice += double.parse(
-              data_adding_correct[i]['comparable_adding_price'].toString());
+            data_adding_correct[i]['comparable_adding_price'].toString(),
+          );
         }
         adding_price = numberPrice;
         adding_price /= int.parse(data_adding_correct.length.toString());
         var price = (adding_price + (R_avg + C_avg)) / 2;
         min = price - (0.03 * price);
         max = price + (0.02 * price);
-        // avg = price;
         avg = price;
         priceCm = price.toString();
-        // print("${route.toString()}\n");
       });
-      return showDailogs();
+      return (!clickdone) ? showDailogs() : null;
     } else {
       setState(() {
         var numberPrice = 0.0;
         for (int i = 0; i < data_adding_correct.length; i++) {
           numberPrice += double.parse(
-              data_adding_correct[i]['comparable_adding_price'].toString());
+            data_adding_correct[i]['comparable_adding_price'].toString(),
+          );
         }
         adding_price = numberPrice;
         adding_price /= int.parse(data_adding_correct.length.toString());
         // var price = (adding_price + R_avg) / 2;
-        min = adding_price - (0.3 * adding_price);
+        min = adding_price - (0.2 * adding_price);
         max = adding_price + (0.2 * adding_price);
         avg = adding_price;
       });
-      return showDailogs();
+      return (!clickdone) ? showDailogs() : null;
     }
   }
 
@@ -1959,6 +2784,10 @@ class _HomePageState extends State<map_cross_verbal> {
   }
 
   TextEditingController addressController = TextEditingController();
+  final TextEditingController controllerDrop = TextEditingController();
+  final TextEditingController controllerDS = TextEditingController();
+  final TextEditingController controllerArea = TextEditingController();
+
   var maxSqm1, minSqm1;
   var maxSqm2, minSqm2;
   var commune, district;
@@ -2014,7 +2843,7 @@ class _HomePageState extends State<map_cross_verbal> {
               setState(() {
                 route = (jsonResponse['results'][j]['address_components'][i]
                     ['short_name']);
-                print("route => $route");
+                // print("route => $route");
               });
             }
           }
@@ -2022,11 +2851,21 @@ class _HomePageState extends State<map_cross_verbal> {
       }
 
       addressController.text =
-          "${(district == "null") ? "" : district}, ${(commune == "null") ? "" : commune}";
+          "${(province == "null") ? "" : province}, ${(district == "null") ? "" : district}, ${(commune == "null") ? "" : commune}, ${(route == "null") ? "" : route}";
+      widget.get_province(addressController.text);
       if (checkFunction == false) {
         await checkKhatIDSangID(district, commune);
       }
     }
+  }
+
+  bool validateAndSave() {
+    final form = formKey.currentState;
+    if (form!.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
   }
 
   bool waitngOne = false;
@@ -2034,30 +2873,30 @@ class _HomePageState extends State<map_cross_verbal> {
   int sangkatID = 0;
   Future<void> checkKhatIDSangID(district, commune) async {
     setState(() {
-      for (int i = 0; i < listKhanP.length; i++) {
-        for (int j = 0; j < listsang.length; j++) {
-          if (listKhanP[i]['Khan_Name'] == district &&
-              listsang[j]['Sangkat_Name'] == commune) {
-            khanID = listKhanP[i]['Khan_ID'];
-            sangkatID = listsang[j]['Sangkat_ID'];
+      for (int i = 0; i < controller.listKhanP.length; i++) {
+        for (int j = 0; j < controller.listsang.length; j++) {
+          if (controller.listKhanP[i]['Khan_Name'] == district &&
+              controller.listsang[j]['Sangkat_Name'] == commune) {
+            khanID = controller.listKhanP[i]['Khan_ID'];
+            sangkatID = controller.listsang[j]['Sangkat_ID'];
           }
         }
       }
-      for (int r = 0; r < listPriceR.length; r++) {
-        if (listPriceR[r]['Sangkat_ID'] == sangkatID &&
-            listPriceR[r]['Khan_ID'] == khanID) {
+      for (int r = 0; r < controller.listPriceR.length; r++) {
+        if (controller.listPriceR[r]['Sangkat_ID'] == sangkatID &&
+            controller.listPriceR[r]['Khan_ID'] == khanID) {
           setState(() {
-            maxSqm1 = listPriceR[r]['Max_Value'].toString();
-            minSqm1 = listPriceR[r]['Min_Value'].toString();
+            maxSqm1 = controller.listPriceR[r]['Max_Value'].toString();
+            minSqm1 = controller.listPriceR[r]['Min_Value'].toString();
           });
         }
       }
-      for (int c = 0; c < listPriceC.length; c++) {
-        if (listPriceC[c]['Sangkat_ID'] == sangkatID &&
-            listPriceC[c]['Khan_ID'] == khanID) {
+      for (int c = 0; c < controller.listPriceC.length; c++) {
+        if (controller.listPriceC[c]['Sangkat_ID'] == sangkatID &&
+            controller.listPriceC[c]['Khan_ID'] == khanID) {
           setState(() {
-            maxSqm2 = listPriceC[c]['Max_Value'].toString();
-            minSqm2 = listPriceC[c]['Min_Value'].toString();
+            maxSqm2 = controller.listPriceC[c]['Max_Value'].toString();
+            minSqm2 = controller.listPriceC[c]['Min_Value'].toString();
           });
         }
       }
@@ -2070,5 +2909,19 @@ class _HomePageState extends State<map_cross_verbal> {
           2;
       print('No.3 R_avg : $R_avg || C_avg : $C_avg');
     });
+  }
+
+  TextStyle Label() {
+    return TextStyle(color: kPrimaryColor, fontSize: 11);
+  }
+
+  TextStyle Name() {
+    return TextStyle(
+        color: kImageColor, fontSize: 11, fontWeight: FontWeight.bold);
+  }
+
+  TextStyle NameProperty() {
+    return TextStyle(
+        color: kImageColor, fontSize: 12, fontWeight: FontWeight.bold);
   }
 }

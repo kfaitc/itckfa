@@ -89,34 +89,36 @@ class _CodeState extends State<Code> {
       child: loading
           ? SizedBox()
           : //if loading == true, show progress indicator
-          Row(
-              children: [
-                SizedBox(width: 40),
-                Icon(
-                  Icons.qr_code,
-                  color: kImageColor,
-                  size: 30,
-                ),
-                SizedBox(width: 10),
-                ((widget.cd == null)
-                    // ? SizedBox()
-                    ? Text(
-                        codedisplay.toString(),
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: kPrimaryColor,
-                        ),
-                      )
-                    : Text(
-                        widget.cd.toString(),
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                          color: kPrimaryColor,
-                        ),
-                      )),
-              ],
+          Padding(
+              padding: const EdgeInsets.only(left: 30),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.qr_code,
+                    color: kImageColor,
+                    size: 25,
+                  ),
+                  SizedBox(width: 10),
+                  ((widget.cd == null)
+                      // ? SizedBox()
+                      ? Text(
+                          codedisplay.toString(),
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: kPrimaryColor,
+                          ),
+                        )
+                      : Text(
+                          widget.cd.toString(),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: kPrimaryColor,
+                          ),
+                        )),
+                ],
+              ),
             ),
     );
   }

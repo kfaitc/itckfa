@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
@@ -9,12 +8,12 @@ import 'package:getwidget/size/gf_size.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:itckfa/Option/screens/AutoVerbal/search/Edit.dart';
 import 'package:itckfa/screen/Home/Home.dart';
-// import 'package:onesignal_flutter/onesignal_flutter.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:itckfa/screen/components/map_all/map_in_add_verbal.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uni_links/uni_links.dart';
-import 'Option/components/slideUp.dart';
 import 'Option/screens/Auth/login.dart';
+import 'Option/screens/AutoVerbal/Verbal/Add.dart';
 
 void main() async {
   // if (Platform.isIOS) {
@@ -31,16 +30,14 @@ void main() async {
   //   [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
   // );
 
-
-
-  // String? playerId;
-  // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-  // OneSignal.shared.getDeviceState().then((deviceState) {
-  //   if (deviceState != null) {
-  //     playerId = deviceState.userId;
-  //     // print("OneSignal Player ID: $playerId");
-  //   }
-  // });
+  String? playerId;
+  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  OneSignal.shared.getDeviceState().then((deviceState) {
+    if (deviceState != null) {
+      playerId = deviceState.userId;
+      // print("OneSignal Player ID: $playerId");
+    }
+  });
 
   runApp(MyApp());
 }
@@ -174,6 +171,21 @@ class _MyAppState extends State<MyApp> {
         //       asking_price: (value) {},
         //     ),
         '/': (context) => const Login(),
+        '/s': (context) =>
+            const Add(id: '249', id_control_user: "248K292F248A"),
+        "/d": (context) => Map_verbal_add(
+              iduser: "248K292F248A",
+              updateNew: 0,
+              get_commune: (value) {},
+              get_district: (value) {},
+              get_lat: (value) {},
+              get_log: (value) {},
+              get_province: (value) {
+                setState(() {
+                  // addressController.text = value;
+                });
+              },
+            ),
         // '/': (p0) => ListController_Approvel(),
         "/aba": (context) => const ThankYouPage(title: "aba"),
         "/wing": (context) => const ThankYouPage(title: "wing"),

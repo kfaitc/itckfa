@@ -55,80 +55,42 @@ class _HomePageState extends State<HomePage1> {
   double? log;
   String? password;
   String? control_user;
-  getdata() {
-    if (widget.pf != null) {
-      Future.delayed(Duration(seconds: 1), () async {
-        await mydb.open_user();
-        slist = await mydb.db.rawQuery('SELECT * FROM user');
+  void getdata() async {
+    await mydb.open_user();
+    slist = await mydb.db.rawQuery('SELECT * FROM user');
 
-        setState(() {
-          int i;
-          if (slist.isNotEmpty) {
-            i = slist.length - 1;
-            user = '${slist[i]['first_name']} ${slist[0]['last_name']}';
-            first_name = slist[i]['first_name'];
-            last_name = slist[i]['last_name'];
-            email = slist[i]['email'];
-            gender = slist[i]['gender'];
-            from = slist[i]['known_from'];
-            tel = slist[i]['tel_num'];
-            id = slist[i]['id'];
-            control_user = slist[i]['username'];
-            password = slist[i]['password'];
-          }
-        });
-      });
-      setState(() {
-        check = true;
-      });
-      Future.delayed(Duration(seconds: 4), () {
-        setState(() {
-          check = false;
-        });
-      });
-    } else {
-      Future.delayed(Duration(seconds: 1), () async {
-        await mydb.open_user();
-        slist = await mydb.db.rawQuery('SELECT * FROM user');
+    setState(() {
+      int i;
+      if (slist.isNotEmpty) {
+        i = slist.length - 1;
+        user = '${slist[i]['first_name']}${slist[0]['last_name']}';
+        first_name = slist[i]['first_name'];
+        last_name = slist[i]['last_name'];
+        email = slist[i]['email'];
+        gender = slist[i]['gender'];
+        from = slist[i]['known_from'];
+        tel = slist[i]['tel_num'];
+        id = slist[i]['id'];
+        control_user = slist[i]['username'];
+        password = slist[i]['password'];
 
-        setState(() {
-          int i;
-          if (slist.isNotEmpty) {
-            i = slist.length - 1;
-            user = '${slist[i]['first_name']}${slist[0]['last_name']}';
-            first_name = slist[i]['first_name'];
-            last_name = slist[i]['last_name'];
-            email = slist[i]['email'];
-            gender = slist[i]['gender'];
-            from = slist[i]['known_from'];
-            tel = slist[i]['tel_num'];
-            id = slist[i]['id'];
-            control_user = slist[i]['username'];
-            password = slist[i]['password'];
-
-            // OneSignal.login("$control_user");
-            // OneSignal.User.addAlias(
-            //   "$user",
-            //   "$control_user",
-            // );
-            // OneSignal.User.addTagWithKey(
-            //     "fb_id$id", slist[i]['username'].toString(),);
-            // OneSignal.User.addTags({'fb_id$id': '${slist[i]['username']}'});
-          }
-        });
-        setState(() {
-          check = false;
-        });
-      });
-    }
+        // OneSignal.login("$control_user");
+        // OneSignal.User.addAlias(
+        //   "$user",
+        //   "$control_user",
+        // );
+        // OneSignal.User.addTagWithKey(
+        //     "fb_id$id", slist[i]['username'].toString(),);
+        // OneSignal.User.addTags({'fb_id$id': '${slist[i]['username']}'});
+      }
+    });
   }
 
   Map? datatest;
   List<Map> slist = [];
   MyDb mydb = MyDb();
   Future logOut() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.remove('email');
+    mydb.db.delete('user', where: 'id = ?', whereArgs: [id]);
     Fluttertoast.showToast(
       msg: 'Log Out',
       toastLength: Toast.LENGTH_SHORT,
@@ -147,7 +109,7 @@ class _HomePageState extends State<HomePage1> {
   String? expiry;
   List list = [];
   String? now_day;
-  Future _showCustomSnackbar(String message) async {
+  Future showCustomSnackbar(String message) async {
     final snackbar = SnackBar(
       content: Container(
         alignment: Alignment.center,
@@ -188,7 +150,7 @@ class _HomePageState extends State<HomePage1> {
   }
 
   int _currentIndex = 0;
-  bool check = false;
+
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
@@ -212,211 +174,182 @@ class _HomePageState extends State<HomePage1> {
       Center(child: Abouts()),
       Center(child: Feed_back()),
     ];
-    if (slist.isNotEmpty && check == false) {
-      return Scaffold(
-        body: tabs[_currentIndex],
-        drawer: Drawer(
-          width: 270,
-          child: ListView(
-            children: [
-              //MyHeaderDrawer(),
-              MyDrawerList(
-                icon: Icons.people,
-                title: 'Account',
-                Press: () {
-                  setState(() {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return Account(
-                            username: user ?? '',
-                            email: email ?? '',
-                            first_name: first_name ?? '',
-                            last_name: last_name ?? '',
-                            gender: gender ?? '',
-                            from: from ?? '',
-                            tel: tel ?? '',
-                            id: id.toString(),
-                            password: password ?? "",
-                            control_user: control_user ?? "",
-                          );
-                        },
-                      ),
-                    );
-                  });
-                },
-              ),
-              MyDrawerList(
-                icon: Icons.list,
-                title: 'Add Verbal',
-                Press: () {
+
+    return Scaffold(
+      body: tabs[_currentIndex],
+      drawer: Drawer(
+        width: 270,
+        child: ListView(
+          children: [
+            //MyHeaderDrawer(),
+            MyDrawerList(
+              icon: Icons.people,
+              title: 'Account',
+              Press: () {
+                setState(() {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return Menu_Add_verbal(
+                        return Account(
+                          username: user ?? '',
+                          email: email ?? '',
+                          first_name: first_name ?? '',
+                          last_name: last_name ?? '',
+                          gender: gender ?? '',
+                          from: from ?? '',
+                          tel: tel ?? '',
                           id: id.toString(),
-                          id_control_user: control_user ?? "",
+                          password: password ?? "",
+                          control_user: control_user ?? "",
                         );
                       },
                     ),
                   );
-                },
-              ),
-              MyDrawerList(
-                icon: Icons.villa,
-                title: 'Property',
-                Press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return Home_Screen_property();
-                      },
-                    ),
-                  );
-                },
-              ),
-              MyDrawerList(
-                icon: Icons.wallet,
-                title: 'Wallet',
-                Press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return Walletscreen();
-                      },
-                    ),
-                  );
-                },
-              ),
-              MyDrawerList(
-                icon: Icons.question_answer,
-                title: 'FAQ',
-                Press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return FapsSidebar();
-                      },
-                    ),
-                  );
-                },
-              ),
-              MyDrawerList(
-                icon: Icons.contact_phone,
-                title: 'Contact Us',
-                Press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return ContactsSidebar();
-                      },
-                    ),
-                  );
-                },
-              ),
-              MyDrawerList(
-                icon: Icons.people,
-                title: 'About Us',
-                Press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return AboutSidebar();
-                      },
-                    ),
-                  );
-                },
-              ),
-              SizedBox(height: 40),
-              Divider(
-                color: Colors.blueAccent,
-              ),
-              MyDrawerList(
-                icon: Icons.lock,
-                title: 'Log Out',
-                Press: () {
-                  logOut();
-                },
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: kwhite_new,
-          currentIndex: _currentIndex,
-          type: BottomNavigationBarType.fixed,
-          iconSize: 25,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-              ),
-              label: "Home",
-              backgroundColor: kwhite_new,
+                });
+              },
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.question_answer),
-              label: "FAQ",
-              backgroundColor: kwhite_new,
+            MyDrawerList(
+              icon: Icons.list,
+              title: 'Add Verbal',
+              Press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Menu_Add_verbal(
+                        id: id.toString(),
+                        id_control_user: control_user ?? "",
+                      );
+                    },
+                  ),
+                );
+              },
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.contact_phone),
-              label: "Contact",
-              backgroundColor: kwhite_new,
+            MyDrawerList(
+              icon: Icons.villa,
+              title: 'Property',
+              Press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Home_Screen_property();
+                    },
+                  ),
+                );
+              },
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: "About",
-              backgroundColor: kwhite_new,
+            MyDrawerList(
+              icon: Icons.wallet,
+              title: 'Wallet',
+              Press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return Walletscreen();
+                    },
+                  ),
+                );
+              },
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.contact_phone),
-              label: "FeedBack",
-              backgroundColor: kwhite_new,
+            MyDrawerList(
+              icon: Icons.question_answer,
+              title: 'FAQ',
+              Press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return FapsSidebar();
+                    },
+                  ),
+                );
+              },
+            ),
+            MyDrawerList(
+              icon: Icons.contact_phone,
+              title: 'Contact Us',
+              Press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ContactsSidebar();
+                    },
+                  ),
+                );
+              },
+            ),
+            MyDrawerList(
+              icon: Icons.people,
+              title: 'About Us',
+              Press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AboutSidebar();
+                    },
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: 40),
+            Divider(
+              color: Colors.blueAccent,
+            ),
+            MyDrawerList(
+              icon: Icons.lock,
+              title: 'Log Out',
+              Press: () {
+                logOut();
+              },
             ),
           ],
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
         ),
-      );
-    } else {
-      return Scaffold(
-        body: SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.fill,
-                opacity: 0.4,
-                filterQuality: FilterQuality.medium,
-                image: AssetImage('assets/images/first.gif'),
-              ),
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(226, 76, 83, 175),
-                  Color.fromARGB(211, 101, 59, 255)
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: kwhite_new,
+        currentIndex: _currentIndex,
+        type: BottomNavigationBarType.fixed,
+        iconSize: 25,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
             ),
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
+            label: "Home",
+            backgroundColor: kwhite_new,
           ),
-        ),
-      );
-    }
+          BottomNavigationBarItem(
+            icon: Icon(Icons.question_answer),
+            label: "FAQ",
+            backgroundColor: kwhite_new,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contact_phone),
+            label: "Contact",
+            backgroundColor: kwhite_new,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: "About",
+            backgroundColor: kwhite_new,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contact_phone),
+            label: "FeedBack",
+            backgroundColor: kwhite_new,
+          ),
+        ],
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+      ),
+    );
   }
 }

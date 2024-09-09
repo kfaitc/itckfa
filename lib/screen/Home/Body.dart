@@ -4,21 +4,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/Option/components/contants.dart';
 import 'package:itckfa/Option/screens/AutoVerbal/Verbal/Add.dart';
 import 'package:itckfa/Option/screens/AutoVerbal/List.dart';
-import 'package:itckfa/Option/screens/AutoVerbal/search/protect.dart';
 import 'package:itckfa/Option/screens/walletscreen.dart';
 import 'package:itckfa/screen/Home/Customs/Model-responsive.dart';
 import 'package:itckfa/screen/Promotion/membership_real.dart';
 import 'package:itckfa/screen/Promotion/partnerList_real.dart';
-// import 'package:itckfa/screen/Home/Customs/MenuCard.dart';
 import 'package:http/http.dart' as http;
 import 'package:itckfa/screen/Promotion/Title_promo.dart';
 import 'package:itckfa/screen/Promotion/promotion.dart';
@@ -28,6 +27,7 @@ import 'package:itckfa/screen/components/payment/Main_Form/in_app_purchase_top_u
 import 'package:itckfa/screen/components/payment/Main_Form/top_up.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:crypto/crypto.dart';
+import '../../Getx/Auto_Verbal/autu_verbal.dart';
 import '../../Option/screens/AutoVerbal/Verbal/add_PropertyPrce.dart';
 import '../../Option/screens/AutoVerbal/Verbal/menu_add.dart';
 import '../../models/autoVerbal.dart';
@@ -67,141 +67,10 @@ class _BodyState extends State<Body> {
   late AutoVerbalRequestModel requestModelAuto;
   int check_ios_pay = 0;
   Uint8List? get_bytes;
-  Future<bool> _handleLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Location services are disabled. Please enable the services',
-          ),
-        ),
-      );
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location permissions are denied')),
-        );
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Location permissions are permanently denied, we cannot request permissions.',
-          ),
-        ),
-      );
-      return false;
-    }
-    // _getCurrentPosition();
-    return true;
-  }
-
-  Future<void> _getCurrentPosition() async {
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    setState(() {
-      lat = position.latitude;
-      log = position.longitude;
-      Find_by_piont(lat, log);
-    });
-  }
 
   var maxSqm1, minSqm1;
   var maxSqm2, minSqm2;
   var formatter = NumberFormat("##,###,###,###.00", "en_US");
-  Future<void> Find_by_piont(double la, double lo) async {
-    final response = await http.get(
-      Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-      List ls = jsonResponse['results'];
-      List ac;
-      bool check_sk = false, check_kn = false;
-      for (int j = 0; j < ls.length; j++) {
-        ac = jsonResponse['results'][j]['address_components'];
-        for (int i = 0; i < ac.length; i++) {
-          if (check_kn == false || check_sk == false) {
-            if (jsonResponse['results'][j]['address_components'][i]['types']
-                    [0] ==
-                "political") {
-              setState(() {
-                check_kn = true;
-                district = (jsonResponse['results'][j]['address_components'][i]
-                    ['short_name']);
-              });
-            }
-            if (jsonResponse['results'][j]['address_components'][i]['types']
-                    [0] ==
-                "administrative_area_level_3") {
-              setState(() {
-                check_sk = true;
-                commune = (jsonResponse['results'][j]['address_components'][i]
-                    ['short_name']);
-              });
-            }
-          }
-        }
-      }
-      final response_rc = await http.get(
-        Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
-        ),
-      );
-      var jsonResponse_rc = json.decode(response_rc.body);
-      setState(() {
-        maxSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
-        minSqm1 = jsonResponse_rc['residential'][0]['Max_Value'].toString();
-        maxSqm2 = jsonResponse_rc['commercial'][0]['Min_Value'].toString();
-        minSqm2 = jsonResponse_rc['commercial'][0]['Max_Value'].toString();
-        R_avg = (double.parse(maxSqm1.toString()) +
-                double.parse(minSqm1.toString())) /
-            2;
-        C_avg = (double.parse(maxSqm2.toString()) +
-                double.parse(minSqm2.toString())) /
-            2;
-      });
-    } else {
-      // print(response.statusCode);
-    }
-  }
-
-  double? R_avg;
-  double? C_avg;
-  Future<void> change_price() async {
-    final response_rc = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
-      ),
-    );
-    var jsonResponse_rc = json.decode(response_rc.body);
-    setState(() {
-      maxSqm1 = jsonResponse_rc['residential'][0]['Min_Value'].toString();
-      minSqm1 = jsonResponse_rc['residential'][0]['Max_Value'].toString();
-      maxSqm2 = jsonResponse_rc['commercial'][0]['Min_Value'].toString();
-      minSqm2 = jsonResponse_rc['commercial'][0]['Max_Value'].toString();
-      R_avg = (double.parse(maxSqm1.toString()) +
-              double.parse(minSqm1.toString())) /
-          2;
-      C_avg = (double.parse(maxSqm2.toString()) +
-              double.parse(minSqm2.toString())) /
-          2;
-    });
-  }
 
   String user = "";
   String first_name = "";
@@ -214,10 +83,11 @@ class _BodyState extends State<Body> {
   String control_user = "";
   String password = "";
   String? number_of_vpoint;
-  String? their_plans;
-  String? expiry;
+
+  // String? expiry;
   List<Map> DataAutoVerbal = [];
   String? v_point;
+  AuthVerbal authVerbal = AuthVerbal(Iduser: "");
   Future<void> check_v_point() async {
     await mydb_vb.open_verbal();
 
@@ -238,46 +108,20 @@ class _BodyState extends State<Body> {
       "SELECT * FROM verbal_models WHERE verbal_user = ? ",
       [control_user.toString()],
     );
-    final response = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$control_user',
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
-    var rs_ios = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option',
+
+    var dio = Dio();
+    var response = await dio.request(
+      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option',
+      options: Options(
+        method: 'GET',
       ),
     );
     if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
-      var jsonData_ios = jsonDecode(rs_ios.body);
-      setState(() {
-        number_of_vpoint = jsonData['vpoint'].toString();
-        check_ios_pay = jsonData_ios;
-        // their_plans = jsonData['their_plans'].toString();
-        if (jsonData['their_plans'].toString() == "1 day") {
-          their_plans = "1 Day";
-        } else if (jsonData['their_plans'].toString() == "7 day") {
-          their_plans = "1 Week";
-        } else if (jsonData['their_plans'].toString() == "30 day") {
-          their_plans = "1 Mount";
-        } else {
-          their_plans = jsonData['their_plans'].toString();
-        }
-        if (jsonData['expiry'].toString() != "0") {
-          expiry = jsonData['expiry'].toString();
-        } else {
-          DateTime timeNow = DateTime.now();
-          expiry = timeNow.toString();
-        }
+      // var jsonData = jsonDecode(response.body);
 
-        // print(number_of_vpoint);
+      setState(() {
+        check_ios_pay = int.parse(jsonDecode(json.encode(response.data)));
       });
-    } else {
-      // print(response.reasonPhrase);
     }
   }
 
@@ -288,13 +132,10 @@ class _BodyState extends State<Body> {
   ];
   @override
   void initState() {
-    ///
-    _handleLocationPermission();
-    // _getCurrentPosition();
-
     super.initState();
-
     requestModelAuto = AutoVerbalRequestModel(
+      borey: "0",
+      road: "",
       property_type_id: "",
       lat: "",
       lng: "",
@@ -320,9 +161,14 @@ class _BodyState extends State<Body> {
       // autoVerbal: [requestModelVerbal],
       // data: requestModelVerbal,
     );
-    Future.delayed(const Duration(seconds: 1), () {
-      check_v_point();
-      // _handleSetExternalUserId();
+    check_v_point();
+    mainCheck();
+  }
+
+  void mainCheck() async {
+    Future.delayed(Duration(seconds: 2), () {
+      authVerbal.checkVpoint(widget.control_user.toString());
+      authVerbal = Get.put(AuthVerbal(Iduser: widget.control_user));
     });
   }
 
@@ -358,15 +204,7 @@ class _BodyState extends State<Body> {
       wth2 = w * 0.3;
     }
 
-    if (expiry != null) {
-      DateTime timeNow = DateTime.parse(expiry!);
-      maxX = MediaQuery.of(context).size.width * 0.9;
-      maxY = MediaQuery.of(context).size.height * 0.75;
-
-      formattedDate = DateFormat('d MMMM yyyy').format(timeNow);
-    }
-
-    return (user != null)
+    return (user != "")
         ? Scaffold(
             appBar: AppBar(
               backgroundColor: kwhite_new,
@@ -389,18 +227,19 @@ class _BodyState extends State<Body> {
                   child: GFIconButton(
                     padding: const EdgeInsets.all(1),
                     onPressed: () {
-                      setState(() {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return ProtectDataCrossCheck(
-                                id_user: control_user,
-                              );
-                            },
-                          ),
-                        );
-                      });
+                      authVerbal.checkVpoint(widget.control_user.toString());
+                      // setState(() {
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) {
+                      //         return ProtectDataCrossCheck(
+                      //           id_user: control_user,
+                      //         );
+                      //       },
+                      //     ),
+                      //   );
+                      // });
                     },
                     icon: Icon(
                       Icons.shopping_cart_outlined,
@@ -478,7 +317,9 @@ class _BodyState extends State<Body> {
                                           MaterialPageRoute(
                                             builder: (context) => Add(
                                               id: widget.id,
-                                              id_control_user: control_user,
+                                              id_control_user: widget
+                                                  .control_user
+                                                  .toString(),
                                             ),
                                           ),
                                         );
@@ -600,9 +441,11 @@ class _BodyState extends State<Body> {
                                                             set_phone: tel,
                                                             id_user:
                                                                 id.toString(),
-                                                            set_id_user:
-                                                                control_user,
-                                                            set_email: email,
+                                                            set_id_user: widget
+                                                                .control_user,
+                                                            set_email: widget
+                                                                .email
+                                                                .toString(),
                                                           ),
                                                         ),
                                                       );
@@ -1302,51 +1145,28 @@ class _BodyState extends State<Body> {
                                             width: 2,
                                           ),
                                         ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Row(
+                                        child: Obx(() {
+                                          if (authVerbal.isAuthGet.value) {
+                                            return Center(
+                                              child:
+                                                  const CircularProgressIndicator(),
+                                            );
+                                          } else if (authVerbal
+                                              .listCheckVP.isEmpty) {
+                                            return SizedBox();
+                                          } else {
+                                            return Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.start,
+                                                  MainAxisAlignment.spaceAround,
                                               children: [
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Text(
-                                                    "Main Balance : ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white,
-                                                      fontSize: MediaQuery.of(
-                                                            context,
-                                                          ).textScaleFactor *
-                                                          10,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                        (number_of_vpoint !=
-                                                                null)
-                                                            ? "$number_of_vpoint"
-                                                            : "0",
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.red,
-                                                          fontSize: MediaQuery
-                                                                  .of(
-                                                                context,
-                                                              ).textScaleFactor *
-                                                              14,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        "  VPoint",
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        "Main Balance : ",
                                                         style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
@@ -1355,108 +1175,155 @@ class _BodyState extends State<Body> {
                                                                   .of(
                                                                 context,
                                                               ).textScaleFactor *
-                                                              11,
+                                                              10,
                                                         ),
                                                       ),
-                                                      SizedBox(width: 10),
-                                                      Image.asset(
-                                                        "assets/images/v.png",
-                                                        height: 25,
-                                                        width: 25,
-                                                      )
-                                                    ],
-                                                  ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                            authVerbal
+                                                                .countAccount
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Colors.red,
+                                                              fontSize: MediaQuery
+                                                                      .of(
+                                                                    context,
+                                                                  ).textScaleFactor *
+                                                                  14,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            "  VPoint",
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: MediaQuery
+                                                                      .of(
+                                                                    context,
+                                                                  ).textScaleFactor *
+                                                                  11,
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Image.asset(
+                                                            "assets/images/v.png",
+                                                            height: 25,
+                                                            width: 25,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(
+                                                  color: Colors.white,
+                                                  endIndent: 15,
+                                                  indent: 15,
+                                                  height: 1,
+                                                  thickness: 1,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        "My Plans : ",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                          fontSize: MediaQuery
+                                                                  .of(
+                                                                context,
+                                                              ).textScaleFactor *
+                                                              10,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        authVerbal
+                                                            .listCheckVP[0]
+                                                                ['their_plans']
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                          fontSize: MediaQuery
+                                                                  .of(
+                                                                context,
+                                                              ).textScaleFactor *
+                                                              10,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Divider(
+                                                  color: Colors.white,
+                                                  endIndent: 15,
+                                                  indent: 15,
+                                                  height: 1,
+                                                  thickness: 1,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        "Valid Until : ",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                          fontSize: MediaQuery
+                                                                  .of(
+                                                                context,
+                                                              ).textScaleFactor *
+                                                              10,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        authVerbal
+                                                            .formattedDate.value
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                          fontSize: MediaQuery
+                                                                  .of(
+                                                                context,
+                                                              ).textScaleFactor *
+                                                              10,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                              endIndent: 15,
-                                              indent: 15,
-                                              height: 1,
-                                              thickness: 1,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Text(
-                                                    "My Plans : ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white,
-                                                      fontSize: MediaQuery.of(
-                                                            context,
-                                                          ).textScaleFactor *
-                                                          10,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Text(
-                                                    "${(their_plans != null) ? their_plans : "0 day"}",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white,
-                                                      fontSize: MediaQuery.of(
-                                                            context,
-                                                          ).textScaleFactor *
-                                                          10,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Divider(
-                                              color: Colors.white,
-                                              endIndent: 15,
-                                              indent: 15,
-                                              height: 1,
-                                              thickness: 1,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Text(
-                                                    "Valid Until : ",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white,
-                                                      fontSize: MediaQuery.of(
-                                                            context,
-                                                          ).textScaleFactor *
-                                                          10,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Text(
-                                                    "${(formattedDate != null) ? formattedDate : "00/00/0000"}",
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white,
-                                                      fontSize: MediaQuery.of(
-                                                            context,
-                                                          ).textScaleFactor *
-                                                          10,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                            );
+                                          }
+                                        }),
                                       ),
                                     ),
                                   ),
@@ -1532,47 +1399,5 @@ class _BodyState extends State<Body> {
               ),
             ),
           );
-  }
-
-  String? options;
-  String? commune;
-
-  var id_Sangkat;
-  List<dynamic> list_sangkat = [];
-  void Load_sangkat(String id) async {
-    setState(() {});
-    var rs = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/sangkat?Sangkat_Name=$id',
-      ),
-    );
-    if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
-      setState(() {
-        list_sangkat = jsonData;
-        id_Sangkat = int.parse(list_sangkat[0]['Sangkat_ID']);
-      });
-    }
-  }
-
-  String? province;
-
-  late List<dynamic> list_Khan;
-
-  int id_khan = 0;
-  void Load_khan(String district) async {
-    setState(() {});
-    var rs = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/khan?Khan_Name=$district',
-      ),
-    );
-    if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
-      setState(() {
-        list_Khan = jsonData;
-        id_khan = int.parse(list_Khan[0]['Khan_ID']);
-      });
-    }
   }
 }

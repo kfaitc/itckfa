@@ -2,16 +2,17 @@
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:itckfa/Memory_local/database.dart';
 import 'package:itckfa/Memory_local/show_data_saved_offline.dart';
+import 'package:itckfa/Option/components/colors.dart';
 import 'package:itckfa/Option/screens/Auth/register.dart';
 import 'package:itckfa/Option/screens/AutoVerbal/search/protect.dart';
 import 'package:itckfa/api/api_service.dart';
@@ -22,6 +23,8 @@ import 'package:itckfa/screen/Home/Home.dart';
 import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'dart:developer' as developer;
+import '../../../Getx/Auth/Auth.dart';
+import '../../../Getx/Auth/remember.dart';
 import '../../../screen/Customs/responsive.dart';
 import '../../components/contants.dart';
 
@@ -59,7 +62,9 @@ class _LoginState extends State<Login> {
   late String from = "";
   late String tel = "";
   late String control_user = "";
-  static bool status = false;
+  bool status = false;
+  GetUserRemember getUserRemember = GetUserRemember();
+  Authentication authentication = Get.put(Authentication());
   late TextEditingController Email;
   late TextEditingController Password;
   Future getdata() async {
@@ -69,14 +74,19 @@ class _LoginState extends State<Login> {
       setState(() {
         if (slist.length > 0) {
           int i = slist.length - 1;
-          // print("\n\n\n\nkokoko" + slist.toString() + "\n\n\n\nkokoko");
           status = true;
           id = slist[i]['id'];
           control_user = slist[i]['username'];
           print("objects: $id");
-          Email = TextEditingController(text: slist[i]['email']);
-          Password = TextEditingController(text: slist[i]['password']);
-        } else {}
+          print(slist.toString());
+          requestModel.email = slist[i]['email'];
+          requestModel.password = slist[i]['password'];
+          if (slist.isNotEmpty) {
+            authentication.login(requestModel, true);
+          }
+        } else {
+          authentication.listAuth.clear();
+        }
       });
     });
   }
@@ -182,6 +192,7 @@ class _LoginState extends State<Login> {
     initialPage = _pageController.initialPage;
 
     super.initState();
+
     requestModel = LoginRequestModel(email: "", password: "");
   }
 
@@ -193,231 +204,285 @@ class _LoginState extends State<Login> {
 
   bool welcome = false;
   bool check_elcome = false;
+
   @override
   Widget build(BuildContext context) {
-    return ProgressHUD(
-      color: kPrimaryColor,
-      inAsyncCall: isApiCallProcess,
-      opacity: 0.5,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: kwhite_new,
-          elevation: 0,
-          centerTitle: true,
-          title: Image.asset(
-            'assets/images/KFA_CRM.png',
-            height: 160,
-            width: 160,
-          ),
-          toolbarHeight: 130,
-        ),
-        backgroundColor: kwhite_new,
-        body: Container(
-          height: MediaQuery.of(context).size.height * 0.6,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: kwhite,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(100.0),
-              bottomRight: Radius.circular(100.0),
-            ),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Responsive(
-                  mobile: login(context),
-                  tablet: Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 500,
-                              child: login(context),
-                            ),
-                          ],
+    return Scaffold(
+      backgroundColor: kwhite_new,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Responsive(
+              mobile: login(context),
+              tablet: Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 500,
+                          child: login(context),
                         ),
-                      )
-                    ],
-                  ),
-                  desktop: Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 500,
-                              child: login(context),
-                            ),
-                          ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              desktop: Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 500,
+                          child: login(context),
                         ),
-                      )
-                    ],
-                  ),
-                  phone: login(context),
-                ),
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              phone: login(context),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget login(BuildContext context) {
+  Widget login(BuildContext contex) {
     return Form(
       key: _formKey,
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 25.0,
-          ),
-
-          ((status == false) ? input(context) : Output(context)),
-
-          SizedBox(
-            height: 10.0,
-          ),
-          // ignore: deprecated_member_use
-          SizedBox(
-            width: 150,
-            child: AnimatedButton(
-              text: 'Login',
-              color: kwhite_new,
-              pressEvent: () async {
-                if (validateAndSave()) {
-                  setState(() {
-                    // final player = AudioPlayer();
-                    // player.play(AssetSource('nor.mp3'));
-                    isApiCallProcess = true;
-                  });
-                  APIservice apIservice = APIservice();
-                  apIservice.login(requestModel).then((value) async {
-                    Load(value.token);
-                    setState(() {
-                      isApiCallProcess = false;
-                    });
-                    if (value.message == "Login Successfully!") {
-                      if (slist.length == 0) {
-                        await mydb.db.rawInsert(
-                            "INSERT INTO user (id ,first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
-                            [
-                              value.user['id'],
-                              value.user['first_name'],
-                              value.user['last_name'],
-                              value.user['control_user'],
-                              value.user['gender'],
-                              value.user['tel_num'],
-                              value.user['known_from'],
-                              requestModel.email,
-                              requestModel.password
-                            ]);
-                      } else {
-                        var check_Sql = await mydb.db.rawQuery(
-                          'SELECT * FROM user  WHERE  email=? AND password=?',
-                          [requestModel.email, requestModel.password],
-                        );
-                        if (check_Sql.length == 0) {
-                          mydb.db.rawInsert(
-                              "UPDATE user SET id=? ,first_name=?, last_name=?, username=?, gender=?, tel_num=?, known_from=?, email=?, password=? WHERE 1",
-                              [
-                                value.user!['id'],
-                                value.user['first_name'],
-                                value.user['last_name'],
-                                value.user['control_user'],
-                                value.user['gender'],
-                                value.user['tel_num'],
-                                value.user['known_from'],
-                                requestModel.email,
-                                requestModel.password
-                              ]);
-                        }
-                      }
-                      AwesomeDialog(
-                        btnOkOnPress: () {},
-                        context: context,
-                        animType: AnimType.leftSlide,
-                        headerAnimationLoop: false,
-                        dialogType: DialogType.success,
-                        showCloseIcon: false,
-                        title: value.message,
-                        autoHide: Duration(seconds: 3),
-                        onDismissCallback: (type) {
-                          // debugPrint('Dialog Dissmiss from callback $type');
-
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomePage1(),
-                            ),
-                          );
-                        },
-                      ).show();
-                    } else if (value.message == "Login unSuccessfully!") {
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.error,
-                        animType: AnimType.rightSlide,
-                        headerAnimationLoop: false,
-                        title: 'Error',
-                        body: Text("Incorrect Email or Password"),
-                        btnOkOnPress: () {},
-                        btnOkIcon: Icons.cancel,
-                        btnOkColor: Colors.red,
-                      ).show();
-                      // print(value.message);
-                    } else {
-                      AwesomeDialog(
-                        context: context,
-                        dialogType: DialogType.error,
-                        animType: AnimType.rightSlide,
-                        headerAnimationLoop: false,
-                        title: 'Error',
-                        body: Text("Incorrect Email or Password"),
-                        desc: value.message,
-                        btnOkOnPress: () {},
-                        btnOkIcon: Icons.cancel,
-                        btnOkColor: Colors.red,
-                      ).show();
-                    }
-                  });
-                }
-              },
-            ),
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: "Don't have any account? ",
-                  style: TextStyle(fontSize: 16.0, color: kTextLightColor),
+      child: Obx(
+        () {
+          if (authentication.isAuth.value) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.85,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  opacity: 0.4,
+                  filterQuality: FilterQuality.medium,
+                  image: AssetImage('assets/images/first.gif'),
                 ),
-                TextSpan(
-                  text: 'Register',
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).textScaleFactor * 16,
-                    color: kPrimaryColor,
+                gradient: LinearGradient(
+                  colors: const [
+                    Color.fromARGB(226, 76, 83, 175),
+                    Color.fromARGB(211, 101, 59, 255)
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else if (authentication.listAuth.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 10, left: 10, top: 50),
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/KFA_CRM.png',
+                    height: 160,
+                    width: 160,
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Register()),
-                      );
-                    },
-                ),
-              ],
-            ),
-          ),
-        ],
+                  Container(
+                    height: 300,
+                    decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 25.0),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                          child: SizedBox(
+                            height: 55,
+                            child: TextFormField(
+                              onChanged: (input) => requestModel.email = input,
+                              keyboardAppearance: Brightness.light,
+                              keyboardType: TextInputType.emailAddress,
+                              scrollPadding: const EdgeInsets.only(top: 5000),
+                              decoration: InputDecoration(
+                                fillColor: Color.fromARGB(255, 255, 255, 255),
+                                filled: true,
+                                labelText: 'Email',
+                                prefixIcon: Icon(
+                                  Icons.email,
+                                  color: kPrimaryColor,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                              ),
+                              validator: (input) {
+                                if (input == null || input.isEmpty) {
+                                  return 'require email*';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                          child: SizedBox(
+                            height: 55,
+                            child: TextFormField(
+                              onSaved: (input) =>
+                                  requestModel.password = input!,
+                              obscureText: _isObscure,
+                              decoration: InputDecoration(
+                                fillColor: kwhite,
+                                filled: true,
+                                labelText: 'Enter password',
+                                prefixIcon: Icon(
+                                  Icons.key,
+                                  color: kPrimaryColor,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    color: kPrimaryColor,
+                                    _isObscure
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isObscure = !_isObscure;
+                                    });
+                                  },
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              validator: (input) {
+                                if (input == null || input.isEmpty) {
+                                  return "require password *";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        SizedBox(
+                          width: 100,
+                          child: AnimatedButton(
+                            text: 'Login',
+                            color: kwhite_new,
+                            pressEvent: () async {
+                              if (validateAndSave()) {
+                                setState(() {
+                                  // final player = AudioPlayer();
+                                  // player.play(AssetSource('nor.mp3'));
+                                  isApiCallProcess = true;
+                                });
+                                await authentication.login(
+                                  requestModel,
+                                  true,
+                                );
+                                // await getUserRemember
+                                //     .rememberAuth(authVerbal.listGetUser);
+                                if (slist.length == 0) {
+                                  await mydb.db.rawInsert(
+                                      "INSERT INTO user (id ,first_name, last_name, username, gender, tel_num, known_from, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+                                      [
+                                        authentication.listAuth[0]['id'],
+                                        authentication.listAuth[0]
+                                            ['first_name'],
+                                        authentication.listAuth[0]['last_name'],
+                                        authentication.listAuth[0]
+                                            ['control_user'],
+                                        authentication.listAuth[0]['gender'],
+                                        authentication.listAuth[0]['tel_num'],
+                                        authentication.listAuth[0]
+                                            ['known_from'],
+                                        requestModel.email,
+                                        requestModel.password
+                                      ]);
+                                } else {
+                                  var check_Sql = await mydb.db.rawQuery(
+                                    'SELECT * FROM user  WHERE  email=? AND password=?',
+                                    [requestModel.email, requestModel.password],
+                                  );
+                                  if (check_Sql.length == 0) {
+                                    mydb.db.rawInsert(
+                                        "UPDATE user SET id=? ,first_name=?, last_name=?, username=?, gender=?, tel_num=?, known_from=?, email=?, password=? WHERE 1",
+                                        [
+                                          authentication.listAuth[0]!['id'],
+                                          authentication.listAuth[0]
+                                              ['first_name'],
+                                          authentication.listAuth[0]
+                                              ['last_name'],
+                                          authentication.listAuth[0]
+                                              ['control_user'],
+                                          authentication.listAuth[0]['gender'],
+                                          authentication.listAuth[0]['tel_num'],
+                                          authentication.listAuth[0]
+                                              ['known_from'],
+                                          requestModel.email,
+                                          requestModel.password
+                                        ]);
+                                  }
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "Don't have any account? ",
+                                style: TextStyle(
+                                    fontSize: 16.0, color: kTextLightColor),
+                              ),
+                              TextSpan(
+                                text: 'Register',
+                                style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).textScaleFactor *
+                                          16,
+                                  color: kPrimaryColor,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Register()),
+                                    );
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Text('No Data');
+          }
+        },
       ),
     );
   }
@@ -489,163 +554,5 @@ class _LoginState extends State<Login> {
       return true;
     }
     return false;
-  }
-
-  Widget input(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: TextFormField(
-            // controller: Email,
-            onSaved: (input) => requestModel.email = input!,
-            keyboardAppearance: Brightness.light,
-            keyboardType: TextInputType.emailAddress,
-            scrollPadding: const EdgeInsets.only(top: 5000),
-            decoration: InputDecoration(
-              fillColor: Color.fromARGB(255, 255, 255, 255),
-              filled: true,
-              labelText: 'Email',
-              prefixIcon: Icon(
-                Icons.email,
-                color: kPrimaryColor,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-            ),
-            validator: (input) {
-              if (input == null || input.isEmpty) {
-                return 'require *';
-              }
-              return null;
-            },
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Padding(
-          //   height: 55,
-          padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: TextFormField(
-            // controller: password,
-            // initialValue: "list[0].password",
-            onSaved: (input) => requestModel.password = input!,
-            obscureText: _isObscure,
-            decoration: InputDecoration(
-              fillColor: kwhite,
-              filled: true,
-              labelText: 'Enter password',
-              prefixIcon: Icon(
-                Icons.key,
-                color: kPrimaryColor,
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  color: kPrimaryColor,
-                  _isObscure ? Icons.visibility : Icons.visibility_off,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isObscure = !_isObscure;
-                  });
-                },
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              focusedBorder: OutlineInputBorder(
-                // borderSide: const BorderSide(color: kPrimaryColor, width: 1.0),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-            ),
-            validator: (input) {
-              if (input == null || input.isEmpty) {
-                return 'require *';
-              }
-              return null;
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget Output(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: TextFormField(
-            controller: Email,
-            onSaved: (input) => requestModel.email = input!,
-            decoration: InputDecoration(
-              fillColor: Color.fromARGB(255, 255, 255, 255),
-              filled: true,
-              labelText: 'Email',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              prefixIcon: Icon(
-                Icons.email,
-                color: kPrimaryColor,
-              ),
-            ),
-            validator: (input) {
-              if (input == null || input.isEmpty) {
-                return 'require *';
-              }
-              return null;
-            },
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Padding(
-          //   height: 55,
-          padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: TextFormField(
-            controller: Password,
-            // initialValue: "list[0].password",
-            onSaved: (input) => requestModel.password = input!,
-            obscureText: _isObscure,
-            decoration: InputDecoration(
-              fillColor: kwhite,
-              filled: true,
-              labelText: 'Enter password',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              prefixIcon: Icon(
-                Icons.key,
-                color: kPrimaryColor,
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  color: kPrimaryColor,
-                  _isObscure ? Icons.visibility : Icons.visibility_off,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isObscure = !_isObscure;
-                  });
-                },
-              ),
-            ),
-            validator: (input) {
-              if (input == null || input.isEmpty) {
-                return 'require *';
-              }
-              return null;
-            },
-          ),
-        ),
-      ],
-    );
   }
 }

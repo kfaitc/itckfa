@@ -333,6 +333,8 @@ class AutoVerbalRequestModel {
   late String code;
   late String user;
   late String option;
+  late String borey;
+  late String road;
   late List verbal;
   //VerbalTypeRequestModel data;
   // List<VerbalTypeRequestModel> autoVerbal;
@@ -359,6 +361,8 @@ class AutoVerbalRequestModel {
     required this.agent,
     required this.verbal_id,
     required this.verbal_khan,
+    required this.borey,
+    required this.road,
     required this.verbal,
   });
   Map<String, dynamic> toJson() {
@@ -385,6 +389,8 @@ class AutoVerbalRequestModel {
       "verbal_property_code": code.trim(),
       "verbal_user": user.trim(),
       "verbal_option": option.trim(),
+      "borey": borey.trim(),
+      "road": road.trim(),
       "VerbalType": verbal,
     };
     return map;

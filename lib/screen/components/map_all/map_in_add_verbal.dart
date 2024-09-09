@@ -1,13 +1,19 @@
-import 'dart:convert';
+// ignore_for_file: non_constant_identifier_names
 
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:itckfa/Option/components/colors.dart';
 import 'package:itckfa/Option/components/contants.dart';
+import '../../../Getx/Auth/Auth.dart';
+import '../../../Getx/GoogleMap/GoogMap.dart';
+import '../../../models/login_model.dart';
+import '../../../models/search_model.dart';
 
 typedef OnChangeCallback = void Function(dynamic value);
 
@@ -15,7 +21,7 @@ const kGoogleApiKey = 'AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class Map_verbal_add extends StatefulWidget {
-  const Map_verbal_add({
+  Map_verbal_add({
     super.key,
     required this.get_province,
     required this.get_district,
@@ -23,6 +29,8 @@ class Map_verbal_add extends StatefulWidget {
     required this.get_log,
     required this.get_lat,
     this.show_landmarket_price,
+    required this.updateNew,
+    required this.iduser,
   });
   final OnChangeCallback get_province;
   final OnChangeCallback get_district;
@@ -30,6 +38,9 @@ class Map_verbal_add extends StatefulWidget {
   final OnChangeCallback get_log;
   final OnChangeCallback get_lat;
   final bool? show_landmarket_price;
+  late int updateNew;
+  final String iduser;
+
   @override
   State<Map_verbal_add> createState() => _SearchPlacesScreenState();
 }
@@ -38,16 +49,13 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
   String sendAddrress = '';
   var formatter = NumberFormat("##,###,###,##0.00", "en_US");
   final Set<Marker> _marker = {};
-  var _selectedValue;
+
   List<String> option = [
     'Residencial',
     'Commercial',
     'Agricultural',
   ];
   GoogleMapController? mapController;
-
-  String? _currentAddress;
-  Position? _currentPosition;
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -111,19 +119,806 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
     });
   }
 
+  final TextEditingController distanceController = TextEditingController();
+  Authentication authentication = Authentication();
   double? lat;
   double? log;
+  late LoginRequestModel loginRequestModel;
   @override
   void initState() {
+    // if (Get.isRegistered<Authentication>()) {
+    //   authentication = Get.find<Authentication>();
+    // } else {
+    //   authentication = Get.put(Authentication());
+    //   authentication.login(loginRequestModel, false);
+    // }
     _handleLocationPermission();
+    distanceController.text = '5';
     // _getCurrentLocation();
     super.initState();
+    waitingFuction();
   }
 
-  Uint8List? _imageFile;
+  bool checkFunction = false;
+  Future<void> waitingFuction() async {
+    setState(() {
+      checkFunction = true;
+    });
+    await Future.wait([
+      _loadStringList(),
+    ]);
+    setState(() {
+      checkFunction = false;
+    });
+  }
+
+  Future<void> _loadStringList() async {
+    await controller.mainAPI(widget.updateNew);
+    // await controller.roadAPI(widget.updateNew);
+    await controller.checkPriceListRAPI(widget.updateNew);
+    await controller.checkPriceListCAPI(widget.updateNew);
+    await controller.khanAPI(widget.updateNew);
+    await controller.songkatAPI(widget.updateNew);
+    await controller.optionAPI(widget.updateNew);
+    await controller.comparaCRAPI(widget.updateNew);
+
+    if (widget.updateNew != 0) {
+      //  await controller.comparaCRAPI(widget.updateNew);
+      widget.updateNew = 0;
+      await controller.checkGoogle(widget.iduser);
+    }
+  }
+
+  String opionTypeID = '0';
+  double areas = 0;
+  double? minSqm, maxSqm, totalMin, totalMax, totalArea;
+  double caculateCom(double p) {
+    double avgCaculate =
+        (((addingPriceSimple * p) + addingPriceVerbal) / 5 + (R_avg + C_avg)) /
+            2;
+    return avgCaculate;
+  }
+
+  double caculateRen(double p) {
+    double avgCaculate = ((addingPriceSimple * p) + addingPriceVerbal) / 5;
+    return avgCaculate;
+  }
+
+  List listBuilding = [];
+  void calLs() {
+    setState(() {
+      if (haveValue == true) {
+        if (areas <= 300) {
+          double avgmin = caculateCom(0.85);
+          double avgmax = caculateCom(0.80);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 301 && areas <= 1000) {
+          double avgmin = caculateCom(0.8);
+          double avgmax = caculateCom(0.75);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 1001 && areas <= 3000) {
+          double avgmin = caculateCom(0.75);
+          double avgmax = caculateCom(0.7);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 3000) {
+          double avgmin = caculateCom(0.7);
+          double avgmax = caculateCom(0.65);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        }
+      } else {
+        if (areas <= 300) {
+          double avgmin = caculateRen(0.85);
+          double avgmax = caculateRen(0.80);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 301 && areas <= 1000) {
+          double avgmin = caculateRen(0.8);
+          double avgmax = caculateRen(0.75);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 1001 && areas <= 3000) {
+          double avgmin = caculateRen(0.75);
+          double avgmax = caculateRen(0.7);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        } else if (areas > 3000) {
+          double avgmin = caculateRen(0.7);
+          double avgmax = caculateRen(0.65);
+          minSqm = avgmin + (avgmin * double.parse(opionTypeID) / 100);
+          maxSqm = avgmax + (avgmax * double.parse(opionTypeID) / 100);
+        }
+      }
+      totalMin = (minSqm! * areas);
+      totalMax = (maxSqm! * areas);
+    });
+  }
+
+  Future<void> calElse(double area, String autoverbalTypeValue) async {
+    var rs = await http.get(Uri.parse(
+        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/autoverbal/type?autoverbal_id=$autoverbalTypeValue'));
+
+    setState(() {
+      var jsonData = jsonDecode(rs.body);
+
+      maxSqm = double.parse(jsonData[0]['max'].toString());
+      minSqm = double.parse(jsonData[0]['min'].toString());
+      // ignore: unnecessary_null_comparison
+      if (opionTypeID != null) {
+        totalMin =
+            ((minSqm! * area) + (double.parse(opionTypeID.toString()) / 100)) +
+                (minSqm! * area);
+        totalMax =
+            ((maxSqm! * area) + (double.parse(opionTypeID.toString()) / 100)) +
+                (maxSqm! * area);
+      } else {
+        totalMin = minSqm! * area;
+        totalMax = maxSqm! * area;
+      }
+    });
+    //  }
+  }
+  // void addItemToList() {
+  //   setState(() {
+  //     listBuilding.add({
+  //       "verbal_land_type": autoverbalType,
+  //       "verbal_land_des": controllerDS.text,
+  //       "verbal_land_dp": dep,
+  //       "verbal_land_area": areas,
+  //       "verbal_land_minsqm": minSqm!.toStringAsFixed(0),
+  //       "verbal_land_maxsqm": maxSqm!.toStringAsFixed(0),
+  //       "verbal_land_minvalue": totalMin!.toStringAsFixed(0),
+  //       "verbal_land_maxvalue": totalMax!.toStringAsFixed(0),
+  //       "address": '$commune / $district',
+  //       "verbal_landid": verbalID
+  //     });
+  //   });
+  // }
+
+  bool clickdone = false;
+  String priceCm = '';
+  bool haveValue = false;
+  List data_adding_correct = [];
+  var avg;
+  double? min, max;
+  double adding_price = 0;
   LatLng latLng = const LatLng(11.519037, 104.915120);
   CameraPosition? cameraPosition;
+  var colorbackground = const Color.fromARGB(255, 242, 242, 244);
+  Future? Dialog(BuildContext context) {
+    if (haveValue == true) {
+      setState(() {
+        // print("addingPriceSimple : $addingPriceSimple");
+        // print("addingPriceVerbal : $addingPriceVerbal");
+        var numberPrice = 0.0;
+        for (int i = 0; i < data_adding_correct.length; i++) {
+          numberPrice += double.parse(
+            data_adding_correct[i]['comparable_adding_price'].toString(),
+          );
+        }
+        adding_price = numberPrice;
+        adding_price /= int.parse(data_adding_correct.length.toString());
+        var price = (adding_price + (R_avg + C_avg)) / 2;
+        min = price - (0.03 * price);
+        max = price + (0.02 * price);
+        avg = price;
+        priceCm = price.toString();
+      });
+      return (!clickdone) ? showDailogs() : null;
+    } else {
+      setState(() {
+        var numberPrice = 0.0;
+        for (int i = 0; i < data_adding_correct.length; i++) {
+          numberPrice += double.parse(
+            data_adding_correct[i]['comparable_adding_price'].toString(),
+          );
+        }
+        adding_price = numberPrice;
+        adding_price /= int.parse(data_adding_correct.length.toString());
+        // var price = (adding_price + R_avg) / 2;
+        min = adding_price - (0.2 * adding_price);
+        max = adding_price + (0.2 * adding_price);
+        avg = adding_price;
+      });
+      return (!clickdone) ? showDailogs() : null;
+    }
+  }
 
+  Future showDailogs() {
+    return showDialog(
+      context: context,
+      builder: (context) => Column(
+        children: [
+          AlertDialog(
+            backgroundColor: Colors.transparent,
+            // backgroundColor: Colors.red,
+            content: Container(
+              height: 450,
+              // width: 450,
+              decoration: BoxDecoration(
+                color: whiteColor,
+                // image: const DecorationImage(
+                //   image: AssetImage("assets/images/paper1.jpg"),
+                //   fit: BoxFit.fitWidth,
+                // ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  top: 10,
+                  bottom: 10,
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Image.asset(
+                          "assets/icons/papersib.png",
+                          height: 35,
+                          width: 50,
+                          fit: BoxFit.fitHeight,
+                        ),
+                        const Spacer(),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              setState(() {});
+                            },
+                            icon: const Icon(
+                              Icons.remove_circle_outline_outlined,
+                              color: Colors.black,
+                            ))
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // if (haveValue == true)
+                        //   Card(
+                        //     elevation: 10,
+                        //     child: Container(
+                        //       height: heightModel,
+                        //       decoration: BoxDecoration(
+                        //         color: colorbackground,
+                        //         boxShadow: const [
+                        //           BoxShadow(blurRadius: 1, color: Colors.grey)
+                        //         ],
+                        //         border: Border.all(width: 0.2),
+                        //         borderRadius: BorderRadius.circular(5),
+                        //       ),
+                        //       child: Column(
+                        //         mainAxisAlignment: MainAxisAlignment.center,
+                        //         children: [
+                        //           Row(
+                        //             mainAxisAlignment: MainAxisAlignment.center,
+                        //             children: [
+                        //               textb("Avg = "),
+                        //               textPriceb(
+                        //                   "${formatter.format(adding_price)}\$"),
+                        //             ],
+                        //           ),
+                        //           const SizedBox(height: 5),
+                        //           Row(
+                        //             mainAxisAlignment:
+                        //                 MainAxisAlignment.spaceAround,
+                        //             children: [
+                        //               Row(
+                        //                 children: [
+                        //                   text("Min = "),
+                        //                   textPrice(
+                        //                       "${formatter.format(adding_price - (0.01 * adding_price))}\$"),
+                        //                 ],
+                        //               ),
+                        //               Row(
+                        //                 children: [
+                        //                   text("Max = "),
+                        //                   textPrice(
+                        //                       "${formatter.format(adding_price + (0.01 * adding_price))}\$"),
+                        //                 ],
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   )
+                        // else
+                        //   Card(
+                        //     elevation: 10,
+                        //     child: Container(
+                        //       height: 110,
+                        //       decoration: BoxDecoration(
+                        //         color: const Color.fromARGB(255, 242, 242, 244),
+                        //         boxShadow: const [
+                        //           BoxShadow(
+                        //               blurRadius: 5,
+                        //               offset: Offset(2, 5),
+                        //               color: Color.fromARGB(255, 0, 89, 255))
+                        //         ],
+                        //         border: Border.all(
+                        //           width: 0.2,
+                        //         ),
+                        //         borderRadius: BorderRadius.circular(5),
+                        //       ),
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.all(5),
+                        //         child: Column(
+                        //           mainAxisAlignment: MainAxisAlignment.center,
+                        //           children: [
+                        //             Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.center,
+                        //               children: [
+                        //                 textb("Avg = "),
+                        //                 textPriceb(
+                        //                     "${formatter.format(adding_price)}\$")
+                        //               ],
+                        //             ),
+                        //             const SizedBox(height: 5),
+                        //             Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.spaceAround,
+                        //               children: [
+                        //                 Column(
+                        //                   crossAxisAlignment:
+                        //                       CrossAxisAlignment.start,
+                        //                   children: [
+                        //                     Row(
+                        //                       children: [
+                        //                         text("Min = "),
+                        //                         textPrice(
+                        //                             "${formatter.format(adding_price - (0.01 * adding_price))}\$")
+                        //                       ],
+                        //                     ),
+                        //                     const SizedBox(height: 15),
+                        //                     Row(
+                        //                       children: [
+                        //                         text(
+                        //                             "Min after - $add_min% = "),
+                        //                         textPrice(
+                        //                             "${formatter.format((adding_price - (0.01 * adding_price)) - ((add_min / 100) * (adding_price - (0.01 * adding_price))))}\$")
+                        //                       ],
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //                 Column(
+                        //                   crossAxisAlignment:
+                        //                       CrossAxisAlignment.start,
+                        //                   children: [
+                        //                     Row(
+                        //                       children: [
+                        //                         text("Max = "),
+                        //                         textPrice(
+                        //                             "${formatter.format(adding_price + (0.01 * adding_price))}\$")
+                        //                       ],
+                        //                     ),
+                        //                     const SizedBox(height: 15),
+                        //                     Row(
+                        //                       children: [
+                        //                         text(
+                        //                             "Max after - $add_max% = "),
+                        //                         textPrice(
+                        //                             "${formatter.format((adding_price + (0.01 * adding_price)) - ((add_max / 100) * (adding_price + (0.01 * adding_price))))}\$")
+                        //                       ],
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // Column(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     const SizedBox(height: 5),
+                        //     Text("Residential",
+                        //         style: TextStyle(
+                        //             fontWeight: FontWeight.bold,
+                        //             fontSize: fontsizes)),
+                        //     const SizedBox(height: 2),
+                        //     Card(
+                        //       elevation: 10,
+                        //       child: Container(
+                        //         height: heightModel,
+                        //         decoration: BoxDecoration(
+                        //           color: colorbackground,
+                        //           boxShadow: const [
+                        //             BoxShadow(blurRadius: 1, color: Colors.grey)
+                        //           ],
+                        //           border: Border.all(width: 0.2),
+                        //           borderRadius: BorderRadius.circular(5),
+                        //         ),
+                        //         child: Column(
+                        //           mainAxisAlignment: MainAxisAlignment.center,
+                        //           children: [
+                        //             Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.center,
+                        //               children: [
+                        //                 textb("Avg = "),
+                        //                 textPriceb(
+                        //                     "${formatter.format(R_avg)}\$")
+                        //               ],
+                        //             ),
+                        //             Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.spaceAround,
+                        //               children: [
+                        //                 Row(
+                        //                   children: [
+                        //                     text("Min = "),
+                        //                     textPrice(
+                        //                         "${formatter.format(double.parse(minSqm1))}\$")
+                        //                   ],
+                        //                 ),
+                        //                 Row(
+                        //                   children: [
+                        //                     text("Max = "),
+                        //                     textPrice(
+                        //                         "${formatter.format(double.parse(maxSqm1))}\$")
+                        //                   ],
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     const SizedBox(height: 10),
+                        //     Text("Commercial",
+                        //         style: TextStyle(
+                        //             fontWeight: FontWeight.bold,
+                        //             fontSize: fontsizes)),
+                        //     const SizedBox(height: 5),
+                        //     Card(
+                        //       elevation: 10,
+                        //       child: Container(
+                        //         height: heightModel,
+                        //         decoration: BoxDecoration(
+                        //           color: colorbackground,
+                        //           boxShadow: const [
+                        //             BoxShadow(blurRadius: 1, color: Colors.grey)
+                        //           ],
+                        //           border: Border.all(width: 0.2),
+                        //           borderRadius: BorderRadius.circular(5),
+                        //         ),
+                        //         child: Column(
+                        //           mainAxisAlignment: MainAxisAlignment.center,
+                        //           children: [
+                        //             Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.center,
+                        //               children: [
+                        //                 textb("Avg = "),
+                        //                 textPriceb(
+                        //                     "${formatter.format(C_avg)}\$")
+                        //               ],
+                        //             ),
+                        //             Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.spaceAround,
+                        //               children: [
+                        //                 Row(
+                        //                   children: [
+                        //                     text("Min = "),
+                        //                     textPrice(
+                        //                         "${formatter.format(double.parse(minSqm2))}\$")
+                        //                   ],
+                        //                 ),
+                        //                 Row(
+                        //                   children: [
+                        //                     text("Max = "),
+                        //                     textPrice(
+                        //                         "${formatter.format(double.parse(maxSqm2))}\$")
+                        //                   ],
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     const SizedBox(height: 10),
+                        //     if (haveValue == true)
+                        //       Text("Calculator Compareble and Land_price",
+                        //           style: TextStyle(
+                        //               fontWeight: FontWeight.bold,
+                        //               fontSize: fontsizes)),
+                        //     if (haveValue == true) const SizedBox(height: 10),
+                        //     if (haveValue == true)
+                        //       Card(
+                        //         elevation: 10,
+                        //         child: Container(
+                        //           height: 90,
+                        //           decoration: BoxDecoration(
+                        //             color: colorbackground,
+                        //             border: Border.all(
+                        //               width: 0.2,
+                        //             ),
+                        //             boxShadow: const [
+                        //               BoxShadow(
+                        //                   blurRadius: 5,
+                        //                   offset: Offset(2, 5),
+                        //                   color:
+                        //                       Color.fromARGB(255, 0, 89, 255))
+                        //             ],
+                        //             borderRadius: BorderRadius.circular(5),
+                        //           ),
+                        //           child: Column(
+                        //             mainAxisAlignment: MainAxisAlignment.center,
+                        //             children: [
+                        //               Row(
+                        //                 mainAxisAlignment:
+                        //                     MainAxisAlignment.center,
+                        //                 children: [
+                        //                   textb("Avg = "),
+                        //                   textPriceb(
+                        //                       "${formatter.format(avg)}\$")
+                        //                 ],
+                        //               ),
+                        //               const SizedBox(height: 5),
+                        //               Row(
+                        //                 mainAxisAlignment:
+                        //                     MainAxisAlignment.spaceAround,
+                        //                 children: [
+                        //                   Column(
+                        //                     crossAxisAlignment:
+                        //                         CrossAxisAlignment.start,
+                        //                     children: [
+                        //                       Row(
+                        //                         children: [
+                        //                           text("Min = "),
+                        //                           textPrice(
+                        //                               "${formatter.format(min)}\$")
+                        //                         ],
+                        //                       ),
+                        //                       const SizedBox(height: 10),
+                        //                       Row(
+                        //                         children: [
+                        //                           textb(
+                        //                               "Min after - $add_min% = "),
+                        //                           textPriceb(
+                        //                               "${formatter.format(min! - ((add_min / 100) * min!))}\$")
+                        //                         ],
+                        //                       ),
+                        //                     ],
+                        //                   ),
+                        //                   Column(
+                        //                     crossAxisAlignment:
+                        //                         CrossAxisAlignment.start,
+                        //                     children: [
+                        //                       Row(
+                        //                         children: [
+                        //                           text("Max = "),
+                        //                           textPrice(
+                        //                               "${formatter.format(max)}\$")
+                        //                         ],
+                        //                       ),
+                        //                       const SizedBox(height: 10),
+                        //                       Row(
+                        //                         children: [
+                        //                           textb(
+                        //                               "Min after - $add_min% = "),
+                        //                           textPriceb(
+                        //                               "${formatter.format(max! - ((add_max / 100) * max!))}\$")
+                        //                         ],
+                        //                       ),
+                        //                     ],
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //   ],
+                        // ),
+                        // const SizedBox(height: 10),
+                        // if (haveValue == false)
+                        //   if (data_adding_correct.length >= 5)
+                        //     if (haveValue == false)
+                        //       Text.rich(
+                        //         TextSpan(
+                        //           children: [
+                        //             for (int i = 0;
+                        //                 i < data_adding_correct.length;
+                        //                 i++)
+                        //               TextSpan(
+                        //                   style: TextStyle(
+                        //                     fontSize: fontsize,
+                        //                     fontWeight: FontWeight.bold,
+                        //                   ),
+                        //                   text:
+                        //                       '${(i < data_adding_correct.length - 1) ? '${data_adding_correct[i]['comparable_adding_price']} + ' : data_adding_correct[i]['comparable_adding_price']}'),
+                        //             TextSpan(
+                        //                 text:
+                        //                     ' / ${data_adding_correct.length} = ${formatter.format(adding_price)}\$',
+                        //                 style: TextStyle(
+                        //                     fontSize: fontsize,
+                        //                     fontWeight: FontWeight.bold,
+                        //                     color: colorsPrice)),
+                        //           ],
+                        //         ),
+                        //       ),
+                        // const SizedBox(height: 5),
+                        // Text(
+                        //   "$commune /  $district / Route : ${route.toString()}",
+                        //   style: const TextStyle(
+                        //       fontStyle: FontStyle.italic,
+                        //       fontSize: 13,
+                        //       color: Colors.black,
+                        //       fontWeight: FontWeight.bold),
+                        //   overflow: TextOverflow.ellipsis,
+                        // ),
+                        // if (haveValue == true)
+                        //   Text.rich(
+                        //     TextSpan(
+                        //       style: TextStyle(
+                        //         fontSize: fontsize,
+                        //         fontWeight: FontWeight.bold,
+                        //       ),
+                        //       text:
+                        //           '\n(${formatter.format(adding_price)}\$ + ${formatter.format(R_avg)}\$ + ${formatter.format(C_avg)}\$) /2 = ', // default text style
+                        //       children: <TextSpan>[
+                        //         TextSpan(
+                        //             text: '${formatter.format(avg)}\$',
+                        //             style: TextStyle(
+                        //                 fontSize: fontsize,
+                        //                 fontWeight: FontWeight.bold,
+                        //                 color: colorsPrice)),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // const SizedBox(height: 5),
+                        // if (haveValue == true)
+                        //   Card(
+                        //     elevation: 10,
+                        //     child: Container(
+                        //       height: 90,
+                        //       decoration: BoxDecoration(
+                        //         color: const Color.fromARGB(255, 242, 242, 244),
+                        //         boxShadow: const [
+                        //           BoxShadow(
+                        //               blurRadius: 5,
+                        //               offset: Offset(2, 5),
+                        //               color: Color.fromARGB(255, 0, 89, 255))
+                        //         ],
+                        //         border: Border.all(
+                        //           width: 0.2,
+                        //         ),
+                        //         borderRadius: BorderRadius.circular(5),
+                        //       ),
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.all(5),
+                        //         child: Column(
+                        //           mainAxisAlignment: MainAxisAlignment.center,
+                        //           children: [
+                        //             Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.center,
+                        //               children: [
+                        //                 for (int i = 0;
+                        //                     i < data_adding_correct.length;
+                        //                     i++)
+                        //                   Text(
+                        //                       "${(i < data_adding_correct.length - 1) ? '${data_adding_correct[i]['comparable_adding_price']} + ' : data_adding_correct[i]['comparable_adding_price']}",
+                        //                       style: TextStyle(
+                        //                           fontSize: fontsize,
+                        //                           fontWeight: FontWeight.bold,
+                        //                           color: Colors.black)),
+                        //                 textPriceb(" Avg = "),
+                        //                 textPriceb(
+                        //                     "${formatter.format(adding_price)}\$"),
+                        //               ],
+                        //             ),
+                        //             const SizedBox(height: 10),
+                        //             Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.spaceAround,
+                        //               children: [
+                        //                 Column(
+                        //                   crossAxisAlignment:
+                        //                       CrossAxisAlignment.start,
+                        //                   children: [
+                        //                     Row(
+                        //                       children: [
+                        //                         textb(
+                        //                             "Min after - $add_min% = "),
+                        //                         textPriceb(
+                        //                             "${formatter.format(adding_price - (0.01 * adding_price) - ((adding_price - (0.01 * adding_price)) * add_min) / 100)}\$"),
+                        //                       ],
+                        //                     ),
+                        //                     const SizedBox(height: 10),
+                        //                     Row(
+                        //                       children: [
+                        //                         text("Min = "),
+                        //                         textPrice(
+                        //                             "${formatter.format(adding_price - (0.01 * adding_price))}\$"),
+                        //                       ],
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //                 Column(
+                        //                   crossAxisAlignment:
+                        //                       CrossAxisAlignment.start,
+                        //                   children: [
+                        //                     Row(
+                        //                       children: [
+                        //                         textb(
+                        //                             "Max after - $add_min% = "),
+                        //                         textPrice(
+                        //                             "${formatter.format(adding_price + (0.01 * adding_price) - ((adding_price + (0.01 * adding_price)) * add_min) / 100)}\$"),
+                        //                       ],
+                        //                     ),
+                        //                     const SizedBox(height: 10),
+                        //                     Row(
+                        //                       children: [
+                        //                         text("Max = "),
+                        //                         textPrice(
+                        //                             "${formatter.format(adding_price + (0.01 * adding_price))}\$"),
+                        //                       ],
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  var colorstitle = const Color.fromARGB(255, 141, 140, 140);
+  var colorsPrice = const Color.fromARGB(255, 241, 31, 23);
+  double heightModel = 50;
+  double fontsize = 14;
+  Widget textPriceb(txt) {
+    return Text(txt,
+        style: TextStyle(
+          fontSize: fontsize,
+          color: colorsPrice,
+          fontWeight: FontWeight.bold,
+        ));
+  }
+
+  Widget textPrice(txt) {
+    return Text(txt, style: TextStyle(fontSize: fontsize, color: colorsPrice));
+  }
+
+  Widget textb(txt) {
+    return Text(txt,
+        style: TextStyle(
+            fontSize: fontsize,
+            fontWeight: FontWeight.bold,
+            color: colorstitle));
+  }
+
+  Widget text(txt) {
+    return Text(txt, style: TextStyle(fontSize: fontsize, color: colorstitle));
+  }
+
+  late SearchRequestModel requestModel;
   Future<void> _addMarker(LatLng latLng) async {
     Marker newMarker = Marker(
       draggable: true,
@@ -131,13 +926,13 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
       position: latLng,
       onDragEnd: (value) {
         latLng = value;
-        Find_by_piont(value.latitude, value.longitude);
+        findBYPiont(value.latitude, value.longitude);
       },
     );
 
     setState(() {
       _marker.clear();
-      Find_by_piont(latLng.latitude, latLng.longitude);
+      findBYPiont(latLng.latitude, latLng.longitude);
       // add the new marker to the list of markers
       _marker.add(newMarker);
     });
@@ -227,6 +1022,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
   String? name_of_place;
 
   GlobalKey<FormState> check = GlobalKey<FormState>();
+  ControllerMap controller = ControllerMap();
   var input;
   double? wth;
   double? wth2;
@@ -258,12 +1054,9 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
             height: 800,
             child: GoogleMap(
               initialCameraPosition: CameraPosition(target: latLng, zoom: 12),
-
-              // markers: Set.from(_marker),
               zoomGesturesEnabled: true,
               zoomControlsEnabled: false,
               markers: _marker.map((e) => e).toSet(),
-
               onMapCreated: (GoogleMapController controller) {
                 mapController = controller;
               },
@@ -271,10 +1064,17 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
                 cameraPosition = cameraPositiona; //when map is dragging
               },
               mapType: style_map[index],
-              onTap: (argument) {
-                widget.get_lat(argument.latitude.toString());
-                widget.get_log(argument.longitude.toString());
+              onLongPress: (argument) {
                 _addMarker(argument);
+                Dialog(context);
+                // Show(requestModel);
+              },
+              onTap: (argument) {
+                // setState(() {
+                //   widget.get_lat(argument.latitude.toString());
+                //   widget.get_log(argument.longitude.toString());
+                // });
+                // _addMarker(argument);
               },
             ),
           ),
@@ -333,7 +1133,6 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
                     ),
                   ),
                   IconButton(
-                    // splashRadius: 30,
                     hoverColor: Colors.black,
                     onPressed: () {
                       setState(() {
@@ -423,21 +1222,17 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
     );
   }
 
-  Future<void> Find_by_piont(double la, double lo) async {
+  String? id_route;
+  String? route;
+  String province = '';
+  Future<void> findBYPiont(double la, double lo) async {
     final response = await http.get(
       Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$la,$lo&key=AIzaSyAJt0Zghbk3qm_ZClIQOYeUT0AaV5TeOsI',
       ),
     );
-
     if (response.statusCode == 200) {
-      // Successful response
       var jsonResponse = json.decode(response.body);
-      var location = jsonResponse['results'][0]['geometry']['location'];
-      var lati = location['lat'];
-      var longi = location['lng'];
-      widget.get_lat(lati.toString());
-      widget.get_log(longi.toString());
       List ls = jsonResponse['results'];
       List ac;
       bool checkSk = false, checkKn = false;
@@ -474,196 +1269,79 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
                 );
               });
             }
+            if (jsonResponse['results'][j]['address_components'][i]['types']
+                    [0] ==
+                "administrative_area_level_1") {
+              province = (jsonResponse['results'][j]['address_components'][i]
+                  ['short_name']);
+            }
+          }
+        }
+        if (jsonResponse['results'][j]['types'][0] == "route") {
+          List r = jsonResponse['results'][j]['address_components'];
+          for (int i = 0; i < r.length; i++) {
+            if (jsonResponse['results'][j]['address_components'][i]['types']
+                    [0] ==
+                "route") {
+              setState(() {
+                route = (jsonResponse['results'][j]['address_components'][i]
+                    ['short_name']);
+              });
+            }
           }
         }
       }
-      final responseRc = await http.get(
-        Uri.parse(
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/map/check_price?Khan_Name=${district.toString()}&Sangkat_Name=${commune.toString()}',
-        ),
+
+      widget.get_province(
+        "${(district == "null") ? "" : district}, ${(commune == "null") ? "" : commune}",
       );
-      var jsonresponseRc = json.decode(responseRc.body);
-      setState(() {
-        maxSqm1 = jsonresponseRc['residential'][0]['Max_Value'].toString();
-        minSqm1 = jsonresponseRc['residential'][0]['Min_Value'].toString();
-        maxSqm2 = jsonresponseRc['commercial'][0]['Max_Value'].toString();
-        minSqm2 = jsonresponseRc['commercial'][0]['Min_Value'].toString();
-        dynamic rAvg = (double.parse(maxSqm1.toString()) +
-                double.parse(minSqm1.toString())) /
-            2;
-        dynamic cAvg = (double.parse(maxSqm2.toString()) +
-                double.parse(minSqm2.toString())) /
-            2;
-        if (widget.show_landmarket_price == null) {
-          AwesomeDialog(
-            btnOkOnPress: () {},
-            context: context,
-            animType: AnimType.leftSlide,
-            headerAnimationLoop: false,
-            dialogType: DialogType.infoReverse,
-            showCloseIcon: false,
-            title: "Check price by KFA",
-            customHeader: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'assets/images/New_KFA_Logo.png',
-                filterQuality: FilterQuality.high,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Residential",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 220, 221, 223),
-                    boxShadow: const [
-                      BoxShadow(blurRadius: 1, color: Colors.grey)
-                    ],
-                    border: Border.all(width: 0.2),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Avg = ",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "${formatter.format(rAvg)}\$",
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 242, 11, 134),
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                            children: [
-                              const Text(
-                                "Min = ",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "${formatter.format(double.parse(minSqm1))}\$",
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 242, 11, 134),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text(
-                                "Max = ",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "${formatter.format(double.parse(maxSqm1))}\$",
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 242, 11, 134),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const Text(
-                  "Commercial",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 220, 221, 223),
-                    border: Border.all(
-                      width: 0.2,
-                    ),
-                    boxShadow: const [
-                      BoxShadow(blurRadius: 1, color: Colors.grey)
-                    ],
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Avg = ",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "${formatter.format(cAvg)}\$",
-                            style: const TextStyle(
-                              color: Color.fromARGB(255, 242, 11, 134),
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Row(
-                            children: [
-                              const Text(
-                                "Min = ",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "${formatter.format(double.parse(minSqm2))}\$",
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 242, 11, 134),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text(
-                                "Max = ",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "${formatter.format(double.parse(maxSqm2))}\$",
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 242, 11, 134),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  ' $commune /  $district',
-                  style: const TextStyle(
-                      fontStyle: FontStyle.italic, fontSize: 10),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ).show();
-        }
-      });
-    } else {
-      // Error or invalid response
-      // print(response.statusCode);
+      if (checkFunction == false) {
+        await checkKhatIDSangID(district, commune);
+      }
     }
+  }
+
+  double R_avg = 0, C_avg = 0;
+  int khanID = 0;
+  int sangkatID = 0;
+  Future<void> checkKhatIDSangID(district, commune) async {
+    setState(() {
+      for (int i = 0; i < controller.listKhanP.length; i++) {
+        for (int j = 0; j < controller.listsang.length; j++) {
+          if (controller.listKhanP[i]['Khan_Name'] == district &&
+              controller.listsang[j]['Sangkat_Name'] == commune) {
+            khanID = controller.listKhanP[i]['Khan_ID'];
+            sangkatID = controller.listsang[j]['Sangkat_ID'];
+          }
+        }
+      }
+      for (int r = 0; r < controller.listPriceR.length; r++) {
+        if (controller.listPriceR[r]['Sangkat_ID'] == sangkatID &&
+            controller.listPriceR[r]['Khan_ID'] == khanID) {
+          setState(() {
+            maxSqm1 = controller.listPriceR[r]['Max_Value'].toString();
+            minSqm1 = controller.listPriceR[r]['Min_Value'].toString();
+          });
+        }
+      }
+      for (int c = 0; c < controller.listPriceC.length; c++) {
+        if (controller.listPriceC[c]['Sangkat_ID'] == sangkatID &&
+            controller.listPriceC[c]['Khan_ID'] == khanID) {
+          setState(() {
+            maxSqm2 = controller.listPriceC[c]['Max_Value'].toString();
+            minSqm2 = controller.listPriceC[c]['Min_Value'].toString();
+          });
+        }
+      }
+
+      R_avg = (double.parse(maxSqm1.toString()) +
+              double.parse(minSqm1.toString())) /
+          2;
+      C_avg = (double.parse(maxSqm2.toString()) +
+              double.parse(minSqm2.toString())) /
+          2;
+      print('No.3 R_avg : $R_avg || C_avg : $C_avg');
+    });
   }
 
   List name_place = [];
@@ -686,13 +1364,13 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
         position: latLng,
         onDragEnd: (value) {
           latLng = value;
-          Find_by_piont(value.latitude, value.longitude);
+          findBYPiont(value.latitude, value.longitude);
         },
         infoWindow: const InfoWindow(title: 'KFA\'s Developer'),
       );
       setState(() {
         _marker.clear();
-        Find_by_piont(lati, longi);
+        findBYPiont(lati, longi);
         _marker.add(newMarker);
       });
 
@@ -747,13 +1425,13 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
         position: latLng,
         onDragEnd: (value) {
           latLng = value;
-          Find_by_piont(value.latitude, value.longitude);
+          findBYPiont(value.latitude, value.longitude);
         },
         infoWindow: const InfoWindow(title: 'KFA\'s Developer'),
       );
       setState(() {
         _marker.clear();
-        Find_by_piont(lati, longi);
+        findBYPiont(lati, longi);
         _marker.add(newMarker);
       });
 
@@ -789,10 +1467,300 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
     }
   }
 
+  bool doneORudone = false;
+  int checkborey = 0;
+  var pty;
+  String comparedropdown = '';
   // ignore: prefer_typing_uninitialized_variables
   var commune, district;
-
+  bool isApiCallProcess = false;
   List list = [];
+  Map? map;
+  double addingPriceVerbal = 0;
+  double addingPriceSimple = 0;
+  Future<void> Show(SearchRequestModel requestModel) async {
+    if (controller.listMainRoute.isNotEmpty &&
+        controller.listRaod.isNotEmpty &&
+        controller.listPriceR.isNotEmpty &&
+        controller.listPriceC.isNotEmpty &&
+        controller.listKhanP.isNotEmpty &&
+        controller.listsang.isNotEmpty &&
+        controller.listOption.isNotEmpty &&
+        controller.listdropdown.isNotEmpty) {
+      try {
+        setState(() {
+          isApiCallProcess = true;
+        });
+
+        if (route != null) {
+          for (int i = 0; i < controller.listMainRoute.length; i++) {
+            if (route.toString().contains(
+                      controller.listMainRoute[i]['name_road'].toString(),
+                    ) ||
+                comparedropdown == "C") {
+              haveValue = true;
+              break;
+            }
+          }
+        }
+        setState(() {
+          pty;
+          if (checkborey == 0) {
+            if (haveValue == true) {
+              id_route = '1';
+            } else {
+              id_route = '2';
+            }
+          }
+        });
+        var headers = {'Content-Type': 'application/json'};
+        var data = json.encode({
+          "distance": distanceController.text,
+          "property_type_id": (pty == null) ? null : pty,
+          "type": (comparedropdown == "") ? "" : comparedropdown,
+          "road": id_route,
+          "num": requestModel.num,
+          "lat": requestModel.lat,
+          "lng": requestModel.lng,
+          "borey": checkborey,
+        });
+        var dio = Dio();
+        var response = await dio.request(
+          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/mapNew/map_action',
+          options: Options(
+            method: 'POST',
+            headers: headers,
+          ),
+          data: data,
+        );
+
+        if (response.statusCode == 200) {
+          setState(() {
+            doneORudone = false;
+            list = jsonDecode(json.encode(response.data))['autoverbal'];
+            print("list ===> ${list.length}");
+          });
+        }
+        addingPriceSimple = 0;
+        addingPriceVerbal = 0;
+        if (list.length >= 5) {
+          List<dynamic> filteredList = filterDuplicates(
+              list, "comparable_adding_price", "latlong_la", "latlong_log");
+
+          setState(() {
+            isApiCallProcess = false;
+            map = filteredList.asMap();
+          });
+
+          // setState(() {
+          //   for (var i = 0; i < map!.length; i++) {
+          //     if (checkborey == 1) {
+          //       if (map![i]['borey'] == 1) {
+          //         if (map![i]['type_value'] == "V") {
+          //           if (map![i]['comparable_adding_price'] == '') {
+          //             map![i]['comparable_adding_price'] = '0';
+          //             addingPriceVerbal +=
+          //                 double.parse(map![i]['comparable_adding_price']);
+          //           } else if (map![i]['comparable_adding_price']
+          //               .contains(',')) {
+          //             addingPriceVerbal += double.parse(map![i]
+          //                     ['comparable_adding_price']
+          //                 .replaceAll(",", ""));
+          //           } else {
+          //             addingPriceVerbal +=
+          //                 (double.parse(map![i]['comparable_adding_price']));
+          //           }
+          //         } else {
+          //           {
+          //             if (map![i]['comparable_adding_price'] == '') {
+          //               map![i]['comparable_adding_price'] = '0';
+          //               addingPriceSimple +=
+          //                   double.parse(map![i]['comparable_adding_price']);
+          //             } else if (map![i]['comparable_adding_price']
+          //                 .contains(',')) {
+          //               addingPriceSimple += double.parse(map![i]
+          //                       ['comparable_adding_price']
+          //                   .replaceAll(",", ""));
+          //             } else {
+          //               addingPriceSimple +=
+          //                   (double.parse(map![i]['comparable_adding_price']));
+          //             }
+          //           }
+          //         }
+          //         setState(() {
+          //           data_adding_correct.add(map![i]);
+          //         });
+          //       }
+          //     } else {
+          //       if (map![i]['type_value'] == "V") {
+          //         if (map![i]['comparable_adding_price'] == '') {
+          //           map![i]['comparable_adding_price'] = '0';
+          //           addingPriceVerbal +=
+          //               double.parse(map![i]['comparable_adding_price']);
+          //         } else if (map![i]['comparable_adding_price'].contains(',')) {
+          //           addingPriceVerbal += double.parse(
+          //               map![i]['comparable_adding_price'].replaceAll(",", ""));
+          //         } else {
+          //           addingPriceVerbal +=
+          //               (double.parse(map![i]['comparable_adding_price']));
+          //         }
+          //       } else {
+          //         {
+          //           if (map![i]['comparable_adding_price'] == '') {
+          //             map![i]['comparable_adding_price'] = '0';
+          //             addingPriceSimple +=
+          //                 double.parse(map![i]['comparable_adding_price']);
+          //           } else if (map![i]['comparable_adding_price']
+          //               .contains(',')) {
+          //             addingPriceSimple += double.parse(map![i]
+          //                     ['comparable_adding_price']
+          //                 .replaceAll(",", ""));
+          //           } else {
+          //             addingPriceSimple +=
+          //                 (double.parse(map![i]['comparable_adding_price']));
+          //           }
+          //         }
+          //       }
+          //       setState(() {
+          //         data_adding_correct.add(map![i]);
+          //       });
+          //     }
+          //   }
+          // });
+
+          // if (!clickdone) {
+          //   if (data_adding_correct.isNotEmpty) {
+          //     for (int i = 0; i < data_adding_correct.length; i++) {
+          //       // print(
+          //       //     "No.${data_adding_correct[i]['comparable_id']} : ${data_adding_correct[i]['comparable_property_id']}\n");
+          //       if (data_adding_correct[i]['comparable_property_id']
+          //               .toString() ==
+          //           '15') {
+          //         markerType(i, 'l.png');
+          //       } else if (data_adding_correct[i]['comparable_property_id']
+          //               .toString() ==
+          //           '10') {
+          //         markerType(i, 'f.png');
+          //       } else if (data_adding_correct[i]['comparable_property_id']
+          //               .toString() ==
+          //           '33') {
+          //         markerType(i, 'v.png');
+          //       } else if (data_adding_correct[i]['comparable_property_id']
+          //               .toString() ==
+          //           '14') {
+          //         markerType(i, 'h.png');
+          //       } else if (data_adding_correct[i]['comparable_property_id']
+          //               .toString() ==
+          //           '4') {
+          //         markerType(i, 'b.png');
+          //       } else if (data_adding_correct[i]['comparable_property_id']
+          //               .toString() ==
+          //           '29') {
+          //         markerType(i, 'v.png');
+          //       } else {
+          //         markerType(i, 'a.png');
+          //       }
+          //     }
+          //   }
+          // }
+
+          if (data_adding_correct.isNotEmpty) {
+            if (data_adding_correct.length < 5) {
+              setState(() {
+                pty = null;
+                comparedropdown = '';
+              });
+
+              // await Show(requestModel);
+            } else {
+              await Dialog(context);
+            }
+          }
+        } else {
+          getxsnackbar("Please Try again", "");
+          setState(() {
+            isApiCallProcess = false;
+          });
+        }
+      } on Exception catch (_) {
+        getxsnackbar("Connect is Slow", "Please Try again");
+        setState(() {
+          isApiCallProcess = false;
+        });
+      }
+    } else {
+      getxsnackbar("Connect is Slow", "Please Try again");
+      setState(() {
+        isApiCallProcess = false;
+      });
+    }
+  }
+
+  List<dynamic> filterDuplicates(
+      List<dynamic> list, String priceKey, String lat, String log) {
+    Set<String> seenPriceAndLatLog = {};
+    Set<String> seenLatLog = {};
+    List<dynamic> uniqueList = [];
+
+    for (var item in list) {
+      String priceAndLatLogKey = "${item[priceKey]}_${item[lat]}_${item[log]}";
+      String latLogKey = "${item[lat]}_${item[log]}";
+
+      if (list.length == 5 ||
+          (!seenPriceAndLatLog.contains(priceAndLatLogKey) &&
+              !seenLatLog.contains(latLogKey))) {
+        seenPriceAndLatLog.add(priceAndLatLogKey);
+        seenLatLog.add(latLogKey);
+        uniqueList.add(item);
+      }
+    }
+
+    return uniqueList;
+  }
+
+  Future<void> getxsnackbar(title, subtitle) async {
+    Get.snackbar(
+      title,
+      subtitle,
+      colorText: Colors.black,
+      padding: const EdgeInsets.only(right: 50, left: 50, top: 20, bottom: 20),
+      borderColor: const Color.fromARGB(255, 48, 47, 47),
+      borderWidth: 1.0,
+      borderRadius: 5,
+      backgroundColor: const Color.fromARGB(255, 235, 242, 246),
+      icon: const Icon(Icons.add_alert),
+    );
+  }
+
+  double fontsizeD = 14;
+  Future<void> markerType(int i, typeMarker) async {
+    MarkerId markerId = MarkerId(i.toString());
+    Marker marker = Marker(
+      markerId: markerId,
+      position: LatLng(
+        double.parse(data_adding_correct[i]['latlong_log'].toString()),
+        double.parse(data_adding_correct[i]['latlong_la'].toString()),
+      ),
+      icon: await BitmapDescriptor.fromAssetImage(
+          const ImageConfiguration(size: Size(50, 50)),
+          'assets/icons/$typeMarker'),
+      onTap: () {
+        setState(() {
+          // priceController.text =
+          //     data_adding_correct[i]['comparable_adding_price'].toString();
+          // updateproperty =
+          //     data_adding_correct[i]['comparable_property_id'].toString();
+          // updateraod = data_adding_correct[i]['comparable_road'].toString();
+          // updatepropertyName =
+          //     data_adding_correct[i]['comparable_property_id'].toString();
+        });
+      },
+    );
+    setState(() {
+      isApiCallProcess = false;
+      // listMarkerIds.add(marker);
+    });
+  }
 
   final Set<Marker> marker = {}; //163
   List ln = [];
@@ -834,7 +1802,7 @@ class _SearchPlacesScreenState extends State<Map_verbal_add> {
       position: latLng,
       onDragEnd: (value) {
         latLng = value;
-        Find_by_piont(value.latitude, value.longitude);
+        findBYPiont(value.latitude, value.longitude);
       },
       infoWindow: const InfoWindow(title: 'KFA\'s Developer'),
     );

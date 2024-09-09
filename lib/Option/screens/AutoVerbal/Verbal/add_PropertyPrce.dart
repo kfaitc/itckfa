@@ -16,6 +16,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import '../../../../Getx/Auth/Auth.dart';
+import '../../../../Getx/Auto_Verbal/autu_verbal.dart';
 import '../../../../Memory_local/database.dart';
 import '../../../../api/api_service.dart';
 import '../../../../contants.dart';
@@ -90,6 +92,8 @@ class _Add_with_propertyState extends State<Add_with_property>
     });
   }
 
+  // AuthVerbal authVerbal = AuthVerbal();
+  Authentication authentication = Authentication();
   File? file;
   Uint8List? get_bytes;
   late AnimationController controller;
@@ -115,30 +119,30 @@ class _Add_with_propertyState extends State<Add_with_property>
   //   }
   // }
 
-  Future<void> get_count() async {
-    setState(() {
-      control_user = widget.id_control_user;
-    });
-    var rs = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}',
-      ),
-    );
-    var rs_ios = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option',
-      ),
-    );
-    if (rs.statusCode == 200) {
-      var jsonData = jsonDecode(rs.body);
-      var jsonData_ios = jsonDecode(rs_ios.body);
-      setState(() {
-        number = jsonData['number_count'];
-        list_user = jsonData['user'];
-        check_ios_pay = jsonData_ios;
-      });
-    }
-  }
+  // Future<void> get_count() async {
+  //   setState(() {
+  //     control_user = widget.id_control_user;
+  //   });
+  //   var rs = await http.get(
+  //     Uri.parse(
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_count?id_user_control=${control_user}',
+  //     ),
+  //   );
+  //   var rs_ios = await http.get(
+  //     Uri.parse(
+  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/ios_pay_option',
+  //     ),
+  //   );
+  //   if (rs.statusCode == 200) {
+  //     var jsonData = jsonDecode(rs.body);
+  //     var jsonData_ios = jsonDecode(rs_ios.body);
+  //     setState(() {
+  //       number = jsonData['number_count'];
+  //       list_user = jsonData['user'];
+  //       check_ios_pay = jsonData_ios;
+  //     });
+  //   }
+  // }
 
   Future<void> payment_done(BuildContext context) async {
     final Data = {
@@ -213,8 +217,9 @@ class _Add_with_propertyState extends State<Add_with_property>
   void initState() {
     _getCurrentPosition();
     // get_control_user(widget.id.toString());
+    // authVerbal.getUsers(widget.id_control_user);
     verbal_id = widget.id_control_user.toString() + RandomString(9);
-    get_count();
+
     addVerbal(context);
     lat1;
     log2;
@@ -236,6 +241,8 @@ class _Add_with_propertyState extends State<Add_with_property>
     super.initState();
 
     requestModelAuto = AutoVerbalRequestModel(
+      borey: "0",
+      road: "",
       property_type_id: "",
       lat: "",
       lng: "",
@@ -294,7 +301,7 @@ class _Add_with_propertyState extends State<Add_with_property>
                       requestModelAuto.verbal = jsonList;
                       _image;
                     });
-                    await get_count();
+                    // await get_count();
                     if (number! >= 1) {
                       if (_image != null) {
                         Uint8List? imagebytes =
@@ -625,22 +632,22 @@ class _Add_with_propertyState extends State<Add_with_property>
               toolbarHeight: 80,
             ),
             backgroundColor: const Color.fromARGB(235, 7, 9, 145),
-            body: RefreshIndicator(
-              onRefresh: () => get_count(),
-              child: Container(
-                height: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                child: SingleChildScrollView(
-                  child: addVerbal(context),
-                ),
-              ),
-            ),
+            // body: RefreshIndicator(
+            //   onRefresh: () => authVerbal.getUsers(widget.id_control_user),
+            //   child: Container(
+            //     height: double.infinity,
+            //     decoration: const BoxDecoration(
+            //       color: Colors.white,
+            //       borderRadius: BorderRadius.only(
+            //         topLeft: Radius.circular(20),
+            //         topRight: Radius.circular(20),
+            //       ),
+            //     ),
+            //     child: SingleChildScrollView(
+            //       child: addVerbal(context),
+            //     ),
+            //   ),
+            // ),
             floatingActionButton: (number! > 0)
                 ? FloatingActionButton.small(
                     onPressed: () {
@@ -724,7 +731,7 @@ class _Add_with_propertyState extends State<Add_with_property>
         if (lat != null && lat1 == null)
           InkWell(
             onTap: () async {
-              await SlideUp(context);
+              await slideUp(context);
             },
             child: Container(
               height: 180,
@@ -747,7 +754,7 @@ class _Add_with_propertyState extends State<Add_with_property>
               setState(() {
                 asking_price = 0.0;
               });
-              await SlideUp(context);
+              await slideUp(context);
             },
             child: Container(
               height: 180,
@@ -1188,11 +1195,16 @@ class _Add_with_propertyState extends State<Add_with_property>
   String? commune;
 
   //MAP
-  Future<void> SlideUp(BuildContext context) async {
+  Future<void> slideUp(BuildContext context) async {
 //=============================================================
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => map_cross_verbal(
+          listBuildings: [],
+          listBuilding: (value) {},
+          verbID: "",
+          iduser: widget.id_control_user,
+          updateNew: 0,
           get_commune: (value) {
             setState(() {
               commune = value;

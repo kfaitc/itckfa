@@ -39,7 +39,7 @@ dependencies:
   intl: ^0.17.0
 
   carousel_slider: ^4.1.1
-  shared_preferences: ^2.0.15
+  shared_preferences: ^2.2.2
   image_gallery_saver: ^2.0.3
   aba_payment: ^0.0.3
   flutter_easyloading: ^3.0.5
@@ -74,7 +74,7 @@ dependencies:
   transparent_image: ^2.0.0
   animated_background: ^2.0.0
   video_player: ^2.5.1
-  multi_image_picker: ^4.8.01
+  # multi_image_picker: ^4.8.01
   cached_network_image: ^3.2.3
   number_pagination: ^0.0.3+2
   barcode_widget: ^2.0.4
