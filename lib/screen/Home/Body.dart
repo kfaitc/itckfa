@@ -18,7 +18,6 @@ import 'package:itckfa/Option/screens/walletscreen.dart';
 import 'package:itckfa/screen/Home/Customs/Model-responsive.dart';
 import 'package:itckfa/screen/Promotion/membership_real.dart';
 import 'package:itckfa/screen/Promotion/partnerList_real.dart';
-import 'package:http/http.dart' as http;
 import 'package:itckfa/screen/Promotion/Title_promo.dart';
 import 'package:itckfa/screen/Promotion/promotion.dart';
 import 'package:itckfa/screen/Home/Customs/titleBar.dart';
@@ -31,8 +30,6 @@ import '../../Getx/Auto_Verbal/autu_verbal.dart';
 import '../../Option/screens/AutoVerbal/Verbal/add_PropertyPrce.dart';
 import '../../Option/screens/AutoVerbal/Verbal/menu_add.dart';
 import '../../models/autoVerbal.dart';
-
-// import 'Customs/googlemapkfa/detailmap.dart';
 
 class Body extends StatefulWidget {
   final String username;
@@ -167,6 +164,7 @@ class _BodyState extends State<Body> {
 
   void mainCheck() async {
     Future.delayed(Duration(seconds: 2), () {
+      print("===> ${widget.control_user.toString()}");
       authVerbal.checkVpoint(widget.control_user.toString());
       authVerbal = Get.put(AuthVerbal(Iduser: widget.control_user));
     });
@@ -292,11 +290,6 @@ class _BodyState extends State<Body> {
                         Stack(
                           alignment: Alignment.topCenter,
                           children: [
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.3,
-                              width: MediaQuery.of(context).size.width * 1.0,
-                              color: kwhite_new,
-                            ),
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 70),
                               margin: EdgeInsets.only(top: 160),
@@ -1021,8 +1014,8 @@ class _BodyState extends State<Body> {
                               ),
                             ),
                             Container(
-                              height: MediaQuery.of(context).size.height * 0.3,
-                              width: MediaQuery.of(context).size.width * 1.0,
+                              height: 300,
+                              width: MediaQuery.of(context).size.width,
                               margin: EdgeInsets.only(top: 10),
                               child: Stack(
                                 alignment: Alignment.topCenter,
@@ -1116,9 +1109,7 @@ class _BodyState extends State<Body> {
                                   Positioned(
                                     top: 90.0,
                                     child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.15,
+                                      height: 120,
                                       width: MediaQuery.of(context).size.width *
                                           0.87,
                                       decoration: BoxDecoration(

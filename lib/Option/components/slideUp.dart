@@ -1,6 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:async';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,9 +11,9 @@ import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:itckfa/Option/components/property.dart';
 import 'package:itckfa/Option/components/property35.dart';
 import 'package:itckfa/Option/components/property35_search.dart';
+import 'package:itckfa/Option/components/raod_type.dart';
 import 'package:itckfa/models/search_model.dart';
 import 'package:itckfa/screen/Customs/ProgressHUD.dart';
 import 'package:location_geocoder/location_geocoder.dart';
@@ -29,7 +31,6 @@ import '../screens/AutoVerbal/local_Map/data/MyDB.dart';
 import 'autoVerbalType_search.dart';
 import 'colors.dart';
 import 'contants.dart';
-import 'numDisplay.dart';
 
 typedef OnChangeCallback = void Function(dynamic value);
 
@@ -180,6 +181,7 @@ class _HomePageState extends State<map_cross_verbal> {
       fromDate: "",
       toDate: "",
     );
+    listOptin = listRaodNBorey;
     waitingFuction();
     super.initState();
   }
@@ -238,7 +240,7 @@ class _HomePageState extends State<map_cross_verbal> {
         : MediaQuery.of(context).size.height * 0.25;
     return Scaffold(
       appBar: AppBar(
-        title: Text("$haveValue"),
+        title: Text("GoogleMap", style: TextStyle(color: whiteColor)),
         centerTitle: true,
         elevation: 0.0,
         backgroundColor: Colors.indigo[900],
@@ -263,16 +265,23 @@ class _HomePageState extends State<map_cross_verbal> {
           InkWell(
             onTap: () {
               if (groupValue == 0) {
-                Dialog(context);
+                if (adding_price > 0) {
+                  Dialog(context);
+                } else {
+                  getxsnackbar("Google Map!", "Please find Price");
+                }
               } else {
                 for_market_price();
               }
             },
-            child: Image.asset(
-              "assets/icons/papersib.png",
-
-              width: 30,
-              // fit: BoxFit.fitHeight,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 7, bottom: 7),
+              child: Image.asset(
+                "assets/icons/papersib.png",
+                height: 35,
+                width: 50,
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
           const SizedBox(width: 10)
@@ -315,6 +324,16 @@ class _HomePageState extends State<map_cross_verbal> {
     );
   }
 
+  List listassetImage = [
+    {"image": "assets/icons/Approved.png"},
+    {"image": "assets/icons/house.png"},
+    {"image": "assets/icons/Comparable.png"},
+    {"image": "assets/icons/land.png"},
+    {"image": "assets/icons/area.png"},
+    {"image": "assets/icons/condo.png"},
+    {"image": "assets/icons/Appraiser.png"},
+    {"image": "assets/icons/locations.png"},
+  ];
   List<LatLng> points = [];
   Set<Polygon> polygons = {};
   void _createPolygon() {
@@ -369,22 +388,12 @@ class _HomePageState extends State<map_cross_verbal> {
         requestModel.lat = centroid.latitude.toString();
         requestModel.lng = centroid.longitude.toString();
         haveValue = false;
-        route = "";
+        routeNo = "";
         clickMap == false;
       });
     }
   }
 
-  List listassetImage = [
-    {"image": "assets/icons/Approved.png"},
-    {"image": "assets/icons/house.png"},
-    {"image": "assets/icons/Comparable.png"},
-    {"image": "assets/icons/land.png"},
-    {"image": "assets/icons/area.png"},
-    {"image": "assets/icons/condo.png"},
-    {"image": "assets/icons/Appraiser.png"},
-    {"image": "assets/icons/locations.png"},
-  ];
   LatLng _calculatePolygonCentroid(List<LatLng> points) {
     double centroidLat = 0.0;
     double centroidLng = 0.0;
@@ -433,6 +442,74 @@ class _HomePageState extends State<map_cross_verbal> {
                   style: TextStyle(color: greyColor, fontSize: 17),
                 )
               ],
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.only(right: 10, left: 10),
+              child: Row(
+                children: [
+                  Text(
+                    "Borey",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: greyColor,
+                        fontSize: 14),
+                  ),
+                  IconButton(
+                      onPressed: () async {
+                        setState(() {
+                          waitingCheck = true;
+                        });
+                        setState(() {
+                          boreybutton = !boreybutton;
+
+                          if (boreybutton) {
+                            checkborey = 1;
+                            listOptin = listRaodNBorey;
+                          } else {
+                            checkborey = 0;
+                            listOptin = listRaodBorey;
+                          }
+                        });
+                        setState(() {
+                          if (boreybutton) {
+                            checkborey = 1;
+                            listOptin = listRaodBorey;
+                          } else {
+                            checkborey = 0;
+                            listOptin = listRaodNBorey;
+                          }
+                        });
+                        await Future.delayed(const Duration(seconds: 1), () {
+                          setState(() {
+                            waitingCheck = false;
+                          });
+                        });
+                      },
+                      icon: Icon(boreybutton
+                          ? Icons.check_box_outlined
+                          : Icons.check_box_outline_blank)),
+                  waitingCheck
+                      ? const Center(child: CircularProgressIndicator())
+                      : OptionRoadNew(
+                          hight: 35,
+                          pwidth: 250,
+                          list: listOptin,
+                          valueId: "road_id",
+                          valueName: "road_name",
+                          lable: "Road Name",
+                          onbackValue: (value) {
+                            setState(() {
+                              List<String> parts = value!.split(',');
+
+                              id_route = parts[0];
+
+                              lable = parts[1];
+                            });
+                          },
+                        ),
+                ],
+              ),
             ),
             const SizedBox(height: 10),
             Row(
@@ -514,222 +591,224 @@ class _HomePageState extends State<map_cross_verbal> {
             //       requestModel.num = newValue!;
             //     }),
             //   ),
-            Padding(
-              padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: SizedBox(
-                      height: 35,
-                      child: DropdownButtonFormField<String>(
-                        //value: genderValue,
+            if (groupValue == 0)
+              Padding(
+                padding: const EdgeInsets.only(right: 10, left: 10, top: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 35,
+                        child: DropdownButtonFormField<String>(
+                          //value: genderValue,
 
-                        value: searchlatlog.text.isNotEmpty
-                            ? searchlatlog.text
-                            : null,
-                        isExpanded: true,
-                        onChanged: (newValue) {
-                          setState(() {
-                            searchlatlog.text = newValue ?? "";
-                            if (newValue == 'N') {
-                              comparedropdown = '';
-                            } else {
-                              comparedropdown = newValue!;
-                              comparedropdown2 = 'P';
-                            }
+                          value: searchlatlog.text.isNotEmpty
+                              ? searchlatlog.text
+                              : null,
+                          isExpanded: true,
+                          onChanged: (newValue) {
+                            setState(() {
+                              searchlatlog.text = newValue ?? "";
+                              if (newValue == 'N') {
+                                comparedropdown = '';
+                              } else {
+                                comparedropdown = newValue!;
+                                comparedropdown2 = 'P';
+                              }
 
-                            // print('==> $comparedropdown');
-                          });
-                        },
+                              // print('==> $comparedropdown');
+                            });
+                          },
 
-                        items: controller.listdropdown
-                            .map<DropdownMenuItem<String>>(
-                              (value) => DropdownMenuItem<String>(
-                                value: value["type"].toString(),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 7),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          flex: 1,
-                                          child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 5),
-                                            child: SizedBox(
-                                                height: 70,
-                                                // radius: 15,
-                                                // backgroundColor: Colors.white,
-                                                child: (value['id'] == 1)
-                                                    ? Image.asset(
-                                                        listassetImage[0]
-                                                                ['image']
-                                                            .toString(),
-                                                      )
-                                                    : (value['id'] == 2)
-                                                        ? Image.asset(
-                                                            listassetImage[1]
-                                                                    ['image']
-                                                                .toString())
-                                                        : (value['id'] == 3)
-                                                            ? Image.asset(
-                                                                listassetImage[2][
-                                                                        'image']
-                                                                    .toString())
-                                                            : (value['id'] == 4)
-                                                                ? Image.asset(
-                                                                    listassetImage[3]['image']
-                                                                        .toString())
-                                                                : (value['id'] ==
-                                                                        5)
-                                                                    ? Image.asset(
-                                                                        listassetImage[4]['image']
-                                                                            .toString())
-                                                                    : (value['id'] ==
-                                                                            6)
-                                                                        ? Image.asset(
-                                                                            listassetImage[5]['image'].toString())
-                                                                        : (value['id'] == 7)
-                                                                            ? Image.asset(listassetImage[6]['image'].toString())
-                                                                            : Image.asset(listassetImage[7]['image'].toString())),
-                                          )),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(value["title"].toString(),
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 11)),
-                                      ),
-                                      Expanded(
-                                          flex: 4,
-                                          child: Text(value["name"],
+                          items: controller.listdropdown
+                              .map<DropdownMenuItem<String>>(
+                                (value) => DropdownMenuItem<String>(
+                                  value: value["type"].toString(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 7),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 1,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 5),
+                                              child: SizedBox(
+                                                  height: 70,
+                                                  // radius: 15,
+                                                  // backgroundColor: Colors.white,
+                                                  child: (value['id'] == 1)
+                                                      ? Image.asset(
+                                                          listassetImage[0]
+                                                                  ['image']
+                                                              .toString(),
+                                                        )
+                                                      : (value['id'] == 2)
+                                                          ? Image.asset(
+                                                              listassetImage[1]
+                                                                      ['image']
+                                                                  .toString())
+                                                          : (value['id'] == 3)
+                                                              ? Image.asset(
+                                                                  listassetImage[2]
+                                                                          [
+                                                                          'image']
+                                                                      .toString())
+                                                              : (value['id'] ==
+                                                                      4)
+                                                                  ? Image.asset(
+                                                                      listassetImage[3]['image']
+                                                                          .toString())
+                                                                  : (value['id'] ==
+                                                                          5)
+                                                                      ? Image.asset(
+                                                                          listassetImage[4]['image']
+                                                                              .toString())
+                                                                      : (value['id'] ==
+                                                                              6)
+                                                                          ? Image.asset(listassetImage[5]['image'].toString())
+                                                                          : (value['id'] == 7)
+                                                                              ? Image.asset(listassetImage[6]['image'].toString())
+                                                                              : Image.asset(listassetImage[7]['image'].toString())),
+                                            )),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text(value["title"].toString(),
                                               style: const TextStyle(
-                                                  fontSize: 11))),
-                                    ],
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 11)),
+                                        ),
+                                        Expanded(
+                                            flex: 4,
+                                            child: Text(value["name"],
+                                                style: const TextStyle(
+                                                    fontSize: 11))),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                            .toList(),
-                        // add extra sugar..
-                        icon: const Icon(
-                          Icons.arrow_drop_down,
-                          color: kImageColor,
-                        ),
-
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 0),
-                          fillColor: Colors.white,
-                          filled: true,
-                          labelText: 'Special Option',
-                          labelStyle: TextStyle(fontSize: 12),
-                          hintText: 'Select one',
-                          prefixIcon: const Icon(
-                            Icons.home_outlined,
+                              )
+                              .toList(),
+                          // add extra sugar..
+                          icon: const Icon(
+                            Icons.arrow_drop_down,
                             color: kImageColor,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: kPrimaryColor,
-                              width: 2.0,
+
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 0),
+                            fillColor: Colors.white,
+                            filled: true,
+                            labelText: 'Special Option',
+                            labelStyle: const TextStyle(fontSize: 12),
+                            hintText: 'Select one',
+                            prefixIcon: const Icon(
+                              Icons.home_outlined,
+                              color: kImageColor,
                             ),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              width: 1,
-                              color: kPrimaryColor,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: kPrimaryColor,
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                            borderRadius: BorderRadius.circular(5),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                width: 1,
+                                color: kPrimaryColor,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: SizedBox(
-                  //     height: 35,
-                  //     child: DropdownButtonFormField<String>(
-                  //       isExpanded: true,
+                    // Expanded(
+                    //   flex: 1,
+                    //   child: SizedBox(
+                    //     height: 35,
+                    //     child: DropdownButtonFormField<String>(
+                    //       isExpanded: true,
 
-                  //       onChanged: (newValue) {
-                  //         setState(() {
-                  //           if (newValue == "2024") {
-                  //             id_route = null;
-                  //           } else {
-                  //             roadType = true;
-                  //             id_route = newValue;
-                  //           }
-                  //           print("===> $id_route");
-                  //         });
-                  //       },
+                    //       onChanged: (newValue) {
+                    //         setState(() {
+                    //           if (newValue == "2024") {
+                    //             id_route = null;
+                    //           } else {
+                    //             roadType = true;
+                    //             id_route = newValue;
+                    //           }
+                    //           print("===> $id_route");
+                    //         });
+                    //       },
 
-                  //       items: controller.listRaod
-                  //           .map<DropdownMenuItem<String>>(
-                  //             (value) =>
-                  //                 DropdownMenuItem<String>(
-                  //               value: value["road_id"]
-                  //                   .toString(),
-                  //               child: Text(value["road_name"]
-                  //                   .toString()),
-                  //               // child: Text(
-                  //               //   value["name"],
+                    //       items: controller.listRaod
+                    //           .map<DropdownMenuItem<String>>(
+                    //             (value) =>
+                    //                 DropdownMenuItem<String>(
+                    //               value: value["road_id"]
+                    //                   .toString(),
+                    //               child: Text(value["road_name"]
+                    //                   .toString()),
+                    //               // child: Text(
+                    //               //   value["name"],
 
-                  //               //   style: TextStyle(
-                  //               //       fontWeight: FontWeight.bold,
-                  //               //       color: Colors.red),
-                  //               // ),
-                  //             ),
-                  //           )
-                  //           .toList(),
-                  //       // add extra sugar..
-                  //       icon: const Icon(
-                  //         Icons.arrow_drop_down,
-                  //         color: kImageColor,
-                  //       ),
+                    //               //   style: TextStyle(
+                    //               //       fontWeight: FontWeight.bold,
+                    //               //       color: Colors.red),
+                    //               // ),
+                    //             ),
+                    //           )
+                    //           .toList(),
+                    //       // add extra sugar..
+                    //       icon: const Icon(
+                    //         Icons.arrow_drop_down,
+                    //         color: kImageColor,
+                    //       ),
 
-                  //       decoration: InputDecoration(
-                  //         contentPadding:
-                  //             const EdgeInsets.symmetric(
-                  //                 vertical: 0, horizontal: 0),
-                  //         fillColor: Colors.white,
-                  //         filled: true,
-                  //         labelText: (searchraod.text == "")
-                  //             ? 'Road'
-                  //             : searchraod.text,
-                  //         hintStyle: TextStyle(
-                  //             color: blackColor,
-                  //             fontWeight: FontWeight.bold,
-                  //             fontSize: 15),
-                  //         hintText: 'Select one',
-                  //         prefixIcon: const Icon(
-                  //           Icons.edit_road_outlined,
-                  //           color: kImageColor,
-                  //         ),
-                  //         focusedBorder: OutlineInputBorder(
-                  //           borderSide: const BorderSide(
-                  //               color: kPrimaryColor,
-                  //               width: 2.0),
-                  //           borderRadius:
-                  //               BorderRadius.circular(5),
-                  //         ),
-                  //         enabledBorder: OutlineInputBorder(
-                  //           borderSide: const BorderSide(
-                  //             width: 1,
-                  //             color: kPrimaryColor,
-                  //           ),
-                  //           borderRadius:
-                  //               BorderRadius.circular(5),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                    //       decoration: InputDecoration(
+                    //         contentPadding:
+                    //             const EdgeInsets.symmetric(
+                    //                 vertical: 0, horizontal: 0),
+                    //         fillColor: Colors.white,
+                    //         filled: true,
+                    //         labelText: (searchraod.text == "")
+                    //             ? 'Road'
+                    //             : searchraod.text,
+                    //         hintStyle: TextStyle(
+                    //             color: blackColor,
+                    //             fontWeight: FontWeight.bold,
+                    //             fontSize: 15),
+                    //         hintText: 'Select one',
+                    //         prefixIcon: const Icon(
+                    //           Icons.edit_road_outlined,
+                    //           color: kImageColor,
+                    //         ),
+                    //         focusedBorder: OutlineInputBorder(
+                    //           borderSide: const BorderSide(
+                    //               color: kPrimaryColor,
+                    //               width: 2.0),
+                    //           borderRadius:
+                    //               BorderRadius.circular(5),
+                    //         ),
+                    //         enabledBorder: OutlineInputBorder(
+                    //           borderSide: const BorderSide(
+                    //             width: 1,
+                    //             color: kPrimaryColor,
+                    //           ),
+                    //           borderRadius:
+                    //               BorderRadius.circular(5),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
-            ),
             const SizedBox(height: 10),
             if (groupValue == 0)
               Padding(
@@ -819,14 +898,15 @@ class _HomePageState extends State<map_cross_verbal> {
             //       ),
             //     ],
             //   ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Divider(
-                thickness: 1,
-                color: greyColor,
+            if (groupValue == 0)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Divider(
+                  thickness: 1,
+                  color: greyColor,
+                ),
               ),
-            ),
-            if (adding_price > 0)
+            if (adding_price > 0 && groupValue == 0)
               const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -840,9 +920,9 @@ class _HomePageState extends State<map_cross_verbal> {
                   ),
                 ],
               ),
-            if (adding_price > 0) addLandBuilding(),
+            if (adding_price > 0 && groupValue == 0) addLandBuilding(),
 
-            if (listBuilding.isNotEmpty && adding_price > 0)
+            if (listBuilding.isNotEmpty && adding_price > 0 && groupValue == 0)
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 height: 260,
@@ -1050,7 +1130,7 @@ class _HomePageState extends State<map_cross_verbal> {
 
     setState(() {
       haveValue = false;
-      route = "";
+      routeNo = "";
       listMarkerIds.clear();
       data_adding_correct.clear();
       listMarkerIds.add(marker);
@@ -1072,7 +1152,7 @@ class _HomePageState extends State<map_cross_verbal> {
 
     setState(() {
       haveValue = false;
-      route = "";
+      routeNo = "";
       listMarkerIds.clear();
       data_adding_correct.clear();
       listMarkerIds.add(marker);
@@ -1095,6 +1175,8 @@ class _HomePageState extends State<map_cross_verbal> {
     return SizedBox(height: isNeedPadding ? bottomOffset : hiddenKeyboard);
   }
 
+  late Timer _timer;
+  bool closeDialog = false;
   Stack MapShow() {
     return Stack(
       children: [
@@ -1119,13 +1201,18 @@ class _HomePageState extends State<map_cross_verbal> {
               requestModel.lat = latLng.latitude.toString();
               requestModel.lng = latLng.longitude.toString();
             });
-            if (checktypeMarker == false) {
+            if (closeDialog == false) {
               addMarker(argument);
-              // getAddress(argument);
-              await findByPiont(argument.latitude, argument.longitude);
-              await Show(requestModel);
+              findByPiont(argument.latitude, argument.longitude);
+              await optionSearch();
             } else {
-              addManyMarkers(argument);
+              if (checktypeMarker == false) {
+                addMarker(argument);
+                findByPiont(argument.latitude, argument.longitude);
+                await Show(requestModel);
+              } else {
+                addManyMarkers(argument);
+              }
             }
           },
           onCameraMove: (CameraPosition cameraPositiona) {
@@ -1135,7 +1222,7 @@ class _HomePageState extends State<map_cross_verbal> {
         Align(
           alignment: Alignment.topLeft,
           child: Container(
-            margin: EdgeInsets.only(top: 10, left: 2),
+            margin: const EdgeInsets.only(top: 10, left: 2),
             width: MediaQuery.of(context).size.width * 0.8,
             child: SearchLocation(
               apiKey:
@@ -1160,6 +1247,352 @@ class _HomePageState extends State<map_cross_verbal> {
         listMarkerIds.remove(markerId);
       }
     });
+  }
+
+  List listOptin = [];
+  List listRaodNBorey = [
+    {"road_id": 1, "road_name": "Main Roads"},
+    {"road_id": 2, "road_name": "Sub Road"},
+  ];
+  List listRaodBorey = [
+    {"road_id": 38, "road_name": "Borey Residential"},
+    {"road_id": 39, "road_name": "Borey Commercial"},
+  ];
+  String lable = "Road Name";
+  bool waitingCheck = false;
+  bool boreybutton = false;
+  Future<void> optionSearch() {
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => StatefulBuilder(
+        builder: (BuildContext context, StateSetter setModalState) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 420,
+                width: 300,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          const Spacer(),
+                          IconButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              icon: const Icon(
+                                Icons.remove_circle_outline,
+                                size: 30,
+                              ))
+                        ],
+                      ),
+                      Image.asset("assets/images/searchMan.png", height: 120),
+                      const SizedBox(height: 10),
+                      ((routeNo != "Unnamed Road" && checkborey != 0))
+                          ? Text(
+                              (routeNo == "Unnamed Road" && checkborey == 0)
+                                  ? "Specail Zone"
+                                  : "",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 55, 52, 52),
+                                  fontSize: 15))
+                          : const Text("Select Property Category",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 55, 52, 52),
+                                  fontSize: 15)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                  (routeNo == "Unnamed Road" && checkborey == 0)
+                                      ? "Specail Zone"
+                                      : "",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 55, 52, 52),
+                                      fontSize: 15)),
+                              (routeNo == "Unnamed Road" && checkborey == 0)
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setModalState(() {
+                                          doneORudone = !doneORudone;
+                                        });
+                                        setState(() {
+                                          haveValue = !haveValue;
+                                        });
+                                      },
+                                      icon: !doneORudone
+                                          ? Icon(
+                                              Icons.check_box_outline_blank,
+                                              size: 25,
+                                              color: greyColorNolots,
+                                            )
+                                          : Icon(
+                                              Icons.check_box_outlined,
+                                              size: 25,
+                                              color: greyColor,
+                                            ))
+                                  : const SizedBox(),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Borey",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: greyColor,
+                                        fontSize: 14),
+                                  ),
+                                  IconButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          waitingCheck = true;
+                                        });
+                                        setModalState(() {
+                                          boreybutton = !boreybutton;
+
+                                          if (boreybutton) {
+                                            checkborey = 1;
+                                            listOptin = listRaodNBorey;
+                                          } else {
+                                            checkborey = 0;
+                                            listOptin = listRaodBorey;
+                                          }
+                                        });
+                                        setState(() {
+                                          if (boreybutton) {
+                                            checkborey = 1;
+                                            listOptin = listRaodBorey;
+                                          } else {
+                                            checkborey = 0;
+                                            listOptin = listRaodNBorey;
+                                          }
+                                        });
+                                        await Future.delayed(
+                                            const Duration(seconds: 1), () {
+                                          setModalState(() {
+                                            waitingCheck = false;
+                                          });
+                                        });
+                                      },
+                                      icon: Icon(boreybutton
+                                          ? Icons.check_box_outlined
+                                          : Icons.check_box_outline_blank)),
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          waitingCheck
+                              ? const Center(child: CircularProgressIndicator())
+                              : OptionRoadNew(
+                                  hight: 35,
+                                  pwidth: 250,
+                                  list: listOptin,
+                                  valueId: "road_id",
+                                  valueName: "road_name",
+                                  lable: "Road Name",
+                                  onbackValue: (value) {
+                                    setModalState(() {
+                                      List<String> parts = value!.split(',');
+
+                                      id_route = parts[0];
+
+                                      lable = parts[1];
+                                    });
+                                  },
+                                ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      (routeNo == "Unnamed Road" || checkborey == 1)
+                          ? const SizedBox()
+                          : Container(
+                              height: 35,
+                              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                              child: DropdownButtonFormField<String>(
+                                //value: genderValue,
+                                value: searchlatlog.text.isNotEmpty
+                                    ? searchlatlog.text
+                                    : null,
+                                isExpanded: true,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    comparedropdown = newValue!;
+                                    for (int j = 0;
+                                        j < controller.listdropdown.length;
+                                        j++) {
+                                      if (controller.listdropdown[j]['type']
+                                              .toString() ==
+                                          newValue) {
+                                        // valuedropdown = controller
+                                        //     .listdropdown[j]['title']
+                                        //     .toString();
+                                      }
+                                    }
+                                  });
+                                },
+                                items: controller.listdropdown
+                                    .map<DropdownMenuItem<String>>(
+                                      (value) => DropdownMenuItem<String>(
+                                        value: value["type"].toString(),
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 7),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: SizedBox(
+                                                    height: 70,
+                                                    // radius: 15,
+                                                    // backgroundColor: Colors.white,
+                                                    child: (value['id'] == 1)
+                                                        ? Image.asset(
+                                                            listassetImage[0]
+                                                                    ['image']
+                                                                .toString(),
+                                                          )
+                                                        : (value['id'] == 2)
+                                                            ? Image.asset(
+                                                                listassetImage[
+                                                                            1][
+                                                                        'image']
+                                                                    .toString())
+                                                            : (value['id'] == 3)
+                                                                ? Image.asset(
+                                                                    listassetImage[2]
+                                                                            [
+                                                                            'image']
+                                                                        .toString())
+                                                                : (value['id'] ==
+                                                                        4)
+                                                                    ? Image.asset(
+                                                                        listassetImage[3]['image']
+                                                                            .toString())
+                                                                    : (value['id'] ==
+                                                                            5)
+                                                                        ? Image.asset(
+                                                                            listassetImage[4]['image'].toString())
+                                                                        : (value['id'] == 6)
+                                                                            ? Image.asset(listassetImage[5]['image'].toString())
+                                                                            : (value['id'] == 7)
+                                                                                ? Image.asset(listassetImage[6]['image'].toString())
+                                                                                : Image.asset(listassetImage[7]['image'].toString())),
+                                              ),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 7),
+                                                  child: Text(
+                                                    "${value["title"]}",
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 12),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Expanded(
+                                                child: Text(
+                                                  style: const TextStyle(
+                                                      fontSize: 11),
+                                                  value["name"].toString(),
+                                                  maxLines: 30,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        // child: Text(
+                                        //   value["name"],
+
+                                        //   style: TextStyle(
+                                        //       fontWeight: FontWeight.bold,
+                                        //       color: Colors.red),
+                                        // ),
+                                      ),
+                                    )
+                                    .toList(),
+                                // add extra sugar..
+                                icon: const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: kImageColor,
+                                ),
+
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 0),
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  labelText: 'Special Option',
+                                  hintText: 'Select one',
+                                  prefixIcon: const Icon(
+                                    Icons.edit_road_outlined,
+                                    color: kImageColor,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: kPrimaryColor, width: 2.0),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        width: 1, color: kPrimaryColor),
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          SizedBox(
+                            height: 35,
+                            width: 150,
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<
+                                          Color>(
+                                      const Color.fromARGB(255, 20, 23, 167)),
+                                ),
+                                onPressed: () async {
+                                  Get.back();
+                                  // await getAddress(latLng);
+                                  await Show(requestModel);
+                                },
+                                child: const Text('Search')),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 
   var colorstitle = const Color.fromARGB(255, 141, 140, 140);
@@ -2220,33 +2653,35 @@ class _HomePageState extends State<map_cross_verbal> {
       if (groupValue == 0) {
         setState(() {
           isApiCallProcess = true;
+          print("routeNo : (${routeNo!.toString()})");
         });
-        // print("==> No.0 Route : $route");
-        if (route != null) {
+
+        if (routeNo != null) {
           for (int i = 0; i < controller.listMainRoute.length; i++) {
-            if (route.toString().contains(
-                      controller.listMainRoute[i]['name_road'].toString(),
-                    ) ||
+            if (routeNo!.contains(
+                  controller.listMainRoute[i]['name_road'].toString(),
+                ) ||
                 comparedropdown == "C") {
               setState(() {
-                // print("No.1 Route : ${listMainRoute[i]['name_road']}");
                 haveValue = true;
               });
 
               break;
             } else {
-              // print("No.2 Route : ${listMainRoute[i]['name_road']}");
+              // print("No.2 Route");
             }
           }
         }
         setState(() {
           pty;
-          if (haveValue == true) {
-            id_route = '1';
-            print("==> Main Road");
+          if (checkborey == 0) {
+            if (haveValue == true) {
+              id_route = '1';
+            } else {
+              id_route = '2';
+            }
           } else {
-            print("==> Sub Road");
-            id_route = '2';
+            id_route = null;
           }
         });
         var headers = {'Content-Type': 'application/json'};
@@ -2301,8 +2736,41 @@ class _HomePageState extends State<map_cross_verbal> {
 
           setState(() {
             for (var i = 0; i < map!.length; i++) {
-              // if (checkborey == 1) {
-              if (map![i]['borey'] == 1) {
+              if (checkborey == 1) {
+                if (map![i]['borey'] == 1) {
+                  if (map![i]['type_value'] == "V") {
+                    if (map![i]['comparable_adding_price'] == '') {
+                      map![i]['comparable_adding_price'] = '0';
+                      addingPriceVerbal +=
+                          double.parse(map![i]['comparable_adding_price']);
+                    } else if (map![i]['comparable_adding_price']
+                        .contains(',')) {
+                      addingPriceVerbal += double.parse(map![i]
+                              ['comparable_adding_price']
+                          .replaceAll(",", ""));
+                    } else {
+                      addingPriceVerbal +=
+                          (double.parse(map![i]['comparable_adding_price']));
+                    }
+                  } else {
+                    {
+                      if (map![i]['comparable_adding_price'] == '') {
+                        map![i]['comparable_adding_price'] = '0';
+                        addingPriceSimple +=
+                            double.parse(map![i]['comparable_adding_price']);
+                      } else if (map![i]['comparable_adding_price']
+                          .contains(',')) {
+                        addingPriceSimple += double.parse(map![i]
+                                ['comparable_adding_price']
+                            .replaceAll(",", ""));
+                      } else {
+                        addingPriceSimple +=
+                            (double.parse(map![i]['comparable_adding_price']));
+                      }
+                    }
+                  }
+                }
+              } else {
                 if (map![i]['type_value'] == "V") {
                   if (map![i]['comparable_adding_price'] == '') {
                     map![i]['comparable_adding_price'] = '0';
@@ -2310,8 +2778,7 @@ class _HomePageState extends State<map_cross_verbal> {
                         double.parse(map![i]['comparable_adding_price']);
                   } else if (map![i]['comparable_adding_price'].contains(',')) {
                     addingPriceVerbal += double.parse(
-                      map![i]['comparable_adding_price'].replaceAll(",", ""),
-                    );
+                        map![i]['comparable_adding_price'].replaceAll(",", ""));
                   } else {
                     addingPriceVerbal +=
                         (double.parse(map![i]['comparable_adding_price']));
@@ -2324,45 +2791,13 @@ class _HomePageState extends State<map_cross_verbal> {
                           double.parse(map![i]['comparable_adding_price']);
                     } else if (map![i]['comparable_adding_price']
                         .contains(',')) {
-                      addingPriceSimple += double.parse(
-                        map![i]['comparable_adding_price'].replaceAll(",", ""),
-                      );
+                      addingPriceSimple += double.parse(map![i]
+                              ['comparable_adding_price']
+                          .replaceAll(",", ""));
                     } else {
                       addingPriceSimple +=
                           (double.parse(map![i]['comparable_adding_price']));
                     }
-                  }
-                }
-                setState(() {
-                  data_adding_correct.add(map![i]);
-                });
-              }
-              if (map![i]['type_value'] == "V") {
-                if (map![i]['comparable_adding_price'] == '') {
-                  map![i]['comparable_adding_price'] = '0';
-                  addingPriceVerbal +=
-                      double.parse(map![i]['comparable_adding_price']);
-                } else if (map![i]['comparable_adding_price'].contains(',')) {
-                  addingPriceVerbal += double.parse(
-                    map![i]['comparable_adding_price'].replaceAll(",", ""),
-                  );
-                } else {
-                  addingPriceVerbal +=
-                      (double.parse(map![i]['comparable_adding_price']));
-                }
-              } else {
-                {
-                  if (map![i]['comparable_adding_price'] == '') {
-                    map![i]['comparable_adding_price'] = '0';
-                    addingPriceSimple +=
-                        double.parse(map![i]['comparable_adding_price']);
-                  } else if (map![i]['comparable_adding_price'].contains(',')) {
-                    addingPriceSimple += double.parse(
-                      map![i]['comparable_adding_price'].replaceAll(",", ""),
-                    );
-                  } else {
-                    addingPriceSimple +=
-                        (double.parse(map![i]['comparable_adding_price']));
                   }
                 }
               }
@@ -2405,7 +2840,7 @@ class _HomePageState extends State<map_cross_verbal> {
               }
             }
           }
-          print("No.2 : ${data_adding_correct.length}");
+          // print("No.2 : ${data_adding_correct.length}");
           if (data_adding_correct.isNotEmpty) {
             if (data_adding_correct.length < 5) {
               setState(() {
@@ -2420,7 +2855,7 @@ class _HomePageState extends State<map_cross_verbal> {
           }
         } else {
           // nodata("We are devoloping!");
-          getxsnackbar("Please Try again", "");
+          getxsnackbar("updating!", "will coming soon!");
 
           // await Show(requestModel);
           setState(() {
@@ -2447,8 +2882,13 @@ class _HomePageState extends State<map_cross_verbal> {
 
   Future<void> getxsnackbar(title, subtitle) async {
     Get.snackbar(
-      title,
-      subtitle,
+      "",
+      "",
+      titleText: Text(title, style: TextStyle(fontSize: 14, color: greyColor)),
+      messageText: Text(
+        subtitle,
+        style: TextStyle(fontSize: 12, color: greyColorNolot),
+      ),
       colorText: Colors.black,
       padding: const EdgeInsets.only(right: 50, left: 50, top: 20, bottom: 20),
       borderColor: const Color.fromARGB(255, 48, 47, 47),
@@ -2461,7 +2901,7 @@ class _HomePageState extends State<map_cross_verbal> {
 
   bool clickdone = false;
   String priceCm = '';
-  var route, avg;
+  var avg;
   Future? Dialog(BuildContext context) {
     if (haveValue == true) {
       setState(() {
@@ -2548,7 +2988,7 @@ class _HomePageState extends State<map_cross_verbal> {
           data_adding_correct: data_adding_correct,
           commune: commune,
           district: district,
-          route: route),
+          route: routeNo!),
     );
   }
 
@@ -2792,6 +3232,7 @@ class _HomePageState extends State<map_cross_verbal> {
   var maxSqm2, minSqm2;
   var commune, district;
   dynamic R_avg, C_avg;
+  String? routeNo;
   var province;
   Future<void> findByPiont(double la, double lo) async {
     final response = await http.get(Uri.parse(
@@ -2841,9 +3282,14 @@ class _HomePageState extends State<map_cross_verbal> {
                     [0] ==
                 "route") {
               setState(() {
-                route = (jsonResponse['results'][j]['address_components'][i]
+                routeNo = (jsonResponse['results'][j]['address_components'][i]
                     ['short_name']);
-                // print("route => $route");
+                if (routeNo != "Unnamed Road") {
+                  checkborey = 0;
+                  boreybutton = false;
+                  listOptin = listRaodNBorey;
+                  print("routeNo : $routeNo || checkborey : $checkborey");
+                }
               });
             }
           }
@@ -2851,7 +3297,7 @@ class _HomePageState extends State<map_cross_verbal> {
       }
 
       addressController.text =
-          "${(province == "null") ? "" : province}, ${(district == "null") ? "" : district}, ${(commune == "null") ? "" : commune}, ${(route == "null") ? "" : route}";
+          "${(province == "null") ? "" : province}, ${(district == "null") ? "" : district}, ${(commune == "null") ? "" : commune}, ${(routeNo == "null") ? "" : routeNo}";
       widget.get_province(addressController.text);
       if (checkFunction == false) {
         await checkKhatIDSangID(district, commune);

@@ -43,7 +43,6 @@ class _BankDropdownState extends State<BankDropdownSearch> {
     super.initState();
     bankvalue = "";
     branchvalue = "";
-
     bankModel();
   }
 

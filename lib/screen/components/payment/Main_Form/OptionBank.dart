@@ -1,19 +1,15 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:itckfa/screen/Home/Home.dart';
+import 'package:get/get.dart';
 import 'package:itckfa/screen/components/payment/ABA/Aba.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../../../../Getx/Auto_Verbal/autu_verbal.dart';
+import '../../../../Getx/Bank/UPay/upay_bank.dart';
+import '../../../../Getx/Bank/Wing/wing_bank.dart';
+import '../../../../Option/components/colors.dart';
 import '../../../../Option/components/contants.dart';
 import '../UPAY/UPay_qr.dart';
 import '../WING/Wing_qr.dart';
-import '../UPAY/UPAY.dart';
 
 class OptionPayment extends StatefulWidget {
   OptionPayment({
@@ -70,11 +66,7 @@ class _OptionPaymentState extends State<OptionPayment> {
       style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
     ),
   ];
-  // List<String> set_Subtitle = [
-  //   'U-Pay',
-  //   'Wing',
-  //   'ABA',
-  // ];
+  UpayBank upayBank = UpayBank();
   List Qr_Image = [
     {
       'image': 'assets/images/Partners/KHQR.png',
@@ -100,359 +92,11 @@ class _OptionPaymentState extends State<OptionPayment> {
       'subscrip': 'Tap to pay with KHQR',
     },
   ];
-
-  UPAY upay = UPAY();
-  // WING wing = WING();
-
   var order_reference_no;
-  late Timer _timer;
   bool check_wing = false;
-  Future check_traslation_wing(orderReferenceNo) async {
-    var request = http.Request(
-      'GET',
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/checkdone/wing?order_reference_no=$orderReferenceNo',
-      ),
-    );
 
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(await response.stream.bytesToString());
-      setState(() {
-        print("kokok\n\n\n");
-      });
-      if (jsonResponse["status"].toString() == "OK") {
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.success,
-          animType: AnimType.rightSlide,
-          headerAnimationLoop: false,
-          title: 'Payment',
-          desc: jsonResponse["message"],
-          autoHide: const Duration(seconds: 3),
-          onDismissCallback: (type) {
-            dispose();
-            setState(() {
-              check_wing = true;
-            });
-            Navigator.pop(context);
-          },
-        ).show();
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-
-  Future<void> _await(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return const Center(child: CircularProgressIndicator());
-      },
-    );
-  }
-
-  var token;
-  var accessToken;
-  Future<bool> createOrder_Wing(price, option, context) async {
-    // Navigator.pop(context);
-    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var url = Uri.parse(
-      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token',
-    );
-    var body = {
-      // 'username': 'online.mangogame',
-      // // 'username': 'online.kfausd',
-      // 'password': '914bade01fd32493a0f2efc583e1a5f6',
-      // 'grant_type': 'password',
-      // 'client_id': 'third_party',
-      // 'client_secret': '16681c9ff419d8ecc7cfe479eb02a7a',
-    };
-
-    // Encode the body as a form-urlencoded string
-    // var requestBody = Uri(queryParameters: body).query;
-
-    var response = await http.post(url, headers: headers);
-
-    if (response.statusCode == 200) {
-      // Parse the JSON response
-      var jsonResponse = jsonDecode(response.body);
-      accessToken = jsonResponse['access_token'];
-
-      var parts = accessToken.split('-');
-      token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
-
-      print('accessToken: $accessToken');
-      print('token: $token');
-      print('Price : $price');
-
-      // await deeplink_hask(token);
-      if (token != null) {
-        deeplinkHask(accessToken, token, price, option, context);
-        return true;
-      }
-    } else {
-      print('T: Request failed with status: ${response.statusCode}');
-      print('T: Response: ${response.body}');
-      return false;
-    }
-    return false;
-  }
-
-// has verbal_id
-  Future<bool> createOrder_Wing_verbal_id(price, option, context) async {
-    // Navigator.pop(context);
-    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var url = Uri.parse(
-      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/Test_token',
-    );
-    var body = {
-      // 'username': 'online.mangogame',
-      // 'username': 'online.kfausd',
-      // 'password': '914bade01fd32493a0f2efc583e1a5f6',
-      // 'grant_type': 'password',
-      // 'client_id': 'third_party',
-      // 'client_secret': '16681c9ff419d8ecc7cfe479eb02a7a',
-    };
-
-    // Encode the body as a form-urlencoded string
-    // var requestBody = Uri(queryParameters: body).query;
-
-    var response = await http.post(url, headers: headers);
-
-    if (response.statusCode == 200) {
-      // Parse the JSON response
-      var jsonResponse = jsonDecode(response.body);
-      accessToken = jsonResponse['access_token'];
-
-      var parts = accessToken.split('-');
-      token = '${parts[0]}${parts[1]}${parts[2]}${parts[3]}${parts[4]}';
-
-      print('accessToken: $accessToken');
-      print('token: $token');
-      print('Price : $price');
-
-      // await deeplink_hask(token);
-      if (token != null) {
-        print(" \n\n\n\n\n\n\n\nvirak \n\n\n\n\n\n\n\n");
-        deeplinkHask_verbal_id(accessToken, token, price, option, context);
-        return true;
-      }
-    } else {
-      print('T: Request failed with status: ${response.statusCode}');
-      print('T: Response: ${response.body}');
-      return false;
-    }
-    return false;
-  }
-
-  var deeplink_hask;
-  // Has verbal_id
-  Future<void> deeplinkHask_verbal_id(
-    accessToken,
-    token,
-    price,
-    option,
-    context,
-  ) async {
-    final url = Uri.parse(
-      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask',
-    );
-    final request = http.MultipartRequest('POST', url);
-
-    request.fields.addAll({
-      'str':
-          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com/wing/${widget.set_id_user}/${widget.id_verbal}',
-      'key': '$token',
-    });
-    final response = await request.send();
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(await response.stream.bytesToString());
-      deeplink_hask = jsonResponse['Deeplink_Hask'];
-      if (deeplink_hask != null) {
-        await call_back_wing_verbal_id(context, price);
-      }
-    } else {
-      print('D: Request failed with status: ${response.reasonPhrase}');
-    }
-  }
-
-  Future<void> deeplinkHask(accessToken, token, price, option, context) async {
-    final url = Uri.parse(
-      'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/DeepLink_Hask',
-    );
-    final request = http.MultipartRequest('POST', url);
-
-    request.fields.addAll({
-      'str':
-          '$price#USD#00432#$order_reference_no#https://oneclickonedollar.com/wing',
-      'key': '$token',
-    });
-    final response = await request.send();
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(await response.stream.bytesToString());
-      deeplink_hask = jsonResponse['Deeplink_Hask'];
-      if (deeplink_hask != null) {
-        await call_back_wing(context, price);
-      }
-    } else {
-      print('D: Request failed with status: ${response.reasonPhrase}');
-    }
-  }
-
-  var redirect_url;
-
-  Future call_back_wing(BuildContext context, price) async {
-    var headers = {'Content-Type': 'application/json'};
-    var request = http.Request(
-      'POST',
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing',
-      ),
-    );
-    request.body = json.encode({
-      "order_reference_no": "$order_reference_no",
-      "amount": "$price",
-      "txn_hash": "$deeplink_hask",
-      "accessToken": "$accessToken",
-    });
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(await response.stream.bytesToString());
-      redirect_url = jsonResponse['redirect_url'];
-      print("\n$redirect_url\n");
-      // await launchUrl(Uri.parse(redirect_url));
-      await openDeepLink("$redirect_url");
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-
-  // int vpoint = 0;
-  // int vpointSecond = 0;
-  // Future<void> getCount() async {
-  //   final response = await http.get(
-  //     Uri.parse(
-  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=209K105F209A',
-  //     ),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //   );
-  //   if (response.statusCode == 200) {
-  //     var jsonData = jsonDecode(response.body);
-  //     setState(() {
-  //       if (vpointSecond == 0) {
-  //         vpoint = vpointSecond = int.parse(jsonData['vpoint'].toString());
-  //       } else {
-  //         vpoint = int.parse(jsonData['vpoint'].toString());
-  //       }
-  //     });
-  //   }
-  // }
-
+  WingBank wingBank = WingBank();
   int count = 0;
-  // void main() async {
-  //   _timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) async {
-  //     await getCount();
-  //     setState(() {
-  //       count++;
-
-  //       if (vpoint > vpointSecond) {
-  //         Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(builder: (context) => const HomePage1()),
-  //         );
-  //       }
-  //     });
-  //     if (count >= 300) {
-  //       _timer.cancel();
-  //     }
-  //   });
-  // }
-
-// Has verbal_id
-  Future call_back_wing_verbal_id(BuildContext context, price) async {
-    var headers = {'Content-Type': 'application/json'};
-    var request = http.Request(
-      'POST',
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/LinkWing',
-      ),
-    );
-    request.body = json.encode({
-      "order_reference_no": "$order_reference_no",
-      "amount": "$price",
-      "txn_hash": "$deeplink_hask",
-      "accessToken": "$accessToken",
-      "schema_url":
-          "https://oneclickonedollar.com/wing/${widget.set_id_user}/${widget.id_verbal}"
-    });
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(await response.stream.bytesToString());
-      redirect_url = jsonResponse['redirect_url'];
-      print("\n${response.stream}\n");
-      // await launchUrl(Uri.parse(redirect_url));
-      await openDeepLink("$redirect_url");
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-
-  Future openDeepLink(var qrString) async {
-    if (Platform.isIOS) {
-      try {
-        // ignore: deprecated_member_use
-        bool checkLink = await launchUrl(Uri.parse(qrString));
-        if (checkLink == false) {
-          const playStoreUrl = 'https://onelink.to/dagdt6';
-          // ignore: deprecated_member_use
-          if (await canLaunch(playStoreUrl)) {
-            // ignore: deprecated_member_use
-            await launch(playStoreUrl);
-          } else {
-            throw 'Could not launch $playStoreUrl';
-          }
-        }
-      } catch (e) {}
-    } else if (Platform.isAndroid) {
-      try {
-        // ignore: deprecated_member_use
-        bool checkLink = await launch(qrString);
-
-        if (checkLink == false) {
-          const playStoreUrl = 'https://onelink.to/dagdt6';
-          // ignore: deprecated_member_use
-          if (await canLaunch(playStoreUrl)) {
-            // ignore: deprecated_member_use
-            await launch(playStoreUrl);
-          } else {
-            throw 'Could not launch $playStoreUrl';
-          }
-        }
-      } catch (e) {
-        if (Platform.isAndroid) {
-          const playStoreUrl = 'https://onelink.to/dagdt6';
-          // ignore: deprecated_member_use
-          if (await canLaunch(playStoreUrl)) {
-            // ignore: deprecated_member_use
-            await launch(playStoreUrl);
-          } else {
-            throw 'Could not launch $playStoreUrl';
-          }
-        }
-      }
-    }
-  }
 
   @override
   void initState() {
@@ -460,15 +104,30 @@ class _OptionPaymentState extends State<OptionPayment> {
     // main();
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
+  Future<void> createorder(String price) async {
+    setState(() {
+      Get.back();
+      wingBank.checkStatus.value = '';
+      checkApp = true;
+    });
+    await Future.wait([
+      wingBank.createOrderWing(
+        price,
+        thierPlan,
+        context,
+        widget.set_id_user,
+      )
+    ]);
+    setState(() {
+      checkApp = false;
+    });
   }
 
+  bool checkApp = false;
+  AuthVerbal authVerbal = AuthVerbal(Iduser: "");
   @override
   Widget build(BuildContext context) {
-    widget.id_verbal;
+    authVerbal = Get.put(AuthVerbal(Iduser: widget.set_id_user.toString()));
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 247, 246, 246),
       appBar: AppBar(
@@ -484,193 +143,166 @@ class _OptionPaymentState extends State<OptionPayment> {
         ),
         title: const Text('Option Payment'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemCount: text_bank.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 3),
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    order_reference_no =
-                        "${widget.set_id_user}24K${RandomString(2)}F${RandomString(3)}A";
+      body: checkApp
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                itemCount: text_bank.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 3),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          order_reference_no =
+                              "${widget.set_id_user}24K${RandomString(2)}F${RandomString(3)}A";
 
-                    if (index == 0) {
-                      var tranIdRef = RandomString(10);
-                      if (widget.id_verbal == null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ABA(
-                              id_set_use: widget.set_id_user,
-                              option: widget.option,
-                              price: widget.price,
-                              tran_id: tranIdRef,
-                              set_email: widget.set_email,
-                              set_phone: widget.set_phone.toString(),
+                          if (index == 0) {
+                            var tranIdRef = RandomString(10);
+                            if (widget.id_verbal == null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ABA(
+                                    id_set_use: widget.set_id_user,
+                                    option: widget.option,
+                                    price: widget.price,
+                                    tran_id: tranIdRef,
+                                    set_email: widget.set_email,
+                                    set_phone: widget.set_phone.toString(),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ABA(
+                                    id_set_use: widget.set_id_user,
+                                    option: widget.option,
+                                    price: widget.price,
+                                    tran_id: tranIdRef,
+                                    set_email: widget.set_email,
+                                    set_phone: widget.set_phone.toString(),
+                                    id_verbal: widget.id_verbal ?? '',
+                                  ),
+                                ),
+                              );
+                            }
+                          } else {
+                            alertDialog(
+                              context,
+                              widget.price,
+                              widget.set_email ?? "",
+                              widget.option,
+                              index,
+                            );
+                          }
+                        });
+                      },
+                      child: Card(
+                        elevation: 7,
+                        child: SizedBox(
+                          height: 65,
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10, left: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        // color: Colors.red,
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                            '${Qr_Image[index]['image']}',
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 15),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "${text_bank[index]['bank']}",
+                                          style: TextStyle(
+                                            overflow: TextOverflow.visible,
+                                            color: const Color.fromARGB(
+                                              255,
+                                              21,
+                                              21,
+                                              21,
+                                            ),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize:
+                                                MediaQuery.textScaleFactorOf(
+                                                      context,
+                                                    ) *
+                                                    14,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          "${text_bank[index]['subscrip']}",
+                                          style: TextStyle(
+                                            overflow: TextOverflow.visible,
+                                            color: const Color.fromRGBO(
+                                              158,
+                                              158,
+                                              158,
+                                              1,
+                                            ),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize:
+                                                MediaQuery.textScaleFactorOf(
+                                                      context,
+                                                    ) *
+                                                    12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Spacer(),
+                                    Container(
+                                      height: 25,
+                                      width: 25,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: const Color.fromARGB(
+                                            255, 242, 240, 240),
+                                      ),
+                                      child: const Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 16,
+                                        color:
+                                            Color.fromARGB(255, 171, 169, 169),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ABA(
-                              id_set_use: widget.set_id_user,
-                              option: widget.option,
-                              price: widget.price,
-                              tran_id: tranIdRef,
-                              set_email: widget.set_email,
-                              set_phone: widget.set_phone.toString(),
-                              id_verbal: widget.id_verbal ?? '',
-                            ),
-                          ),
-                        );
-                      }
-                    } else {
-                      alertDialog(
-                        context,
-                        widget.price,
-                        widget.set_email ?? "",
-                        widget.option,
-                        index,
-                      );
-                    }
-                  });
-                },
-                child: Card(
-                  elevation: 7,
-                  child: SizedBox(
-                    height: 65,
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 10, left: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  // color: Colors.red,
-                                  borderRadius: BorderRadius.circular(10),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      '${Qr_Image[index]['image']}',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 15),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${text_bank[index]['bank']}",
-                                    style: TextStyle(
-                                      overflow: TextOverflow.visible,
-                                      color: const Color.fromARGB(
-                                        255,
-                                        21,
-                                        21,
-                                        21,
-                                      ),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: MediaQuery.textScaleFactorOf(
-                                            context,
-                                          ) *
-                                          14,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    "${text_bank[index]['subscrip']}",
-                                    style: TextStyle(
-                                      overflow: TextOverflow.visible,
-                                      color: const Color.fromRGBO(
-                                        158,
-                                        158,
-                                        158,
-                                        1,
-                                      ),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: MediaQuery.textScaleFactorOf(
-                                            context,
-                                          ) *
-                                          12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Spacer(),
-                              Container(
-                                height: 25,
-                                width: 25,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color:
-                                      const Color.fromARGB(255, 242, 240, 240),
-                                ),
-                                child: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 16,
-                                  color: Color.fromARGB(255, 171, 169, 169),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Future _showCustomSnackbar(BuildContext context, String message) async {
-    final snackbar = SnackBar(
-      content: Container(
-        alignment: Alignment.center,
-        height: 45,
-        width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 60),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          children: [
-            const CircleAvatar(
-              radius: 25,
-              backgroundColor: Colors.white,
-              backgroundImage: AssetImage('assets/images/done.png'),
             ),
-            Text(
-              message,
-              style: const TextStyle(color: Colors.black, fontSize: 12),
-            ),
-          ],
-        ),
-      ),
-      duration: const Duration(seconds: 2),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
     );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-
+  int? thierPlan;
   String RandomString(int strlen) {
     Random rnd = Random(DateTime.now().millisecondsSinceEpoch);
     String result = "";
@@ -680,6 +312,110 @@ class _OptionPaymentState extends State<OptionPayment> {
     return result;
   }
 
+  late Timer _timer;
+
+  Future<void> main() async {
+    _timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) async {
+      wingBank.checkTransection(wingBank.orderReferenceNo);
+      // print(
+      //     "*********(${wingBank.checkStatus.value} || ${wingBank.orderReferenceNo})");
+      if (wingBank.checkStatus.value == "OK") {
+        _timer.cancel();
+        await authVerbal.checkVpoint(widget.set_id_user!);
+        Get.snackbar(
+          "",
+          "",
+          titleText: Text(
+            'Done!',
+            style: TextStyle(
+              color: greyColor,
+              fontSize: 14,
+            ),
+          ),
+          messageText: Text(
+            'Payment is successfuly!',
+            style: TextStyle(
+              color: greyColor,
+              fontSize: 12,
+            ),
+          ),
+          colorText: Colors.black,
+          padding: const EdgeInsets.only(
+            right: 50,
+            left: 50,
+            top: 20,
+            bottom: 20,
+          ),
+          borderColor: const Color.fromARGB(255, 48, 47, 47),
+          borderWidth: 1.0,
+          borderRadius: 5,
+          backgroundColor: const Color.fromARGB(255, 235, 242, 246),
+          icon: const Icon(Icons.add_alert),
+        );
+        Get.back();
+      }
+    });
+  }
+
+  bool checkdeeplink = false;
+  List<Image> setImages = [
+    Image.asset(
+      'assets/images/Partners/KHQR.png',
+      fit: BoxFit.scaleDown,
+    ),
+    Image.asset(
+      'assets/images/UPAY-logo.png',
+      fit: BoxFit.scaleDown,
+    ),
+    Image.asset(
+      'assets/images/WingBank-Logo_Square.png',
+      fit: BoxFit.scaleDown,
+    ),
+  ];
+  List<Text> setTitle = [
+    const Text(
+      'PayWay',
+      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+    ),
+    const Text(
+      'U-Pay Pay',
+      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+    ),
+    const Text(
+      'Wing Pay',
+      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+    ),
+  ];
+  List<String> setSubtitle = [
+    'ABA KHQR',
+    'U-Pay',
+    'Wing',
+  ];
+  List qrImage = [
+    {
+      'image': 'assets/images/Partners/KHQR.png',
+    },
+    {
+      'image': 'assets/images/KHQR.jpg',
+    },
+    {
+      'image': 'assets/images/KHQR.jpg',
+    },
+  ];
+  List textBank = [
+    {
+      'bank': 'ABA',
+      'subscrip': 'Scan to pay with any banking app',
+    },
+    {
+      'bank': 'U-Pay KHQR',
+      'subscrip': 'Tap to pay with KHQR',
+    },
+    {
+      'bank': 'Wing KHQR',
+      'subscrip': 'Tap to pay with KHQR',
+    },
+  ];
   Future<void> alertDialog(
     BuildContext context,
     var price,
@@ -687,64 +423,6 @@ class _OptionPaymentState extends State<OptionPayment> {
     String option,
     int index,
   ) {
-    List<Image> setImages = [
-      Image.asset(
-        'assets/images/Partners/KHQR.png',
-        fit: BoxFit.scaleDown,
-      ),
-      Image.asset(
-        'assets/images/UPAY-logo.png',
-        fit: BoxFit.scaleDown,
-      ),
-      Image.asset(
-        'assets/images/WingBank-Logo_Square.png',
-        fit: BoxFit.scaleDown,
-      ),
-    ];
-    List<Text> setTitle = [
-      const Text(
-        'PayWay',
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-      ),
-      const Text(
-        'U-Pay Pay',
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-      ),
-      const Text(
-        'Wing Pay',
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-      ),
-    ];
-    List<String> setSubtitle = [
-      'ABA KHQR',
-      'U-Pay',
-      'Wing',
-    ];
-    List qrImage = [
-      {
-        'image': 'assets/images/Partners/KHQR.png',
-      },
-      {
-        'image': 'assets/images/KHQR.jpg',
-      },
-      {
-        'image': 'assets/images/KHQR.jpg',
-      },
-    ];
-    List textBank = [
-      {
-        'bank': 'ABA',
-        'subscrip': 'Scan to pay with any banking app',
-      },
-      {
-        'bank': 'U-Pay KHQR',
-        'subscrip': 'Tap to pay with KHQR',
-      },
-      {
-        'bank': 'Wing KHQR',
-        'subscrip': 'Tap to pay with KHQR',
-      },
-    ];
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -758,45 +436,29 @@ class _OptionPaymentState extends State<OptionPayment> {
               children: [
                 InkWell(
                   onTap: () async {
-                    // order_reference_no = SignUtil().RandomString(10).toString();
-                    // order_reference_no =
-                    //     "${widget.set_id_user}24K${RandomString(2)}F${Random().nextInt(10) + 10}A";
                     setState(() {
                       widget.id_verbal;
+                      var countNumber = widget.option!.split(' ');
+                      if (countNumber[4] == "Day") {
+                        thierPlan = 1;
+                      } else if (countNumber[4] == "Week") {
+                        thierPlan = 7;
+                      } else if (countNumber[4] == "Mount") {
+                        thierPlan = 30;
+                      }
                     });
                     if (index == 1) {
-                      await upay.createOrder(
+                      await upayBank.createOrder(
                         price,
-                        widget.option,
-                        widget.set_id_user,
+                        // "${widget.control_user}/${widget.price}/$thierPlan",
+                        "${widget.set_id_user}/1.00/$thierPlan",
                         context,
                       );
                     } else if (index == 2) {
-                      setState(() {
-                        if (check_wing == false) {
-                          print('===> Wing1');
-                          // _await(context);
-                          // _timer = Timer.periodic(const Duration(seconds: 5),
-                          //     (timer) {
-                          //   check_traslation_wing(order_reference_no);
-                          // });
-                        }
-                      });
-                      if (widget.id_verbal != null) {
-                        print('===> Wing2');
-                        print(
-                          "\n\n\n\n\n\n\n=======> Call by ${widget.id_verbal}\n\n\n\n",
-                        );
-                        // await createOrder_Wing_verbal_id(
-                        //   price,
-                        //   option,
-                        //   context,
-                        // );
-                        print(" \n\n\n\n\n\n\n\nvirak \n\n\n\n\n\n\n\n");
-                      } else {
-                        print('===> Wing : $option');
-                        await createOrder_Wing(price, option, context);
-                      }
+                      // await createOrder_Wing(price, option, context);
+                      createorder(price);
+
+                      main();
                     }
                   },
                   child: Card(
@@ -832,9 +494,6 @@ class _OptionPaymentState extends State<OptionPayment> {
                 InkWell(
                   onTap: () async {
                     if (index == 2) {
-                      // print("Wing QR");
-                      // print(
-                      //     'price = $price || account = $account || set_phone = ${widget.set_phone} || option = $option || id_user = ${widget.id_user} || set_id_user = ${widget.set_id_user} ');
                       await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => Qr_Wing(
@@ -935,6 +594,8 @@ class _OptionPaymentState extends State<OptionPayment> {
               child: const Text('Close'),
               onPressed: () {
                 Navigator.of(context).pop();
+                _timer.cancel();
+
                 // dispose();
               },
             ),

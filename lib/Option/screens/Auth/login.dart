@@ -77,8 +77,8 @@ class _LoginState extends State<Login> {
           status = true;
           id = slist[i]['id'];
           control_user = slist[i]['username'];
-          print("objects: $id");
-          print(slist.toString());
+          // print("objects: $id");
+          // print(slist.toString());
           requestModel.email = slist[i]['email'];
           requestModel.password = slist[i]['password'];
           if (slist.isNotEmpty) {
@@ -260,7 +260,7 @@ class _LoginState extends State<Login> {
         () {
           if (authentication.isAuth.value) {
             return Container(
-              height: MediaQuery.of(context).size.height * 0.85,
+              height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 image: DecorationImage(

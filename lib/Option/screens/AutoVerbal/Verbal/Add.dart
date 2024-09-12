@@ -6,10 +6,8 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -104,55 +102,6 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
   String? control_user;
 
   PDFController pdfController = PDFController();
-  // Future<void> payment_done(BuildContext context) async {
-  //   final Data = {
-  //     "id_user_control": control_user.toString(),
-  //     "count_autoverbal": "-1",
-  //   };
-  //   final response = await http.post(
-  //     Uri.parse(
-  //       'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/updart_count_verbal/0',
-  //     ),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: json.encode(Data),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     AwesomeDialog(
-  //       context: context,
-  //       animType: AnimType.leftSlide,
-  //       headerAnimationLoop: false,
-  //       dialogType: DialogType.success,
-  //       showCloseIcon: false,
-  //       // title: value.message,
-  //       autoHide: const Duration(seconds: 10),
-  //       body: const Center(child: Text("Do you want to save photo")),
-  //       btnOkOnPress: () {
-  //         Navigator.of(context).push(
-  //           MaterialPageRoute(
-  //             builder: (context) => save_image_after_add_verbal(
-  //               set_data_verbal: code.toString(),
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //       btnCancelOnPress: () {
-  //         Navigator.pop(context);
-  //       },
-  //       onDismissCallback: (type) {
-  //         Navigator.of(context).push(
-  //           MaterialPageRoute(
-  //             builder: (context) => List_Auto(
-  //               verbal_id: widget.id,
-  //               id_control_user: widget.id_control_user,
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //     ).show();
-  //   }
-  // }
 
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 2),
@@ -332,7 +281,17 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
             ),
           );
         } else if ((authVerbal.listGetUser.isEmpty)) {
-          return const Text("No Data");
+          return InkWell(
+            onTap: () {
+              authVerbal.getUsers("248K292F248A");
+            },
+            child: Center(
+              child: Text(
+                "No Data ${authVerbal.listGetUser.length}",
+                style: TextStyle(color: whiteColor),
+              ),
+            ),
+          );
         } else {
           return Container(
             height: MediaQuery.of(context).size.height,
@@ -646,56 +605,7 @@ class _AddState extends State<Add> with TickerProviderStateMixin {
                       });
                     },
                   ),
-                  // if (id_khan != 0)
-                  //   InkWell(
-                  //     onTap: () {
-                  //       _asyncInputDialog(context);
-                  //       ++i;
-                  //     },
-                  //     child: Container(
-                  //       height: 37,
-                  //       margin: const EdgeInsets.fromLTRB(30, 5, 30, 0),
-                  //       decoration: BoxDecoration(
-                  //         color: Colors.lightBlueAccent[700],
-                  //         borderRadius: BorderRadius.circular(10),
-                  //       ),
-                  //       child: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           // Text("land~Building"),
-                  //           SizedBox(
-                  //             width: MediaQuery.of(context).size.width * 0.3,
-                  //             child: DefaultTextStyle(
-                  //               style: const TextStyle(
-                  //                 fontSize: 18.0,
-                  //                 fontFamily: 'Horizon',
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //               child: AnimatedTextKit(
-                  //                 animatedTexts: [
-                  //                   RotateAnimatedText('land'),
-                  //                   RotateAnimatedText('Building'),
-                  //                 ],
-                  //                 pause: const Duration(milliseconds: 100),
-                  //                 repeatForever: true,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           GFAnimation(
-                  //             controller: controller,
-                  //             slidePosition: offsetAnimation,
-                  //             type: GFAnimationType.slideTransition,
-                  //             child: const Icon(
-                  //               Icons.add_circle_outline,
-                  //               color: Colors.white,
-                  //               size: 30,
-                  //               shadows: [Shadow(blurRadius: 5, color: Colors.black)],
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
+
                   const SizedBox(height: 10),
                   if (listBuilding.isNotEmpty)
                     SizedBox(

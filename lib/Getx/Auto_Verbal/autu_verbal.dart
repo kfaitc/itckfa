@@ -9,9 +9,7 @@ import '../../models/autoverbal_model.dart';
 
 class AuthVerbal extends GetxController {
   var iduser = ''.obs;
-  AuthVerbal({
-    required String Iduser,
-  }) {
+  AuthVerbal({required String Iduser}) {
     iduser.value = Iduser;
   }
   @override
@@ -44,26 +42,6 @@ class AuthVerbal extends GetxController {
     List landbuiding,
     int iduser,
   ) async {
-    // print("titleNumber : ${datamodel.titleNumber}");
-    // print("borey : ${datamodel.borey}");
-    // print("road : ${datamodel.road}");
-    // print("propertyTypeId : ${datamodel.verbalPropertyId}");
-    // print("verbalBankId : ${datamodel.verbalBankId}");
-    // print("verbalBankBranchId : ${datamodel.verbalBankBranchId}");
-    // print("verbalBankContact : ${datamodel.verbalBankContact}");
-    // print("verbalOwner : ${datamodel.verbalOwner}");
-    // print("verbalContact : ${datamodel.verbalContact}");
-    // print("verbalBankOfficer : ${datamodel.verbalBankOfficer}");
-    // print("verbalAddress : ${datamodel.verbalAddress}");
-    // print("approveId : ${datamodel.approveId}");
-    // print("latlongLog : ${datamodel.latlongLog}");
-    // print("latlongLa : ${datamodel.latlongLa}");
-    // print("verbalUser : ${datamodel.verbalUser}");
-    // print("verbalOption : ${datamodel.verbalOption}");
-    // print("protectID : ${datamodel.protectID}");
-    // print("base64string : $base64string");
-    // print("landbuiding : $landbuiding");
-
     try {
       isAuthGet.value = true;
       var headers = {'Content-Type': 'application/json'};
@@ -81,11 +59,9 @@ class AuthVerbal extends GetxController {
         "verbal_bank_officer": datamodel.verbalBankOfficer,
         "verbal_address": datamodel.verbalAddress,
         "verbal_approve_id": datamodel.approveId,
-        // "VerifyAgent": datamodel.verifyAgent,
         "latlong_log": datamodel.latlongLog,
         "latlong_la": datamodel.latlongLa,
         "verbal_image": base64string,
-        // "verbal_image": "No",
         "verbal_user": datamodel.verbalUser,
         "verbal_option": datamodel.verbalOption,
         "VerbalType": landbuiding
@@ -160,6 +136,7 @@ class AuthVerbal extends GetxController {
           icon: const Icon(Icons.add_alert),
         );
         await checkVpoint(iduser);
+        Get.offNamed('/homePage', arguments: {'pf': true});
 
         // Get.back();
         // showModalBottomSheet(
@@ -210,6 +187,7 @@ class AuthVerbal extends GetxController {
 
       if (response.statusCode == 200) {
         listGetUser.value = jsonDecode(json.encode(response.data));
+        // print(listGetUser.toString());
       }
     } catch (e) {
       // Handle error
@@ -223,6 +201,7 @@ class AuthVerbal extends GetxController {
   Future<void> checkVpoint(id) async {
     try {
       isAuthGet.value = true;
+      print("id : $id");
       var dio = Dio();
       var response = await dio.request(
         'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=$id',
@@ -262,6 +241,7 @@ class AuthVerbal extends GetxController {
     } catch (e) {
       // print(e);
     } finally {
+      print(countAccount.toString());
       isAuthGet.value = false;
     }
   }

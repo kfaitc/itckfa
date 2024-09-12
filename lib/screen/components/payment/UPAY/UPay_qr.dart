@@ -1,18 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
 import 'package:barcode_widget/barcode_widget.dart';
-
-import 'package:http/http.dart' as http;
-import 'package:crypto/crypto.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-
+import 'package:itckfa/Option/components/colors.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:dio/dio.dart';
-
+import '../../../../Getx/Auto_Verbal/autu_verbal.dart';
+import '../../../../Getx/Bank/UPay/upay_bank.dart';
 import '../../../Home/Home.dart';
 
 class Qr_UPay extends StatefulWidget {
@@ -38,82 +34,7 @@ class Qr_UPay extends StatefulWidget {
 }
 
 class Qr_UPayState extends State<Qr_UPay> {
-  final TextEditingController idText = TextEditingController();
-  final TextEditingController keyText = TextEditingController();
-  final TextEditingController nameText = TextEditingController();
-  final TextEditingController amountText = TextEditingController();
-  final TextEditingController orderIdText = TextEditingController();
-  final TextEditingController usdText = TextEditingController();
-  final TextEditingController versionText = TextEditingController();
-  final TextEditingController notifyText = TextEditingController();
-  final TextEditingController returnText = TextEditingController();
-  final TextEditingController signText = TextEditingController();
-  final TextEditingController langText = TextEditingController();
   var loading = false;
-  static String baseUrl2 = 'https://upayapi.u-pay.com/upayApi/mc/mcOrder';
-  var appUrl = '$baseUrl2/appCreate';
-  var qrUrl = '$baseUrl2/create/qrcode';
-  var url_qr;
-  var orderId;
-  void createOrderQR() async {
-    setState(() {});
-    var merchantId = idText.text;
-    var merchantKey = keyText.text;
-    var goods = nameText.text;
-    var amount = amountText.text;
-    var ccy = usdText.text;
-    var v = versionText.text;
-    var notifyUrl = notifyText.text;
-    var returnUrl = returnText.text;
-    var language = langText.text;
-    orderId = SignUtil().RandomString(10);
-    orderIdText.text = orderId;
-    Map<String, String> map = {
-      'currency': ccy,
-      'goodsDetail': goods,
-      'lang': language,
-      'mcAbridge': 'Khmer Foundation Apprais',
-      'mcId': merchantId,
-      'mcOrderId': orderId,
-      'money': amount,
-      'notifyUrl': notifyUrl,
-      'version': v,
-    };
-    var sign = SignUtil.getSign(map, merchantKey);
-    map['sign'] = sign;
-    // print(jsonEncode(map));
-    signText.text = sign;
-
-    try {
-      var response = await Dio().post(qrUrl, data: map);
-      if (response.statusCode == 200) {
-        var data = response.data;
-        var d1 = jsonEncode(data['data']);
-        var d2 = json.decode(d1);
-        setState(() {
-          url_qr = d2['qrcode'].toString();
-          print(url_qr);
-        });
-      } else {}
-    } catch (e) {}
-    loading = false;
-    setState(() {});
-  }
-
-  bool success_payment = false;
-  Future<void> Load() async {
-    var rs = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_done_upay?mcOrderId=$orderId',
-      ),
-    );
-    var jsonData = jsonDecode(rs.body);
-    setState(() {
-      if (jsonData.toString() == orderId.toString()) {
-        success_payment = true;
-      }
-    });
-  }
 
   bool isChecked = false;
   Future _saved(image, BuildContext context) async {
@@ -121,84 +42,71 @@ class Qr_UPayState extends State<Qr_UPay> {
     final result = await ImageGallerySaver.saveImage(image);
   }
 
-  TextEditingController roll_id = TextEditingController();
-  int count = 0;
-  var thier_plan;
+  int? thierPlan;
   @override
   void initState() {
     super.initState();
-    main();
+    // main();
     setState(() {
       var countNumber = widget.option!.split(' ');
 
       if (countNumber[4] == "Day") {
-        thier_plan = 1;
+        thierPlan = 1;
       } else if (countNumber[4] == "Week") {
-        thier_plan = 7;
+        thierPlan = 7;
       } else if (countNumber[4] == "Mount") {
-        thier_plan = 30;
+        thierPlan = 30;
       }
     });
-    if (thier_plan != null) {
-      idText.text = '83ef634e4c80809edd6e2d53a8d49454';
-      keyText.text = '83ef634e4c80809edd6e2d53a8d49454';
-      nameText.text = widget.option ?? "";
-      amountText.text = widget.price ?? "";
-      usdText.text = 'USD';
-      versionText.text = 'V1';
-      notifyText.text =
-          'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6591/${widget.control_user}/1.00/$thier_plan';
-      // 'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/call_back_pay/6591/${widget.control_user}/${widget.price}/2/$thier_plan';
-      returnText.text = 'kfa://callback';
-      langText.text = 'EN';
-      createOrderQR();
-    }
+    main();
   }
 
-  Future<void> getCount() async {
-    final response = await http.get(
-      Uri.parse(
-        'https://www.oneclickonedollar.com/laravel_kfa_2023/public/api/check_dateVpoint?id_user_control=209K105F209A',
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
-      setState(() {
-        if (vpointSecond == 0) {
-          vpoint = vpointSecond = int.parse(jsonData['vpoint'].toString());
-        } else {
-          vpoint = int.parse(jsonData['vpoint'].toString());
-        }
-      });
-    }
-  }
-
-  int vpoint = 0;
-  int vpointSecond = 0;
   late Timer _timer;
-
+  AuthVerbal authVerbal = AuthVerbal(Iduser: "");
   void main() async {
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      await getCount();
-      setState(() {
-        count++;
-
-        if (vpoint > vpointSecond) {
-          notification();
-          print("OKOK");
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage1()),
-          );
-        } else {
-          print("==> NoNO vpoint : $vpoint || vpointSecond : $vpointSecond");
-        }
-      });
-      if (count >= 300) {
+    upayBank.createOrderQR(
+      widget.price!,
+      // "${widget.control_user}/${widget.price}/$thierPlan",
+      "${widget.control_user}/1.00/$thierPlan",
+    );
+    _timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) async {
+      upayBank.transetionID(upayBank.mcOrderId);
+      if (upayBank.listQR.isNotEmpty) {
         _timer.cancel();
+        Future.delayed(const Duration(seconds: 5), () async {
+          await authVerbal.checkVpoint(widget.control_user);
+          Get.snackbar(
+            "",
+            "",
+            titleText: Text(
+              'Done!',
+              style: TextStyle(
+                color: greyColor,
+                fontSize: 14,
+              ),
+            ),
+            messageText: Text(
+              'Payment is successfuly!',
+              style: TextStyle(
+                color: greyColor,
+                fontSize: 12,
+              ),
+            ),
+            colorText: Colors.black,
+            padding:
+                const EdgeInsets.only(right: 50, left: 50, top: 20, bottom: 20),
+            borderColor: const Color.fromARGB(255, 48, 47, 47),
+            borderWidth: 1.0,
+            borderRadius: 5,
+            backgroundColor: const Color.fromARGB(255, 235, 242, 246),
+            icon: const Icon(Icons.add_alert),
+          );
+        });
+
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const HomePage1()),
+        // );
       }
     });
   }
@@ -209,49 +117,20 @@ class Qr_UPayState extends State<Qr_UPay> {
     super.dispose();
   }
 
-  Future<void> notification() async {
-    var headers = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Cookie':
-          '__cf_bm=Tz0b2VzsEGdqRwABVHE9.d1MJ75lrLCUpGpFioEzZ2c-1711944598-1.0.1.1-1JSGW9GW6AxAwmFIBjF6UfpSo84Xb1b.dsB7Z0PiGRbaOMlul3B8F2hgZ9yMnBHuAIvohTpEebcHmDD.F4Noqw; __cf_bm=JyLnwxo0CFbi7c4EUDCxEybwa47B6IM0RMBEt2awf6Q-1719595913-1.0.1.1-QKP1lqbqfEJZGhL51ETlMQ5eZWr9OrPYpgxBQAXZQ4d2OEGfG4QGFZgT2nBL9WXmUmFxFB08EuhT..OBcVBKmA'
-    };
-    var data =
-        '''{\r\n    "app_id": "d3025f03-32f5-444a-8100-7f7637a7f631",\r\n    "name": {"en": "Khmer Fundation appraisal"},    \r\n    "headings": {"en": "KFA"}, \r\n    "contents": {"en": "New Client Verbal Approval"},\r\n    "include_player_ids": ["${widget.playerID}"],\r\n    \n    "large_icon": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/87f1d34d-2002-4608-b166-a5c6fac0f344/dew2uzh-09c9673a-a8d3-45e0-b275-3ec2b8bd5ccd.png/v1/fill/w_1024,h_576/nana_collector_skin_mlbb_png_tranparant_by_dechunf_dew2uzh-fullview.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTc2IiwicGF0aCI6IlwvZlwvODdmMWQzNGQtMjAwMi00NjA4LWIxNjYtYTVjNmZhYzBmMzQ0XC9kZXcydXpoLTA5Yzk2NzNhLWE4ZDMtNDVlMC1iMjc1LTNlYzJiOGJkNWNjZC5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.VLal2qJWK_hsnqy-tkTkZbwrpS4Acpz5WYxEDNG-yeQ"\r\n    \n    \n}\r\n''';
-    var dio = Dio();
-    var response = await dio.request(
-      'https://onesignal.com/api/v1/notifications',
-      options: Options(
-        method: 'POST',
-        headers: headers,
-      ),
-      data: data,
-    );
-
-    if (response.statusCode == 200) {
-      print(json.encode(response.data));
-    } else {
-      print(response.statusMessage);
-    }
-  }
-
   ScreenshotController screenshotController = ScreenshotController();
+  UpayBank upayBank = UpayBank();
+
   @override
   Widget build(BuildContext context) {
-    // var now = DateTime.now();
-    // var formatterDate = DateFormat('dd/MM/yy kk:mm');
-    // var dateTime = DateFormat('yyyy-MM-ddThh:mm:ss');
-
-    // String actualDate = formatterDate.format(now);
-    // String actualDate1 = dateTime.format(now);
-
+    authVerbal = Get.put(AuthVerbal(Iduser: widget.control_user.toString()));
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: whiteColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            Get.back();
           },
           icon: const Icon(
             Icons.arrow_back_ios,
@@ -259,7 +138,7 @@ class Qr_UPayState extends State<Qr_UPay> {
           ),
         ),
         title: Text(
-          "Scan for payments($count)",
+          "Scan for payments",
           style: TextStyle(
             color: const Color.fromRGBO(49, 27, 146, 1),
             fontSize: MediaQuery.textScaleFactorOf(context) * 18,
@@ -277,7 +156,6 @@ class Qr_UPayState extends State<Qr_UPay> {
                 const snackBar = SnackBar(
                   content: Text('Photo saved'),
                 );
-                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }).catchError((onError) {
                 // print(onError);
@@ -299,273 +177,227 @@ class Qr_UPayState extends State<Qr_UPay> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              color: Colors.white,
-              height: MediaQuery.of(context).size.height * 0.13,
-              width: double.infinity,
-              alignment: Alignment.topCenter,
-              child: Image.asset(
-                'assets/images/New_KFA_Logo_pdf.png',
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-            if (url_qr != null)
-              Screenshot(
+        child: Obx(
+          () {
+            if (upayBank.isQR.value) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (upayBank.qrCode.value == "") {
+              return Container(
+                color: Colors.white,
+                height: MediaQuery.of(context).size.height * 0.13,
+                width: double.infinity,
+                alignment: Alignment.topCenter,
+                child: Image.asset(
+                  'assets/images/New_KFA_Logo_pdf.png',
+                  fit: BoxFit.fitWidth,
+                ),
+              );
+            } else {
+              return Screenshot(
                 controller: screenshotController,
-                child: Container(
-                  height: 465,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  padding: const EdgeInsets.only(top: 65),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    image: const DecorationImage(
-                      image: AssetImage("assets/images/logoqr.png"),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "\t\t\t\t\t\t\t\tKFA",
-                        style: TextStyle(
-                          color: const Color.fromRGBO(121, 121, 121, 1),
-                          fontWeight: FontWeight.w700,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 20,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Container(
+                      height: 455,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      padding: const EdgeInsets.only(top: 65),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        image: const DecorationImage(
+                          image: AssetImage("assets/images/logoqr.png"),
+                          fit: BoxFit.fill,
                         ),
                       ),
-                      Text(
-                        "\t\t\t\t\t\t\t\t${widget.price ?? ""} \$",
-                        style: TextStyle(
-                          color: const Color.fromRGBO(63, 63, 63, 1),
-                          fontWeight: FontWeight.w700,
-                          fontSize: MediaQuery.textScaleFactorOf(context) * 20,
-                        ),
-                      ),
-                      //  Text(
-                      //   '------------------------------------------------',
-                      //   style: TextStyle(
-                      //     overflow: TextOverflow.ellipsis,
-                      //   ),
-                      // ),
-
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 45),
-                        child: Center(
-                          child: BarcodeWidget(
-                            width: 226,
-                            height: 226,
-                            barcode: Barcode.qrCode(),
-                            data: url_qr,
-                            color: Colors.black,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                            ),
-                            backgroundColor: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 10,
                           ),
+                          const Text(
+                            "\t\t\t\t\t\t\t\tKFA",
+                            style: TextStyle(
+                              color: Color.fromRGBO(121, 121, 121, 1),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 17,
+                            ),
+                          ),
+                          Text(
+                            "\t\t\t\t\t\t\t\t${widget.price ?? ""} \$",
+                            style: const TextStyle(
+                              color: Color.fromRGBO(63, 63, 63, 1),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 17,
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(vertical: 45),
+                            child: Center(
+                              child: Card(
+                                elevation: 10,
+                                child: BarcodeWidget(
+                                  width: 226,
+                                  height: 226,
+                                  barcode: Barcode.qrCode(),
+                                  data: upayBank.qrCode.value,
+                                  color: Colors.black,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                  ),
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      height: 50,
+                      child: Text(
+                        'Scan with Bakong App Or Mobile Banking app that support KHQR',
+                        style: TextStyle(
+                          overflow: TextOverflow.visible,
+                          color: const Color.fromRGBO(158, 158, 158, 1),
+                          fontWeight: FontWeight.w500,
+                          fontSize: MediaQuery.textScaleFactorOf(context) * 10,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    // if (success_payment)
+                    //   GFCheckboxListTile(
+                    //     titleText: 'Payment Success',
+                    //     size: 20,
+                    //     activeBgColor: Colors.green,
+                    //     color: Colors.white,
+                    //     margin: const EdgeInsets.symmetric(
+                    //         vertical: 25, horizontal: 16),
+                    //     listItemTextColor: const Color.fromARGB(255, 0, 0, 0),
+                    //     type: GFCheckboxType.square,
+                    //     activeIcon: const Icon(
+                    //       Icons.check,
+                    //       size: 15,
+                    //       color: Colors.white,
+                    //     ),
+                    //     onChanged: (value) {
+                    //       setState(() {
+                    //         success_payment = value;
+                    //       });
+                    //     },
+                    //     value: success_payment,
+                    //     inactiveIcon: null,
+                    //   ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Subtotal',
+                            style: TextStyle(
+                              overflow: TextOverflow.visible,
+                              color: const Color.fromRGBO(158, 158, 158, 1),
+                              fontWeight: FontWeight.w800,
+                              fontSize:
+                                  MediaQuery.textScaleFactorOf(context) * 11,
+                            ),
+                          ),
+                          // Text(' ${count.toString()}'),
+                          Text(
+                            " ${widget.price} USD",
+                            style: TextStyle(
+                              overflow: TextOverflow.visible,
+                              color: const Color.fromRGBO(158, 158, 158, 1),
+                              fontWeight: FontWeight.w800,
+                              fontSize:
+                                  MediaQuery.textScaleFactorOf(context) * 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      thickness: 1,
+                      color: Colors.black,
+                      indent: 50,
+                      endIndent: 50,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'V-Point',
+                            style: TextStyle(
+                              overflow: TextOverflow.visible,
+                              color: const Color.fromRGBO(158, 158, 158, 1),
+                              fontWeight: FontWeight.w800,
+                              fontSize:
+                                  MediaQuery.textScaleFactorOf(context) * 11,
+                            ),
+                          ),
+                          Text(
+                            " ${widget.option}",
+                            style: TextStyle(
+                              overflow: TextOverflow.visible,
+                              color: const Color.fromRGBO(158, 158, 158, 1),
+                              fontWeight: FontWeight.w800,
+                              fontSize:
+                                  MediaQuery.textScaleFactorOf(context) * 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Text(
+                        '................................................................................................................................',
+                        style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Total:',
+                            style: TextStyle(
+                              overflow: TextOverflow.visible,
+                              color: Color.fromRGBO(158, 158, 158, 1),
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            " ${widget.price} USD",
+                            style: const TextStyle(
+                              overflow: TextOverflow.visible,
+                              color: Color.fromRGBO(158, 158, 158, 1),
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
                 ),
-              )
-            else
-              Container(
-                height: 400,
-                color: Colors.white,
-                margin: const EdgeInsets.only(top: 15, right: 10, left: 10),
-              ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              height: 50,
-              child: Text(
-                'Scan with Bakong App Or Mobile Banking app that support KHQR',
-                style: TextStyle(
-                  overflow: TextOverflow.visible,
-                  color: const Color.fromRGBO(158, 158, 158, 1),
-                  fontWeight: FontWeight.w500,
-                  fontSize: MediaQuery.textScaleFactorOf(context) * 10,
-                ),
-              ),
-            ),
-            if (success_payment)
-              GFCheckboxListTile(
-                titleText: 'Payment Success',
-                size: 20,
-                activeBgColor: Colors.green,
-                color: Colors.white,
-                margin:
-                    const EdgeInsets.symmetric(vertical: 25, horizontal: 16),
-                listItemTextColor: const Color.fromARGB(255, 0, 0, 0),
-                type: GFCheckboxType.square,
-                activeIcon: const Icon(
-                  Icons.check,
-                  size: 15,
-                  color: Colors.white,
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    success_payment = value;
-                  });
-                },
-                value: success_payment,
-                inactiveIcon: null,
-              ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Subtotal',
-                    style: TextStyle(
-                      overflow: TextOverflow.visible,
-                      color: const Color.fromRGBO(158, 158, 158, 1),
-                      fontWeight: FontWeight.w800,
-                      fontSize: MediaQuery.textScaleFactorOf(context) * 11,
-                    ),
-                  ),
-                  // Text(' ${count.toString()}'),
-                  Text(
-                    " ${widget.price} USD",
-                    style: TextStyle(
-                      overflow: TextOverflow.visible,
-                      color: const Color.fromRGBO(158, 158, 158, 1),
-                      fontWeight: FontWeight.w800,
-                      fontSize: MediaQuery.textScaleFactorOf(context) * 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(
-              thickness: 1,
-              color: Colors.black,
-              indent: 50,
-              endIndent: 50,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'V-Point',
-                    style: TextStyle(
-                      overflow: TextOverflow.visible,
-                      color: const Color.fromRGBO(158, 158, 158, 1),
-                      fontWeight: FontWeight.w800,
-                      fontSize: MediaQuery.textScaleFactorOf(context) * 11,
-                    ),
-                  ),
-                  Text(
-                    " ${widget.option}",
-                    style: TextStyle(
-                      overflow: TextOverflow.visible,
-                      color: const Color.fromRGBO(158, 158, 158, 1),
-                      fontWeight: FontWeight.w800,
-                      fontSize: MediaQuery.textScaleFactorOf(context) * 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: Text(
-                '................................................................................................................................',
-                style: TextStyle(
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total:',
-                    style: TextStyle(
-                      overflow: TextOverflow.visible,
-                      color: const Color.fromRGBO(158, 158, 158, 1),
-                      fontWeight: FontWeight.w800,
-                      fontSize: MediaQuery.textScaleFactorOf(context) * 12,
-                    ),
-                  ),
-                  Text(
-                    " ${widget.price} USD",
-                    style: TextStyle(
-                      overflow: TextOverflow.visible,
-                      color: const Color.fromRGBO(158, 158, 158, 1),
-                      fontWeight: FontWeight.w800,
-                      fontSize: MediaQuery.textScaleFactorOf(context) * 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 50),
-          ],
+              );
+            }
+          },
+
+          // ],
+          // ),
         ),
       ),
     );
-  }
-}
-
-class SignUtil {
-  static StringBuffer getKeys(Map<String, String> inMap, List<String> keys) {
-    StringBuffer sbf = StringBuffer();
-    for (var i = 0; i < keys.length; i++) {
-      var key = keys[i];
-      if (key != 'sign' && key.isNotEmpty) {
-        var value = inMap[key];
-        if (value == '' || value == null) {
-          continue;
-        }
-        sbf
-          ..write(key)
-          ..write('=')
-          ..write(value);
-        if (i != (keys.length - 1)) {
-          sbf.write('&');
-        }
-      }
-    }
-    return sbf;
-  }
-
-  static String generateMD5(String data) {
-    // print(data);
-    Uint8List content = const Utf8Encoder().convert(data);
-    Digest digest = md5.convert(content);
-    return digest.toString();
-  }
-
-  static String getSign(Map<String, String> inMap, String secretKey) {
-    var keys = <String>[];
-    keys.addAll(inMap.keys);
-    keys.sort();
-    var sbf = getKeys(inMap, keys);
-    sbf.write(secretKey);
-    // print(sbf.toString());
-    return generateMD5(sbf.toString()).toUpperCase();
-  }
-
-  var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-
-  String RandomString(int strlen) {
-    Random rnd = Random(DateTime.now().millisecondsSinceEpoch);
-    String result = "";
-    for (var i = 0; i < strlen; i++) {
-      result += chars[rnd.nextInt(chars.length)];
-    }
-    return result;
   }
 }

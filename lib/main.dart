@@ -161,7 +161,11 @@ class _MyAppState extends State<MyApp> {
       },
       initialRoute: '/',
       // home: ThankYouPage(title: "aba"),
+      // getPages: [
+      //   GetPage(name: '/homePage', page: () => const HomePage1()),
+      // ],
       routes: {
+        "/homePage": (context) => const HomePage1(),
         // '/': (context) => map_cross_verbal(
         //       get_province: (value) {},
         //       get_district: (value) {},
@@ -171,21 +175,21 @@ class _MyAppState extends State<MyApp> {
         //       asking_price: (value) {},
         //     ),
         '/': (context) => const Login(),
-        '/s': (context) =>
-            const Add(id: '249', id_control_user: "248K292F248A"),
-        "/d": (context) => Map_verbal_add(
-              iduser: "248K292F248A",
-              updateNew: 0,
-              get_commune: (value) {},
-              get_district: (value) {},
-              get_lat: (value) {},
-              get_log: (value) {},
-              get_province: (value) {
-                setState(() {
-                  // addressController.text = value;
-                });
-              },
-            ),
+        // '/s': (context) =>
+        //     const Add(id: '249', id_control_user: "248K292F248A"),
+        // "/d": (context) => Map_verbal_add(
+        //       iduser: "248K292F248A",
+        //       updateNew: 0,
+        //       get_commune: (value) {},
+        //       get_district: (value) {},
+        //       get_lat: (value) {},
+        //       get_log: (value) {},
+        //       get_province: (value) {
+        //         setState(() {
+        //           // addressController.text = value;
+        //         });
+        //       },
+        //     ),
         // '/': (p0) => ListController_Approvel(),
         "/aba": (context) => const ThankYouPage(title: "aba"),
         "/wing": (context) => const ThankYouPage(title: "wing"),

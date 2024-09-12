@@ -1,6 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_const_constructors, prefer_typing_uninitialized_variables, avoid_print, unnecessary_brace_in_string_interps, unnecessary_string_interpolations, deprecated_member_use
-
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
 import 'dart:math';
@@ -8,12 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:itckfa/Option/components/colors.dart';
 import 'package:itckfa/Option/components/contants.dart';
 import 'package:itckfa/screen/Home/Home.dart';
 import 'package:itckfa/screen/components/payment/Main_Form/OptionBank.dart';
 import 'package:crypto/crypto.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-
 import '../../../../Getx/Auto_Verbal/autu_verbal.dart';
 import 'Transtoin_history.dart';
 
@@ -45,7 +43,7 @@ class _TopUpState extends State<TopUp> {
   AuthVerbal authVerbal = AuthVerbal(Iduser: "");
   @override
   void initState() {
-    mainPlayerID();
+    // mainPlayerID();
     super.initState();
     // check();
   }
@@ -69,7 +67,7 @@ class _TopUpState extends State<TopUp> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kwhite_new,
-        title: Text(
+        title: const Text(
           "V-Point",
           style: TextStyle(
             color: Colors.white,
@@ -78,7 +76,7 @@ class _TopUpState extends State<TopUp> {
         ),
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context, HomePage1());
+            Navigator.pop(context, const HomePage1());
           },
           icon: const Icon(
             Icons.chevron_left,
@@ -110,14 +108,14 @@ class _TopUpState extends State<TopUp> {
         child: Obx(
           () {
             if (authVerbal.isAuthGet.value) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (authVerbal.listCheckVP.isEmpty) {
-              return SizedBox();
+              return const SizedBox();
             } else {
               return Column(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.178,
+                    height: 135,
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -151,11 +149,20 @@ class _TopUpState extends State<TopUp> {
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                // ' $v_point',
                                 authVerbal.countAccount.value.toString(),
                                 style: TextStyle(
                                   fontSize: 30,
                                   color: Colors.amber[800],
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  authVerbal.checkVpoint(widget.set_id_user);
+                                },
+                                icon: Icon(
+                                  Icons.refresh,
+                                  color: whiteColor,
+                                  size: 30,
                                 ),
                               )
                             ],
@@ -218,13 +225,13 @@ class _TopUpState extends State<TopUp> {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 1,
+                    width: MediaQuery.of(context).size.width,
                     child: Stack(
                       alignment: Alignment.bottomRight,
                       children: [
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          height: MediaQuery.of(context).size.height * 0.35,
+                          height: 220,
                           width: MediaQuery.of(context).size.width * 1,
                           decoration: BoxDecoration(
                             color: kImageColor,
@@ -272,90 +279,28 @@ class _TopUpState extends State<TopUp> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        print(widget.set_id_user.toString());
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) => OptionPayment(
-                                        //       playerID: playerId,
-                                        //       id_user: widget.id_user,
-                                        //       set_email: widget.set_email ?? "",
-                                        //       set_phone: widget.set_phone,
-                                        //       option: '1  V / Day',
-                                        //       price: '0.01',
-                                        //       up_point: widget.up_point,
-                                        //       set_id_user: widget.set_id_user,
-                                        //       id_verbal: widget.id_verbal,
-                                        //     ),
-                                        //   ),
-                                        // );
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.all(6),
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        width:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(80),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.grey,
-                                              blurRadius: 7,
-                                              offset: Offset(1.0, 7.0),
-                                            )
-                                          ],
-                                          border: Border.all(
-                                            width: 1,
-                                          ),
-                                        ),
-                                        alignment: Alignment.topCenter,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 15,
-                                                  height: 15,
-                                                  child: Image.asset(
-                                                    "assets/images/v.png",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "1",
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    color: Colors.amber[800],
-                                                  ),
-                                                )
-                                              ],
+                                        // print(widget.set_id_user.toString());
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => OptionPayment(
+                                              playerID: playerId,
+                                              id_user: widget.id_user,
+                                              set_email: widget.set_email ?? "",
+                                              set_phone: widget.set_phone,
+                                              option: '1  V / Day',
+                                              price: '0.01',
+                                              up_point: widget.up_point,
+                                              set_id_user:
+                                                  widget.set_id_user.toString(),
+                                              id_verbal: widget.id_verbal,
                                             ),
-                                            const Text(
-                                              "\$1.0",
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                color: Color.fromARGB(
-                                                  255,
-                                                  242,
-                                                  11,
-                                                  134,
-                                                ),
-                                                decorationStyle:
-                                                    TextDecorationStyle.solid,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                          ),
+                                        );
+                                      },
+                                      child: optionV(
+                                        "1",
+                                        "1.0",
                                       ),
                                     ),
                                     InkWell(
@@ -377,72 +322,9 @@ class _TopUpState extends State<TopUp> {
                                           ),
                                         );
                                       },
-                                      child: Container(
-                                        margin: const EdgeInsets.all(6),
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        width:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(80),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.grey,
-                                              blurRadius: 7,
-                                              offset: Offset(1.0, 7.0),
-                                            )
-                                          ],
-                                          border: Border.all(
-                                            width: 1,
-                                          ),
-                                        ),
-                                        alignment: Alignment.topCenter,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 15,
-                                                  height: 15,
-                                                  child: Image.asset(
-                                                    "assets/images/v.png",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "3",
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    color: Colors.amber[800],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            const Text(
-                                              "\$2.5",
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                color: Color.fromARGB(
-                                                  255,
-                                                  242,
-                                                  11,
-                                                  134,
-                                                ),
-                                                decorationStyle:
-                                                    TextDecorationStyle.solid,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                      child: optionV(
+                                        "3",
+                                        "2.5",
                                       ),
                                     ),
                                     InkWell(
@@ -464,72 +346,9 @@ class _TopUpState extends State<TopUp> {
                                           ),
                                         );
                                       },
-                                      child: Container(
-                                        margin: const EdgeInsets.all(6),
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        width:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(80),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.grey,
-                                              blurRadius: 7,
-                                              offset: Offset(1.0, 7.0),
-                                            )
-                                          ],
-                                          border: Border.all(
-                                            width: 1,
-                                          ),
-                                        ),
-                                        alignment: Alignment.topCenter,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 15,
-                                                  height: 15,
-                                                  child: Image.asset(
-                                                    "assets/images/v.png",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "5",
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    color: Colors.amber[800],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            const Text(
-                                              "\$3.0",
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                color: Color.fromARGB(
-                                                  255,
-                                                  242,
-                                                  11,
-                                                  134,
-                                                ),
-                                                decorationStyle:
-                                                    TextDecorationStyle.solid,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                      child: optionV(
+                                        "5",
+                                        "3.0",
                                       ),
                                     ),
                                   ],
@@ -558,248 +377,61 @@ class _TopUpState extends State<TopUp> {
                                           ),
                                         );
                                       },
-                                      child: Container(
-                                        margin: const EdgeInsets.all(6),
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        width:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(80),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.grey,
-                                              blurRadius: 7,
-                                              offset: Offset(1.0, 7.0),
-                                            )
-                                          ],
-                                          border: Border.all(
-                                            width: 1,
-                                          ),
-                                        ),
-                                        alignment: Alignment.topCenter,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 15,
-                                                  height: 15,
-                                                  child: Image.asset(
-                                                    "assets/images/v.png",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "6",
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    color: Colors.amber[800],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            const Text(
-                                              "\$5.0",
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                color: Color.fromARGB(
-                                                  255,
-                                                  242,
-                                                  11,
-                                                  134,
-                                                ),
-                                                decorationStyle:
-                                                    TextDecorationStyle.solid,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                      child: optionV(
+                                        "6",
+                                        "5.0",
                                       ),
                                     ),
                                     InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => OptionPayment(
-                                              playerID: playerId,
-                                              id_user: widget.id_user,
-                                              set_email: widget.set_email ?? "",
-                                              set_phone: widget.set_phone,
-                                              option: '8  V / Day',
-                                              price: '6.50',
-                                              up_point: widget.up_point,
-                                              set_id_user: widget.set_id_user,
-                                              id_verbal: widget.id_verbal,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.all(6),
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        width:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(80),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.grey,
-                                              blurRadius: 7,
-                                              offset: Offset(1.0, 7.0),
-                                            )
-                                          ],
-                                          border: Border.all(
-                                            width: 1,
-                                          ),
-                                        ),
-                                        alignment: Alignment.topCenter,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 15,
-                                                  height: 15,
-                                                  child: Image.asset(
-                                                    "assets/images/v.png",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "8",
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    color: Colors.amber[800],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            const Text(
-                                              "\$6.5",
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                color: Color.fromARGB(
-                                                  255,
-                                                  242,
-                                                  11,
-                                                  134,
-                                                ),
-                                                decorationStyle:
-                                                    TextDecorationStyle.solid,
-                                                decoration:
-                                                    TextDecoration.underline,
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OptionPayment(
+                                                playerID: playerId,
+                                                id_user: widget.id_user,
+                                                set_email:
+                                                    widget.set_email ?? "",
+                                                set_phone: widget.set_phone,
+                                                option: '8  V / Day',
+                                                price: '6.50',
+                                                up_point: widget.up_point,
+                                                set_id_user: widget.set_id_user,
+                                                id_verbal: widget.id_verbal,
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                            ),
+                                          );
+                                        },
+                                        child: optionV(
+                                          "8",
+                                          "6.5",
+                                        )),
                                     InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => OptionPayment(
-                                              playerID: playerId,
-                                              id_user: widget.id_user,
-                                              set_email: widget.set_email ?? "",
-                                              set_phone: widget.set_phone,
-                                              option: '10  V / Day',
-                                              price: '8.00',
-                                              up_point: widget.up_point,
-                                              set_id_user: widget.set_id_user,
-                                              id_verbal: widget.id_verbal,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.all(6),
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        width:
-                                            MediaQuery.of(context).size.height *
-                                                0.1,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(80),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.grey,
-                                              blurRadius: 7,
-                                              offset: Offset(1.0, 7.0),
-                                            )
-                                          ],
-                                          border: Border.all(
-                                            width: 1,
-                                          ),
-                                        ),
-                                        alignment: Alignment.topCenter,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: 15,
-                                                  height: 15,
-                                                  child: Image.asset(
-                                                    "assets/images/v.png",
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "10",
-                                                  style: TextStyle(
-                                                    fontSize: 17,
-                                                    color: Colors.amber[800],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            const Text(
-                                              "\$8.0",
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                color: Color.fromARGB(
-                                                  255,
-                                                  242,
-                                                  11,
-                                                  134,
-                                                ),
-                                                decorationStyle:
-                                                    TextDecorationStyle.solid,
-                                                decoration:
-                                                    TextDecoration.underline,
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OptionPayment(
+                                                playerID: playerId,
+                                                id_user: widget.id_user,
+                                                set_email:
+                                                    widget.set_email ?? "",
+                                                set_phone: widget.set_phone,
+                                                option: '10  V / Day',
+                                                price: '8.00',
+                                                up_point: widget.up_point,
+                                                set_id_user: widget.set_id_user,
+                                                id_verbal: widget.id_verbal,
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                            ),
+                                          );
+                                        },
+                                        child: optionV(
+                                          "10",
+                                          "8.0",
+                                        )),
                                   ],
                                 ),
                               ],
@@ -810,14 +442,14 @@ class _TopUpState extends State<TopUp> {
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 1,
+                    width: MediaQuery.of(context).size.width,
                     child: Stack(
                       alignment: Alignment.bottomRight,
                       children: [
                         Container(
                           margin: const EdgeInsets.only(top: 20),
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          width: MediaQuery.of(context).size.width * 1,
+                          height: 210,
+                          width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             color: kImageColor,
                             borderRadius: BorderRadius.circular(10),
@@ -1031,6 +663,67 @@ class _TopUpState extends State<TopUp> {
             }
           },
         ),
+      ),
+    );
+  }
+
+  Widget optionV(String v, String price) {
+    return Container(
+      margin: const EdgeInsets.all(6),
+      height: 70,
+      width: 70,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(80),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 7,
+            offset: Offset(1.0, 7.0),
+          )
+        ],
+        border: Border.all(
+          width: 1,
+        ),
+      ),
+      alignment: Alignment.topCenter,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 15,
+                height: 15,
+                child: Image.asset(
+                  "assets/images/v.png",
+                ),
+              ),
+              Text(
+                v,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.amber[800],
+                ),
+              )
+            ],
+          ),
+          Text(
+            "\$$price",
+            style: const TextStyle(
+              fontSize: 17,
+              color: Color.fromARGB(
+                255,
+                242,
+                11,
+                134,
+              ),
+              decorationStyle: TextDecorationStyle.solid,
+              decoration: TextDecoration.underline,
+            ),
+          )
+        ],
       ),
     );
   }
