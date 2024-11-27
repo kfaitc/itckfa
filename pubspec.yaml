@@ -4,7 +4,7 @@ description: A new Flutter project.
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.2+3
+version: 1.0.3+3
 
 environment:
   sdk: ">=3.0.5 <4.0.0"
@@ -114,7 +114,7 @@ dependencies:
   http: ^0.13.6
   file_selector: ^1.0.2
   share_plus: ^4.5.3
-  cloud_firestore: ^4.14.0
+  # cloud_firestore: ^4.14.0
 
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -122,7 +122,6 @@ flutter_launcher_icons:
   remove_alpha_ios: true
   image_path: "assets/icons/icon.png"
   min_sdk_android: 21
-
 
 dev_dependencies:
   flutter_test:

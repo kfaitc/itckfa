@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,7 +54,7 @@ class _PDfButtonState extends State<PDfButton> {
     });
   }
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   DateTime now = DateTime.now();
   Future<void> submitAgent() async {
     var headers = {'Content-Type': 'application/json'};
@@ -66,32 +66,32 @@ class _PDfButtonState extends State<PDfButton> {
         headers: headers,
       ),
     );
-    if (response.statusCode == 200) {
-      _firestore.collection('submitAgent').add({
-        'verbal_id': widget.verbalID,
-        'client_Name': widget.listUser[0]['username'].toString(),
-        'clientID': widget.listUser[0]['control_user'].toString(),
-        'agent_id': "",
-        'agent_name': "",
-        'create_Date': now.toString(),
-        'submit': 3,
-      });
-      Get.snackbar(
-        "Done",
-        "Please wait from agent 1hour/1day",
-        colorText: Colors.black,
-        padding:
-            const EdgeInsets.only(right: 50, left: 50, top: 20, bottom: 20),
-        borderColor: const Color.fromARGB(255, 48, 47, 47),
-        borderWidth: 1.0,
-        borderRadius: 5,
-        backgroundColor: const Color.fromARGB(255, 235, 242, 246),
-        icon: const Icon(Icons.add_alert),
-      );
-      Navigator.pop(context);
-    } else {
-      print(response.statusMessage);
-    }
+    // if (response.statusCode == 200) {
+    //   _firestore.collection('submitAgent').add({
+    //     'verbal_id': widget.verbalID,
+    //     'client_Name': widget.listUser[0]['username'].toString(),
+    //     'clientID': widget.listUser[0]['control_user'].toString(),
+    //     'agent_id': "",
+    //     'agent_name': "",
+    //     'create_Date': now.toString(),
+    //     'submit': 3,
+    //   });
+    //   Get.snackbar(
+    //     "Done",
+    //     "Please wait from agent 1hour/1day",
+    //     colorText: Colors.black,
+    //     padding:
+    //         const EdgeInsets.only(right: 50, left: 50, top: 20, bottom: 20),
+    //     borderColor: const Color.fromARGB(255, 48, 47, 47),
+    //     borderWidth: 1.0,
+    //     borderRadius: 5,
+    //     backgroundColor: const Color.fromARGB(255, 235, 242, 246),
+    //     icon: const Icon(Icons.add_alert),
+    //   );
+    //   Navigator.pop(context);
+    // } else {
+    //   print(response.statusMessage);
+    // }
   }
 
   var formatter = NumberFormat("##,###,###,###", "en_US");

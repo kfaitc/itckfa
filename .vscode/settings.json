@@ -1,6 +1,5 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "editor.wordWrapColumn": 150,
-    "cmake.configureOnOpen": true,
-    "cmake.sourceDirectory": "C:/Users/Administrator/Documents/GitHub/itckfa/linux"
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "editor.wordWrapColumn": 150,
+  "cmake.configureOnOpen": true
 }
